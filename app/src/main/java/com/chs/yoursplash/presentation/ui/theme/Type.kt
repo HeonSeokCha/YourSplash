@@ -1,4 +1,4 @@
-package com.chs.yoursplash.ui.theme
+package com.chs.yoursplash.presentation.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
