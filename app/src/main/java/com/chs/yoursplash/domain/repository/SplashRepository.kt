@@ -4,7 +4,7 @@ interface SplashRepository {
 
     suspend fun getSplashImages()
 
-    suspend fun getSplashImageDetail()
+    suspend fun getSplashImageDetail(id: String)
 
     suspend fun getSearchResultImages(query: String)
 
