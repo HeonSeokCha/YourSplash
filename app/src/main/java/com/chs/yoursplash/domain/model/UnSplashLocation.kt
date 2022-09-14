@@ -7,8 +7,3 @@ data class UnSplashLocation(
     val country: String? = null,
     val position: UnSplashPosition
 )
-
-data class UnSplashPosition(
-    val latitude: Float? = null,
-    val longitude: Float? = null
-)
