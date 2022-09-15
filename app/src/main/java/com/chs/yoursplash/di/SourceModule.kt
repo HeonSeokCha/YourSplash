@@ -10,7 +10,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object SourceModule {
 
-    @Provides
-    @Singleton
-    fun provide
+//    @Provides
+//    @Singleton
+//    fun provide
 }
