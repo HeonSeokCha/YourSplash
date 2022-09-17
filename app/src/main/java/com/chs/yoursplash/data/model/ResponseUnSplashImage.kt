@@ -11,6 +11,6 @@ data class ResponseUnSplashImage(
     val color: String,
     @SerialName("urls")
     val urls: ResponseUnSplashImageUrls,
-    @SerialName("users")
-    val users: ResponseUnSplashUser
+    @SerialName("user")
+    val user: ResponseUnSplashUser
 )

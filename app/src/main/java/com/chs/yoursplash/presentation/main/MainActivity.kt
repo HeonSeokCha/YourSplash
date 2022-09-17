@@ -3,7 +3,6 @@ package com.chs.yoursplash.presentation.main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -11,16 +10,15 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.twotone.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.chs.yoursplash.R
+import com.chs.yoursplash.presentation.main.home.HomeScreen
 import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +27,7 @@ class MainActivity : ComponentActivity() {
             val scope = rememberCoroutineScope()
             YourSplashTheme {
                 Scaffold(
+                    scaffoldState = scaffoldState,
                     topBar = {
                         TopBar(
                             onNavigationIconClick = {
@@ -43,18 +42,30 @@ class MainActivity : ComponentActivity() {
                         DrawerBody(
                             items = listOf(
                                 MenuItem(
-                                    id = "Home",
-                                    title = "Home",
+                                    id = "Setting",
+                                    title = "Setting",
+                                    icon = Icons.Default.Home
+                                ),
+                                MenuItem(
+                                    id = "About",
+                                    title = "About",
                                     icon = Icons.Default.Home
                                 )
                             ),
                             onItemClick = {
+                                when (it.id) {
+                                    "Setting" -> {
 
+                                    }
+                                    "About" -> {
+
+                                    }
+                                }
                             }
                         )
                     }
                 ) {
-
+                    HomeScreen()
                 }
             }
         }
@@ -73,12 +84,13 @@ fun TopBar(
                 fontSize = 20.sp
             )
         }, navigationIcon = {
-            IconButton(onClick = { onNavigationIconClick }) {
+            IconButton(onClick = {
+                onNavigationIconClick()
+            }) {
                 Icon(Icons.Filled.Menu, contentDescription = null)
             }
         }, actions = {
             IconButton(onClick = {
-                /* doSomething() */
             }) {
                 Icon(
                     imageVector = Icons.TwoTone.Search,
