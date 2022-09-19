@@ -1,7 +1,6 @@
 package com.chs.yoursplash.presentation.main.home
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
@@ -9,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.chs.yoursplash.presentation.base.ImageCard
 
@@ -23,6 +23,9 @@ fun HomeScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
+            .padding(8.dp),
+        contentPadding = PaddingValues(vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(32.dp),
     ) {
         items(state.imageList.size) { idx ->
             ImageCard(image = state.imageList[idx])

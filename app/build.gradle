@@ -8,6 +8,9 @@ plugins {
     id 'com.google.devtools.ksp' version '1.7.10-1.0.6'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     compileSdk 33
 
@@ -22,6 +25,7 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        buildConfigField "String", "API_ACCESS_KEY", properties["api.AccessKey"]
     }
 
     buildTypes {

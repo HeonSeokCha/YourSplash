@@ -13,6 +13,8 @@ fun ResponseUnSplashImage.toUnSplashImage(): UnSplashImage {
     return UnSplashImage(
         id = id,
         color = color,
+        width = width,
+        height = height,
         urls = urls.toUnSplashImageUrls(),
         user = user.toUnSplashUser()
     )
@@ -33,6 +35,7 @@ fun ResponseUnSplashUser.toUnSplashUser(): UnSplashUser {
     return UnSplashUser(
         id = id,
         userName = userName,
+        name = name,
         photoProfile = photoProfile.toUnsplashUserProfileImage()
     )
 }

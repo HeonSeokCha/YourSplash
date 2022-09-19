@@ -1,5 +1,6 @@
 package com.chs.yoursplash.presentation.main
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,10 +11,12 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.twotone.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import com.chs.yoursplash.R
 import com.chs.yoursplash.presentation.main.home.HomeScreen
+import com.chs.yoursplash.presentation.search.SearchActivity
 import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -37,6 +40,7 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     },
+                    drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
                     drawerContent = {
                         DrawerHeader()
                         DrawerBody(
@@ -77,6 +81,8 @@ class MainActivity : ComponentActivity() {
 fun TopBar(
     onNavigationIconClick: () -> Unit
 ) {
+    val context = LocalContext.current
+
     TopAppBar(
         title = {
             Text(
@@ -91,6 +97,9 @@ fun TopBar(
             }
         }, actions = {
             IconButton(onClick = {
+                context.startActivity(
+                    Intent(context, SearchActivity::class.java)
+                )
             }) {
                 Icon(
                     imageVector = Icons.TwoTone.Search,

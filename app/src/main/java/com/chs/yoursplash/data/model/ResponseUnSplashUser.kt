@@ -9,6 +9,8 @@ data class ResponseUnSplashUser(
     val id: String,
     @SerialName("username")
     val userName: String,
+    @SerialName("name")
+    val name: String,
     @SerialName("profile_image")
     val photoProfile: ResponseUnsplashUserProfileImage,
 )

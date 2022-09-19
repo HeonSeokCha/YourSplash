@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.search
+package com.chs.yoursplash.presentation.user
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,8 +9,10 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
 import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
+import dagger.hilt.android.AndroidEntryPoint
 
-class SearchActivity : ComponentActivity() {
+@AndroidEntryPoint
+class UserDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -20,7 +22,7 @@ class SearchActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Text(text = "This is SearchActivity")
+                    Text(text = "This is UserDetailActivity")
                 }
             }
         }
