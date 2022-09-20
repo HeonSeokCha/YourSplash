@@ -11,11 +11,11 @@ data class ResponseUnSplashExif(
     val model: String,
     @SerialName("name")
     val name: String,
-    @SerialName("exposureTime")
+    @SerialName("exposure_time")
     val exposureTime: String,
     @SerialName("aperture")
     val aperture: String,
-    @SerialName("focalLength")
+    @SerialName("focal_length")
     val focalLength: String,
     @SerialName("iso")
     val iso: Int

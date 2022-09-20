@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     scaffoldState = scaffoldState,
                     topBar = {
-                        TopBar(
+                        MainTopBar(
                             onNavigationIconClick = {
                                  scope.launch {
                                      scaffoldState.drawerState.open()
@@ -58,12 +58,8 @@ class MainActivity : ComponentActivity() {
                             ),
                             onItemClick = {
                                 when (it.id) {
-                                    "Setting" -> {
-
-                                    }
-                                    "About" -> {
-
-                                    }
+                                    "Setting" -> { }
+                                    "About" -> { }
                                 }
                             }
                         )
@@ -78,7 +74,7 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun TopBar(
+fun MainTopBar(
     onNavigationIconClick: () -> Unit
 ) {
     val context = LocalContext.current

@@ -2,6 +2,7 @@ package com.chs.yoursplash.data.source
 
 import android.util.Log
 import com.chs.yoursplash.data.model.ResponseUnSplashImage
+import com.chs.yoursplash.data.model.ResponseUnSplashImageDetail
 import com.chs.yoursplash.domain.model.UnSplashImage
 import com.chs.yoursplash.util.Constants
 import io.ktor.client.*
@@ -23,11 +24,11 @@ class UnSplashService @Inject constructor(
         }.body()
     }
 
-    suspend fun getImageDetail(id: String) {
-        service.get("${Constants.UNSPLAH_URL}/photos/$id") {
+    suspend fun getImageDetail(id: String): ResponseUnSplashImageDetail {
+        return service.get("${Constants.UNSPLAH_URL}/photos/$id") {
             this.headers.append("Accept-Version", "v1")
             this.parameter("client_id", Constants.CLIENT_ID)
-        }
+        }.body()
     }
 
     suspend fun getSearchResultImage(

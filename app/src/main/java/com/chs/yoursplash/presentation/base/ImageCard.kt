@@ -12,11 +12,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.chs.yoursplash.domain.model.UnSplashImage
+import com.chs.yoursplash.domain.model.UnSplashImageUrls
+import com.chs.yoursplash.domain.model.UnSplashUser
+import com.chs.yoursplash.domain.model.UnsplashUserProfileImage
 import com.chs.yoursplash.presentation.image_detail.ImageDetailActivity
 import com.chs.yoursplash.presentation.user.UserDetailActivity
 import com.chs.yoursplash.util.color
@@ -25,7 +31,6 @@ import com.chs.yoursplash.util.color
 fun ImageCard(
     image: UnSplashImage
 ) {
-
     val context = LocalContext.current
 
     Column (modifier = Modifier
@@ -51,6 +56,7 @@ fun ImageCard(
                     .size(50.dp)
                     .clip(RoundedCornerShape(100)),
                 model = image.user.photoProfile.large,
+                placeholder = painterResource(com.chs.yoursplash.R.drawable.test_user_profile_image),
                 contentDescription = null
             )
             Spacer(modifier = Modifier.width(16.dp))
@@ -73,7 +79,38 @@ fun ImageCard(
                 .background(color = image.color.color),
             model = image.urls.small,
             contentScale = ContentScale.Crop,
+            placeholder = painterResource(com.chs.yoursplash.R.drawable.test_photo),
             contentDescription = null
         )
     }
+}
+
+@Preview
+@Composable
+fun PreviewImageCard() {
+    ImageCard(
+        UnSplashImage(
+            id = "",
+            color = "#333333",
+            width = 480,
+            height = 270,
+            urls = UnSplashImageUrls(
+                raw = "",
+                full = "",
+                small = "",
+                thumb = "",
+                small_s3 = ""
+            ),
+            user = UnSplashUser(
+                id = "",
+                userName = "",
+                name = "Mailchimp",
+                photoProfile = UnsplashUserProfileImage(
+                    small = "",
+                    medium = "",
+                    large = ""
+                )
+            )
+        )
+    )
 }

@@ -1,13 +1,7 @@
 package com.chs.yoursplash.data.mapper
 
-import com.chs.yoursplash.data.model.ResponseUnSplashImage
-import com.chs.yoursplash.data.model.ResponseUnSplashImageUrls
-import com.chs.yoursplash.data.model.ResponseUnSplashUser
-import com.chs.yoursplash.data.model.ResponseUnsplashUserProfileImage
-import com.chs.yoursplash.domain.model.UnSplashImage
-import com.chs.yoursplash.domain.model.UnSplashImageUrls
-import com.chs.yoursplash.domain.model.UnSplashUser
-import com.chs.yoursplash.domain.model.UnsplashUserProfileImage
+import com.chs.yoursplash.data.model.*
+import com.chs.yoursplash.domain.model.*
 
 fun ResponseUnSplashImage.toUnSplashImage(): UnSplashImage {
     return UnSplashImage(
@@ -30,7 +24,6 @@ fun ResponseUnSplashImageUrls.toUnSplashImageUrls(): UnSplashImageUrls {
     )
 }
 
-
 fun ResponseUnSplashUser.toUnSplashUser(): UnSplashUser {
     return UnSplashUser(
         id = id,
@@ -45,5 +38,48 @@ fun ResponseUnsplashUserProfileImage.toUnsplashUserProfileImage(): UnsplashUserP
         small = small,
         medium = medium,
         large = large
+    )
+}
+
+fun ResponseUnSplashExif.toUnSplashExif(): UnSplashExif {
+    return UnSplashExif(
+        make = make,
+        model = model,
+        name = name,
+        exposureTime = exposureTime,
+        aperture = aperture,
+        focalLength = focalLength,
+        iso = iso
+    )
+}
+
+fun ResponseUnSplashLocation.toUnSplashLocation(): UnSplashLocation {
+    return UnSplashLocation(
+        title = title,
+        name = name,
+        city = city,
+        country = country,
+        position = position.toUnSplashPosition()
+    )
+}
+
+fun ResponseUnSplashPosition.toUnSplashPosition(): UnSplashPosition {
+    return UnSplashPosition(
+        latitude = latitude,
+        longitude = longitude
+    )
+}
+
+fun ResponseUnSplashImageDetail.toUnSplashImageDetail(): UnSplashImageDetail {
+    return UnSplashImageDetail(
+        id = id,
+        width = width,
+        height = height,
+        color = color,
+        urls = urls.toUnSplashImageUrls(),
+        description = description,
+        user = user.toUnSplashUser(),
+        exif = exif.toUnSplashExif(),
+        location = location.toUnSplashLocation()
     )
 }

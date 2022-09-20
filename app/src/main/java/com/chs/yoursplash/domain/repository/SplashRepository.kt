@@ -9,7 +9,7 @@ interface SplashRepository {
 
     suspend fun getSplashImages(): Flow<Resource<List<UnSplashImage>>>
 
-    suspend fun getSplashImageDetail(id: String): Flow<Resource<List<UnSplashImageDetail>>>
+    suspend fun getSplashImageDetail(id: String): Flow<Resource<UnSplashImageDetail>>
 
     suspend fun getSearchResultImages(
         query: String,
