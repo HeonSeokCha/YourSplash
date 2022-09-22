@@ -28,7 +28,7 @@ fun HomeScreen(
         verticalArrangement = Arrangement.spacedBy(32.dp),
     ) {
         items(state.imageList.size) { idx ->
-            ImageCard(image = state.imageList[idx])
+            ImageCard(photoInfo = state.imageList[idx])
         }
     }
 

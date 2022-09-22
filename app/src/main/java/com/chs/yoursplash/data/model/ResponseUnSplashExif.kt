@@ -6,17 +6,17 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ResponseUnSplashExif(
     @SerialName("make")
-    val make: String,
+    val make: String?,
     @SerialName("model")
-    val model: String,
+    val model: String?,
     @SerialName("name")
-    val name: String,
+    val name: String?,
     @SerialName("exposure_time")
-    val exposureTime: String,
+    val exposureTime: String?,
     @SerialName("aperture")
-    val aperture: String,
+    val aperture: String?,
     @SerialName("focal_length")
-    val focalLength: String,
+    val focalLength: String?,
     @SerialName("iso")
-    val iso: Int
+    val iso: Int?
 )

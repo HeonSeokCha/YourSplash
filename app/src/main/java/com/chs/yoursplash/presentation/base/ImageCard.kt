@@ -25,11 +25,12 @@ import com.chs.yoursplash.domain.model.UnSplashUser
 import com.chs.yoursplash.domain.model.UnsplashUserProfileImage
 import com.chs.yoursplash.presentation.image_detail.ImageDetailActivity
 import com.chs.yoursplash.presentation.user.UserDetailActivity
+import com.chs.yoursplash.util.Constants.PHOTO_ID
 import com.chs.yoursplash.util.color
 
 @Composable
 fun ImageCard(
-    image: UnSplashImage
+    photoInfo: UnSplashImage
 ) {
     val context = LocalContext.current
 
@@ -55,13 +56,13 @@ fun ImageCard(
                 modifier = Modifier
                     .size(50.dp)
                     .clip(RoundedCornerShape(100)),
-                model = image.user.photoProfile.large,
+                model = photoInfo.user.photoProfile.large,
                 placeholder = painterResource(com.chs.yoursplash.R.drawable.test_user_profile_image),
                 contentDescription = null
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
-                text = image.user.name,
+                text = photoInfo.user.name,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -73,11 +74,13 @@ fun ImageCard(
                 .clip(RoundedCornerShape(10.dp))
                 .clickable {
                     context.startActivity(
-                        Intent(context, ImageDetailActivity::class.java)
+                        Intent(context, ImageDetailActivity::class.java).apply {
+                            putExtra(PHOTO_ID, photoInfo.id)
+                        }
                     )
                 }
-                .background(color = image.color.color),
-            model = image.urls.small,
+                .background(color = photoInfo.color.color),
+            model = photoInfo.urls.small,
             contentScale = ContentScale.Crop,
             placeholder = painterResource(com.chs.yoursplash.R.drawable.test_photo),
             contentDescription = null

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -25,12 +26,18 @@ import coil.compose.AsyncImage
 import com.chs.yoursplash.R
 import com.chs.yoursplash.presentation.search.SearchActivity
 import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
+import com.chs.yoursplash.util.Constants.PHOTO_ID
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ImageDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (!intent.hasExtra(PHOTO_ID)) {
+            Toast.makeText(this, "Wrong Photo ID...", Toast.LENGTH_SHORT).show()
+            this.finish()
+        }
 
         setContent {
             YourSplashTheme {
@@ -39,7 +46,7 @@ class ImageDetailActivity : ComponentActivity() {
                         .fillMaxSize()
                 ) {
                     Column {
-                        ImageDetailScreen()
+                        ImageDetailScreen(intent.getStringExtra(PHOTO_ID)!!)
                     }
                     ImageDetailTopBar()
                 }
