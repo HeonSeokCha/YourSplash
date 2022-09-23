@@ -20,14 +20,14 @@ class UnSplashService @Inject constructor(
     suspend fun getSplashImage(): List<ResponseUnSplashImage> {
         return service.get("${Constants.UNSPLAH_URL}/photos") {
             this.headers.append("Accept-Version", "v1")
-            this.parameter("client_id", Constants.CLIENT_ID)
+            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
         }.body()
     }
 
     suspend fun getImageDetail(id: String): ResponseUnSplashImageDetail {
         return service.get("${Constants.UNSPLAH_URL}/photos/$id") {
             this.headers.append("Accept-Version", "v1")
-            this.parameter("client_id", Constants.CLIENT_ID)
+            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
         }.body()
     }
 
@@ -40,7 +40,7 @@ class UnSplashService @Inject constructor(
     ) {
         service.get("${Constants.UNSPLAH_URL}/search/photos") {
             this.headers.append("Accept-Version", "v1")
-            this.parameter("client_id", Constants.CLIENT_ID)
+            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
             this.parameter("query", query)
             this.parameter("page", page)
             if (orientation != null) {
@@ -58,7 +58,7 @@ class UnSplashService @Inject constructor(
     ) {
         service.get("${Constants.UNSPLAH_URL}/search/collections") {
             this.headers.append("Accept-Version", "v1")
-            this.parameter("client_id", Constants.CLIENT_ID)
+            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
             this.parameter("query", query)
             this.parameter("page", page)
         }

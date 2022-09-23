@@ -85,6 +85,8 @@ fun ImageDetailScreen(
             Divider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
 
             ImageDetailInfo(state.imageDetailInfo)
+
+
         }
     }
 

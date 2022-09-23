@@ -13,6 +13,8 @@ data class ResponseUnSplashImageDetail(
     val height: Int,
     @SerialName("color")
     val color: String,
+    @SerialName("likes")
+    val likes: Int,
     @SerialName("urls")
     val urls: ResponseUnSplashImageUrls,
     @SerialName("description")
@@ -22,5 +24,9 @@ data class ResponseUnSplashImageDetail(
     @SerialName("exif")
     val exif: ResponseUnSplashExif,
     @SerialName("location")
-    val location: ResponseUnSplashLocation
+    val location: ResponseUnSplashLocation,
+    @SerialName("views")
+    val views: Int,
+    @SerialName("downloads")
+    val downloads: Int
 )

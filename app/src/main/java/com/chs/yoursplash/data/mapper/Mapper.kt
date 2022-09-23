@@ -76,10 +76,13 @@ fun ResponseUnSplashImageDetail.toUnSplashImageDetail(): UnSplashImageDetail {
         width = width,
         height = height,
         color = color,
+        likes = likes,
         urls = urls.toUnSplashImageUrls(),
         description = description,
         user = user.toUnSplashUser(),
         exif = exif.toUnSplashExif(),
-        location = location.toUnSplashLocation()
+        location = location.toUnSplashLocation(),
+        views = views,
+        downloads = downloads
     )
 }
