@@ -7,5 +7,7 @@ import com.chs.yoursplash.domain.model.UnSplashImageDetail
 data class ImageDetailState(
     val isLoading: Boolean = false,
     val imageDetailInfo: UnSplashImageDetail? = null,
+    val isDownloading: Boolean = false,
+    val isSavedFile: Boolean = false,
     val isError: Boolean = false,
 )

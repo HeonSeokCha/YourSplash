@@ -15,50 +15,48 @@ import com.chs.yoursplash.domain.model.UnSplashImageDetail
 fun ImageDetailInfo(
     imageDetailInfo: UnSplashImageDetail?
 ) {
-    LazyColumn(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        item {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
-                Column (horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = "Views",
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = imageDetailInfo?.views.toString(),
-                        fontWeight = FontWeight.Light
-                    )
-                }
-
-                Column (horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = "Downloads",
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = imageDetailInfo?.downloads.toString(),
-                        fontWeight = FontWeight.Light
-                    )
-                }
-
-                Column (horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        text = "Views",
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = imageDetailInfo?.likes.toString(),
-                        fontWeight = FontWeight.Light
-                    )
-                }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "Views",
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = imageDetailInfo?.views.toString(),
+                    fontWeight = FontWeight.Light
+                )
             }
-            Divider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
+
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "Downloads",
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = imageDetailInfo?.downloads.toString(),
+                    fontWeight = FontWeight.Light
+                )
+            }
+
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "Views",
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = imageDetailInfo?.likes.toString(),
+                    fontWeight = FontWeight.Light
+                )
+            }
         }
+        Divider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
     }
 }

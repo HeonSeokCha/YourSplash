@@ -62,31 +62,58 @@ fun ImageDetailScreen(
                     .padding(top = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                AsyncImage(
-                    modifier = Modifier
-                        .clickable {
-                            context.startActivity(
-                                Intent(context, UserDetailActivity::class.java)
-                            )
-                        }
-                        .size(40.dp)
-                        .clip(RoundedCornerShape(100)),
-                    model = state.imageDetailInfo?.user?.photoProfile?.large,
-                    placeholder = painterResource(R.drawable.test_user_profile_image),
-                    contentDescription = null
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(
-                    text = state.imageDetailInfo?.user?.name ?: "",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                Row {
+                    AsyncImage(
+                        modifier = Modifier
+                            .clickable {
+                                context.startActivity(
+                                    Intent(context, UserDetailActivity::class.java)
+                                )
+                            }
+                            .size(40.dp)
+                            .clip(RoundedCornerShape(100)),
+                        model = state.imageDetailInfo?.user?.photoProfile?.large,
+                        placeholder = painterResource(R.drawable.test_user_profile_image),
+                        contentDescription = null
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                        text = state.imageDetailInfo?.user?.name ?: "",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                if (state.isDownloading) {
+                    IconButton(onClick = {
+                        // TODO: show alert again
+                    }) {
+                        Icon(
+                            painterResource(id = R.drawable.ico_file_download_done),
+                            contentDescription = "fileIsSaved"
+                        )
+                    }
+
+                } else if (state.isSavedFile) {
+                    IconButton(onClick = { }) {
+                        Icon(
+                            painterResource(id = R.drawable.ico_downloading),
+                            contentDescription = "downloading"
+                        )
+                    }
+                } else {
+                    IconButton(onClick = {
+                        // TODO: file download start.
+                    }) {
+                        Icon(
+                            painterResource(id = R.drawable.ico_download),
+                            contentDescription = "download"
+                        )
+                    }
+                }
             }
             Divider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
-
             ImageDetailInfo(state.imageDetailInfo)
-
-
         }
     }
 
