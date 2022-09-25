@@ -15,26 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.YourSplash"
         tools:targetApi="31">
-        <activity
-            android:name=".presentation.user.UserDetailActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".presentation.collection_detail.CollectionDetailActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".presentation.image_detail.ImageDetailActivity"
-            android:exported="false" />
-        <activity
-            android:name=".presentation.search.SearchActivity"
-            android:exported="false" />
+
         <activity
             android:name=".presentation.main.MainActivity"
             android:exported="true"

@@ -10,11 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.chs.yoursplash.presentation.base.ImageCard
 
 
 @Composable
 fun HomeScreen(
+    navController: NavHostController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state = viewModel.state
@@ -28,7 +30,10 @@ fun HomeScreen(
         verticalArrangement = Arrangement.spacedBy(32.dp),
     ) {
         items(state.imageList.size) { idx ->
-            ImageCard(photoInfo = state.imageList[idx])
+            ImageCard(
+                navController,
+                photoInfo = state.imageList[idx]
+            )
         }
     }
 

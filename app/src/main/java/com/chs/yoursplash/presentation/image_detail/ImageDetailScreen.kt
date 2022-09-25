@@ -19,14 +19,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.chs.yoursplash.R
-import com.chs.yoursplash.presentation.user.UserDetailActivity
+import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.util.color
 
 @Composable
 fun ImageDetailScreen(
     photoId: String,
+    navController: NavHostController,
     viewModel: ImageDetailViewModel = hiltViewModel()
 ) {
     val state = viewModel.state
@@ -66,8 +69,8 @@ fun ImageDetailScreen(
                     AsyncImage(
                         modifier = Modifier
                             .clickable {
-                                context.startActivity(
-                                    Intent(context, UserDetailActivity::class.java)
+                                navController.navigate(
+                                    "${Screens.UserDetailScreen.route}/${state.imageDetailInfo?.user?.id}"
                                 )
                             }
                             .size(40.dp)

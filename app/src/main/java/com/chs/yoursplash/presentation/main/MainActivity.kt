@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.twotone.Search
@@ -17,19 +18,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.chs.yoursplash.R
+import com.chs.yoursplash.presentation.Screens
+import com.chs.yoursplash.presentation.image_detail.ImageDetailScreen
 import com.chs.yoursplash.presentation.main.collection.CollectionScreen
 import com.chs.yoursplash.presentation.main.home.HomeScreen
-import com.chs.yoursplash.presentation.search.SearchActivity
 import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -47,6 +51,7 @@ class MainActivity : ComponentActivity() {
                     scaffoldState = scaffoldState,
                     topBar = {
                         MainTopBar(
+                            navController = navController,
                             onNavigationIconClick = {
                                  scope.launch {
                                      scaffoldState.drawerState.open()
@@ -87,10 +92,23 @@ class MainActivity : ComponentActivity() {
                         startDestination = BottomNavScreen.HomeScreen.route
                     ) {
                         composable(BottomNavScreen.HomeScreen.route) {
-                            HomeScreen()
+                            HomeScreen(navController)
                         }
                         composable(BottomNavScreen.CollectionScreen.route) {
                             CollectionScreen()
+                        }
+                        composable(
+                            "${Screens.ImageDetailScreen.route}/{id}",
+                            arguments = listOf(
+                                navArgument("id") {
+                                    type = NavType.StringType
+                                }
+                            )
+                        ) { backStackEntry ->
+                            ImageDetailScreen(
+                                photoId = backStackEntry.arguments?.getString("id")!!,
+                                navController = navController
+                            )
                         }
                     }
                 }
@@ -102,36 +120,52 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainTopBar(
+    navController: NavHostController,
     onNavigationIconClick: () -> Unit
 ) {
     val context = LocalContext.current
-
-    TopAppBar(
-        title = {
-            Text(
-                text = stringResource(id = R.string.app_name),
-                fontSize = 20.sp
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    when (navBackStackEntry?.destination?.route) {
+        Screens.ImageDetailScreen.route -> {
+            TopAppBar(
+                title = { },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
+                        Icon(Icons.Filled.ArrowBack, contentDescription = null)
+                    }
+                }, backgroundColor = Color.Transparent,
+                elevation = 0.dp,
+                contentColor = Color.White
             )
-        }, navigationIcon = {
-            IconButton(onClick = {
-                onNavigationIconClick()
-            }) {
-                Icon(Icons.Filled.Menu, contentDescription = null)
-            }
-        }, actions = {
-            IconButton(onClick = {
-                context.startActivity(
-                    Intent(context, SearchActivity::class.java)
-                )
-            }) {
-                Icon(
-                    imageVector = Icons.TwoTone.Search,
-                    contentDescription = null
-                )
-            }
-        }, backgroundColor = MaterialTheme.colors.primary,
-        contentColor = MaterialTheme.colors.onPrimary
-    )
+        }
+        else -> {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.app_name),
+                        fontSize = 20.sp
+                    )
+                }, navigationIcon = {
+                    IconButton(onClick = {
+                        onNavigationIconClick()
+                    }) {
+                        Icon(Icons.Filled.Menu, contentDescription = null)
+                    }
+                }, actions = {
+                    IconButton(onClick = {
+                    }) {
+                        Icon(
+                            imageVector = Icons.TwoTone.Search,
+                            contentDescription = null
+                        )
+                    }
+                }, backgroundColor = MaterialTheme.colors.primary,
+                contentColor = MaterialTheme.colors.onPrimary
+            )
+        }
+    }
 }
 
 
