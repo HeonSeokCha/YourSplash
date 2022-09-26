@@ -1,28 +1,31 @@
 package com.chs.yoursplash.presentation.image_detail
 
-import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.DownloadDone
+import androidx.compose.material.icons.filled.Downloading
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.chs.yoursplash.R
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.util.color
 
@@ -39,84 +42,105 @@ fun ImageDetailScreen(
         viewModel.getImageDetailInfo(photoId)
     }
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        AsyncImage(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
-                .background(state.imageDetailInfo?.color?.color ?: Color.White),
-            contentScale = ContentScale.Crop,
-            model = state.imageDetailInfo?.urls?.full ?: "",
-            contentDescription = null
-        )
-        Column(
-            modifier = Modifier
-                .padding(
-                    start = 16.dp,
-                    end = 16.dp
-                )
-        ) {
-            Row(
+        item {
+            AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
+                    .height(300.dp)
+                    .background(state.imageDetailInfo?.color?.color ?: Color.White),
+                contentScale = ContentScale.Crop,
+                model = state.imageDetailInfo?.urls?.full ?: "",
+                contentDescription = null
+            )
+            Column(
+                modifier = Modifier
+                    .padding(
+                        start = 16.dp,
+                        end = 16.dp
+                    )
             ) {
-                Row {
-                    AsyncImage(
-                        modifier = Modifier
-                            .clickable {
-                                navController.navigate(
-                                    "${Screens.UserDetailScreen.route}/${state.imageDetailInfo?.user?.id}"
-                                )
-                            }
-                            .size(40.dp)
-                            .clip(RoundedCornerShape(100)),
-                        model = state.imageDetailInfo?.user?.photoProfile?.large,
-                        placeholder = painterResource(R.drawable.test_user_profile_image),
-                        contentDescription = null
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text(
-                        text = state.imageDetailInfo?.user?.name ?: "",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                if (state.isDownloading) {
-                    IconButton(onClick = {
-                        // TODO: show alert again
-                    }) {
-                        Icon(
-                            painterResource(id = R.drawable.ico_file_download_done),
-                            contentDescription = "fileIsSaved"
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        AsyncImage(
+                            modifier = Modifier
+                                .clickable {
+                                    navController.navigate(
+                                        "${Screens.UserDetailScreen.route}/${state.imageDetailInfo?.user?.id}"
+                                    )
+                                }
+                                .size(40.dp)
+                                .clip(RoundedCornerShape(100)),
+                            model = state.imageDetailInfo?.user?.photoProfile?.large,
+                            placeholder = ColorPainter(
+                                state.imageDetailInfo?.color?.color ?: Color.LightGray
+                            ),
+                            contentDescription = null
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Text(
+                            text = state.imageDetailInfo?.user?.name ?: "",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 1
                         )
                     }
 
-                } else if (state.isSavedFile) {
-                    IconButton(onClick = { }) {
-                        Icon(
-                            painterResource(id = R.drawable.ico_downloading),
-                            contentDescription = "downloading"
-                        )
-                    }
-                } else {
-                    IconButton(onClick = {
-                        // TODO: file download start.
-                    }) {
-                        Icon(
-                            painterResource(id = R.drawable.ico_download),
-                            contentDescription = "download"
-                        )
+                    if (state.isDownloading) {
+                        IconButton(
+                            modifier = Modifier.size(24.dp),
+                            onClick = {
+                                // TODO: show alert again
+                            }) {
+                            Icon(
+                                imageVector = Icons.Default.Downloading,
+                                contentDescription = "downloading"
+                            )
+                        }
+
+                    } else if (state.isSavedFile) {
+                        IconButton(
+                            modifier = Modifier.size(24.dp),
+                            onClick = { }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.DownloadDone,
+                                contentDescription = "fileIsSaved"
+                            )
+                        }
+                    } else {
+                        IconButton(
+                            modifier = Modifier.size(32.dp),
+                            onClick = {
+                                // TODO: file download start.
+                            }) {
+                            Icon(
+                                imageVector = Icons.Default.Download,
+                                contentDescription = "download"
+                            )
+                        }
                     }
                 }
+                Divider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
+                ImageDetailInfo(state.imageDetailInfo)
             }
-            Divider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
-            ImageDetailInfo(state.imageDetailInfo)
+        }
+        item {
+            Text(
+                text = "Related photos"
+            )
         }
     }
 

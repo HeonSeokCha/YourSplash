@@ -9,9 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -25,11 +26,11 @@ fun ImageCard(
     navController: NavHostController,
     photoInfo: UnSplashImage
 ) {
-
-    Column (modifier = Modifier
-        .fillMaxWidth()
-        .wrapContentHeight()
-    ){
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -49,14 +50,16 @@ fun ImageCard(
                     .size(50.dp)
                     .clip(RoundedCornerShape(100)),
                 model = photoInfo.user.photoProfile.large,
-                placeholder = painterResource(com.chs.yoursplash.R.drawable.test_user_profile_image),
+                placeholder = ColorPainter(photoInfo.color.color),
                 contentDescription = null
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
                 text = photoInfo.user.name,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
             )
         }
         AsyncImage(
@@ -72,7 +75,7 @@ fun ImageCard(
                 .background(color = photoInfo.color.color),
             model = photoInfo.urls.small,
             contentScale = ContentScale.Crop,
-            placeholder = painterResource(com.chs.yoursplash.R.drawable.test_photo),
+            placeholder = ColorPainter(photoInfo.color.color),
             contentDescription = null
         )
     }

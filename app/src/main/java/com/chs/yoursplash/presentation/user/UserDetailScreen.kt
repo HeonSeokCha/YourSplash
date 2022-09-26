@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 
 @Composable
 fun UserDetailScreen(
+    userId: String,
     navController: NavHostController,
     viewModel: UserDetailViewModel = hiltViewModel()
 ) {

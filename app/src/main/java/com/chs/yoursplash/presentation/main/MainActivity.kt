@@ -1,9 +1,9 @@
 package com.chs.yoursplash.presentation.main
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -16,7 +16,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,6 +34,7 @@ import com.chs.yoursplash.presentation.image_detail.ImageDetailScreen
 import com.chs.yoursplash.presentation.main.collection.CollectionScreen
 import com.chs.yoursplash.presentation.main.home.HomeScreen
 import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
+import com.chs.yoursplash.presentation.user.UserDetailScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -53,9 +53,7 @@ class MainActivity : ComponentActivity() {
                         MainTopBar(
                             navController = navController,
                             onNavigationIconClick = {
-                                 scope.launch {
-                                     scaffoldState.drawerState.open()
-                                 }
+                                scope.launch { scaffoldState.drawerState.open() }
                             }
                         )
                     },
@@ -110,6 +108,20 @@ class MainActivity : ComponentActivity() {
                                 navController = navController
                             )
                         }
+
+                        composable(
+                            "${Screens.UserDetailScreen.route}/{id}",
+                            arguments = listOf(
+                                navArgument("id") {
+                                    type = NavType.StringType
+                                }
+                            )
+                        ) { backStackEntry ->
+                            UserDetailScreen(
+                                userId = backStackEntry.arguments?.getString("id")!!,
+                                navController = navController
+                            )
+                        }
                     }
                 }
             }
@@ -123,48 +135,45 @@ fun MainTopBar(
     navController: NavHostController,
     onNavigationIconClick: () -> Unit
 ) {
-    val context = LocalContext.current
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    when (navBackStackEntry?.destination?.route) {
-        Screens.ImageDetailScreen.route -> {
-            TopAppBar(
-                title = { },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = null)
-                    }
-                }, backgroundColor = Color.Transparent,
-                elevation = 0.dp,
-                contentColor = Color.White
-            )
-        }
-        else -> {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(id = R.string.app_name),
-                        fontSize = 20.sp
+    if (navBackStackEntry?.destination?.route == BottomNavScreen.HomeScreen.route
+        || navBackStackEntry?.destination?.route == BottomNavScreen.CollectionScreen.route) {
+        TopAppBar(
+            title = {
+                Text(
+                    text = stringResource(id = R.string.app_name),
+                    fontSize = 20.sp
+                )
+            }, navigationIcon = {
+                IconButton(onClick = {
+                    onNavigationIconClick()
+                }) {
+                    Icon(Icons.Filled.Menu, contentDescription = null)
+                }
+            }, actions = {
+                IconButton(onClick = {
+                }) {
+                    Icon(
+                        imageVector = Icons.TwoTone.Search,
+                        contentDescription = null
                     )
-                }, navigationIcon = {
-                    IconButton(onClick = {
-                        onNavigationIconClick()
-                    }) {
-                        Icon(Icons.Filled.Menu, contentDescription = null)
-                    }
-                }, actions = {
-                    IconButton(onClick = {
-                    }) {
-                        Icon(
-                            imageVector = Icons.TwoTone.Search,
-                            contentDescription = null
-                        )
-                    }
-                }, backgroundColor = MaterialTheme.colors.primary,
-                contentColor = MaterialTheme.colors.onPrimary
-            )
-        }
+                }
+            }, backgroundColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary
+        )
+    } else {
+        TopAppBar(
+            title = { },
+            navigationIcon = {
+                IconButton(onClick = {
+                    navController.navigateUp()
+                }) {
+                    Icon(Icons.Filled.ArrowBack, contentDescription = null)
+                }
+            }, backgroundColor = Color.Transparent,
+            elevation = 0.dp,
+            contentColor = Color.White
+        )
     }
 }
 
@@ -177,36 +186,40 @@ fun BottomBar(
         BottomNavScreen.HomeScreen,
         BottomNavScreen.CollectionScreen,
     )
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-    BottomNavigation {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentDestination = navBackStackEntry?.destination
-        items.forEach { destination ->
-            BottomNavigationItem(
-                selected = currentDestination?.hierarchy?.any { it.route == destination.route } == true,
-                selectedContentColor = Color.White,
-                unselectedContentColor = Color.White.copy(0.4f),
-                onClick = {
-                    navController.navigate(destination.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+    if (navBackStackEntry?.destination?.route == BottomNavScreen.HomeScreen.route ||
+        navBackStackEntry?.destination?.route == BottomNavScreen.CollectionScreen.route
+    ) {
+        BottomNavigation {
+            val currentDestination = navBackStackEntry?.destination
+            items.forEach { destination ->
+                BottomNavigationItem(
+                    selected = currentDestination?.hierarchy?.any { it.route == destination.route } == true,
+                    selectedContentColor = Color.White,
+                    unselectedContentColor = Color.White.copy(0.4f),
+                    onClick = {
+                        navController.navigate(destination.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
-                        launchSingleTop = true
-                        restoreState = true
+                    },
+                    icon = {
+                        Icon(
+                            destination.icon,
+                            contentDescription = stringResource(destination.label)
+                        )
+                    },
+                    label = {
+                        Text(
+                            text = stringResource(destination.label),
+                        )
                     }
-                },
-                icon = {
-                    Icon(
-                        destination.icon,
-                        contentDescription = stringResource(destination.label)
-                    )
-                },
-                label = {
-                    Text(
-                        text = stringResource(destination.label),
-                    )
-                }
-            )
+                )
+            }
         }
     }
 }

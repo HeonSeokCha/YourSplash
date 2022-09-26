@@ -7,7 +7,6 @@ import androidx.navigation.NavHostController
 @Composable
 fun SearchScreen(
     navController: NavHostController,
-
 ) {
 
 }
