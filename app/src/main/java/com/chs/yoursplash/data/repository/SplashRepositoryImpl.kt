@@ -6,6 +6,7 @@ import com.chs.yoursplash.data.mapper.toUnSplashImageDetail
 import com.chs.yoursplash.data.source.UnSplashService
 import com.chs.yoursplash.domain.model.UnSplashImage
 import com.chs.yoursplash.domain.model.UnSplashImageDetail
+import com.chs.yoursplash.domain.model.UnSplashRelated
 import com.chs.yoursplash.domain.repository.SplashRepository
 import com.chs.yoursplash.util.Resource
 import io.ktor.client.*
@@ -36,12 +37,37 @@ class SplashRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getSplashCollection() {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getSplashImageDetail(id: String): Flow<Resource<UnSplashImageDetail>> {
         return flow {
             emit(Resource.Loading(true))
             try {
                 emit(Resource.Success(
                     client.getImageDetail(id).toUnSplashImageDetail())
+                )
+            } catch (e: IOException) {
+                e.printStackTrace()
+                emit(Resource.Error("Couldn't load date"))
+            } catch (e: HttpException) {
+                e.printStackTrace()
+                emit(Resource.Error("Couldn't load date"))
+            }
+        }
+    }
+
+    override suspend fun getSplashImageRelated(id: String): Flow<Resource<List<UnSplashImage>>> {
+        return flow {
+            emit(Resource.Loading(true))
+            try {
+                emit(
+                    Resource.Success(
+                        client.getImageRelated(id).results.map {
+                            it.toUnSplashImage()
+                        }
+                    )
                 )
             } catch (e: IOException) {
                 e.printStackTrace()

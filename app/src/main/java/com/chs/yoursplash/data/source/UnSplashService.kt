@@ -1,6 +1,7 @@
 package com.chs.yoursplash.data.source
 
 import android.util.Log
+import com.chs.yoursplash.data.model.ResponseInSplashRelated
 import com.chs.yoursplash.data.model.ResponseUnSplashImage
 import com.chs.yoursplash.data.model.ResponseUnSplashImageDetail
 import com.chs.yoursplash.domain.model.UnSplashImage
@@ -30,6 +31,14 @@ class UnSplashService @Inject constructor(
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
         }.body()
     }
+
+    suspend fun getImageRelated(id: String): ResponseInSplashRelated {
+        return service.get("${Constants.UNSPLAH_URL}/photos/$id/related") {
+            this.headers.append("Accept-Version", "v1")
+            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
+        }.body()
+    }
+
 
     suspend fun getSearchResultImage(
         query: String,

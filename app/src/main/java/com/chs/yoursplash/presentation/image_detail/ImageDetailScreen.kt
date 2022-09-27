@@ -1,5 +1,6 @@
 package com.chs.yoursplash.presentation.image_detail
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,9 +19,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,6 +32,7 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.util.color
+import kotlin.math.max
 
 @Composable
 fun ImageDetailScreen(
@@ -40,6 +45,7 @@ fun ImageDetailScreen(
 
     LaunchedEffect(context, viewModel) {
         viewModel.getImageDetailInfo(photoId)
+        viewModel.getImageRelatedList(photoId)
     }
 
     LazyColumn(
@@ -142,6 +148,17 @@ fun ImageDetailScreen(
                 text = "Related photos"
             )
         }
+
+        item {
+            StaggeredVerticalGrid(modifier = Modifier.fillMaxWidth()) {
+                for (image in state.imageRelatedList ?: listOf()) {
+                    AsyncImage(
+                        model = image.urls.small,
+                        contentDescription = null
+                    )
+                }
+            }
+        }
     }
 
     if (state.isLoading) {
@@ -153,4 +170,57 @@ fun ImageDetailScreen(
             CircularProgressIndicator(color = MaterialTheme.colors.primary)
         }
     }
+}
+
+@Composable
+fun StaggeredVerticalGrid(
+    modifier: Modifier = Modifier,
+    cols: Int = 2,
+    content: @Composable () -> Unit
+) {
+    Layout(
+        content = content,
+        modifier = modifier
+    ) { measurAbles, constraints ->
+
+        val placeableXY: MutableMap<Placeable, Pair<Int, Int>> = mutableMapOf()
+
+        val columnWidth = constraints.maxWidth / cols
+        val itemConstraints = constraints.copy(minWidth = columnWidth)
+        val colHeights = IntArray(cols) { 0 } // track each column's height
+        val placeAbles = measurAbles.map { measurable ->
+            val column = shortestColumn(colHeights)
+            val placeable = measurable.measure(itemConstraints)
+            placeableXY[placeable] = Pair(columnWidth * column, colHeights[column])
+            colHeights[column] += placeable.height
+            placeable
+        }
+
+        val height = colHeights.maxOrNull()
+            ?.coerceIn(constraints.minHeight, constraints.maxHeight)
+            ?: constraints.minHeight
+        layout(
+            width = constraints.maxWidth,
+            height = height
+        ) {
+            placeAbles.forEach { placeable ->
+                placeable.place(
+                    x = placeableXY.getValue(placeable).first,
+                    y = placeableXY.getValue(placeable).second
+                )
+            }
+        }
+    }
+}
+
+private fun shortestColumn(colHeights: IntArray): Int {
+    var minHeight = Int.MAX_VALUE
+    var column = 0
+    colHeights.forEachIndexed { index, height ->
+        if (height < minHeight) {
+            minHeight = height
+            column = index
+        }
+    }
+    return column
 }

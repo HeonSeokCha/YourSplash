@@ -1,5 +1,6 @@
 package com.chs.yoursplash.presentation.user
 
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -11,5 +12,5 @@ fun UserDetailScreen(
     navController: NavHostController,
     viewModel: UserDetailViewModel = hiltViewModel()
 ) {
-
+    Text(text = "UserDetailScreen")
 }
