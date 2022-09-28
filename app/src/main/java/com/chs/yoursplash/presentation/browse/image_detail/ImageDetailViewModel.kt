@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.image_detail
+package com.chs.yoursplash.presentation.browse.image_detail
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

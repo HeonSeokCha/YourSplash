@@ -17,7 +17,6 @@ import com.chs.yoursplash.presentation.base.ImageCard
 
 @Composable
 fun HomeScreen(
-    navController: NavHostController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state = viewModel.state
@@ -31,7 +30,6 @@ fun HomeScreen(
     ) {
         items(state.imageList.size) { idx ->
             ImageCard(
-                navController,
                 photoInfo = state.imageList[idx]
             )
         }

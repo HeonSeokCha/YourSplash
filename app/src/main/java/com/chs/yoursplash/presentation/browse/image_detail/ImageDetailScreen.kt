@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.image_detail
+package com.chs.yoursplash.presentation.browse.image_detail
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -141,20 +141,32 @@ fun ImageDetailScreen(
                 }
                 Divider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
                 ImageDetailInfo(state.imageDetailInfo)
+
+                Text(
+                    text = "Related photos"
+                )
             }
-        }
-        item {
-            Text(
-                text = "Related photos"
-            )
         }
 
         item {
-            StaggeredVerticalGrid(modifier = Modifier.fillMaxWidth()) {
+            StaggeredVerticalGrid(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = 16.dp,
+                        top = 16.dp
+                    )
+            ) {
                 for (image in state.imageRelatedList ?: listOf()) {
                     AsyncImage(
-                        model = image.urls.small,
-                        contentDescription = null
+                        modifier = Modifier
+                            .padding(
+                                end = 16.dp,
+                                bottom = 16.dp
+                            ),
+                        model = image.urls.small_s3,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop
                     )
                 }
             }

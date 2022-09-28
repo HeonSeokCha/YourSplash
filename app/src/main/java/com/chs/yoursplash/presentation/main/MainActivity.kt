@@ -3,7 +3,6 @@ package com.chs.yoursplash.presentation.main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -30,7 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.chs.yoursplash.R
 import com.chs.yoursplash.presentation.Screens
-import com.chs.yoursplash.presentation.image_detail.ImageDetailScreen
+import com.chs.yoursplash.presentation.browse.image_detail.ImageDetailScreen
 import com.chs.yoursplash.presentation.main.collection.CollectionScreen
 import com.chs.yoursplash.presentation.main.home.HomeScreen
 import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
@@ -90,37 +89,10 @@ class MainActivity : ComponentActivity() {
                         startDestination = BottomNavScreen.HomeScreen.route
                     ) {
                         composable(BottomNavScreen.HomeScreen.route) {
-                            HomeScreen(navController)
+                            HomeScreen()
                         }
                         composable(BottomNavScreen.CollectionScreen.route) {
                             CollectionScreen()
-                        }
-                        composable(
-                            "${Screens.ImageDetailScreen.route}/{id}",
-                            arguments = listOf(
-                                navArgument("id") {
-                                    type = NavType.StringType
-                                }
-                            )
-                        ) { backStackEntry ->
-                            ImageDetailScreen(
-                                photoId = backStackEntry.arguments?.getString("id")!!,
-                                navController = navController
-                            )
-                        }
-
-                        composable(
-                            "${Screens.UserDetailScreen.route}/{id}",
-                            arguments = listOf(
-                                navArgument("id") {
-                                    type = NavType.StringType
-                                }
-                            )
-                        ) { backStackEntry ->
-                            UserDetailScreen(
-                                userId = backStackEntry.arguments?.getString("id")!!,
-                                navController = navController
-                            )
                         }
                     }
                 }
