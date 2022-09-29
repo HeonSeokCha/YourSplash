@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ResponseUnSplashImageUrls(
+data class ResponsePhotoUrls(
     @SerialName("raw")
     val raw: String,
     @SerialName("full")

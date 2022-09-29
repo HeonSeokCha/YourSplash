@@ -1,38 +1,35 @@
 package com.chs.yoursplash.data.source
 
-import android.util.Log
-import com.chs.yoursplash.data.model.ResponseInSplashRelated
-import com.chs.yoursplash.data.model.ResponseUnSplashImage
-import com.chs.yoursplash.data.model.ResponseUnSplashImageDetail
-import com.chs.yoursplash.domain.model.UnSplashImage
+import com.chs.yoursplash.data.model.ResponseRelatedPhoto
+import com.chs.yoursplash.data.model.ResponsePhoto
+import com.chs.yoursplash.data.model.ResponsePhotoDetail
 import com.chs.yoursplash.util.Constants
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.text.get
 
 @Singleton
 class UnSplashService @Inject constructor(
     private val service: HttpClient
 ) {
 
-    suspend fun getSplashImage(): List<ResponseUnSplashImage> {
+    suspend fun getPhotos(): List<ResponsePhoto> {
         return service.get("${Constants.UNSPLAH_URL}/photos") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
         }.body()
     }
 
-    suspend fun getImageDetail(id: String): ResponseUnSplashImageDetail {
+    suspend fun getPhotoDetail(id: String): ResponsePhotoDetail {
         return service.get("${Constants.UNSPLAH_URL}/photos/$id") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
         }.body()
     }
 
-    suspend fun getImageRelated(id: String): ResponseInSplashRelated {
+    suspend fun getPhotoRelated(id: String): ResponseRelatedPhoto {
         return service.get("${Constants.UNSPLAH_URL}/photos/$id/related") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")

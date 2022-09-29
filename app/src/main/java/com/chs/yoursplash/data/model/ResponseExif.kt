@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ResponseUnSplashExif(
+data class ResponseExif(
     @SerialName("make")
     val make: String?,
     @SerialName("model")

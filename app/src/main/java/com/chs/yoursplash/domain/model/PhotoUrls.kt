@@ -1,6 +1,6 @@
 package com.chs.yoursplash.domain.model
 
-data class UnSplashImageUrls(
+data class PhotoUrls(
     val raw: String,
     val full: String,
     val small: String,

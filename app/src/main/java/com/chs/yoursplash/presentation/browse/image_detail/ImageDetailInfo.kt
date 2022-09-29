@@ -1,7 +1,6 @@
 package com.chs.yoursplash.presentation.browse.image_detail
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -9,11 +8,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.chs.yoursplash.domain.model.UnSplashImageDetail
+import com.chs.yoursplash.domain.model.PhotoDetail
 
 @Composable
 fun ImageDetailInfo(
-    imageDetailInfo: UnSplashImageDetail?
+    imageDetailInfo: PhotoDetail?
 ) {
     Column(
         modifier = Modifier

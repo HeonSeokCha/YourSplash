@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ResponseUnSplashLocation(
+data class ResponsePhotoLocation(
     @SerialName("title")
     val title: String? = null,
     @SerialName("name")
@@ -14,5 +14,5 @@ data class ResponseUnSplashLocation(
     @SerialName("country")
     val country: String? = null,
     @SerialName("position")
-    val position: ResponseUnSplashPosition
+    val position: ResponsePhotoPosition
 )

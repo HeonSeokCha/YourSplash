@@ -3,8 +3,8 @@ package com.chs.yoursplash.data.mapper
 import com.chs.yoursplash.data.model.*
 import com.chs.yoursplash.domain.model.*
 
-fun ResponseUnSplashImage.toUnSplashImage(): UnSplashImage {
-    return UnSplashImage(
+fun ResponsePhoto.toUnSplashImage(): Photo {
+    return Photo(
         id = id,
         color = color,
         width = width,
@@ -14,8 +14,8 @@ fun ResponseUnSplashImage.toUnSplashImage(): UnSplashImage {
     )
 }
 
-fun ResponseUnSplashImageUrls.toUnSplashImageUrls(): UnSplashImageUrls {
-    return UnSplashImageUrls(
+fun ResponsePhotoUrls.toUnSplashImageUrls(): PhotoUrls {
+    return PhotoUrls(
         raw = raw,
         full = full,
         small = small,
@@ -24,8 +24,8 @@ fun ResponseUnSplashImageUrls.toUnSplashImageUrls(): UnSplashImageUrls {
     )
 }
 
-fun ResponseUnSplashUser.toUnSplashUser(): UnSplashUser {
-    return UnSplashUser(
+fun ResponseUser.toUnSplashUser(): User {
+    return User(
         id = id,
         userName = userName,
         name = name,
@@ -33,16 +33,16 @@ fun ResponseUnSplashUser.toUnSplashUser(): UnSplashUser {
     )
 }
 
-fun ResponseUnsplashUserProfileImage.toUnsplashUserProfileImage(): UnsplashUserProfileImage {
-    return UnsplashUserProfileImage(
+fun ResponseUserProfileImage.toUnsplashUserProfileImage(): UserProfileImage {
+    return UserProfileImage(
         small = small,
         medium = medium,
         large = large
     )
 }
 
-fun ResponseUnSplashExif.toUnSplashExif(): UnSplashExif {
-    return UnSplashExif(
+fun ResponseExif.toUnSplashExif(): Exif {
+    return Exif(
         make = make,
         model = model,
         name = name,
@@ -53,8 +53,8 @@ fun ResponseUnSplashExif.toUnSplashExif(): UnSplashExif {
     )
 }
 
-fun ResponseUnSplashLocation.toUnSplashLocation(): UnSplashLocation {
-    return UnSplashLocation(
+fun ResponsePhotoLocation.toUnSplashLocation(): PhotoLocation {
+    return PhotoLocation(
         title = title,
         name = name,
         city = city,
@@ -63,15 +63,15 @@ fun ResponseUnSplashLocation.toUnSplashLocation(): UnSplashLocation {
     )
 }
 
-fun ResponseUnSplashPosition.toUnSplashPosition(): UnSplashPosition {
-    return UnSplashPosition(
+fun ResponsePhotoPosition.toUnSplashPosition(): PhotoPosition {
+    return PhotoPosition(
         latitude = latitude,
         longitude = longitude
     )
 }
 
-fun ResponseUnSplashImageDetail.toUnSplashImageDetail(): UnSplashImageDetail {
-    return UnSplashImageDetail(
+fun ResponsePhotoDetail.toUnSplashImageDetail(): PhotoDetail {
+    return PhotoDetail(
         id = id,
         width = width,
         height = height,
@@ -82,7 +82,33 @@ fun ResponseUnSplashImageDetail.toUnSplashImageDetail(): UnSplashImageDetail {
         user = user.toUnSplashUser(),
         exif = exif.toUnSplashExif(),
         location = location.toUnSplashLocation(),
+        tags = tags.map { it.toUnSplashTag() },
+        relatedCollection = relatedCollections.toRelatedPhotoCollection(),
         views = views,
         downloads = downloads
+    )
+}
+
+fun ResponseUnSplashTag.toUnSplashTag(): UnSplashTag {
+    return UnSplashTag(
+        title = title,
+        type = type
+    )
+}
+
+fun ResponseRelatedPhotoCollection.toRelatedPhotoCollection(): RelatedPhotoCollection {
+    return RelatedPhotoCollection(
+        total = total,
+        result = results.map { it.toPhotoCollection() }
+    )
+}
+
+fun ResponsePhotoCollection.toPhotoCollection(): PhotoCollection {
+    return PhotoCollection(
+        id = id,
+        title = title,
+        unSplashTags = tags.map { it.toUnSplashTag() },
+        user = user.toUnSplashUser(),
+//        previewPhotos = previewPhotos.map { it.toUnSplashImage() }
     )
 }

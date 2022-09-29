@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ResponseUnSplashImage(
+data class ResponsePhoto(
     @SerialName("id")
     val id: String,
     @SerialName("color")
@@ -14,7 +14,7 @@ data class ResponseUnSplashImage(
     @SerialName("height")
     val height: Int,
     @SerialName("urls")
-    val urls: ResponseUnSplashImageUrls,
+    val urls: ResponsePhotoUrls,
     @SerialName("user")
-    val user: ResponseUnSplashUser
+    val user: ResponseUser
 )

@@ -1,6 +1,6 @@
 package com.chs.yoursplash.domain.model
 
-data class UnSplashExif(
+data class Exif(
     val make: String?,
     val model: String?,
     val name: String?,

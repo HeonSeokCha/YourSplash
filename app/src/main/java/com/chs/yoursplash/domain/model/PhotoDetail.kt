@@ -1,16 +1,18 @@
 package com.chs.yoursplash.domain.model
 
-data class UnSplashImageDetail(
+data class PhotoDetail(
     val id: String,
     val width: Int,
     val height: Int,
     val color: String,
     val likes: Int,
-    val urls: UnSplashImageUrls,
+    val urls: PhotoUrls,
     val description: String?,
-    val user: UnSplashUser,
-    val exif: UnSplashExif,
-    val location: UnSplashLocation,
+    val user: User,
+    val exif: Exif,
+    val location: PhotoLocation,
+    val tags: List<UnSplashTag>,
+    val relatedCollection: RelatedPhotoCollection,
     val views: Int,
     val downloads: Int
 )

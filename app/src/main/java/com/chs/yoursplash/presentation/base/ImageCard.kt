@@ -17,17 +17,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.chs.yoursplash.domain.model.UnSplashImage
-import com.chs.yoursplash.presentation.Screens
+import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.presentation.browse.BrowseActivity
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.color
 
 @Composable
 fun ImageCard(
-    photoInfo: UnSplashImage
+    photoInfo: Photo
 ) {
     val context = LocalContext.current
 

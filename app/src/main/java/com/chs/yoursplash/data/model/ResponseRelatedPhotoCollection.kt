@@ -4,9 +4,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ResponseInSplashRelated(
+data class ResponseRelatedPhotoCollection(
     @SerialName("total")
     val total: Int,
     @SerialName("results")
-    val results: List<ResponseUnSplashImage>
+    val results: List<ResponsePhotoCollection>
 )

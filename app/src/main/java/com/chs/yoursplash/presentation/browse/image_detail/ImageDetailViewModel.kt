@@ -55,7 +55,7 @@ class ImageDetailViewModel @Inject constructor(
                     is Resource.Success -> {
                         state = state.copy(
                             isLoading = false,
-                            imageRelatedList = result.data
+                            imageRelatedList = result.data!!
                         )
                     }
                     is Resource.Error -> {

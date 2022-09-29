@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ResponseUnSplashPosition(
+data class ResponsePhotoPosition(
     @SerialName("latitude")
     val latitude: Float? = null,
     @SerialName("longitude")

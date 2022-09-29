@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ResponseUnsplashUserProfileImage(
+data class ResponseUserProfileImage(
     @SerialName("small")
     val small: String,
     @SerialName("medium")

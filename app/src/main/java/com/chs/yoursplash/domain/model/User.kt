@@ -1,8 +1,8 @@
 package com.chs.yoursplash.domain.model
 
-data class UnSplashUser(
+data class User(
     val id: String,
     val userName: String,
     val name: String,
-    val photoProfile: UnsplashUserProfileImage,
+    val photoProfile: UserProfileImage,
 )
