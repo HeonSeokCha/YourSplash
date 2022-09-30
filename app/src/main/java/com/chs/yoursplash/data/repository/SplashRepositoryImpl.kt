@@ -4,12 +4,9 @@ import coil.network.HttpException
 import com.chs.yoursplash.data.mapper.toUnSplashImage
 import com.chs.yoursplash.data.mapper.toUnSplashImageDetail
 import com.chs.yoursplash.data.source.UnSplashService
-import com.chs.yoursplash.domain.model.UnSplashImage
-import com.chs.yoursplash.domain.model.UnSplashImageDetail
-import com.chs.yoursplash.domain.model.UnSplashRelated
+import com.chs.yoursplash.domain.model.*
 import com.chs.yoursplash.domain.repository.SplashRepository
 import com.chs.yoursplash.util.Resource
-import io.ktor.client.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.io.IOException
@@ -18,12 +15,12 @@ import javax.inject.Inject
 class SplashRepositoryImpl @Inject constructor(
     private val client: UnSplashService
 ) : SplashRepository {
-    override suspend fun getSplashImages(): Flow<Resource<List<UnSplashImage>>> {
+    override suspend fun getSplashPhoto(): Flow<Resource<List<Photo>>> {
         return flow {
             emit(Resource.Loading(true))
             try {
                 emit(Resource.Success(
-                    client.getSplashImage().map {
+                    client.getPhotos().map {
                         it.toUnSplashImage()
                     }
                 ))
@@ -41,12 +38,12 @@ class SplashRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getSplashImageDetail(id: String): Flow<Resource<UnSplashImageDetail>> {
+    override suspend fun getSplashPhotoDetail(id: String): Flow<Resource<PhotoDetail>> {
         return flow {
             emit(Resource.Loading(true))
             try {
                 emit(Resource.Success(
-                    client.getImageDetail(id).toUnSplashImageDetail())
+                    client.getPhotoDetail(id).toUnSplashImageDetail())
                 )
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -58,13 +55,13 @@ class SplashRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getSplashImageRelated(id: String): Flow<Resource<List<UnSplashImage>>> {
+    override suspend fun getSplashPhotoRelated(id: String): Flow<Resource<List<Photo>>> {
         return flow {
             emit(Resource.Loading(true))
             try {
                 emit(
                     Resource.Success(
-                        client.getImageRelated(id).results.map {
+                        client.getPhotoRelated(id).results.map {
                             it.toUnSplashImage()
                         }
                     )
@@ -79,17 +76,17 @@ class SplashRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getSearchResultImages(
+    override suspend fun getSearchResultSplashPhoto(
         query: String,
         page: Int,
         orderBy: String,
         color: String?,
         orientation: String?
-    ): Flow<Resource<List<UnSplashImage>>> {
+    ): Flow<Resource<List<Photo>>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getSearchResultCollection(query: String, page: Int) {
+    override suspend fun getSearchResultPhotoCollection(query: String, page: Int) {
         TODO("Not yet implemented")
     }
 }

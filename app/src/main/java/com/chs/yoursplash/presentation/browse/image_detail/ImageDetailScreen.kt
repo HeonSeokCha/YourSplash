@@ -197,6 +197,47 @@ fun ImageDetailScreen(
                         )
                     }
                 }
+
+                Text(
+                    modifier = Modifier
+                        .padding(bottom = 16.dp),
+                    text = "Related Collections",
+                    fontWeight = FontWeight.Bold
+                )
+
+                LazyVerticalGrid(
+                    modifier = Modifier
+                        .height(300.dp)
+                        .nestedScroll(remember {
+                            object : NestedScrollConnection {
+                                override fun onPreScroll(
+                                    available: Offset,
+                                    source: NestedScrollSource
+                                ): Offset {
+                                    return if (available.y > 0) Offset.Zero else Offset(
+                                        x = 0f,
+                                        y = -scrollState.dispatchRawDelta(-available.y)
+                                    )
+                                }
+                            }
+                        }),
+                    columns = GridCells.Fixed(2)
+                ) {
+                    items(state.imageDetailInfo?.relatedCollection?.result?.size ?: 0) { idx ->
+                        AsyncImage(
+                            modifier = Modifier
+                                .padding(
+                                    end = 16.dp,
+                                    bottom = 16.dp
+                                )
+                                .clickable {
+                                },
+                            model = state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.user?.photoProfile?.large,
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+                }
             }
         }
     }
