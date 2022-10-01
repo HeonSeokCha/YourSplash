@@ -12,4 +12,6 @@ data class ResponsePhotoCollection(
     val tags: List<ResponseUnSplashTag>,
     @SerialName("user")
     val user: ResponseUser,
+    @SerialName("preview_photos")
+    val previewPhotos: List<ResponseRelatedCollectionPreview>
 )

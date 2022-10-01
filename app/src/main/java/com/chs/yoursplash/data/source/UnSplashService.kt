@@ -3,6 +3,9 @@ package com.chs.yoursplash.data.source
 import com.chs.yoursplash.data.model.ResponseRelatedPhoto
 import com.chs.yoursplash.data.model.ResponsePhoto
 import com.chs.yoursplash.data.model.ResponsePhotoDetail
+import com.chs.yoursplash.domain.model.Photo
+import com.chs.yoursplash.domain.model.UnSplashCollection
+import com.chs.yoursplash.domain.model.User
 import com.chs.yoursplash.util.Constants
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -36,6 +39,41 @@ class UnSplashService @Inject constructor(
         }.body()
     }
 
+    suspend fun getCollection(): List<UnSplashCollection> {
+        return service.get("${Constants.UNSPLAH_URL}/collections") {
+            this.headers.append("Accept-Version", "v1")
+            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
+        }.body()
+    }
+
+    suspend fun getUserDetail(userName: String): User {
+        return service.get("${Constants.UNSPLAH_URL}/users/$userName") {
+            this.headers.append("Accept-Version", "v1")
+            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
+        }.body()
+    }
+
+
+    suspend fun getUserPhotos(): List<Photo> {
+        return service.get("${Constants.UNSPLAH_URL}/users/photos") {
+            this.headers.append("Accept-Version", "v1")
+            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
+        }.body()
+    }
+
+    suspend fun getUserLikes(): List<Photo> {
+        return service.get("${Constants.UNSPLAH_URL}/users/likes") {
+            this.headers.append("Accept-Version", "v1")
+            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
+        }.body()
+    }
+
+    suspend fun getUserCollections(): List<UnSplashCollection> {
+        return service.get("${Constants.UNSPLAH_URL}/users/collections") {
+            this.headers.append("Accept-Version", "v1")
+            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
+        }.body()
+    }
 
     suspend fun getSearchResultImage(
         query: String,

@@ -103,12 +103,21 @@ fun ResponseRelatedPhotoCollection.toRelatedPhotoCollection(): RelatedPhotoColle
     )
 }
 
-fun ResponsePhotoCollection.toPhotoCollection(): PhotoCollection {
-    return PhotoCollection(
+fun ResponseRelatedCollectionPreview.toRelatedCollectionPreview(): RelatedCollectionPreview {
+    return RelatedCollectionPreview(
+        id = id,
+        urls = urls.toUnSplashImageUrls()
+    )
+}
+
+fun ResponsePhotoCollection.toPhotoCollection(): UnSplashCollection {
+    return UnSplashCollection(
         id = id,
         title = title,
         unSplashTags = tags.map { it.toUnSplashTag() },
         user = user.toUnSplashUser(),
-//        previewPhotos = previewPhotos.map { it.toUnSplashImage() }
+        previewPhotos = previewPhotos.map {
+            it.toRelatedCollectionPreview()
+        }
     )
 }
