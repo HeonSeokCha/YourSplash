@@ -1,8 +1,6 @@
 package com.chs.yoursplash.data.source
 
-import com.chs.yoursplash.data.model.ResponseRelatedPhoto
-import com.chs.yoursplash.data.model.ResponsePhoto
-import com.chs.yoursplash.data.model.ResponsePhotoDetail
+import com.chs.yoursplash.data.model.*
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.User
@@ -39,14 +37,21 @@ class UnSplashService @Inject constructor(
         }.body()
     }
 
-    suspend fun getCollection(): List<UnSplashCollection> {
+    suspend fun getCollection(): List<ResponseCollection> {
         return service.get("${Constants.UNSPLAH_URL}/collections") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
         }.body()
     }
 
-    suspend fun getUserDetail(userName: String): User {
+    suspend fun getCollectionDetail(id: String): ResponseCollection {
+        return service.get("${Constants.UNSPLAH_URL}/collections/$id") {
+            this.headers.append("Accept-Version", "v1")
+            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
+        }.body()
+    }
+
+    suspend fun getUserDetail(userName: String): ResponseUser {
         return service.get("${Constants.UNSPLAH_URL}/users/$userName") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
@@ -54,22 +59,22 @@ class UnSplashService @Inject constructor(
     }
 
 
-    suspend fun getUserPhotos(): List<Photo> {
-        return service.get("${Constants.UNSPLAH_URL}/users/photos") {
+    suspend fun getUserPhotos(userName: String): List<ResponsePhoto> {
+        return service.get("${Constants.UNSPLAH_URL}/users/$userName/photos") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
         }.body()
     }
 
-    suspend fun getUserLikes(): List<Photo> {
-        return service.get("${Constants.UNSPLAH_URL}/users/likes") {
+    suspend fun getUserLikes(userName: String): List<ResponsePhoto> {
+        return service.get("${Constants.UNSPLAH_URL}/users/$userName/likes") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
         }.body()
     }
 
-    suspend fun getUserCollections(): List<UnSplashCollection> {
-        return service.get("${Constants.UNSPLAH_URL}/users/collections") {
+    suspend fun getUserCollections(userName: String): List<ResponseCollection> {
+        return service.get("${Constants.UNSPLAH_URL}/users/$userName/collections") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
         }.body()

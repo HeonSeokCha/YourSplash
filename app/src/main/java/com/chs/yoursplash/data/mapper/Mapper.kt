@@ -110,7 +110,7 @@ fun ResponseRelatedCollectionPreview.toRelatedCollectionPreview(): RelatedCollec
     )
 }
 
-fun ResponsePhotoCollection.toPhotoCollection(): UnSplashCollection {
+fun ResponseCollection.toPhotoCollection(): UnSplashCollection {
     return UnSplashCollection(
         id = id,
         title = title,
