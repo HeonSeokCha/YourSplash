@@ -1,8 +1,9 @@
 package com.chs.yoursplash.data.model
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class ResponseCollection(
     @SerialName("id")
     val id: String,

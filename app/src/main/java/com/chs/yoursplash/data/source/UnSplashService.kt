@@ -51,7 +51,7 @@ class UnSplashService @Inject constructor(
         }.body()
     }
 
-    suspend fun getUserDetail(userName: String): ResponseUser {
+    suspend fun getUserDetail(userName: String): ResponseUserDetail {
         return service.get("${Constants.UNSPLAH_URL}/users/$userName") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")

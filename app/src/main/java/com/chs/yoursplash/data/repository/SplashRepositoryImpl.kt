@@ -1,10 +1,7 @@
 package com.chs.yoursplash.data.repository
 
 import coil.network.HttpException
-import com.chs.yoursplash.data.mapper.toPhotoCollection
-import com.chs.yoursplash.data.mapper.toUnSplashImage
-import com.chs.yoursplash.data.mapper.toUnSplashImageDetail
-import com.chs.yoursplash.data.mapper.toUnSplashUser
+import com.chs.yoursplash.data.mapper.*
 import com.chs.yoursplash.data.source.UnSplashService
 import com.chs.yoursplash.domain.model.*
 import com.chs.yoursplash.domain.repository.SplashRepository
@@ -112,13 +109,13 @@ class SplashRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUserDetail(userName: String): Flow<Resource<User>> {
+    override suspend fun getUserDetail(userName: String): Flow<Resource<UserDetail>> {
         return flow {
             emit(Resource.Loading(true))
             try {
                 emit(
                     Resource.Success(
-                        client.getUserDetail(userName).toUnSplashUser()
+                        client.getUserDetail(userName).toUserDetail()
                     )
                 )
             } catch (e: IOException) {

@@ -33,6 +33,21 @@ fun ResponseUser.toUnSplashUser(): User {
     )
 }
 
+fun ResponseUserDetail.toUserDetail(): UserDetail {
+    return UserDetail(
+        id = id,
+        userName = userName,
+        name = name,
+        bio = bio,
+        profileImage = profileImage.toUnsplashUserProfileImage(),
+        totalCollections = totalCollection,
+        totalLikes = totalLikes,
+        totalPhotos = totalPhotos,
+        tags = tags.custom.map { it.toUnSplashTag() },
+        followersCount = followersCount
+    )
+}
+
 fun ResponseUserProfileImage.toUnsplashUserProfileImage(): UserProfileImage {
     return UserProfileImage(
         small = small,

@@ -6,10 +6,10 @@ import com.chs.yoursplash.util.Resource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetImageListUseCase @Inject constructor(
+class GetPhotoRelatedListUseCase @Inject constructor(
     private val repository: SplashRepository
 ) {
-    suspend operator fun invoke(): Flow<Resource<List<Photo>>> {
-        return repository.getSplashPhoto()
+    suspend operator fun invoke(id: String): Flow<Resource<List<Photo>>> {
+        return repository.getSplashPhotoRelated(id)
     }
 }

@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.chs.yoursplash.domain.usecase.GetImageDetailUseCase
-import com.chs.yoursplash.domain.usecase.GetImageRelatedListUseCase
+import com.chs.yoursplash.domain.usecase.GetPhotoDetailUseCase
+import com.chs.yoursplash.domain.usecase.GetPhotoRelatedListUseCase
 import com.chs.yoursplash.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -14,15 +14,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ImageDetailViewModel @Inject constructor(
-    private val getImageDetailUseCase: GetImageDetailUseCase,
-    private val getImageRelatedListUseCase: GetImageRelatedListUseCase
+    private val getPhotoDetailUseCase: GetPhotoDetailUseCase,
+    private val getPhotoRelatedListUseCase: GetPhotoRelatedListUseCase
 ) : ViewModel() {
 
     var state by mutableStateOf(ImageDetailState())
 
     fun getImageDetailInfo(imageId: String) {
         viewModelScope.launch {
-            getImageDetailUseCase(imageId).collect { result ->
+            getPhotoDetailUseCase(imageId).collect { result ->
                 when (result) {
                     is Resource.Loading -> {
                         state = state.copy(isLoading = true)
@@ -47,7 +47,7 @@ class ImageDetailViewModel @Inject constructor(
 
     fun getImageRelatedList(imageId: String) {
         viewModelScope.launch {
-            getImageRelatedListUseCase(imageId).collect { result ->
+            getPhotoRelatedListUseCase(imageId).collect { result ->
                 when (result) {
                     is Resource.Loading -> {
                         state = state.copy(isLoading = true)

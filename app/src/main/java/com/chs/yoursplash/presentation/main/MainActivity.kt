@@ -33,7 +33,7 @@ import com.chs.yoursplash.presentation.browse.image_detail.ImageDetailScreen
 import com.chs.yoursplash.presentation.main.collection.CollectionScreen
 import com.chs.yoursplash.presentation.main.home.HomeScreen
 import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
-import com.chs.yoursplash.presentation.user.UserDetailScreen
+import com.chs.yoursplash.presentation.browse.user.UserDetailScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

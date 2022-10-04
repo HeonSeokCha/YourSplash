@@ -22,7 +22,7 @@ import androidx.navigation.navArgument
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.browse.image_detail.ImageDetailScreen
 import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
-import com.chs.yoursplash.presentation.user.UserDetailScreen
+import com.chs.yoursplash.presentation.browse.user.UserDetailScreen
 import com.chs.yoursplash.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.chs.yoursplash.domain.usecase.GetImageListUseCase
+import com.chs.yoursplash.domain.usecase.GetHomePhotosUseCase
 import com.chs.yoursplash.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getImageListUseCase: GetImageListUseCase
+    private val getHomePhotosUseCase: GetHomePhotosUseCase
 ) : ViewModel() {
 
     var state by mutableStateOf(HomeState())
@@ -25,7 +25,7 @@ class HomeViewModel @Inject constructor(
 
     private fun getImageList() {
         viewModelScope.launch {
-            getImageListUseCase().collect { result ->
+            getHomePhotosUseCase().collect { result ->
                 when (result) {
                     is Resource.Loading -> {
                         state = state.copy(isLoading = true)

@@ -16,7 +16,7 @@ interface SplashRepository {
 
     suspend fun getSplashCollectionDetail(id: String): Flow<Resource<UnSplashCollection>>
 
-    suspend fun getUserDetail(id: String): Flow<Resource<User>>
+    suspend fun getUserDetail(userName: String): Flow<Resource<UserDetail>>
 
     suspend fun getUserDetailPhotos(id: String): Flow<Resource<List<Photo>>>
 
