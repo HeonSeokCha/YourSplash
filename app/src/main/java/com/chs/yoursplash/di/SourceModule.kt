@@ -26,7 +26,9 @@ object SourceModule {
                     level = LogLevel.ALL
                 }
                 install(ContentNegotiation) {
-                    json(Json { ignoreUnknownKeys = true })
+                    json(Json {
+                        ignoreUnknownKeys = true
+                    })
                 }
             }
         )

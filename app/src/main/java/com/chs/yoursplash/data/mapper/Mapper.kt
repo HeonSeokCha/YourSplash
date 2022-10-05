@@ -39,6 +39,7 @@ fun ResponseUserDetail.toUserDetail(): UserDetail {
         userName = userName,
         name = name,
         bio = bio,
+        location = location,
         profileImage = profileImage.toUnsplashUserProfileImage(),
         totalCollections = totalCollection,
         totalLikes = totalLikes,

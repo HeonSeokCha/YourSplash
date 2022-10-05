@@ -103,7 +103,7 @@ fun ImageDetailScreen(
                             modifier = Modifier
                                 .clickable {
                                     navController.navigate(
-                                        "${Screens.UserDetailScreen.route}/${state.imageDetailInfo?.user?.id}"
+                                        "${Screens.UserDetailScreen.route}/${state.imageDetailInfo?.user?.userName}"
                                     )
                                 }
                                 .size(40.dp)

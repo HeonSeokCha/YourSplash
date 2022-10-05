@@ -45,7 +45,7 @@ fun ImageCard(
                     context.startActivity(
                         Intent(context, BrowseActivity::class.java).apply {
                             putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
-                            putExtra(Constants.TARGET_ID, photoInfo.user.id)
+                            putExtra(Constants.TARGET_ID, photoInfo.user.userName)
                         }
                     )
                 },

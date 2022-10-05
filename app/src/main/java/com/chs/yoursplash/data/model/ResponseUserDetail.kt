@@ -12,12 +12,12 @@ data class ResponseUserDetail(
     @SerialName("name")
     val name: String,
     @SerialName("bio")
-    val bio: String,
+    val bio: String?,
     @SerialName("location")
-    val location: String,
+    val location: String?,
     @SerialName("profile_image")
     val profileImage: ResponseUserProfileImage,
-    @SerialName("total_collection")
+    @SerialName("total_collections")
     val totalCollection: Int,
     @SerialName("total_likes")
     val totalLikes: Int,

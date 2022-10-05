@@ -80,7 +80,7 @@ class BrowseActivity : ComponentActivity() {
                                 )
                             ) { backStackEntry ->
                                 UserDetailScreen(
-                                    userId = backStackEntry.arguments?.getString("id")!!,
+                                    userName = backStackEntry.arguments?.getString("id")!!,
                                     navController = navController
                                 )
                             }
