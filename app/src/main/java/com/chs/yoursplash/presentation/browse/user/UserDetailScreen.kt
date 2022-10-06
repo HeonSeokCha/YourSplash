@@ -8,13 +8,15 @@ import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -45,6 +47,7 @@ fun UserDetailScreen(
     val context = LocalContext.current
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
+    val scrollState = rememberLazyListState()
 
     LaunchedEffect(context, viewModel) {
         viewModel.getUserDetail(userName)
@@ -74,57 +77,93 @@ fun UserDetailScreen(
         )
     }
 
-
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        item {
-            UserDetailInfo(userInfo = state.userDetailInfo)
-        }
-        item {
-            TabRow(
-                modifier = Modifier.fillMaxWidth(),
-                selectedTabIndex = pagerState.currentPage,
-                backgroundColor = Color.White,
-                indicator = { tabPositions ->
-                    TabRowDefaults.Indicator(
-                        modifier = Modifier
-                            .pagerTabIndicatorOffset(pagerState, tabPositions),
-                        color = Purple200
-                    )
-                }
-            ) {
-                tabList.forEachIndexed { index, s ->
-                    Tab(
-                        text = {
-                            Text(
-                                text = tabList[index],
-                                maxLines = 1,
-                                color = Purple200,
-                                overflow = TextOverflow.Ellipsis,
-                                fontSize = 13.sp
-                            )
-                        },
-                        selected = pagerState.currentPage == index,
-                        onClick = {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(index)
-                            }
-                        },
-                    )
-                }
+    BoxWithConstraints {
+        val screenHeight = maxHeight
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize(),
+            state = scrollState
+        ) {
+            item {
+                UserDetailInfo(userInfo = state.userDetailInfo)
             }
+            item {
+                TabRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    selectedTabIndex = pagerState.currentPage,
+                    backgroundColor = Color.White,
+                    indicator = { tabPositions ->
+                        TabRowDefaults.Indicator(
+                            modifier = Modifier
+                                .pagerTabIndicatorOffset(pagerState, tabPositions),
+                            color = Purple200
+                        )
+                    }
+                ) {
+                    tabList.forEachIndexed { index, s ->
+                        Tab(
+                            text = {
+                                Text(
+                                    text = tabList[index],
+                                    maxLines = 1,
+                                    color = Purple200,
+                                    overflow = TextOverflow.Ellipsis,
+                                    fontSize = 13.sp
+                                )
+                            },
+                            selected = pagerState.currentPage == index,
+                            onClick = {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            },
+                        )
+                    }
+                }
 
-            HorizontalPager(
-                count = tabList.size,
-                state = pagerState,
-                userScrollEnabled = false,
-            ) {
+                HorizontalPager(
+                    modifier = Modifier
+                        .height(screenHeight)
+                        .nestedScroll(remember {
+                            object : NestedScrollConnection {
+                                override fun onPreScroll(
+                                    available: Offset,
+                                    source: NestedScrollSource
+                                ): Offset {
+                                    return if (available.y > 0) Offset.Zero else Offset(
+                                        x = 0f,
+                                        y = -scrollState.dispatchRawDelta(-available.y)
+                                    )
+                                }
+                            }
+                        }),
+                    count = tabList.size,
+                    state = pagerState,
+                    userScrollEnabled = false,
+                ) { pager ->
+                    when (pager) {
+                        0 -> {
+                            UserDetailPhotoScreen(navController = navController, state.userDetailPhotoList)
+                        }
 
+                        1 -> {
+                            if (tabList[1] == "LIKES") {
+                                UserDetailLikeScreen(navController = navController, state.userDetailLikeList)
+                            } else {
+
+                            }
+                        }
+
+                        2 -> {
+
+                        }
+                    }
+                }
             }
         }
     }
+
+
 }
 
 

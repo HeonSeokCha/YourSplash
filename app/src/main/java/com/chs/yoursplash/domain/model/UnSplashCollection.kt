@@ -5,5 +5,5 @@ data class UnSplashCollection(
     val title: String,
     val unSplashTags: List<UnSplashTag>,
     val user: User,
-    val previewPhotos: List<RelatedCollectionPreview>,
+    val previewPhotos: List<RelatedCollectionPreview>?
 )

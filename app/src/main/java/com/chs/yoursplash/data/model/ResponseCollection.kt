@@ -14,5 +14,5 @@ data class ResponseCollection(
     @SerialName("user")
     val user: ResponseUser,
     @SerialName("preview_photos")
-    val previewPhotos: List<ResponseRelatedCollectionPreview>
+    val previewPhotos: List<ResponseRelatedCollectionPreview>?
 )

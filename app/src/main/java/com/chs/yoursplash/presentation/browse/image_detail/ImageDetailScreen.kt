@@ -61,122 +61,117 @@ fun ImageDetailScreen(
         viewModel.getImageDetailInfo(photoId)
         viewModel.getImageRelatedList(photoId)
     }
+    BoxWithConstraints {
+        val screenHeight = maxHeight
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize(),
+            state = scrollState
+        ) {
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize(),
-        state = scrollState
-    ) {
-
-        item {
-            AsyncImage(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(
-                        if ((state.imageDetailInfo?.height ?: 0) > 200) ((state.imageDetailInfo?.height ?: 0) / 10).dp
-                        else 200.dp
-                    )
-                    .background(state.imageDetailInfo?.color?.color ?: Color.White),
-                contentScale = ContentScale.Crop,
-                model = state.imageDetailInfo?.urls?.full ?: "",
-                contentDescription = null
-            )
-
-            Column(
-                modifier = Modifier
-                    .padding(
-                        start = 16.dp,
-                        end = 16.dp
-                    )
-            ) {
-                Row(
+            item {
+                AsyncImage(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                        .height(
+                            if ((state.imageDetailInfo?.height
+                                    ?: 0) > 200
+                            ) ((state.imageDetailInfo?.height ?: 0) / 10).dp
+                            else 200.dp
+                        )
+                        .background(state.imageDetailInfo?.color?.color ?: Color.White),
+                    contentScale = ContentScale.Crop,
+                    model = state.imageDetailInfo?.urls?.full ?: "",
+                    contentDescription = null
+                )
+
+                Column(
+                    modifier = Modifier
+                        .padding(
+                            start = 16.dp,
+                            end = 16.dp
+                        )
                 ) {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        AsyncImage(
-                            modifier = Modifier
-                                .clickable {
-                                    navController.navigate(
-                                        "${Screens.UserDetailScreen.route}/${state.imageDetailInfo?.user?.userName}"
-                                    )
-                                }
-                                .size(40.dp)
-                                .clip(RoundedCornerShape(100)),
-                            model = state.imageDetailInfo?.user?.photoProfile?.large,
-                            placeholder = ColorPainter(
-                                state.imageDetailInfo?.color?.color ?: Color.LightGray
-                            ),
-                            contentDescription = null
-                        )
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Text(
-                            text = state.imageDetailInfo?.user?.name ?: "",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1
-                        )
-                    }
-
-                    if (state.isDownloading) {
-                        IconButton(
-                            modifier = Modifier.size(24.dp),
-                            onClick = {
-                                // TODO: show alert again
-                            }) {
-                            Icon(
-                                imageVector = Icons.Default.Downloading,
-                                contentDescription = "downloading"
-                            )
-                        }
-
-                    } else if (state.isSavedFile) {
-                        IconButton(
-                            modifier = Modifier.size(24.dp),
-                            onClick = { }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.DownloadDone,
-                                contentDescription = "fileIsSaved"
-                            )
-                        }
-                    } else {
-                        IconButton(
-                            modifier = Modifier.size(32.dp),
-                            onClick = {
-                                // TODO: file download start.
-                            }) {
-                            Icon(
-                                imageVector = Icons.Default.Download,
-                                contentDescription = "download"
-                            )
-                        }
-                    }
-                }
-                Divider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
-
-                ImageDetailInfo(state.imageDetailInfo)
-            }
-        }
-
-        item {
-            if (state.imageRelatedList.isNotEmpty()) {
-                    Text(
                         modifier = Modifier
-                            .padding(start = 16.dp,bottom = 16.dp),
-                        text = "Related photos",
-                        fontWeight = FontWeight.Bold
-                    )
-                LazyVerticalStaggeredGrid(
+                            .fillMaxWidth()
+                            .padding(top = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            AsyncImage(
+                                modifier = Modifier
+                                    .clickable {
+                                        navController.navigate(
+                                            "${Screens.UserDetailScreen.route}/${state.imageDetailInfo?.user?.userName}"
+                                        )
+                                    }
+                                    .size(40.dp)
+                                    .clip(RoundedCornerShape(100)),
+                                model = state.imageDetailInfo?.user?.photoProfile?.large,
+                                placeholder = ColorPainter(
+                                    state.imageDetailInfo?.color?.color ?: Color.LightGray
+                                ),
+                                contentDescription = null
+                            )
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Text(
+                                text = state.imageDetailInfo?.user?.name ?: "",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 1
+                            )
+                        }
+
+                        if (state.isDownloading) {
+                            IconButton(
+                                modifier = Modifier.size(24.dp),
+                                onClick = {
+                                    // TODO: show alert again
+                                }) {
+                                Icon(
+                                    imageVector = Icons.Default.Downloading,
+                                    contentDescription = "downloading"
+                                )
+                            }
+
+                        } else if (state.isSavedFile) {
+                            IconButton(
+                                modifier = Modifier.size(24.dp),
+                                onClick = { }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.DownloadDone,
+                                    contentDescription = "fileIsSaved"
+                                )
+                            }
+                        } else {
+                            IconButton(
+                                modifier = Modifier.size(32.dp),
+                                onClick = {
+                                    // TODO: file download start.
+                                }) {
+                                Icon(
+                                    imageVector = Icons.Default.Download,
+                                    contentDescription = "download"
+                                )
+                            }
+                        }
+                    }
+                    Divider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
+
+                    ImageDetailInfo(state.imageDetailInfo)
+                }
+            }
+
+            item {
+                Column(
                     modifier = Modifier
-                        .padding(start = 16.dp)
-                        .fillParentMaxHeight()
+                        .height(maxHeight)
                         .nestedScroll(remember {
                             object : NestedScrollConnection {
                                 override fun onPreScroll(
@@ -190,68 +185,80 @@ fun ImageDetailScreen(
                                 }
                             }
                         }),
-                    columns = StaggeredGridCells.Fixed(2),
                 ) {
-                    items(state.imageRelatedList, key = { photo ->
-                        photo.id
-                    }) { photo ->
-                        AsyncImage(
+                    if (state.imageRelatedList.isNotEmpty()) {
+                        Text(
                             modifier = Modifier
-                                .padding(
-                                    end = 16.dp,
-                                    bottom = 16.dp
-                                )
-                                .clickable {
-                                    navController.navigate(
-                                        "${Screens.ImageDetailScreen.route}/${photo.id}"
-                                    )
-                                },
-                            model = photo.urls.thumb,
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop
+                                .padding(start = 16.dp, bottom = 16.dp),
+                            text = "Related photos",
+                            fontWeight = FontWeight.Bold
                         )
+                        LazyVerticalStaggeredGrid(
+                            modifier = Modifier
+                                .padding(start = 16.dp)
+                                .fillMaxSize(),
+                            columns = StaggeredGridCells.Fixed(2),
+                        ) {
+                            items(state.imageRelatedList, key = { photo ->
+                                photo.id
+                            }) { photo ->
+                                AsyncImage(
+                                    modifier = Modifier
+                                        .padding(
+                                            end = 16.dp,
+                                            bottom = 16.dp
+                                        )
+                                        .clickable {
+                                            navController.navigate(
+                                                "${Screens.ImageDetailScreen.route}/${photo.id}"
+                                            )
+                                        },
+                                    model = photo.urls.thumb,
+                                    contentDescription = null,
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
+                        }
+                    }
+
+                    if (!state.imageDetailInfo?.relatedCollection?.result.isNullOrEmpty()) {
+                        Text(
+                            modifier = Modifier
+                                .padding(bottom = 16.dp),
+                            text = "Related Collections",
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        LazyVerticalGrid(
+                            modifier = Modifier
+                                .wrapContentHeight(),
+                            columns = GridCells.Fixed(2)
+                        ) {
+                            items(state.imageDetailInfo?.relatedCollection?.result?.size ?: 0) { idx ->
+                                AsyncImage(
+                                    modifier = Modifier
+                                        .size(200.dp, 100.dp)
+                                        .clickable {
+                                        },
+                                    model = state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.previewPhotos?.get(idx)?.urls?.thumb,
+                                    contentDescription = null,
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
+                        }
                     }
                 }
             }
         }
-//        item {
-//            if (!state.imageDetailInfo?.relatedCollection?.result.isNullOrEmpty()) {
-//
-//                Text(
-//                    modifier = Modifier
-//                        .padding(bottom = 16.dp),
-//                    text = "Related Collections",
-//                    fontWeight = FontWeight.Bold
-//                )
-//
-//                LazyVerticalGrid(
-//                    modifier = Modifier
-//                        .height(((state.imageDetailInfo?.relatedCollection?.result?.size!! / 2) * 350).dp),
-//                    columns = GridCells.Fixed(2)
-//                ) {
-//                    items(state.imageDetailInfo.relatedCollection.result.size) { idx ->
-//                        AsyncImage(
-//                            modifier = Modifier
-//                                .size(200.dp, 100.dp)
-//                                .clickable {
-//                                },
-//                            model = state.imageDetailInfo.relatedCollection.result[idx].previewPhotos[idx].urls.thumb,
-//                            contentDescription = null,
-//                            contentScale = ContentScale.Crop
-//                        )
-//                    }
-//                }
-//            }
-//        }
-    }
 
-    if (state.isLoading) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator(color = MaterialTheme.colors.primary)
+        if (state.isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = MaterialTheme.colors.primary)
+            }
         }
     }
 }

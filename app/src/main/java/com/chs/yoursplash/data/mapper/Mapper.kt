@@ -132,7 +132,7 @@ fun ResponseCollection.toPhotoCollection(): UnSplashCollection {
         title = title,
         unSplashTags = tags.map { it.toUnSplashTag() },
         user = user.toUnSplashUser(),
-        previewPhotos = previewPhotos.map {
+        previewPhotos = previewPhotos?.map {
             it.toRelatedCollectionPreview()
         }
     )

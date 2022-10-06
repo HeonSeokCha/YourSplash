@@ -63,6 +63,7 @@ class UnSplashService @Inject constructor(
         return service.get("${Constants.UNSPLAH_URL}/users/$userName/photos") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
+            this.parameter("per_page", 20)
         }.body()
     }
 
