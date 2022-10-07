@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -171,35 +172,38 @@ fun UserDetailScreen(
 private fun UserDetailInfo(userInfo: UserDetail?) {
     Row(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(
+                start = 8.dp,
+                end = 8.dp,
+                bottom = 16.dp
+            ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
             modifier = Modifier
-                .size(125.dp, 125.dp)
-                .padding(start = 16.dp)
+                .size(100.dp, 100.dp)
                 .clip(RoundedCornerShape(100)),
             model = userInfo?.profileImage?.large,
-            contentDescription = null
+            contentDescription = null,
         )
 
         Row(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(start = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = "Photos",
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = userInfo?.totalPhotos.toString(),
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -209,14 +213,12 @@ private fun UserDetailInfo(userInfo: UserDetail?) {
                 Text(
                     text = "Likes",
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = userInfo?.totalLikes.toString(),
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -226,14 +228,12 @@ private fun UserDetailInfo(userInfo: UserDetail?) {
                 Text(
                     text = "Collections",
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = userInfo?.totalCollections.toString(),
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )

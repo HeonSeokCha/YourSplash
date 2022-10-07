@@ -73,12 +73,6 @@ fun ImageDetailScreen(
                 AsyncImage(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(
-                            if ((state.imageDetailInfo?.height
-                                    ?: 0) > 200
-                            ) ((state.imageDetailInfo?.height ?: 0) / 10).dp
-                            else 200.dp
-                        )
                         .background(state.imageDetailInfo?.color?.color ?: Color.White),
                     contentScale = ContentScale.Crop,
                     model = state.imageDetailInfo?.urls?.full ?: "",

@@ -1,46 +1,37 @@
-package com.chs.yoursplash.presentation.main.collection
+package com.chs.yoursplash.presentation.browse.collection_detail
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.chs.yoursplash.domain.usecase.GetHomeCollectionsUseCase
+import com.chs.yoursplash.domain.usecase.GetCollectionDetailUseCase
 import com.chs.yoursplash.util.Resource
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class CollectionViewModel @Inject constructor(
-    private val getHomeCollectionsUseCase: GetHomeCollectionsUseCase
+class CollectionDetailViewModel(
+    private val getCollectionDetailUseCase: GetCollectionDetailUseCase
 ) : ViewModel() {
 
-    var state by mutableStateOf(CollectionState())
-        private set
+    var state by mutableStateOf(CollectionDetailState())
 
-    init {
-        getHomeCollections()
-    }
-
-    private fun getHomeCollections() {
+    fun getCollectionDetail(id: String) {
         viewModelScope.launch {
-            getHomeCollectionsUseCase().collect { result ->
+            getCollectionDetailUseCase(id).collect { result ->
                 when (result) {
                     is Resource.Loading -> {
                         state = state.copy(isLoading = true)
                     }
                     is Resource.Success -> {
                         state = state.copy(
-                            collectionList = result.data!!,
-                            isLoading = false
+                            isLoading = false,
+                            collectionDetailInfo = result.data
                         )
                     }
                     is Resource.Error -> {
                         state = state.copy(
                             isLoading = false,
-                            isError = true,
-                            errorMessage = result.message
+                            isError = true
                         )
                     }
                 }
