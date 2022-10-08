@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.chs.yoursplash.presentation.base.CollectionCard
 
 @Composable
 fun CollectionScreen(
@@ -25,11 +26,7 @@ fun CollectionScreen(
         verticalArrangement = Arrangement.spacedBy(32.dp),
     ) {
         items(state.collectionList.size) { idx ->
-            AsyncImage(
-                modifier = Modifier.fillMaxWidth(),
-                model = state.collectionList[idx].previewPhotos?.get(0)?.urls?.small_s3,
-                contentDescription = null
-            )
+            CollectionCard(state.collectionList[idx])
         }
     }
 

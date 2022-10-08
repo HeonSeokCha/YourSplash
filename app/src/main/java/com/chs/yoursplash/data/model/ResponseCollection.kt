@@ -9,6 +9,8 @@ data class ResponseCollection(
     val id: String,
     @SerialName("title")
     val title: String,
+    @SerialName("total_photos")
+    val totalPhotos: Int,
     @SerialName("tags")
     val tags: List<ResponseUnSplashTag>,
     @SerialName("user")
