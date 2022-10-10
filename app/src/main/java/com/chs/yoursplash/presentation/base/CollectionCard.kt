@@ -23,7 +23,7 @@ import com.chs.yoursplash.util.Constants
 
 @Composable
 fun CollectionCard(
-    collectionInfo: UnSplashCollection
+    collectionInfo: UnSplashCollection?
 ) {
     val context = LocalContext.current
 
@@ -43,7 +43,7 @@ fun CollectionCard(
                     context.startActivity(
                         Intent(context, BrowseActivity::class.java).apply {
                             putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
-                            putExtra(Constants.TARGET_ID, collectionInfo.user.userName)
+                            putExtra(Constants.TARGET_ID, collectionInfo?.user?.userName ?: "")
                         }
                     )
                 },
@@ -53,12 +53,12 @@ fun CollectionCard(
                 modifier = Modifier
                     .size(50.dp)
                     .clip(RoundedCornerShape(100)),
-                model = collectionInfo.user.photoProfile.large,
+                model = collectionInfo?.user?.photoProfile?.large,
                 contentDescription = null
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
-                text = collectionInfo.user.name,
+                text = collectionInfo?.user?.name ?: "...",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 overflow = TextOverflow.Ellipsis,
@@ -79,11 +79,11 @@ fun CollectionCard(
                         context.startActivity(
                             Intent(context, BrowseActivity::class.java).apply {
                                 putExtra(Constants.TARGET_TYPE, Constants.TARGET_COLLECTION)
-                                putExtra(Constants.TARGET_ID, collectionInfo.id)
+                                putExtra(Constants.TARGET_ID, collectionInfo?.id ?: "")
                             }
                         )
                     },
-                model = collectionInfo.previewPhotos?.get(0)?.urls?.small_s3,
+                model = collectionInfo?.previewPhotos?.get(0)?.urls?.small_s3,
                 contentScale = ContentScale.Crop,
                 contentDescription = null
             )
@@ -97,12 +97,12 @@ fun CollectionCard(
                     )
             ) {
                 Text(
-                    text = collectionInfo.title,
+                    text = collectionInfo?.title ?: "...",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
-                    text = "${collectionInfo.totalPhotos} Photos",
+                    text = "${collectionInfo?.totalPhotos ?: 0} Photos",
                     fontSize = 14.sp,
                 )
             }

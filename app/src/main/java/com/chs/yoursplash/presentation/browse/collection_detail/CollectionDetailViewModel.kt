@@ -7,9 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chs.yoursplash.domain.usecase.GetCollectionDetailUseCase
 import com.chs.yoursplash.util.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CollectionDetailViewModel(
+@HiltViewModel
+class CollectionDetailViewModel @Inject constructor(
     private val getCollectionDetailUseCase: GetCollectionDetailUseCase
 ) : ViewModel() {
 

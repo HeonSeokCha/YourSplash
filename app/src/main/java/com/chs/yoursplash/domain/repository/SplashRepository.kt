@@ -1,20 +1,23 @@
 package com.chs.yoursplash.domain.repository
 
+import androidx.paging.PagingData
 import com.chs.yoursplash.domain.model.*
 import com.chs.yoursplash.util.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface SplashRepository {
 
-    suspend fun getSplashPhoto(): Flow<Resource<List<Photo>>>
+    fun getSplashPhoto(): Flow<PagingData<Photo>>
 
-    suspend fun getSplashCollection(): Flow<Resource<List<UnSplashCollection>>>
+    fun getSplashCollection(): Flow<PagingData<UnSplashCollection>>
 
     suspend fun getSplashPhotoDetail(id: String): Flow<Resource<PhotoDetail>>
 
     suspend fun getSplashPhotoRelated(id: String): Flow<Resource<List<Photo>>>
 
     suspend fun getSplashCollectionDetail(id: String): Flow<Resource<UnSplashCollection>>
+
+    suspend fun getSplashCollectionRelated(id: String): Flow<Resource<List<UnSplashCollection>>>
 
     suspend fun getUserDetail(userName: String): Flow<Resource<UserDetail>>
 

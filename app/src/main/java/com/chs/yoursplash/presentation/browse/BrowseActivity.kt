@@ -20,6 +20,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.chs.yoursplash.presentation.Screens
+import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailScreen
 import com.chs.yoursplash.presentation.browse.image_detail.ImageDetailScreen
 import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
 import com.chs.yoursplash.presentation.browse.user.UserDetailScreen
@@ -66,6 +67,21 @@ class BrowseActivity : ComponentActivity() {
                             ) { backStackEntry ->
                                 ImageDetailScreen(
                                     photoId = backStackEntry.arguments?.getString("id")!!,
+                                    navController = navController
+                                )
+                            }
+
+                            composable(
+                                "${Screens.CollectionDetailScreen.route}/{id}",
+                                arguments = listOf(
+                                    navArgument("id") {
+                                        type = NavType.StringType
+                                        defaultValue = intent.getStringExtra(Constants.TARGET_ID)!!
+                                    }
+                                )
+                            ) { backStackEntry ->
+                                CollectionDetailScreen(
+                                    id = backStackEntry.arguments?.getString("id")!!,
                                     navController = navController
                                 )
                             }

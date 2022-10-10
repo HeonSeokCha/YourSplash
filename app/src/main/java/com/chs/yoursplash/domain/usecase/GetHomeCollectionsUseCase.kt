@@ -1,5 +1,6 @@
 package com.chs.yoursplash.domain.usecase
 
+import androidx.paging.PagingData
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.repository.SplashRepository
 import com.chs.yoursplash.util.Resource
@@ -9,7 +10,7 @@ import javax.inject.Inject
 class GetHomeCollectionsUseCase @Inject constructor(
     private val repository: SplashRepository
 ) {
-    suspend operator fun invoke(): Flow<Resource<List<UnSplashCollection>>> {
+    operator fun invoke(): Flow<PagingData<UnSplashCollection>> {
         return repository.getSplashCollection()
     }
 }

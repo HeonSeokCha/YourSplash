@@ -1,4 +1,4 @@
-package com.chs.yoursplash.data.source
+package com.chs.yoursplash.data.api
 
 import com.chs.yoursplash.data.model.*
 import com.chs.yoursplash.domain.model.Photo
@@ -16,10 +16,11 @@ class UnSplashService @Inject constructor(
     private val service: HttpClient
 ) {
 
-    suspend fun getPhotos(): List<ResponsePhoto> {
+    suspend fun getPhotos(page: Int): List<ResponsePhoto> {
         return service.get("${Constants.UNSPLAH_URL}/photos") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
+            this.parameter("page", page)
         }.body()
     }
 
@@ -37,15 +38,23 @@ class UnSplashService @Inject constructor(
         }.body()
     }
 
-    suspend fun getCollection(): List<ResponseCollection> {
+    suspend fun getCollection(page: Int): List<ResponseCollection> {
         return service.get("${Constants.UNSPLAH_URL}/collections") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
+            this.parameter("page", page)
         }.body()
     }
 
     suspend fun getCollectionDetail(id: String): ResponseCollection {
         return service.get("${Constants.UNSPLAH_URL}/collections/$id") {
+            this.headers.append("Accept-Version", "v1")
+            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
+        }.body()
+    }
+
+    suspend fun getCollectionRelated(id: String): List<ResponseCollection> {
+        return service.get("${Constants.UNSPLAH_URL}/collections/$id/related") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
         }.body()

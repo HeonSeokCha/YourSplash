@@ -9,6 +9,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import coil.compose.AsyncImage
 import com.chs.yoursplash.presentation.base.CollectionCard
 
@@ -18,6 +20,8 @@ fun CollectionScreen(
 ) {
     val state = viewModel.state
 
+    val lazyPagingItems = viewModel.getHomeCollections().collectAsLazyPagingItems()
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -25,8 +29,9 @@ fun CollectionScreen(
         contentPadding = PaddingValues(vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(32.dp),
     ) {
-        items(state.collectionList.size) { idx ->
-            CollectionCard(state.collectionList[idx])
+
+        items(lazyPagingItems) { collectionInfo ->
+            CollectionCard(collectionInfo)
         }
     }
 

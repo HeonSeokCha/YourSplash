@@ -1,7 +1,6 @@
 package com.chs.yoursplash.presentation.base
 
 import android.content.Intent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -25,7 +25,7 @@ import com.chs.yoursplash.util.color
 
 @Composable
 fun ImageCard(
-    photoInfo: Photo
+    photoInfo: Photo?
 ) {
     val context = LocalContext.current
 
@@ -45,7 +45,7 @@ fun ImageCard(
                     context.startActivity(
                         Intent(context, BrowseActivity::class.java).apply {
                             putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
-                            putExtra(Constants.TARGET_ID, photoInfo.user.userName)
+                            putExtra(Constants.TARGET_ID, photoInfo?.user?.userName ?: "")
                         }
                     )
                 },
@@ -55,13 +55,13 @@ fun ImageCard(
                 modifier = Modifier
                     .size(50.dp)
                     .clip(RoundedCornerShape(100)),
-                model = photoInfo.user.photoProfile.large,
-                placeholder = ColorPainter(photoInfo.color.color),
+                model = photoInfo?.user?.photoProfile?.large,
+                placeholder = ColorPainter(photoInfo?.color?.color ?: Color.White),
                 contentDescription = null
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
-                text = photoInfo.user.name,
+                text = photoInfo?.user?.name ?: "...",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 overflow = TextOverflow.Ellipsis,
@@ -77,14 +77,13 @@ fun ImageCard(
                     context.startActivity(
                         Intent(context, BrowseActivity::class.java).apply {
                             putExtra(Constants.TARGET_TYPE, Constants.TARGET_PHOTO)
-                            putExtra(Constants.TARGET_ID, photoInfo.id)
+                            putExtra(Constants.TARGET_ID, photoInfo?.id ?: "")
                         }
                     )
-                }
-                .background(color = photoInfo.color.color),
-            model = photoInfo.urls.small,
+                },
+            model = photoInfo?.urls?.small,
             contentScale = ContentScale.Crop,
-            placeholder = ColorPainter(photoInfo.color.color),
+            placeholder = ColorPainter(photoInfo?.color?.color ?: Color.White),
             contentDescription = null
         )
     }

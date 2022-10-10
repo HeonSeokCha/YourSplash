@@ -1,6 +1,6 @@
 package com.chs.yoursplash.di
 
-import com.chs.yoursplash.data.source.UnSplashService
+import com.chs.yoursplash.data.api.UnSplashService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
