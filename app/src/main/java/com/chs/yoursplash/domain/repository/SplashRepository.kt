@@ -21,11 +21,11 @@ interface SplashRepository {
 
     suspend fun getUserDetail(userName: String): Flow<Resource<UserDetail>>
 
-    suspend fun getUserDetailPhotos(userName: String): Flow<Resource<List<Photo>>>
+    fun getUserDetailPhotos(userName: String): Flow<PagingData<Photo>>
 
-    suspend fun getUserDetailLikePhotos(userName: String): Flow<Resource<List<Photo>>>
+    fun getUserDetailLikePhotos(userName: String): Flow<PagingData<Photo>>
 
-    suspend fun getUserDetailCollections(userName: String): Flow<Resource<List<UnSplashCollection>>>
+    fun getUserDetailCollections(userName: String): Flow<PagingData<UnSplashCollection>>
 
 
 

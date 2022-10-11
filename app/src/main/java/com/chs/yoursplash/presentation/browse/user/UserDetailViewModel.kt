@@ -5,12 +5,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.chs.yoursplash.domain.model.Photo
+import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.usecase.GetUserCollectionUseCase
 import com.chs.yoursplash.domain.usecase.GetUserDetailUseCase
 import com.chs.yoursplash.domain.usecase.GetUserLikesUseCase
 import com.chs.yoursplash.domain.usecase.GetUserPhotoUseCase
 import com.chs.yoursplash.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -49,78 +54,15 @@ class UserDetailViewModel @Inject constructor(
         }
     }
 
-    fun getUserDetailPhoto(userName: String) {
-        viewModelScope.launch {
-            getUserPhotoUseCase(userName).collect { result ->
-                when (result) {
-                    is Resource.Loading -> {
-                        state = state.copy(isLoading = true)
-                    }
-                    is Resource.Success -> {
-                        state = state.copy(
-                            isLoading = false,
-                            userDetailPhotoList = result.data!!
-                        )
-                    }
-                    is Resource.Error -> {
-
-                        state = state.copy(
-                            isLoading = false,
-                            isError = true
-                        )
-                    }
-                }
-            }
-        }
+    fun getUserDetailPhoto(userName: String): Flow<PagingData<Photo>> {
+        return getUserPhotoUseCase(userName).cachedIn(viewModelScope)
     }
 
-    fun getUserDetailLikes(userName: String) {
-        viewModelScope.launch {
-            getUserLikesUseCase(userName).collect { result ->
-                when (result) {
-                    is Resource.Loading -> {
-                        state = state.copy(isLoading = true)
-                    }
-                    is Resource.Success -> {
-                        state = state.copy(
-                            isLoading = false,
-                            userDetailLikeList = result.data!!
-                        )
-                    }
-                    is Resource.Error -> {
-
-                        state = state.copy(
-                            isLoading = false,
-                            isError = true
-                        )
-                    }
-                }
-            }
-        }
+    fun getUserDetailLikes(userName: String): Flow<PagingData<Photo>> {
+        return getUserLikesUseCase(userName).cachedIn(viewModelScope)
     }
 
-    fun getUserDetailCollections(userName: String) {
-        viewModelScope.launch {
-            getUserCollectionUseCase(userName).collect { result ->
-                when (result) {
-                    is Resource.Loading -> {
-                        state = state.copy(isLoading = true)
-                    }
-                    is Resource.Success -> {
-                        state = state.copy(
-                            isLoading = false,
-                            userDetailCollection = result.data!!
-                        )
-                    }
-                    is Resource.Error -> {
-
-                        state = state.copy(
-                            isLoading = false,
-                            isError = true
-                        )
-                    }
-                }
-            }
-        }
+    fun getUserDetailCollections(userName: String): Flow<PagingData<UnSplashCollection>> {
+        return getUserCollectionUseCase(userName).cachedIn(viewModelScope)
     }
 }

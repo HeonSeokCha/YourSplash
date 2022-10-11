@@ -6,8 +6,7 @@ import androidx.paging.PagingData
 import coil.network.HttpException
 import com.chs.yoursplash.data.mapper.*
 import com.chs.yoursplash.data.api.UnSplashService
-import com.chs.yoursplash.data.paging.HomeCollectionDataSource
-import com.chs.yoursplash.data.paging.HomePhotosDataSource
+import com.chs.yoursplash.data.paging.*
 import com.chs.yoursplash.domain.model.*
 import com.chs.yoursplash.domain.repository.SplashRepository
 import com.chs.yoursplash.util.Resource
@@ -132,67 +131,28 @@ class SplashRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUserDetailPhotos(userName: String): Flow<Resource<List<Photo>>> {
-        return flow {
-            emit(Resource.Loading(true))
-            try {
-                emit(
-                    Resource.Success(
-                        client.getUserPhotos(userName).map {
-                            it.toUnSplashImage()
-                        }
-                    )
-                )
-            } catch (e: IOException) {
-                e.printStackTrace()
-                emit(Resource.Error("Couldn't load date"))
-            } catch (e: HttpException) {
-                e.printStackTrace()
-                emit(Resource.Error("Couldn't load date"))
-            }
-        }
+    override fun getUserDetailPhotos(userName: String): Flow<PagingData<Photo>> {
+        return Pager(
+            PagingConfig(pageSize = 10)
+        ) {
+            UserPhotosDataSource(client, userName)
+        }.flow
     }
 
-    override suspend fun getUserDetailLikePhotos(userName: String): Flow<Resource<List<Photo>>> {
-        return flow {
-            emit(Resource.Loading(true))
-            try {
-                emit(
-                    Resource.Success(
-                        client.getUserLikes(userName).map {
-                            it.toUnSplashImage()
-                        }
-                    )
-                )
-            } catch (e: IOException) {
-                e.printStackTrace()
-                emit(Resource.Error("Couldn't load date"))
-            } catch (e: HttpException) {
-                e.printStackTrace()
-                emit(Resource.Error("Couldn't load date"))
-            }
-        }
+    override fun getUserDetailLikePhotos(userName: String): Flow<PagingData<Photo>> {
+        return Pager(
+            PagingConfig(pageSize = 10)
+        ) {
+            UserLikesDataSource(client, userName)
+        }.flow
     }
 
-    override suspend fun getUserDetailCollections(userName: String): Flow<Resource<List<UnSplashCollection>>> {
-        return flow {
-            emit(Resource.Loading(true))
-            try {
-                emit(
-                    Resource.Success(
-                        client.getUserCollections(userName).map {
-                            it.toPhotoCollection()
-                        }
-                    )
-                )
-            } catch (e: IOException) {
-                e.printStackTrace()
-                emit(Resource.Error("Couldn't load date"))
-            } catch (e: HttpException) {
-                e.printStackTrace()
-                emit(Resource.Error("Couldn't load date"))
-            }
-        }
+    override fun getUserDetailCollections(userName: String): Flow<PagingData<UnSplashCollection>> {
+        return Pager(
+            PagingConfig(pageSize = 10)
+        ) {
+            UserCollectionsDataSource(client, userName)
+        }.flow
     }
 
     override suspend fun getSearchResultSplashPhoto(

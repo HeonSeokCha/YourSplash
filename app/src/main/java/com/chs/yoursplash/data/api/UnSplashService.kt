@@ -68,58 +68,69 @@ class UnSplashService @Inject constructor(
     }
 
 
-    suspend fun getUserPhotos(userName: String): List<ResponsePhoto> {
+    suspend fun getUserPhotos(
+        userName: String,
+        page: Int
+    ): List<ResponsePhoto> {
         return service.get("${Constants.UNSPLAH_URL}/users/$userName/photos") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
-            this.parameter("per_page", 20)
+            this.parameter("page", page)
         }.body()
     }
 
-    suspend fun getUserLikes(userName: String): List<ResponsePhoto> {
+    suspend fun getUserLikes(
+        userName: String,
+        page: Int
+    ): List<ResponsePhoto> {
         return service.get("${Constants.UNSPLAH_URL}/users/$userName/likes") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
+            this.parameter("page", page)
         }.body()
     }
 
-    suspend fun getUserCollections(userName: String): List<ResponseCollection> {
+    suspend fun getUserCollections(
+        userName: String,
+        page: Int
+    ): List<ResponseCollection> {
         return service.get("${Constants.UNSPLAH_URL}/users/$userName/collections") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
+            this.parameter("page", page)
         }.body()
     }
 
-    suspend fun getSearchResultImage(
-        query: String,
-        page: Int,
-        orderBy: String = "relevant",
-        color: String? = null,
-        orientation: String? = null
-    ) {
-        service.get("${Constants.UNSPLAH_URL}/search/photos") {
-            this.headers.append("Accept-Version", "v1")
-            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
-            this.parameter("query", query)
-            this.parameter("page", page)
-            if (orientation != null) {
-                this.parameter("orientation", orientation)
-            }
-            if (color != null) {
-                this.parameter("color", color)
-            }
-        }
-    }
-
-    suspend fun getSearchResultCollection(
-        query: String,
-        page: Int,
-    ) {
-        service.get("${Constants.UNSPLAH_URL}/search/collections") {
-            this.headers.append("Accept-Version", "v1")
-            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
-            this.parameter("query", query)
-            this.parameter("page", page)
-        }
-    }
+//    suspend fun getSearchResultImage(
+//        query: String,
+//        page: Int,
+//        orderBy: String = "relevant",
+//        color: String? = null,
+//        orientation: String? = null
+//    ) {
+//        service.get("${Constants.UNSPLAH_URL}/search/photos") {
+//            this.headers.append("Accept-Version", "v1")
+//            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
+//            this.parameter("query", query)
+//            this.parameter("page", page)
+//            if (orientation != null) {
+//                this.parameter("orientation", orientation)
+//            }
+//            if (color != null) {
+//                this.parameter("color", color)
+//            }
+//        }
+//    }
+//
+//    suspend fun getSearchResultCollection(
+//        query: String,
+//        page: Int,
+//    ) {
+//        service.get("${Constants.UNSPLAH_URL}/search/collections") {
+//            this.headers.append("Accept-Version", "v1")
+//            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
+//            this.parameter("query", query)
+//            this.parameter("page", page)
+//        }
+//    }
 }
