@@ -73,10 +73,11 @@ fun ImageDetailScreen(
                 AsyncImage(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(state.imageDetailInfo?.color?.color ?: Color.White),
+                        .height(((state.imageDetailInfo?.height ?: 2000) / 10).dp),
                     contentScale = ContentScale.Crop,
                     model = state.imageDetailInfo?.urls?.full ?: "",
-                    contentDescription = null
+                    contentDescription = null,
+                    placeholder = ColorPainter(state.imageDetailInfo?.color?.color ?: Color.White)
                 )
 
                 Column(

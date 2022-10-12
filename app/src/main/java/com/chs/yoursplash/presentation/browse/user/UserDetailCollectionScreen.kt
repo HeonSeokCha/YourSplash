@@ -14,18 +14,19 @@ import androidx.navigation.NavHostController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.AsyncImage
-import com.chs.yoursplash.domain.model.Photo
+import coil.size.Size
+import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.presentation.Screens
 
 @Composable
-fun UserDetailLikeScreen(
+fun UserDetailCollectionScreen(
     navController: NavHostController,
-    photoList: LazyPagingItems<Photo>
+    collectionList: LazyPagingItems<UnSplashCollection>
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
     ) {
-        items(photoList) { photoInfo ->
+        items(collectionList) { collectionInfo ->
             AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -37,10 +38,10 @@ fun UserDetailLikeScreen(
                     )
                     .clickable {
                         navController.navigate(
-                            "${Screens.ImageDetailScreen.route}/${photoInfo?.id}"
+                            "${Screens.CollectionDetailScreen.route}/${collectionInfo?.id}"
                         )
                     },
-                model = photoInfo?.urls?.thumb,
+                model = collectionInfo?.previewPhotos?.get(0)?.urls?.thumb,
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )

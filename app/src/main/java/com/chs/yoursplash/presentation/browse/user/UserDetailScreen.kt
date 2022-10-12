@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import com.chs.yoursplash.domain.model.User
 import com.chs.yoursplash.domain.model.UserDetail
@@ -146,17 +147,24 @@ fun UserDetailScreen(
                         0 -> {
                             UserDetailPhotoScreen(navController = navController, state.userDetailPhotoList)
                         }
-
                         1 -> {
                             if (tabList[1] == "LIKES") {
-                                UserDetailLikeScreen(navController = navController, state.userDetailLikeList)
+                                UserDetailLikeScreen(
+                                    navController = navController,
+                                    viewModel.getUserDetailLikes(userName).collectAsLazyPagingItems()
+                                )
                             } else {
-
+                                UserDetailCollectionScreen(
+                                    navController = navController,
+                                    viewModel.getUserDetailCollections(userName).collectAsLazyPagingItems()
+                                )
                             }
                         }
-
                         2 -> {
-
+                            UserDetailCollectionScreen(
+                                navController = navController,
+                                viewModel.getUserDetailCollections(userName).collectAsLazyPagingItems()
+                            )
                         }
                     }
                 }
