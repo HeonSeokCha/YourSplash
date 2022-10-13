@@ -33,25 +33,27 @@ class BrowseActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
-            YourSplashTheme {
-
-                val startMediaDestination =
-                    when (intent?.getStringExtra(Constants.TARGET_TYPE)) {
-                        Constants.TARGET_PHOTO -> {
-                            "${Screens.ImageDetailScreen.route}/{id}"
-                        }
-                        Constants.TARGET_COLLECTION -> {
-                            "${Screens.CollectionDetailScreen.route}/{id}"
-                        }
-                        else -> {
-                            "${Screens.UserDetailScreen.route}/{id}"
-                        }
+            val startMediaDestination =
+                when (intent?.getStringExtra(Constants.TARGET_TYPE)) {
+                    Constants.TARGET_PHOTO -> {
+                        "${Screens.ImageDetailScreen.route}/{id}"
                     }
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    Column {
+                    Constants.TARGET_COLLECTION -> {
+                        "${Screens.CollectionDetailScreen.route}/{id}"
+                    }
+                    else -> {
+                        "${Screens.UserDetailScreen.route}/{id}"
+                    }
+                }
+            YourSplashTheme {
+                Scaffold(
+                    topBar = {
+                        ImageDetailTopBar()
+                    }
+                ) { padding ->
+                    Column(
+                        modifier = Modifier.padding(padding)
+                    ) {
                         NavHost(
                             navController = navController,
                             startDestination = startMediaDestination
@@ -102,7 +104,6 @@ class BrowseActivity : ComponentActivity() {
                             }
                         }
                     }
-                    ImageDetailTopBar()
                 }
             }
         }
@@ -121,8 +122,8 @@ fun ImageDetailTopBar() {
             }) {
                 Icon(Icons.Filled.Close, contentDescription = null)
             }
-        }, backgroundColor = Color.Transparent,
-        elevation = 0 .dp,
+        },
+        elevation = 0.dp,
         contentColor = Color.White
     )
 }

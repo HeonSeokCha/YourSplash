@@ -91,6 +91,10 @@ class SplashRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getSplashCollectionPhotos(id: String): Flow<PagingData<Photo>> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getSplashCollectionRelated(id: String): Flow<Resource<List<UnSplashCollection>>> {
         return flow {
             emit(Resource.Loading(true))
