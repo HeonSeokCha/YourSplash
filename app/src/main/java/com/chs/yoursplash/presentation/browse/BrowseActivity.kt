@@ -83,7 +83,7 @@ class BrowseActivity : ComponentActivity() {
                                 )
                             ) { backStackEntry ->
                                 CollectionDetailScreen(
-                                    id = backStackEntry.arguments?.getString("id")!!,
+                                    collectionId = backStackEntry.arguments?.getString("id")!!,
                                     navController = navController
                                 )
                             }

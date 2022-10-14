@@ -53,10 +53,14 @@ class UnSplashService @Inject constructor(
         }.body()
     }
 
-    suspend fun getCollectionPhotos(id: String): List<ResponsePhoto> {
+    suspend fun getCollectionPhotos(
+        id: String,
+        page: Int
+    ): List<ResponsePhoto> {
         return service.get("${Constants.UNSPLAH_URL}/collections/$id/photos") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
+            this.parameter("page", page)
         }.body()
     }
 

@@ -5,15 +5,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.usecase.GetCollectionDetailUseCase
+import com.chs.yoursplash.domain.usecase.GetCollectionPhotoUserCase
 import com.chs.yoursplash.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CollectionDetailViewModel @Inject constructor(
-    private val getCollectionDetailUseCase: GetCollectionDetailUseCase
+    private val getCollectionDetailUseCase: GetCollectionDetailUseCase,
+    private val getCollectionPhotoUserCase: GetCollectionPhotoUserCase
 ) : ViewModel() {
 
     var state by mutableStateOf(CollectionDetailState())
@@ -40,5 +46,9 @@ class CollectionDetailViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun getCollectionPhotos(id: String): Flow<PagingData<Photo>> {
+        return getCollectionPhotoUserCase(id).cachedIn(viewModelScope)
     }
 }

@@ -9,6 +9,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
+import com.chs.yoursplash.domain.model.UnSplashCollection
+import com.chs.yoursplash.presentation.base.ImageCard
 
 @Composable
 fun CollectionDetailScreen(
@@ -19,6 +23,7 @@ fun CollectionDetailScreen(
 
     val state = viewModel.state
     val context = LocalContext.current
+    val  lazyPagingItems = viewModel.getCollectionPhotos(collectionId).collectAsLazyPagingItems()
 
     LaunchedEffect(context, viewModel) {
         viewModel.getCollectionDetail(collectionId)
@@ -28,5 +33,16 @@ fun CollectionDetailScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
+        items(lazyPagingItems) { photoInfo ->
+            ImageCard(photoInfo = photoInfo)
+        }
     }
+}
+
+@Composable
+private fun CollectionDetailInfo(
+    collectionInfo: UnSplashCollection,
+    navController: NavHostController
+) {
+    
 }

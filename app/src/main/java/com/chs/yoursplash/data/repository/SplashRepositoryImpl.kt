@@ -91,8 +91,12 @@ class SplashRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getSplashCollectionPhotos(id: String): Flow<PagingData<Photo>> {
-        TODO("Not yet implemented")
+    override fun getSplashCollectionPhotos(id: String): Flow<PagingData<Photo>> {
+        return Pager(
+            PagingConfig(pageSize = 10)
+        ) {
+            CollectionPhotoDataSource(client, id)
+        }.flow
     }
 
     override suspend fun getSplashCollectionRelated(id: String): Flow<Resource<List<UnSplashCollection>>> {
