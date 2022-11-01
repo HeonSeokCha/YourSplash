@@ -1,6 +1,5 @@
 package com.chs.yoursplash.presentation.browse.image_detail
 
-import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,7 +17,6 @@ import androidx.compose.material.icons.filled.DownloadDone
 import androidx.compose.material.icons.filled.Downloading
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,22 +28,16 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.util.color
-import kotlin.math.max
-
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ImageDetailScreen(
@@ -62,7 +54,6 @@ fun ImageDetailScreen(
         viewModel.getImageRelatedList(photoId)
     }
     BoxWithConstraints {
-        val screenHeight = maxHeight
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize(),
@@ -256,21 +247,4 @@ fun ImageDetailScreen(
             }
         }
     }
-}
-
-private fun calcStaggeredGridHeight(list: List<Photo>): Int {
-    val totalHeight: ArrayList<Int> = arrayListOf()
-    var prevHeight = 0
-    var currentHeight = 0
-
-    for (i in list.indices) {
-        prevHeight = list[i].height
-        if (i % 2 == 0) {
-            currentHeight = list[i].height
-            if (currentHeight > prevHeight) {
-                totalHeight.add(currentHeight / 15)
-            } else totalHeight.add(prevHeight / 15)
-        }
-    }
-    return totalHeight.sum()
 }

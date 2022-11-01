@@ -1,4 +1,8 @@
 package com.chs.yoursplash.presentation.search
 
-class SearchPhotoScreen {
+import androidx.compose.runtime.Composable
+
+@Composable
+fun SearchPhotoScreen() {
+
 }

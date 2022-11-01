@@ -27,7 +27,9 @@ class HomeViewModel @Inject constructor(
         getImageList()
     }
 
-    fun getImageList(): Flow<PagingData<Photo>> {
-        return getHomePhotosUseCase().cachedIn(viewModelScope)
+    fun getImageList() {
+        state = state.copy(
+            pagingImageList = getHomePhotosUseCase().cachedIn(viewModelScope)
+        )
     }
 }

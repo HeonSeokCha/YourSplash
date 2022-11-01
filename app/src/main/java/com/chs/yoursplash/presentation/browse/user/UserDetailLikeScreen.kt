@@ -20,12 +20,12 @@ import com.chs.yoursplash.presentation.Screens
 @Composable
 fun UserDetailLikeScreen(
     navController: NavHostController,
-    photoList: LazyPagingItems<Photo>
+    photoList: LazyPagingItems<Photo>?
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
     ) {
-        items(photoList) { photoInfo ->
+        items(photoList?.itemCount ?: 0) { idx ->
             AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -37,10 +37,10 @@ fun UserDetailLikeScreen(
                     )
                     .clickable {
                         navController.navigate(
-                            "${Screens.ImageDetailScreen.route}/${photoInfo?.id}"
+                            "${Screens.ImageDetailScreen.route}/${photoList?.get(idx)?.id}"
                         )
                     },
-                model = photoInfo?.urls?.thumb,
+                model = photoList?.get(idx)?.urls?.thumb,
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )

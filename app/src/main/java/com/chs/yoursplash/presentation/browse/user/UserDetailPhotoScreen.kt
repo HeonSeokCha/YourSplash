@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.paging.compose.LazyPagingItems
 import coil.compose.AsyncImage
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.presentation.Screens
@@ -20,13 +21,13 @@ import com.chs.yoursplash.presentation.Screens
 @Composable
 fun UserDetailPhotoScreen(
     navController: NavHostController,
-    photoList: List<Photo>
+    photoList: LazyPagingItems<Photo>?
 ) {
     LazyVerticalStaggeredGrid(
         modifier = Modifier.fillMaxSize(),
         columns = StaggeredGridCells.Fixed(2),
     ) {
-        items(photoList.size) { idx ->
+        items(photoList?.itemCount ?: 0) { idx ->
             AsyncImage(
                 modifier = Modifier
                     .padding(
@@ -36,10 +37,10 @@ fun UserDetailPhotoScreen(
                     )
                     .clickable {
                         navController.navigate(
-                            "${Screens.ImageDetailScreen.route}/${photoList[idx].id}"
+                            "${Screens.ImageDetailScreen.route}/${photoList?.get(idx)?.id}"
                         )
                     },
-                model = photoList[idx].urls.thumb,
+                model = photoList?.get(idx)?.urls?.thumb,
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )

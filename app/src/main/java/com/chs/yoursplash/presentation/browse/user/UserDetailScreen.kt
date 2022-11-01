@@ -102,11 +102,11 @@ fun UserDetailScreen(
                         )
                     }
                 ) {
-                    tabList.forEachIndexed { index, s ->
+                    tabList.forEachIndexed { index, title ->
                         Tab(
                             text = {
                                 Text(
-                                    text = tabList[index],
+                                    text = title,
                                     maxLines = 1,
                                     color = Purple200,
                                     overflow = TextOverflow.Ellipsis,
@@ -145,25 +145,28 @@ fun UserDetailScreen(
                 ) { pager ->
                     when (pager) {
                         0 -> {
-                            UserDetailPhotoScreen(navController = navController, state.userDetailPhotoList)
+                            UserDetailPhotoScreen(
+                                navController = navController,
+                                state.userDetailPhotoList?.collectAsLazyPagingItems()
+                            )
                         }
                         1 -> {
                             if (tabList[1] == "LIKES") {
                                 UserDetailLikeScreen(
                                     navController = navController,
-                                    viewModel.getUserDetailLikes(userName).collectAsLazyPagingItems()
+                                    state.userDetailLikeList?.collectAsLazyPagingItems()
                                 )
                             } else {
                                 UserDetailCollectionScreen(
                                     navController = navController,
-                                    viewModel.getUserDetailCollections(userName).collectAsLazyPagingItems()
+                                    state.userDetailCollection?.collectAsLazyPagingItems()
                                 )
                             }
                         }
                         2 -> {
                             UserDetailCollectionScreen(
                                 navController = navController,
-                                viewModel.getUserDetailCollections(userName).collectAsLazyPagingItems()
+                                state.userDetailCollection?.collectAsLazyPagingItems()
                             )
                         }
                     }

@@ -55,15 +55,21 @@ class UserDetailViewModel @Inject constructor(
         }
     }
 
-    fun getUserDetailPhoto(userName: String): Flow<PagingData<Photo>> {
-        return getUserPhotoUseCase(userName).cachedIn(viewModelScope)
+    fun getUserDetailPhoto(userName: String) {
+        state = state.copy(
+            userDetailPhotoList = getUserPhotoUseCase(userName).cachedIn(viewModelScope)
+        )
     }
 
-    fun getUserDetailLikes(userName: String): Flow<PagingData<Photo>> {
-        return getUserLikesUseCase(userName).cachedIn(viewModelScope)
+    fun getUserDetailLikes(userName: String) {
+        state = state.copy(
+            userDetailLikeList = getUserLikesUseCase(userName).cachedIn(viewModelScope)
+        )
     }
 
-    fun getUserDetailCollections(userName: String): Flow<PagingData<UnSplashCollection>> {
-        return getUserCollectionUseCase(userName).cachedIn(viewModelScope)
+    fun getUserDetailCollections(userName: String) {
+        state = state.copy(
+            userDetailCollection = getUserCollectionUseCase(userName).cachedIn(viewModelScope)
+        )
     }
 }

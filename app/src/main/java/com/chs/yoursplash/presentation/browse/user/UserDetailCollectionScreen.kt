@@ -21,12 +21,12 @@ import com.chs.yoursplash.presentation.Screens
 @Composable
 fun UserDetailCollectionScreen(
     navController: NavHostController,
-    collectionList: LazyPagingItems<UnSplashCollection>
+    collectionList: LazyPagingItems<UnSplashCollection>?
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
     ) {
-        items(collectionList) { collectionInfo ->
+        items(collectionList?.itemCount ?: 0) { idx ->
             AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -38,10 +38,10 @@ fun UserDetailCollectionScreen(
                     )
                     .clickable {
                         navController.navigate(
-                            "${Screens.CollectionDetailScreen.route}/${collectionInfo?.id}"
+                            "${Screens.CollectionDetailScreen.route}/${collectionList?.get(idx)?.id}"
                         )
                     },
-                model = collectionInfo?.previewPhotos?.get(0)?.urls?.thumb,
+                model = collectionList?.get(idx)?.previewPhotos?.get(0)?.urls?.thumb,
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )
