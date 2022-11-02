@@ -112,36 +112,44 @@ class UnSplashService @Inject constructor(
         }.body()
     }
 
-//    suspend fun getSearchResultImage(
-//        query: String,
-//        page: Int,
-//        orderBy: String = "relevant",
-//        color: String? = null,
-//        orientation: String? = null
-//    ) {
-//        service.get("${Constants.UNSPLAH_URL}/search/photos") {
-//            this.headers.append("Accept-Version", "v1")
-//            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
-//            this.parameter("query", query)
-//            this.parameter("page", page)
-//            if (orientation != null) {
-//                this.parameter("orientation", orientation)
-//            }
-//            if (color != null) {
-//                this.parameter("color", color)
-//            }
-//        }
-//    }
-//
-//    suspend fun getSearchResultCollection(
-//        query: String,
-//        page: Int,
-//    ) {
-//        service.get("${Constants.UNSPLAH_URL}/search/collections") {
-//            this.headers.append("Accept-Version", "v1")
-//            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
-//            this.parameter("query", query)
-//            this.parameter("page", page)
-//        }
-//    }
+    suspend fun getSearchResultImage(
+        query: String,
+        page: Int,
+        orderBy: String = "relevant",
+        color: String? = null,
+        orientation: String? = null
+    ): List<ResponsePhoto> {
+        return service.get("${Constants.UNSPLAH_URL}/search/photos") {
+            this.headers.append("Accept-Version", "v1")
+            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
+            this.parameter("query", query)
+            this.parameter("page", page)
+            this.parameter("order_by", orderBy)
+            if (color != null) this.parameter("color", color)
+            if (orientation != null) this.parameter("orientation", orientation)
+        }.body()
+    }
+
+    suspend fun getSearchResultCollection(
+        query: String,
+        page: Int,
+    ): List<ResponseCollection> {
+        return service.get("${Constants.UNSPLAH_URL}/search/collections") {
+            this.headers.append("Accept-Version", "v1")
+            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
+            this.parameter("query", query)
+            this.parameter("page", page)
+        }.body()
+    }
+
+    suspend fun getSearchResultUser(
+        query: String,
+        page: Int,
+    ) {
+        service.get("${Constants.UNSPLAH_URL}/search/users") {
+            this.headers.append("Accept-Version", "v1")
+            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
+            this.parameter("query", query)
+            this.parameter("page", page)
+    }
 }

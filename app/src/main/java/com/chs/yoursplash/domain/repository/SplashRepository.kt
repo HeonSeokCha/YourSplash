@@ -31,14 +31,16 @@ interface SplashRepository {
 
 
 
-    suspend fun getSearchResultSplashPhoto(
+    fun getSearchResultPhoto(
         query: String,
         page: Int,
         orderBy: String = "relevant",
         color: String? = null,
         orientation: String? = null
-    ): Flow<Resource<List<Photo>>>
+    ): Flow<PagingData<Photo>>
 
-    suspend fun getSearchResultPhotoCollection(query: String, page: Int)
+    fun getSearchResultCollection(query: String, page: Int): Flow<PagingData<UnSplashCollection>>
+
+    fun getSearchResultUser(query: String, page: Int): Flow<PagingData<User>>
 
 }
