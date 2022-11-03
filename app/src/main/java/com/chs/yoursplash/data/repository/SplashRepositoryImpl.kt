@@ -165,7 +165,6 @@ class SplashRepositoryImpl @Inject constructor(
 
     override fun getSearchResultPhoto(
         query: String,
-        page: Int,
         orderBy: String,
         color: String?,
         orientation: String?
@@ -173,14 +172,11 @@ class SplashRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override fun getSearchResultCollection(
-        query: String,
-        page: Int
-    ): Flow<PagingData<UnSplashCollection>> {
+    override fun getSearchResultCollection(query: String): Flow<PagingData<UnSplashCollection>> {
         TODO("Not yet implemented")
     }
 
-    override fun getSearchResultUser(query: String, page: Int): Flow<PagingData<User>> {
+    override fun getSearchResultUser(query: String): Flow<PagingData<User>> {
         TODO("Not yet implemented")
     }
 }

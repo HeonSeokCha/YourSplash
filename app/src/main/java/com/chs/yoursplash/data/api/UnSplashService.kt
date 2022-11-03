@@ -112,13 +112,13 @@ class UnSplashService @Inject constructor(
         }.body()
     }
 
-    suspend fun getSearchResultImage(
+    suspend fun getSearchResultPhoto(
         query: String,
         page: Int,
-        orderBy: String = "relevant",
-        color: String? = null,
-        orientation: String? = null
-    ): List<ResponsePhoto> {
+        orderBy: String,
+        color: String?,
+        orientation: String?
+    ): ResponseSearchPhotos {
         return service.get("${Constants.UNSPLAH_URL}/search/photos") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
@@ -133,7 +133,7 @@ class UnSplashService @Inject constructor(
     suspend fun getSearchResultCollection(
         query: String,
         page: Int,
-    ): List<ResponseCollection> {
+    ): ResponseSearchCollections {
         return service.get("${Constants.UNSPLAH_URL}/search/collections") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
@@ -145,11 +145,12 @@ class UnSplashService @Inject constructor(
     suspend fun getSearchResultUser(
         query: String,
         page: Int,
-    ) {
-        service.get("${Constants.UNSPLAH_URL}/search/users") {
+    ): ResponseSearchUsers {
+        return service.get("${Constants.UNSPLAH_URL}/search/users") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
             this.parameter("query", query)
             this.parameter("page", page)
+        }.body()
     }
 }

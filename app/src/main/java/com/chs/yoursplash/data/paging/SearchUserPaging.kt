@@ -3,10 +3,13 @@ package com.chs.yoursplash.data.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.chs.yoursplash.data.api.UnSplashService
+import com.chs.yoursplash.data.mapper.toUnSplashImage
+import com.chs.yoursplash.data.mapper.toUnSplashUser
 import com.chs.yoursplash.domain.model.User
 
 class SearchUserPaging(
-    private val api: UnSplashService
+    private val api: UnSplashService,
+    private val query: String
 ): PagingSource<Int, User>() {
     override fun getRefreshKey(state: PagingState<Int, User>): Int? {
         return state.anchorPosition?.let { position ->
@@ -16,6 +19,21 @@ class SearchUserPaging(
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, User> {
-        TODO("Not yet implemented")
+        return try {
+            val page = params.key ?: 1
+            val response = api.getSearchResultUser(
+                query = query,
+                page = page,
+            ).result.map {
+                it.toUnSplashUser()
+            }
+            LoadResult.Page(
+                data = response,
+                prevKey = if (page == 1) null else page - 1,
+                nextKey = if(response.isNotEmpty()) page + 1 else null
+            )
+        } catch (e: Exception) {
+            LoadResult.Error(e)
+        }
     }
 }
