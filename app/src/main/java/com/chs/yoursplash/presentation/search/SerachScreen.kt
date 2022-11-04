@@ -18,7 +18,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.chs.yoursplash.presentation.ui.theme.Purple200
+import com.chs.yoursplash.util.Constants
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
@@ -27,6 +29,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun SearchScreen(
     navController: NavHostController,
+    searchKeyWord: String,
     viewModel: SearchViewModel = hiltViewModel()
 ) {
 
@@ -73,5 +76,33 @@ fun SearchScreen(
                 )
             }
         }
+        HorizontalPager(
+            count = tabList.size,
+            state = pagerState,
+            userScrollEnabled = false,
+        ) {
+
+            when (pagerState.currentPage) {
+                0 -> {
+                    SearchResultScreen(
+                        query = searchKeyWord,
+                        type = Constants.SEARCH_PHOTO
+                    )
+                }
+                1 -> {
+                    SearchResultScreen(
+                        query = searchKeyWord,
+                        type = Constants.SEARCH_COLLECTION
+                    )
+                }
+                2 -> {
+                    SearchResultScreen(
+                        query = searchKeyWord,
+                        type = Constants.SEARCH_USER
+                    )
+                }
+            }
+        }
+    }
     }
 }
