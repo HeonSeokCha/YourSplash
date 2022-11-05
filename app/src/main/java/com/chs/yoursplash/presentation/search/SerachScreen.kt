@@ -28,16 +28,10 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SearchScreen(
-    navController: NavHostController,
-    searchKeyWord: String,
-    viewModel: SearchViewModel = hiltViewModel()
+    searchKeyWord: String
 ) {
-
-    val state = viewModel
-    val context = LocalContext.current
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
-    val scrollState = rememberLazyListState()
     val tabList = listOf("PHOTOS", "COLLECTIONS","USERS")
 
     Column(
@@ -103,6 +97,5 @@ fun SearchScreen(
                 }
             }
         }
-    }
     }
 }

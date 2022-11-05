@@ -1,5 +1,6 @@
 package com.chs.yoursplash.data.api
 
+import android.util.Log
 import com.chs.yoursplash.data.model.*
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.UnSplashCollection
@@ -124,9 +125,9 @@ class UnSplashService @Inject constructor(
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
             this.parameter("query", query)
             this.parameter("page", page)
-            this.parameter("order_by", orderBy)
-            if (color != null) this.parameter("color", color)
-            if (orientation != null) this.parameter("orientation", orientation)
+//            this.parameter("order_by", orderBy)
+//            if (color != null) this.parameter("color", color)
+//            if (orientation != null) this.parameter("orientation", orientation)
         }.body()
     }
 

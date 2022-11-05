@@ -5,7 +5,9 @@ import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.User
 import kotlinx.coroutines.flow.Flow
+import javax.annotation.concurrent.Immutable
 
+@Immutable
 data class SearchState(
     val searchPhotoList: Flow<PagingData<Photo>>? = null,
     val searchCollectionList: Flow<PagingData<UnSplashCollection>>? = null,

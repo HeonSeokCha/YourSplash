@@ -23,6 +23,7 @@ object SourceModule {
         return UnSplashService(
             HttpClient(Android) {
                 install(Logging) {
+                    logger = Logger.DEFAULT
                     level = LogLevel.ALL
                 }
                 install(ContentNegotiation) {

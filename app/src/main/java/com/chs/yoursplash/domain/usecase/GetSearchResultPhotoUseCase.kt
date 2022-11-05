@@ -1,5 +1,6 @@
 package com.chs.yoursplash.domain.usecase
 
+import android.util.Log
 import androidx.paging.PagingData
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.repository.SplashRepository
@@ -15,6 +16,7 @@ class GetSearchResultPhotoUseCase @Inject constructor(
         color: String?,
         orientation: String?
     ): Flow<PagingData<Photo>> {
+        Log.e("searchResult", query)
         return repository.getSearchResultPhoto(
             query = query,
             orderBy = orderBy,

@@ -226,7 +226,7 @@ fun ImageDetailScreen(
                                         .size(200.dp, 100.dp)
                                         .clickable {
                                         },
-                                    model = state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.previewPhotos?.get(idx)?.urls?.thumb,
+                                    model = state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.previewPhotos?.get(0)?.urls?.thumb,
                                     contentDescription = null,
                                     contentScale = ContentScale.Crop
                                 )

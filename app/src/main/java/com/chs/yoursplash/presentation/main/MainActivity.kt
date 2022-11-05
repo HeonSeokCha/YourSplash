@@ -108,7 +108,6 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Screen.SearchScreen.route) {
                             SearchScreen(
-                                navController = navController,
                                 searchKeyWord = searchKeyword
                             )
                         }

@@ -33,7 +33,7 @@ interface SplashRepository {
 
     fun getSearchResultPhoto(
         query: String,
-        orderBy: String = "relevant",
+        orderBy: String,
         color: String? = null,
         orientation: String? = null
     ): Flow<PagingData<Photo>>
