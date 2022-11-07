@@ -13,4 +13,6 @@ data class ResponseUser(
     val name: String,
     @SerialName("profile_image")
     val photoProfile: ResponseUserProfileImage,
+    @SerialName("photos")
+    val photos: List<ResponseUserPhotos> = listOf()
 )

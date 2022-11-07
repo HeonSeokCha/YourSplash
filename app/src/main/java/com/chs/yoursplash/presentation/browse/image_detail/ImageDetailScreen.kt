@@ -225,6 +225,7 @@ fun ImageDetailScreen(
                                     modifier = Modifier
                                         .size(200.dp, 100.dp)
                                         .clickable {
+
                                         },
                                     model = state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.previewPhotos?.get(0)?.urls?.thumb,
                                     contentDescription = null,

@@ -5,4 +5,5 @@ data class User(
     val userName: String,
     val name: String,
     val photoProfile: UserProfileImage,
+    val photos: List<UserPhotos>
 )

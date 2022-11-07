@@ -29,7 +29,18 @@ fun ResponseUser.toUnSplashUser(): User {
         id = id,
         userName = userName,
         name = name,
-        photoProfile = photoProfile.toUnsplashUserProfileImage()
+        photoProfile = photoProfile.toUnsplashUserProfileImage(),
+        photos = photos.map {
+            it.toUserPhotos()
+        }
+    )
+}
+
+fun ResponseUserPhotos.toUserPhotos(): UserPhotos {
+    return UserPhotos(
+        id = id,
+        blurHash = blurHash,
+        urls = urls.toUnSplashImageUrls()
     )
 }
 
