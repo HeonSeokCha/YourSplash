@@ -1,7 +1,5 @@
 package com.chs.yoursplash.presentation.base
 
-import android.content.Intent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,12 +16,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.chs.yoursplash.domain.model.UnSplashCollection
-import com.chs.yoursplash.presentation.browse.BrowseActivity
-import com.chs.yoursplash.util.Constants
 
 @Composable
 fun CollectionCard(
-    collectionInfo: UnSplashCollection?
+    collectionInfo: UnSplashCollection?,
+    userClickAble: (userName: String) -> Unit,
+    collectionClickAble: (collectionId: String) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -40,12 +38,7 @@ fun CollectionCard(
                     bottom = 8.dp
                 )
                 .clickable {
-                    context.startActivity(
-                        Intent(context, BrowseActivity::class.java).apply {
-                            putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
-                            putExtra(Constants.TARGET_ID, collectionInfo?.user?.userName ?: "")
-                        }
-                    )
+                    userClickAble(collectionInfo?.user?.userName ?: "")
                 },
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -76,12 +69,7 @@ fun CollectionCard(
                     .fillMaxSize()
                     .clip(RoundedCornerShape(10.dp))
                     .clickable {
-                        context.startActivity(
-                            Intent(context, BrowseActivity::class.java).apply {
-                                putExtra(Constants.TARGET_TYPE, Constants.TARGET_COLLECTION)
-                                putExtra(Constants.TARGET_ID, collectionInfo?.id ?: "")
-                            }
-                        )
+                        collectionClickAble(collectionInfo?.id ?: "")
                     },
                 model = collectionInfo?.previewPhotos?.get(0)?.urls?.small_s3,
                 contentScale = ContentScale.Crop,

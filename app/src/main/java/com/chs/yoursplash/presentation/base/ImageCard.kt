@@ -1,6 +1,5 @@
 package com.chs.yoursplash.presentation.base
 
-import android.content.Intent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,13 +18,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.chs.yoursplash.domain.model.Photo
-import com.chs.yoursplash.presentation.browse.BrowseActivity
-import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.color
 
 @Composable
 fun ImageCard(
-    photoInfo: Photo?
+    photoInfo: Photo?,
+    userClickAble: (userName: String) -> Unit,
+    photoClickAble: (photoId: String) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -42,12 +41,7 @@ fun ImageCard(
                     bottom = 8.dp
                 )
                 .clickable {
-                    context.startActivity(
-                        Intent(context, BrowseActivity::class.java).apply {
-                            putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
-                            putExtra(Constants.TARGET_ID, photoInfo?.user?.userName ?: "")
-                        }
-                    )
+                    userClickAble(photoInfo?.user?.userName ?: "")
                 },
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -74,12 +68,7 @@ fun ImageCard(
                 .wrapContentHeight()
                 .clip(RoundedCornerShape(10.dp))
                 .clickable {
-                    context.startActivity(
-                        Intent(context, BrowseActivity::class.java).apply {
-                            putExtra(Constants.TARGET_TYPE, Constants.TARGET_PHOTO)
-                            putExtra(Constants.TARGET_ID, photoInfo?.id ?: "")
-                        }
-                    )
+                   photoClickAble(photoInfo?.id ?: "")
                 },
             model = photoInfo?.urls?.small,
             contentScale = ContentScale.Crop,

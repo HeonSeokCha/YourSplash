@@ -1,6 +1,5 @@
 package com.chs.yoursplash.presentation.base
 
-import android.content.Intent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -11,32 +10,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.chs.yoursplash.domain.model.User
-import com.chs.yoursplash.presentation.browse.BrowseActivity
-import com.chs.yoursplash.util.Constants
 
 @Composable
-fun UserCard(userInfo: User?) {
-
-    val context = LocalContext.current
+fun UserCard(
+    userInfo: User?,
+    userClickAble: (userName: String) -> Unit,
+    photoClickAble: (photoId: String) -> Unit
+) {
 
     Row (
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .clickable {
-                context.startActivity(
-                    Intent(context, BrowseActivity::class.java).apply {
-                        putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
-                        putExtra(Constants.TARGET_ID, userInfo?.userName ?: "")
-                    }
-                )
+                userClickAble(userInfo?.userName ?: "")
             },
     ) {
         AsyncImage(
@@ -73,12 +66,7 @@ fun UserCard(userInfo: User?) {
                             .size(90.dp, 190.dp)
                             .clip(RoundedCornerShape(15))
                             .clickable {
-                                context.startActivity(
-                                    Intent(context, BrowseActivity::class.java).apply {
-                                        putExtra(Constants.TARGET_TYPE, Constants.TARGET_PHOTO)
-                                        putExtra(Constants.TARGET_ID, userInfo?.photos?.get(idx)?.id ?: "")
-                                    }
-                                )
+                                photoClickAble(userInfo?.photos?.get(idx)?.id ?: "")
                             },
                         model = userInfo?.photos?.get(idx)?.urls?.small_s3,
                         contentScale = ContentScale.Crop,
