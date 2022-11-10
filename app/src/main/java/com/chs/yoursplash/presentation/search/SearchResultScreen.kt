@@ -1,5 +1,6 @@
 package com.chs.yoursplash.presentation.search
 
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,6 +22,7 @@ import com.chs.yoursplash.domain.model.User
 import com.chs.yoursplash.presentation.base.CollectionCard
 import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.presentation.base.UserCard
+import com.chs.yoursplash.presentation.browse.BrowseActivity
 import com.chs.yoursplash.util.Constants
 
 @Composable
@@ -66,7 +68,24 @@ fun SearchResultScreen(
                 pagingList?.let {
                     val photoList = it as LazyPagingItems<Photo>
                     items(photoList) { item ->
-                        ImageCard(item)
+                        ImageCard(
+                            photoInfo = item,
+                            userClickAble = { userName ->
+                                context.startActivity(
+                                    Intent(context, BrowseActivity::class.java).apply {
+                                        putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
+                                        putExtra(Constants.TARGET_ID, userName)
+                                    }
+                                )
+                            }, photoClickAble = { photoId ->
+                                context.startActivity(
+                                    Intent(context, BrowseActivity::class.java).apply {
+                                        putExtra(Constants.TARGET_TYPE, Constants.TARGET_PHOTO)
+                                        putExtra(Constants.TARGET_ID, photoId)
+                                    }
+                                )
+                            }
+                        )
                     }
                 }
             }
@@ -74,7 +93,24 @@ fun SearchResultScreen(
                 pagingList?.let {
                     val photoList = it as LazyPagingItems<UnSplashCollection>
                     items(photoList) { item ->
-                        CollectionCard(item)
+                        CollectionCard(
+                            collectionInfo = item,
+                            userClickAble = { userName ->
+                                context.startActivity(
+                                    Intent(context, BrowseActivity::class.java).apply {
+                                        putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
+                                        putExtra(Constants.TARGET_ID, userName)
+                                    }
+                                )
+                            }, collectionClickAble = { collectionId ->
+                                context.startActivity(
+                                    Intent(context, BrowseActivity::class.java).apply {
+                                        putExtra(Constants.TARGET_TYPE, Constants.TARGET_COLLECTION)
+                                        putExtra(Constants.TARGET_ID, collectionId)
+                                    }
+                                )
+                            }
+                        )
                     }
                 }
             }
@@ -82,7 +118,22 @@ fun SearchResultScreen(
                 pagingList?.let {
                     val photoList = it as LazyPagingItems<User>
                     items(photoList) { item ->
-                        UserCard(item)
+                        UserCard(
+                            userInfo = item,
+                            userClickAble = { userName ->
+                                Intent(context, BrowseActivity::class.java).apply {
+                                    putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
+                                    putExtra(Constants.TARGET_ID, userName)
+                                }
+                            }, photoClickAble = { photoId ->
+                                context.startActivity(
+                                    Intent(context, BrowseActivity::class.java).apply {
+                                        putExtra(Constants.TARGET_TYPE, Constants.TARGET_PHOTO)
+                                        putExtra(Constants.TARGET_ID, photoId)
+                                    }
+                                )
+                            }
+                        )
                     }
                 }
             }

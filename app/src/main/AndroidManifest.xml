@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.YourSplash"
         tools:targetApi="31">
-
+        <profileable android:shell="true" />
         <activity
             android:name=".presentation.main.MainActivity"
             android:exported="true"

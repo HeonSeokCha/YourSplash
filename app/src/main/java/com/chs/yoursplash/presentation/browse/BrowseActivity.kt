@@ -42,7 +42,7 @@ class BrowseActivity : ComponentActivity() {
                         "${Screens.CollectionDetailScreen.route}/{id}"
                     }
                     else -> {
-                        "${Screens.UserDetailScreen.route}/{id}"
+                        "${Screens.UserDetailScreen.route}/{userName}"
                     }
                 }
             YourSplashTheme {
@@ -89,16 +89,16 @@ class BrowseActivity : ComponentActivity() {
                             }
 
                             composable(
-                                "${Screens.UserDetailScreen.route}/{id}",
+                                "${Screens.UserDetailScreen.route}/{userName}",
                                 arguments = listOf(
-                                    navArgument("id") {
+                                    navArgument("userName") {
                                         type = NavType.StringType
                                         defaultValue = intent.getStringExtra(Constants.TARGET_ID)!!
                                     }
                                 )
                             ) { backStackEntry ->
                                 UserDetailScreen(
-                                    userName = backStackEntry.arguments?.getString("id")!!,
+                                    userName = backStackEntry.arguments?.getString("userName")!!,
                                     navController = navController
                                 )
                             }

@@ -1,5 +1,6 @@
 package com.chs.yoursplash.presentation.main.home
 
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,7 +15,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.base.ImageCard
+import com.chs.yoursplash.presentation.browse.BrowseActivity
+import com.chs.yoursplash.util.Constants
 
 
 @Composable
@@ -34,7 +38,22 @@ fun HomeScreen(
     ) {
         items(lazyPagingItems!!) { photo ->
             ImageCard(
-                photoInfo = photo
+                photoInfo = photo,
+                userClickAble = { userName ->
+                    context.startActivity(
+                        Intent(context, BrowseActivity::class.java).apply {
+                            putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
+                            putExtra(Constants.TARGET_ID, userName)
+                        }
+                    )
+                }, photoClickAble = { photoId ->
+                    context.startActivity(
+                        Intent(context, BrowseActivity::class.java).apply {
+                            putExtra(Constants.TARGET_TYPE, Constants.TARGET_PHOTO)
+                            putExtra(Constants.TARGET_ID, photoId)
+                        }
+                    )
+                }
             )
         }
     }

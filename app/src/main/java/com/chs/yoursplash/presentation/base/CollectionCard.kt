@@ -23,8 +23,6 @@ fun CollectionCard(
     userClickAble: (userName: String) -> Unit,
     collectionClickAble: (collectionId: String) -> Unit
 ) {
-    val context = LocalContext.current
-
     Column(
         modifier = Modifier
             .fillMaxWidth()

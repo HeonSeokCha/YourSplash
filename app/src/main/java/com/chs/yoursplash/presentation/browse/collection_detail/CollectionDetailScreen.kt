@@ -12,6 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.chs.yoursplash.domain.model.UnSplashCollection
+import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.base.ImageCard
 
 @Composable
@@ -34,7 +35,18 @@ fun CollectionDetailScreen(
             .fillMaxSize()
     ) {
         items(lazyPagingItems) { photoInfo ->
-            ImageCard(photoInfo = photoInfo)
+            ImageCard(
+                photoInfo = photoInfo,
+                userClickAble = { userName ->
+                    navController.navigate(
+                        "${Screens.UserDetailScreen.route}/$userName"
+                    )
+                }, photoClickAble = { photoId ->
+                    navController.navigate(
+                        "${Screens.ImageDetailScreen.route}/$photoId"
+                    )
+                }
+            )
         }
     }
 }

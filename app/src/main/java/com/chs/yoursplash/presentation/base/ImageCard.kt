@@ -26,8 +26,6 @@ fun ImageCard(
     userClickAble: (userName: String) -> Unit,
     photoClickAble: (photoId: String) -> Unit
 ) {
-    val context = LocalContext.current
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -39,8 +37,7 @@ fun ImageCard(
                 .padding(
                     start = 4.dp,
                     bottom = 8.dp
-                )
-                .clickable {
+                ).clickable {
                     userClickAble(photoInfo?.user?.userName ?: "")
                 },
             verticalAlignment = Alignment.CenterVertically,
