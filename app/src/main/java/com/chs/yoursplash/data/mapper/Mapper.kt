@@ -7,6 +7,7 @@ fun ResponsePhoto.toUnSplashImage(): Photo {
     return Photo(
         id = id,
         color = color,
+        blurHash = blurHash,
         width = width,
         height = height,
         urls = urls.toUnSplashImageUrls(),
@@ -103,6 +104,7 @@ fun ResponsePhotoDetail.toUnSplashImageDetail(): PhotoDetail {
         width = width,
         height = height,
         color = color,
+        blurHash = blurHash,
         likes = likes,
         urls = urls.toUnSplashImageUrls(),
         description = description,
@@ -133,7 +135,8 @@ fun ResponseRelatedPhotoCollection.toRelatedPhotoCollection(): RelatedPhotoColle
 fun ResponseRelatedCollectionPreview.toRelatedCollectionPreview(): RelatedCollectionPreview {
     return RelatedCollectionPreview(
         id = id,
-        urls = urls.toUnSplashImageUrls()
+        urls = urls.toUnSplashImageUrls(),
+        blurHash = blurHash
     )
 }
 

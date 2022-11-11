@@ -5,6 +5,7 @@ data class PhotoDetail(
     val width: Int,
     val height: Int,
     val color: String,
+    val blurHash: String,
     val likes: Int,
     val urls: PhotoUrls,
     val description: String?,

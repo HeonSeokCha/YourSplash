@@ -1,5 +1,8 @@
 package com.chs.yoursplash.presentation.base
 
+import android.graphics.drawable.BitmapDrawable
+import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,6 +12,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -18,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.chs.yoursplash.domain.model.Photo
+import com.chs.yoursplash.util.BlurHashDecoder
 import com.chs.yoursplash.util.color
 
 @Composable
@@ -69,8 +75,14 @@ fun ImageCard(
                 },
             model = photoInfo?.urls?.small,
             contentScale = ContentScale.Crop,
-            placeholder = ColorPainter(photoInfo?.color?.color ?: Color.White),
-            contentDescription = null
+            placeholder = BitmapPainter(
+                BlurHashDecoder.decode(
+                    blurHash = photoInfo?.blurHash,
+                    width = 40,
+                    height = 60,
+                )!!.asImageBitmap()
+            ),
+            contentDescription = null,
         )
     }
 }

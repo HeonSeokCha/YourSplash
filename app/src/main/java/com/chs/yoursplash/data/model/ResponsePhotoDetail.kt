@@ -13,6 +13,8 @@ data class ResponsePhotoDetail(
     val height: Int,
     @SerialName("color")
     val color: String,
+    @SerialName("blur_hash")
+    val blurHash: String,
     @SerialName("likes")
     val likes: Int,
     @SerialName("urls")

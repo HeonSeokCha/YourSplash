@@ -8,5 +8,7 @@ data class ResponseRelatedCollectionPreview(
     @SerialName("id")
     val id: String,
     @SerialName("urls")
-    val urls: ResponsePhotoUrls
+    val urls: ResponsePhotoUrls,
+    @SerialName("blur_hash")
+    val blurHash: String
 )
