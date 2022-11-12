@@ -75,11 +75,7 @@ fun UserCard(
                         contentScale = ContentScale.Crop,
                         contentDescription = null,
                         placeholder = BitmapPainter(
-                            BlurHashDecoder.decode(
-                                blurHash = userInfo?.photos?.get(idx)?.blurHash,
-                                width = 40,
-                                height = 60,
-                            )!!.asImageBitmap()
+                            BlurHashDecoder.decode(blurHash = userInfo?.photos?.get(idx)?.blurHash,)!!.asImageBitmap()
                         ),
                     )
                 }

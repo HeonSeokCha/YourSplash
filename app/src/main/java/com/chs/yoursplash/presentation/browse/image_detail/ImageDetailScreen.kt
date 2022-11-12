@@ -23,6 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -37,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.chs.yoursplash.presentation.Screens
+import com.chs.yoursplash.util.BlurHashDecoder
 import com.chs.yoursplash.util.color
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -199,9 +202,10 @@ fun ImageDetailScreen(
                                                 "${Screens.ImageDetailScreen.route}/${photo.id}"
                                             )
                                         },
-                                    model = photo.urls.thumb,
+                                    model = photo.urls.small_s3,
                                     contentDescription = null,
-                                    contentScale = ContentScale.Crop
+                                    contentScale = ContentScale.Crop,
+                                    placeholder = BitmapPainter(BlurHashDecoder.decode(blurHash = photo.blurHash)!!.asImageBitmap()),
                                 )
                             }
                         }
@@ -227,9 +231,13 @@ fun ImageDetailScreen(
                                         .clickable {
 
                                         },
-                                    model = state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.previewPhotos?.get(0)?.urls?.thumb,
+                                    model = state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.previewPhotos?.get(0)?.urls?.small_s3,
                                     contentDescription = null,
-                                    contentScale = ContentScale.Crop
+                                    contentScale = ContentScale.Crop,
+                                    placeholder = BitmapPainter(
+                                        BlurHashDecoder.decode(
+                                            blurHash = state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.previewPhotos?.get(0)?.blurHash)!!.asImageBitmap()
+                                    ),
                                 )
                             }
                         }

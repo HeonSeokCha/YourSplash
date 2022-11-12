@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
@@ -76,11 +77,7 @@ fun CollectionCard(
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
                 placeholder = BitmapPainter(
-                    BlurHashDecoder.decode(
-                        blurHash = collectionInfo?.previewPhotos?.get(0)?.blurHash,
-                        width = 40,
-                        height = 60,
-                    )!!.asImageBitmap()
+                    BlurHashDecoder.decode(blurHash = collectionInfo?.previewPhotos?.get(0)?.blurHash)!!.asImageBitmap()
                 ),
             )
 
@@ -94,12 +91,15 @@ fun CollectionCard(
             ) {
                 Text(
                     text = collectionInfo?.title ?: "...",
-                    fontSize = 16.sp,
+                    fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
+                    color = Color.White
                 )
                 Text(
                     text = "${collectionInfo?.totalPhotos ?: 0} Photos",
-                    fontSize = 14.sp,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.White
                 )
             }
         }

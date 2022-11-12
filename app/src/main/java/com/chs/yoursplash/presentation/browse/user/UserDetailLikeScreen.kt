@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -16,6 +18,7 @@ import androidx.paging.compose.items
 import coil.compose.AsyncImage
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.presentation.Screens
+import com.chs.yoursplash.util.BlurHashDecoder
 
 @Composable
 fun UserDetailLikeScreen(
@@ -42,7 +45,10 @@ fun UserDetailLikeScreen(
                     },
                 model = photoList?.get(idx)?.urls?.thumb,
                 contentDescription = null,
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                placeholder = BitmapPainter(
+                    BlurHashDecoder.decode(blurHash = photoList?.get(idx)?.blurHash)!!.asImageBitmap()
+                ),
             )
         }
     }

@@ -75,13 +75,7 @@ fun ImageCard(
                 },
             model = photoInfo?.urls?.small,
             contentScale = ContentScale.Crop,
-            placeholder = BitmapPainter(
-                BlurHashDecoder.decode(
-                    blurHash = photoInfo?.blurHash,
-                    width = 40,
-                    height = 60,
-                )!!.asImageBitmap()
-            ),
+            placeholder = BitmapPainter(BlurHashDecoder.decode(blurHash = photoInfo?.blurHash)!!.asImageBitmap()),
             contentDescription = null,
         )
     }

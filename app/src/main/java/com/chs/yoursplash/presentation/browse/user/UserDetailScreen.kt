@@ -58,8 +58,10 @@ fun UserDetailScreen(
         viewModel.getUserDetailCollections(userName)
     }
 
-    val tabList = if (state.userDetailInfo?.totalCollections == 0
-            && state.userDetailInfo.totalLikes == 0) {
+    val tabList = if (
+        state.userDetailInfo?.totalCollections == 0
+            && state.userDetailInfo.totalLikes == 0
+    ) {
         listOf("PHOTOS")
     } else if (state.userDetailInfo?.totalCollections == 0) {
         listOf(
@@ -174,8 +176,6 @@ fun UserDetailScreen(
             }
         }
     }
-
-
 }
 
 
@@ -213,7 +213,7 @@ private fun UserDetailInfo(userInfo: UserDetail?) {
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = userInfo?.totalPhotos.toString(),
+                    text = userInfo?.totalPhotos?.toString() ?: "",
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -228,7 +228,7 @@ private fun UserDetailInfo(userInfo: UserDetail?) {
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = userInfo?.totalLikes.toString(),
+                    text = userInfo?.totalLikes?.toString() ?: "",
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -243,7 +243,7 @@ private fun UserDetailInfo(userInfo: UserDetail?) {
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = userInfo?.totalCollections.toString(),
+                    text = userInfo?.totalCollections?.toString() ?: "",
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
