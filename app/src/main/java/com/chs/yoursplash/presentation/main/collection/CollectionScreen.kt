@@ -24,7 +24,7 @@ fun CollectionScreen(
     val state = viewModel.state
     val context = LocalContext.current
 
-    val lazyPagingItems = viewModel.getHomeCollections().collectAsLazyPagingItems()
+    val lazyPagingItems = state.collectionList?.collectAsLazyPagingItems()
 
     LazyColumn(
         modifier = Modifier
@@ -34,7 +34,7 @@ fun CollectionScreen(
         verticalArrangement = Arrangement.spacedBy(32.dp),
     ) {
 
-        items(lazyPagingItems) { collectionInfo ->
+        items(lazyPagingItems!!) { collectionInfo ->
             CollectionCard(
                 collectionInfo = collectionInfo,
                 userClickAble = { userName ->

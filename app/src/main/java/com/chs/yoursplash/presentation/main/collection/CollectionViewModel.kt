@@ -25,7 +25,9 @@ class CollectionViewModel @Inject constructor(
         getHomeCollections()
     }
 
-    fun getHomeCollections(): Flow<PagingData<UnSplashCollection>> {
-        return getHomeCollectionsUseCase().cachedIn(viewModelScope)
+    private fun getHomeCollections() {
+        state = state.copy(
+            collectionList = getHomeCollectionsUseCase().cachedIn(viewModelScope)
+        )
     }
 }

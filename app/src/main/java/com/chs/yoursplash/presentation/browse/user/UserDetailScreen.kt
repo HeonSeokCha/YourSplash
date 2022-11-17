@@ -24,11 +24,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
-import com.chs.yoursplash.domain.model.User
 import com.chs.yoursplash.domain.model.UserDetail
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import com.google.accompanist.pager.ExperimentalPagerApi
