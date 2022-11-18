@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.browse.image_detail
+package com.chs.yoursplash.presentation.browse.photo_detail
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,12 +13,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ImageDetailViewModel @Inject constructor(
+class PhotoDetailViewModel @Inject constructor(
     private val getPhotoDetailUseCase: GetPhotoDetailUseCase,
     private val getPhotoRelatedListUseCase: GetPhotoRelatedListUseCase
 ) : ViewModel() {
 
-    var state by mutableStateOf(ImageDetailState())
+    var state by mutableStateOf(PhotoDetailState())
 
     fun getImageDetailInfo(imageId: String) {
         viewModelScope.launch {

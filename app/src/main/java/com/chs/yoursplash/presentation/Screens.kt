@@ -7,5 +7,4 @@ sealed class Screens(
     object UserDetailScreen : Screens("userDetailScreen")
     object CollectionDetailScreen : Screens("collectionDetailScreen")
     object SearchScreen : Screens("searchScreen")
-
 }

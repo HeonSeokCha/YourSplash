@@ -1,5 +1,7 @@
-package com.chs.yoursplash.presentation.browse.image_detail
+package com.chs.yoursplash.presentation.browse.photo_detail
 
+import android.app.DownloadManager
+import android.net.Uri
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -46,7 +48,7 @@ import com.chs.yoursplash.util.color
 fun ImageDetailScreen(
     photoId: String,
     navController: NavHostController,
-    viewModel: ImageDetailViewModel = hiltViewModel()
+    viewModel: PhotoDetailViewModel = hiltViewModel()
 ) {
     val state = viewModel.state
     val context = LocalContext.current
@@ -256,4 +258,16 @@ fun ImageDetailScreen(
             }
         }
     }
+}
+
+private fun downloadPhoto(downloadUrl: String) {
+    val request = DownloadManager.Request(Uri.parse(downloadUrl))
+        .setTitle("Download YourSplash Photo")
+        .setDescription("Downloading YourSplash Photo")
+        .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+        .setDestinationUri(Uri.fromFile(file))
+        .setRequiresCharging(false)
+        .setAllowedOverMetered(true)
+        .setAllowedOverRoaming(true)
+
 }

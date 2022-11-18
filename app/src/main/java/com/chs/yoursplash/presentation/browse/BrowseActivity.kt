@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,7 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailScreen
-import com.chs.yoursplash.presentation.browse.image_detail.ImageDetailScreen
+import com.chs.yoursplash.presentation.browse.photo_detail.ImageDetailScreen
 import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
 import com.chs.yoursplash.presentation.browse.user.UserDetailScreen
 import com.chs.yoursplash.util.Constants

@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.browse.image_detail
+package com.chs.yoursplash.presentation.browse.photo_detail
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
