@@ -9,7 +9,14 @@ data class PhotoDetailState(
     val isLoading: Boolean = false,
     val imageDetailInfo: PhotoDetail? = null,
     val imageRelatedList: List<Photo> = listOf(),
-    val isDownloading: Boolean = false,
-    val isSavedFile: Boolean = false,
+    val imageState:DownLoadState = DownLoadState.NOT_DOWNLOAD,
     val isError: Boolean = false,
 )
+
+
+
+
+enum class DownLoadState {
+    NOT_DOWNLOAD, DOWNLOADING, DOWNLOADED
+}
+

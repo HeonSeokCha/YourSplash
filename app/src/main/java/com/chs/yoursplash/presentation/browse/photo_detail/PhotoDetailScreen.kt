@@ -1,7 +1,10 @@
 package com.chs.yoursplash.presentation.browse.photo_detail
 
 import android.app.DownloadManager
+import android.content.Context
+import android.content.Context.DOWNLOAD_SERVICE
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -37,12 +40,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.getSystemService
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.util.BlurHashDecoder
 import com.chs.yoursplash.util.color
+import java.io.File
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ImageDetailScreen(
@@ -118,38 +124,34 @@ fun ImageDetailScreen(
                             )
                         }
 
-                        if (state.isDownloading) {
-                            IconButton(
-                                modifier = Modifier.size(24.dp),
-                                onClick = {
-                                    // TODO: show alert again
-                                }) {
-                                Icon(
-                                    imageVector = Icons.Default.Downloading,
-                                    contentDescription = "downloading"
-                                )
-                            }
+                        IconButton(
+                            modifier = Modifier.size(24.dp),
+                            onClick = {
+                                if (state.imageState != DownLoadState.DOWNLOADING) {
 
-                        } else if (state.isSavedFile) {
-                            IconButton(
-                                modifier = Modifier.size(24.dp),
-                                onClick = { }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.DownloadDone,
-                                    contentDescription = "fileIsSaved"
-                                )
-                            }
-                        } else {
-                            IconButton(
-                                modifier = Modifier.size(32.dp),
-                                onClick = {
-                                    // TODO: file download start.
-                                }) {
-                                Icon(
-                                    imageVector = Icons.Default.Download,
-                                    contentDescription = "download"
-                                )
+                                } else {
+                                    Toast.makeText(context, "Image Downloading..", Toast.LENGTH_SHORT).show()
+                                }
+                            }) {
+                            when (state.imageState) {
+                                DownLoadState.NOT_DOWNLOAD -> {
+                                    Icon(
+                                        imageVector = Icons.Default.Download,
+                                        contentDescription = "download"
+                                    )
+                                }
+                                DownLoadState.DOWNLOADING -> {
+                                    Icon(
+                                        imageVector = Icons.Default.Downloading,
+                                        contentDescription = "downloading"
+                                    )
+                                }
+                                DownLoadState.DOWNLOADED -> {
+                                    Icon(
+                                        imageVector = Icons.Default.DownloadDone,
+                                        contentDescription = "fileIsSaved"
+                                    )
+                                }
                             }
                         }
                     }
@@ -260,14 +262,23 @@ fun ImageDetailScreen(
     }
 }
 
-private fun downloadPhoto(downloadUrl: String) {
+private fun downloadPhoto(
+    context: Context,
+    downloadUrl: String
+) {
+//    val file: File =
+//
     val request = DownloadManager.Request(Uri.parse(downloadUrl))
         .setTitle("Download YourSplash Photo")
         .setDescription("Downloading YourSplash Photo")
         .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-        .setDestinationUri(Uri.fromFile(file))
+//        .setDestinationUri(Uri.fromFile(file))
         .setRequiresCharging(false)
         .setAllowedOverMetered(true)
         .setAllowedOverRoaming(true)
+
+    val downloadManger: DownloadManager = context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+
+    downloadManger.enqueue(request)
 
 }
