@@ -4,6 +4,7 @@ import android.app.DownloadManager
 import android.content.Context
 import android.content.Context.DOWNLOAD_SERVICE
 import android.net.Uri
+import android.os.Environment
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -44,6 +45,8 @@ import androidx.core.content.getSystemService
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.chs.yoursplash.R
+import com.chs.yoursplash.domain.model.PhotoDetail
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.util.BlurHashDecoder
 import com.chs.yoursplash.util.color
@@ -128,6 +131,8 @@ fun ImageDetailScreen(
                             modifier = Modifier.size(24.dp),
                             onClick = {
                                 if (state.imageState != DownLoadState.DOWNLOADING) {
+                                    Toast.makeText(context, "Image Download Start..", Toast.LENGTH_SHORT).show()
+                                    downloadPhoto(context, state.imageDetailInfo)
 
                                 } else {
                                     Toast.makeText(context, "Image Downloading..", Toast.LENGTH_SHORT).show()
@@ -264,15 +269,18 @@ fun ImageDetailScreen(
 
 private fun downloadPhoto(
     context: Context,
-    downloadUrl: String
+    photoDetail: PhotoDetail?
 ) {
-//    val file: File =
-//
+    val downloadUrl: String = photoDetail?.urls?.raw.toString()
+    val fileName: String = "${photoDetail?.user?.userName}-${photoDetail?.id}.jpg"
+    val saveDirPath: String = "/${context.getString(R.string.app_name)}/${fileName}"
+
     val request = DownloadManager.Request(Uri.parse(downloadUrl))
         .setTitle("Download YourSplash Photo")
         .setDescription("Downloading YourSplash Photo")
+        .setMimeType("image/*")
         .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-//        .setDestinationUri(Uri.fromFile(file))
+        .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, saveDirPath)
         .setRequiresCharging(false)
         .setAllowedOverMetered(true)
         .setAllowedOverRoaming(true)

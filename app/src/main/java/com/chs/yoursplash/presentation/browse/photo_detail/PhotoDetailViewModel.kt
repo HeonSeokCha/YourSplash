@@ -59,7 +59,6 @@ class PhotoDetailViewModel @Inject constructor(
                         )
                     }
                     is Resource.Error -> {
-
                         state = state.copy(
                             isLoading = false,
                             isError = true
@@ -71,7 +70,7 @@ class PhotoDetailViewModel @Inject constructor(
     }
 
     fun checkSaveImage() {
-        // TODO: Check storage fileName copy to state in ImageState
+
     }
 
 }
