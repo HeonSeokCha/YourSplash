@@ -42,6 +42,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.getSystemService
+import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -214,7 +215,9 @@ fun ImageDetailScreen(
                                     model = photo.urls.small_s3,
                                     contentDescription = null,
                                     contentScale = ContentScale.Crop,
-                                    placeholder = BitmapPainter(BlurHashDecoder.decode(blurHash = photo.blurHash)!!.asImageBitmap()),
+                                    placeholder = if (photo.blurHash != null) {
+                                        BitmapPainter(BlurHashDecoder.decode(blurHash = photo.blurHash)!!.asImageBitmap())
+                                    } else ColorPainter(photo.color.color),
                                 )
                             }
                         }
@@ -238,7 +241,10 @@ fun ImageDetailScreen(
                                     modifier = Modifier
                                         .size(200.dp, 100.dp)
                                         .clickable {
-
+                                            navController.navigate(
+                                                "${Screens.CollectionDetailScreen.route}/" +
+                                                        "${state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.id}"
+                                            )
                                         },
                                     model = state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.previewPhotos?.get(0)?.urls?.small_s3,
                                     contentDescription = null,
