@@ -1,12 +1,13 @@
 package com.chs.yoursplash.data.repository
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import coil.network.HttpException
 import com.chs.yoursplash.data.mapper.*
 import com.chs.yoursplash.data.api.UnSplashService
+import com.chs.yoursplash.data.db.PhotoSaveInfo
+import com.chs.yoursplash.data.db.YourSplashDatabase
 import com.chs.yoursplash.data.paging.*
 import com.chs.yoursplash.domain.model.*
 import com.chs.yoursplash.domain.repository.SplashRepository
@@ -17,7 +18,8 @@ import java.io.IOException
 import javax.inject.Inject
 
 class SplashRepositoryImpl @Inject constructor(
-    private val client: UnSplashService
+    private val client: UnSplashService,
+    private val db: YourSplashDatabase
 ) : SplashRepository {
     override fun getSplashPhoto(): Flow<PagingData<Photo>> {
         return Pager(
@@ -197,5 +199,17 @@ class SplashRepositoryImpl @Inject constructor(
         ) {
             SearchUserPaging(client,query)
         }.flow
+    }
+
+    override suspend fun getSavePhoto(fileName: String): PhotoSaveInfo? {
+        return db.photoSaveInfoDao.checkSavePhoto(fileName)
+    }
+
+    override suspend fun deleteSavePhotoInfo(fileName: String): Int {
+        return db.photoSaveInfoDao.deleteSavePhoto(fileName)
+    }
+
+    override suspend fun insertSavePhotoInfo(photoSaveInfo: PhotoSaveInfo): Long {
+        return db.photoSaveInfoDao.insertPhotoSaveInfo(photoSaveInfo)
     }
 }

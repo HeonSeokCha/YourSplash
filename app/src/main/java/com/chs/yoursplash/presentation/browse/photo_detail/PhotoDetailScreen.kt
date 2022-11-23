@@ -65,6 +65,7 @@ fun ImageDetailScreen(
     val scrollState = rememberLazyListState()
 
     LaunchedEffect(context, viewModel) {
+        viewModel.checkSaveImage()
         viewModel.getImageDetailInfo(photoId)
         viewModel.getImageRelatedList(photoId)
     }
