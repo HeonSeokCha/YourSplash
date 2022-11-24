@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "PhotoSaveInfo")
 data class PhotoSaveInfo(
     @PrimaryKey(autoGenerate = true)
-    private val id: Int = 0,
+    val id: Int = 0,
     @ColumnInfo(name = "create_date")
     val createDate: Long = System.currentTimeMillis(),
     @ColumnInfo(name = "file_name")

@@ -65,7 +65,6 @@ fun ImageDetailScreen(
     val scrollState = rememberLazyListState()
 
     LaunchedEffect(context, viewModel) {
-        viewModel.checkSaveImage()
         viewModel.getImageDetailInfo(photoId)
         viewModel.getImageRelatedList(photoId)
     }
@@ -132,7 +131,7 @@ fun ImageDetailScreen(
                         IconButton(
                             modifier = Modifier.size(24.dp),
                             onClick = {
-                                if (state.imageState != DownLoadState.DOWNLOADING) {
+                                if (state.imageSaveState != DownLoadState.DOWNLOADING) {
                                     Toast.makeText(context, "Image Download Start..", Toast.LENGTH_SHORT).show()
                                     downloadPhoto(context, state.imageDetailInfo)
 
@@ -140,7 +139,7 @@ fun ImageDetailScreen(
                                     Toast.makeText(context, "Image Downloading..", Toast.LENGTH_SHORT).show()
                                 }
                             }) {
-                            when (state.imageState) {
+                            when (state.imageSaveState) {
                                 DownLoadState.NOT_DOWNLOAD -> {
                                     Icon(
                                         imageVector = Icons.Default.Download,
