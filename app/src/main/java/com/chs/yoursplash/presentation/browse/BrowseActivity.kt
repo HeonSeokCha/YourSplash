@@ -1,7 +1,14 @@
 package com.chs.yoursplash.presentation.browse
 
 import android.app.Activity
+import android.app.DownloadManager
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.database.Cursor
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -21,13 +28,53 @@ import androidx.navigation.navArgument
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailScreen
 import com.chs.yoursplash.presentation.browse.photo_detail.ImageDetailScreen
-import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
 import com.chs.yoursplash.presentation.browse.user.UserDetailScreen
+import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
 import com.chs.yoursplash.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class BrowseActivity : ComponentActivity() {
+
+    private var downLoadQueueId by Delegates.notNull<Long>()
+
+    private val downloadCompleteReceiver: BroadcastReceiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val reference = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+            if (downLoadQueueId == reference) {
+                val query: DownloadManager.Query = DownloadManager.Query().apply {
+                    this.setFilterById(reference)
+                }
+                val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+
+                val cursor: Cursor? = downloadManager.query(query)
+                if (cursor != null && cursor.moveToNext()) {
+                    val status: Int = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
+                    cursor.close()
+
+                    when (status) {
+                        DownloadManager.STATUS_FAILED -> {
+                            Log.e("DownLoadManagerReceive", "STATUS_FAILED")
+                        }
+                        DownloadManager.STATUS_PAUSED -> {
+                            Log.e("DownLoadManagerReceive", "STATUS_PAUSED")
+                        }
+                        DownloadManager.STATUS_PENDING -> {
+                            Log.e("DownLoadManagerReceive", "STATUS_PENDING")
+                        }
+                        DownloadManager.STATUS_RUNNING -> {
+                            Log.e("DownLoadManagerReceive", "STATUS_RUNNING")
+                        }
+                        DownloadManager.STATUS_SUCCESSFUL -> {
+                            Log.e("DownLoadManagerReceive", "STATUS_SUCCESSFUL")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -68,7 +115,10 @@ class BrowseActivity : ComponentActivity() {
                             ) { backStackEntry ->
                                 ImageDetailScreen(
                                     photoId = backStackEntry.arguments?.getString("id")!!,
-                                    navController = navController
+                                    navController = navController,
+                                    downloadStart = {
+                                        downLoadQueueId = it
+                                    }
                                 )
                             }
 
@@ -107,6 +157,18 @@ class BrowseActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        val completeFilter: IntentFilter = IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+        this.registerReceiver(downloadCompleteReceiver, completeFilter)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        this.unregisterReceiver(downloadCompleteReceiver)
+    }
+
 }
 
 

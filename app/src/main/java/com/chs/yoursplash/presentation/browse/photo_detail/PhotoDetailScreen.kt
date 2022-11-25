@@ -58,6 +58,8 @@ import java.io.File
 fun ImageDetailScreen(
     photoId: String,
     navController: NavHostController,
+    downloadStart: (Long) -> Unit,
+    downloadSuccess: Boolean,
     viewModel: PhotoDetailViewModel = hiltViewModel()
 ) {
     val state = viewModel.state
@@ -133,7 +135,13 @@ fun ImageDetailScreen(
                             onClick = {
                                 if (state.imageSaveState != DownLoadState.DOWNLOADING) {
                                     Toast.makeText(context, "Image Download Start..", Toast.LENGTH_SHORT).show()
-                                    downloadPhoto(context, state.imageDetailInfo)
+                                    downloadPhoto(
+                                        context,
+                                        state.imageDetailInfo,
+                                        downloadStart = {
+                                            downloadStart(it)
+                                        }
+                                    )
 
                                 } else {
                                     Toast.makeText(context, "Image Downloading..", Toast.LENGTH_SHORT).show()
@@ -275,7 +283,8 @@ fun ImageDetailScreen(
 
 private fun downloadPhoto(
     context: Context,
-    photoDetail: PhotoDetail?
+    photoDetail: PhotoDetail?,
+    downloadStart: (Long) -> Unit
 ) {
     val downloadUrl: String = photoDetail?.urls?.raw.toString()
     val fileName: String = "${photoDetail?.user?.userName}-${photoDetail?.id}.jpg"
@@ -293,6 +302,6 @@ private fun downloadPhoto(
 
     val downloadManger: DownloadManager = context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
 
-    downloadManger.enqueue(request)
+    downloadStart(downloadManger.enqueue(request))
 
 }

@@ -83,30 +83,33 @@ class PhotoDetailViewModel @Inject constructor(
             "YourSplash"
         )
 
-        if (getPhotoSaveInfoUseCase(fileName)?.fileName == fileName) {
-            if (downloadDir.isDirectory) {
-                var isRealFileSave: Boolean = false
-                downloadDir.listFiles()?.forEach { file ->
-                    if (file.name == fileName) {
-                        state = state.copy(
-                            imageSaveState = DownLoadState.DOWNLOADED
-                        )
-                        isRealFileSave = true
-                    }
-                }
+        if (downloadDir.isDirectory) {
+            var isRealFileSave: Boolean = false
+            val isDbInsertFileInfo: Boolean = getPhotoSaveInfoUseCase(fileName) != null
 
-                if (!isRealFileSave) {
+            downloadDir.listFiles()?.forEach { file ->
+                if (file.name == fileName) {
+                    state = state.copy(
+                        imageSaveState = DownLoadState.DOWNLOADED
+                    )
+                    isRealFileSave = true
+                }
+            }
+            if (isRealFileSave) { // 실제 파일이 있는데
+                if (!isDbInsertFileInfo) {  //DB에 없을 경우
                     insertPhotoSaveInfoUseCase.invoke(
                         PhotoSaveInfo(fileName = fileName)
                     )
                 }
+            } else { //실제 파일이 없는데
+                if (isDbInsertFileInfo) {  //DB에 있을 경우
+                    deletePhotoSaveInfoUseCase(fileName)
+                }
             }
-        } else {
-            deletePhotoSaveInfoUseCase.invoke(fileName)
         }
     }
 
-    fun insertSaveFile(fileName: String) {
+    fun insertSaveFile(fileName: String) { // broadcast를 통해 Success일 경우 호출
         viewModelScope.launch {
             insertPhotoSaveInfoUseCase.invoke(
                 PhotoSaveInfo(fileName = fileName)
