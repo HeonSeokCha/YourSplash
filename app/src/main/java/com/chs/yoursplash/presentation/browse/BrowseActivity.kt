@@ -9,6 +9,7 @@ import android.content.IntentFilter
 import android.database.Cursor
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -55,7 +56,7 @@ class BrowseActivity : ComponentActivity() {
 
                     when (status) {
                         DownloadManager.STATUS_FAILED -> {
-                            Log.e("DownLoadManagerReceive", "STATUS_FAILED")
+                            Toast.makeText(context, "Image Download Failed", Toast.LENGTH_SHORT).show()
                         }
                         DownloadManager.STATUS_PAUSED -> {
                             Log.e("DownLoadManagerReceive", "STATUS_PAUSED")
@@ -64,10 +65,10 @@ class BrowseActivity : ComponentActivity() {
                             Log.e("DownLoadManagerReceive", "STATUS_PENDING")
                         }
                         DownloadManager.STATUS_RUNNING -> {
-                            Log.e("DownLoadManagerReceive", "STATUS_RUNNING")
+                            Toast.makeText(context, "Image Download Start..", Toast.LENGTH_SHORT).show()
                         }
                         DownloadManager.STATUS_SUCCESSFUL -> {
-                            Log.e("DownLoadManagerReceive", "STATUS_SUCCESSFUL")
+                            Toast.makeText(context, "Image Download Success..", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -118,7 +119,7 @@ class BrowseActivity : ComponentActivity() {
                                     navController = navController,
                                     downloadStart = {
                                         downLoadQueueId = it
-                                    }
+                                    }, downloadSuccess = false
                                 )
                             }
 

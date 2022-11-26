@@ -70,6 +70,7 @@ fun ImageDetailScreen(
         viewModel.getImageDetailInfo(photoId)
         viewModel.getImageRelatedList(photoId)
     }
+
     BoxWithConstraints {
         LazyColumn(
             modifier = Modifier
@@ -130,44 +131,51 @@ fun ImageDetailScreen(
                             )
                         }
 
-                        IconButton(
-                            modifier = Modifier.size(24.dp),
-                            onClick = {
-                                if (state.imageSaveState != DownLoadState.DOWNLOADING) {
-                                    Toast.makeText(context, "Image Download Start..", Toast.LENGTH_SHORT).show()
-                                    downloadPhoto(
-                                        context,
-                                        state.imageDetailInfo,
-                                        downloadStart = {
-                                            downloadStart(it)
-                                        }
-                                    )
-
-                                } else {
-                                    Toast.makeText(context, "Image Downloading..", Toast.LENGTH_SHORT).show()
-                                }
-                            }) {
                             when (state.imageSaveState) {
                                 DownLoadState.NOT_DOWNLOAD -> {
-                                    Icon(
-                                        imageVector = Icons.Default.Download,
-                                        contentDescription = "download"
-                                    )
+                                    IconButton(
+                                        modifier = Modifier.size(24.dp),
+                                        onClick = {
+                                            downloadPhoto(
+                                                context,
+                                                state.imageDetailInfo,
+                                                downloadStart = {
+                                                    downloadStart(it)
+                                                }
+                                            )
+                                        }) {
+                                        Icon(
+                                            imageVector = Icons.Default.Download,
+                                            contentDescription = "download"
+                                        )
+                                    }
                                 }
                                 DownLoadState.DOWNLOADING -> {
-                                    Icon(
-                                        imageVector = Icons.Default.Downloading,
-                                        contentDescription = "downloading"
-                                    )
+                                    IconButton(
+                                        modifier = Modifier.size(24.dp),
+                                        onClick = {
+
+                                        }) {
+                                        Icon(
+                                            imageVector = Icons.Default.Downloading,
+                                            contentDescription = "downloading"
+                                        )
+                                    }
                                 }
                                 DownLoadState.DOWNLOADED -> {
-                                    Icon(
-                                        imageVector = Icons.Default.DownloadDone,
-                                        contentDescription = "fileIsSaved"
-                                    )
+                                    IconButton(
+                                        modifier = Modifier.size(24.dp),
+                                        onClick = {
+
+                                        }) {
+                                        Icon(
+                                            imageVector = Icons.Default.DownloadDone,
+                                            contentDescription = "fileIsSaved"
+                                        )
+                                    }
                                 }
                             }
-                        }
+
                     }
                     Divider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
 

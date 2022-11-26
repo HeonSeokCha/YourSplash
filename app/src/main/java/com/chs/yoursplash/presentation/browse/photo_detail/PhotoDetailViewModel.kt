@@ -89,9 +89,6 @@ class PhotoDetailViewModel @Inject constructor(
 
             downloadDir.listFiles()?.forEach { file ->
                 if (file.name == fileName) {
-                    state = state.copy(
-                        imageSaveState = DownLoadState.DOWNLOADED
-                    )
                     isRealFileSave = true
                 }
             }
@@ -101,6 +98,7 @@ class PhotoDetailViewModel @Inject constructor(
                         PhotoSaveInfo(fileName = fileName)
                     )
                 }
+                state.copy(imageSaveState = DownLoadState.DOWNLOADED)
             } else { //실제 파일이 없는데
                 if (isDbInsertFileInfo) {  //DB에 있을 경우
                     deletePhotoSaveInfoUseCase(fileName)
