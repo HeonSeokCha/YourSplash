@@ -3,20 +3,14 @@ package com.chs.yoursplash.presentation.browse.photo_detail
 import androidx.compose.runtime.Immutable
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.PhotoDetail
+import com.chs.yoursplash.util.PhotoSaveState
 
 @Immutable
 data class PhotoDetailState(
     val isLoading: Boolean = false,
     val imageDetailInfo: PhotoDetail? = null,
     val imageRelatedList: List<Photo> = listOf(),
-    val imageSaveState:DownLoadState = DownLoadState.NOT_DOWNLOAD,
+    val imageSaveState: PhotoSaveState = PhotoSaveState.NOT_DOWNLOAD,
     val isError: Boolean = false,
 )
-
-
-
-
-enum class DownLoadState {
-    NOT_DOWNLOAD, DOWNLOADING, DOWNLOADED
-}
 

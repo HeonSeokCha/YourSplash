@@ -38,44 +38,6 @@ import kotlin.properties.Delegates
 @AndroidEntryPoint
 class BrowseActivity : ComponentActivity() {
 
-    private var downLoadQueueId by Delegates.notNull<Long>()
-
-    private val downloadCompleteReceiver: BroadcastReceiver = object: BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            val reference = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-            if (downLoadQueueId == reference) {
-                val query: DownloadManager.Query = DownloadManager.Query().apply {
-                    this.setFilterById(reference)
-                }
-                val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-
-                val cursor: Cursor? = downloadManager.query(query)
-                if (cursor != null && cursor.moveToNext()) {
-                    val status: Int = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
-                    cursor.close()
-
-                    when (status) {
-                        DownloadManager.STATUS_FAILED -> {
-                            Toast.makeText(context, "Image Download Failed", Toast.LENGTH_SHORT).show()
-                        }
-                        DownloadManager.STATUS_PAUSED -> {
-                            Log.e("DownLoadManagerReceive", "STATUS_PAUSED")
-                        }
-                        DownloadManager.STATUS_PENDING -> {
-                            Log.e("DownLoadManagerReceive", "STATUS_PENDING")
-                        }
-                        DownloadManager.STATUS_RUNNING -> {
-                            Toast.makeText(context, "Image Download Start..", Toast.LENGTH_SHORT).show()
-                        }
-                        DownloadManager.STATUS_SUCCESSFUL -> {
-                            Toast.makeText(context, "Image Download Success..", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -116,10 +78,7 @@ class BrowseActivity : ComponentActivity() {
                             ) { backStackEntry ->
                                 ImageDetailScreen(
                                     photoId = backStackEntry.arguments?.getString("id")!!,
-                                    navController = navController,
-                                    downloadStart = {
-                                        downLoadQueueId = it
-                                    }, downloadSuccess = false
+                                    navController = navController
                                 )
                             }
 
@@ -158,18 +117,6 @@ class BrowseActivity : ComponentActivity() {
             }
         }
     }
-
-    override fun onResume() {
-        super.onResume()
-        val completeFilter: IntentFilter = IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
-        this.registerReceiver(downloadCompleteReceiver, completeFilter)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        this.unregisterReceiver(downloadCompleteReceiver)
-    }
-
 }
 
 

@@ -21,9 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.DownloadDone
 import androidx.compose.material.icons.filled.Downloading
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,6 +48,8 @@ import com.chs.yoursplash.R
 import com.chs.yoursplash.domain.model.PhotoDetail
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.util.BlurHashDecoder
+import com.chs.yoursplash.util.DownLoadState
+import com.chs.yoursplash.util.PhotoSaveState
 import com.chs.yoursplash.util.color
 import java.io.File
 
@@ -58,18 +58,37 @@ import java.io.File
 fun ImageDetailScreen(
     photoId: String,
     navController: NavHostController,
-    downloadStart: (Long) -> Unit,
-    downloadSuccess: Boolean,
     viewModel: PhotoDetailViewModel = hiltViewModel()
 ) {
     val state = viewModel.state
     val context = LocalContext.current
     val scrollState = rememberLazyListState()
+    var downLoadQueueId: Long by remember { mutableStateOf(0L) }
 
     LaunchedEffect(context, viewModel) {
         viewModel.getImageDetailInfo(photoId)
         viewModel.getImageRelatedList(photoId)
     }
+
+    if (downLoadQueueId != 0L) {
+        DownloadBroadCastReceiver(downLoadQueueId) {
+            when (it) {
+                DownLoadState.DOWNLOAD_FAILED -> {
+                    Toast.makeText(context, "Photo Download UnSuccessful...", Toast.LENGTH_SHORT).show()
+                    viewModel.setPhotoDownloadState(DownLoadState.DOWNLOAD_FAILED)
+                }
+                DownLoadState.DOWNLOAD_SUCCESS -> {
+                    Toast.makeText(context, "Photo Download Successful...", Toast.LENGTH_SHORT).show()
+                    viewModel.setPhotoDownloadState(DownLoadState.DOWNLOAD_SUCCESS)
+                }
+                DownLoadState.DOWNLOADING -> {
+                    Toast.makeText(context, "Photo Download Starting...", Toast.LENGTH_SHORT).show()
+                    viewModel.setPhotoDownloadState(DownLoadState.DOWNLOADING)
+                }
+            }
+        }
+    }
+
 
     BoxWithConstraints {
         LazyColumn(
@@ -132,16 +151,14 @@ fun ImageDetailScreen(
                         }
 
                             when (state.imageSaveState) {
-                                DownLoadState.NOT_DOWNLOAD -> {
+                                PhotoSaveState.NOT_DOWNLOAD -> {
                                     IconButton(
                                         modifier = Modifier.size(24.dp),
                                         onClick = {
                                             downloadPhoto(
                                                 context,
                                                 state.imageDetailInfo,
-                                                downloadStart = {
-                                                    downloadStart(it)
-                                                }
+                                                downloadStart = { downLoadQueueId = it }
                                             )
                                         }) {
                                         Icon(
@@ -150,7 +167,7 @@ fun ImageDetailScreen(
                                         )
                                     }
                                 }
-                                DownLoadState.DOWNLOADING -> {
+                                PhotoSaveState.DOWNLOADING -> {
                                     IconButton(
                                         modifier = Modifier.size(24.dp),
                                         onClick = {
@@ -162,7 +179,7 @@ fun ImageDetailScreen(
                                         )
                                     }
                                 }
-                                DownLoadState.DOWNLOADED -> {
+                                PhotoSaveState.DOWNLOADED -> {
                                     IconButton(
                                         modifier = Modifier.size(24.dp),
                                         onClick = {
@@ -259,7 +276,11 @@ fun ImageDetailScreen(
                                         .clickable {
                                             navController.navigate(
                                                 "${Screens.CollectionDetailScreen.route}/" +
-                                                        "${state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.id}"
+                                                        "${
+                                                            state.imageDetailInfo?.relatedCollection?.result?.get(
+                                                                idx
+                                                            )?.id
+                                                        }"
                                             )
                                         },
                                     model = state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.previewPhotos?.get(0)?.urls?.small_s3,
