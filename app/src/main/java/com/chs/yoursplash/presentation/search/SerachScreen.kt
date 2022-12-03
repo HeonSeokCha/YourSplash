@@ -1,19 +1,18 @@
 package com.chs.yoursplash.presentation.search
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.TabRowDefaults
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Filter
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -75,7 +74,6 @@ fun SearchScreen(
             state = pagerState,
             userScrollEnabled = false,
         ) {
-
             when (pagerState.currentPage) {
                 0 -> {
                     SearchResultScreen(
@@ -97,5 +95,54 @@ fun SearchScreen(
                 }
             }
         }
+
+
+        if (pagerState.currentPage == 0) {
+            SearchFloatingActionButton(
+                extend =
+            )
+        }
     }
+}
+
+@Composable
+fun SearchFloatingActionButton(
+    extend: Boolean,
+    onClick: () -> Unit
+) {
+    FloatingActionButton(onClick = onClick) {
+        Row(
+           modifier = Modifier.padding(horizontal = 16.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Filter,
+                contentDescription = null
+            )
+        }
+
+        AnimatedVisibility(visible = extend) {
+            Text(
+                text = "FILTER",
+                modifier = Modifier.padding(start = 8.dp, top = 3.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun LazyListState.isScrollingUp(): Boolean {
+    var previousIndex by remember(this) { mutableStateOf(firstVisibleItemIndex) }
+    var previousScrollOffset by remember(this) { mutableStateOf(firstVisibleItemScrollOffset) }
+    return remember(this) {
+        derivedStateOf {
+            if (previousIndex != firstVisibleItemIndex) {
+                previousIndex > firstVisibleItemIndex
+            } else {
+                previousScrollOffset >= firstVisibleItemScrollOffset
+            }.also {
+                previousIndex = firstVisibleItemIndex
+                previousScrollOffset = firstVisibleItemScrollOffset
+            }
+        }
+    }.value
 }
