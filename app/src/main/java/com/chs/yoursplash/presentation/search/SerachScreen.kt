@@ -1,5 +1,6 @@
 package com.chs.yoursplash.presentation.search
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
@@ -31,7 +32,7 @@ fun SearchScreen(
 ) {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
-    val tabList = listOf("PHOTOS", "COLLECTIONS","USERS")
+    val tabList = listOf("PHOTOS", "COLLECTIONS", "USERS")
 
     Column(
         modifier = Modifier
@@ -78,71 +79,22 @@ fun SearchScreen(
                 0 -> {
                     SearchResultScreen(
                         query = searchKeyWord,
-                        type = Constants.SEARCH_PHOTO
+                        type = Constants.SEARCH_PHOTO,
                     )
                 }
                 1 -> {
                     SearchResultScreen(
                         query = searchKeyWord,
-                        type = Constants.SEARCH_COLLECTION
+                        type = Constants.SEARCH_COLLECTION,
                     )
                 }
                 2 -> {
                     SearchResultScreen(
                         query = searchKeyWord,
-                        type = Constants.SEARCH_USER
+                        type = Constants.SEARCH_USER,
                     )
                 }
             }
         }
-
-
-        if (pagerState.currentPage == 0) {
-            SearchFloatingActionButton(
-                extend =
-            )
-        }
     }
-}
-
-@Composable
-fun SearchFloatingActionButton(
-    extend: Boolean,
-    onClick: () -> Unit
-) {
-    FloatingActionButton(onClick = onClick) {
-        Row(
-           modifier = Modifier.padding(horizontal = 16.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Filter,
-                contentDescription = null
-            )
-        }
-
-        AnimatedVisibility(visible = extend) {
-            Text(
-                text = "FILTER",
-                modifier = Modifier.padding(start = 8.dp, top = 3.dp)
-            )
-        }
-    }
-}
-
-@Composable
-private fun LazyListState.isScrollingUp(): Boolean {
-    var previousIndex by remember(this) { mutableStateOf(firstVisibleItemIndex) }
-    var previousScrollOffset by remember(this) { mutableStateOf(firstVisibleItemScrollOffset) }
-    return remember(this) {
-        derivedStateOf {
-            if (previousIndex != firstVisibleItemIndex) {
-                previousIndex > firstVisibleItemIndex
-            } else {
-                previousScrollOffset >= firstVisibleItemScrollOffset
-            }.also {
-                previousIndex = firstVisibleItemIndex
-                previousScrollOffset = firstVisibleItemScrollOffset
-            }
-        }
-    }.value
 }

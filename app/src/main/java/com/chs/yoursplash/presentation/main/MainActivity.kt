@@ -3,6 +3,7 @@ package com.chs.yoursplash.presentation.main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -194,7 +195,10 @@ fun SearchAppBar(
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = null,
-                    tint = Color.White
+                    tint = Color.White,
+                    modifier = Modifier.clickable {
+                        navController.navigateUp()
+                    }
                 )
             },
             keyboardOptions = KeyboardOptions(
