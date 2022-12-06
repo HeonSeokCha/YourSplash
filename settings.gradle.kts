@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "YourSplash"
-include ':app'
+include(":app")
