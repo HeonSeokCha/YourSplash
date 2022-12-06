@@ -1,7 +1,15 @@
 package com.chs.yoursplash.presentation.browse
 
 import android.app.Activity
+import android.app.DownloadManager
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.database.Cursor
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -21,13 +29,15 @@ import androidx.navigation.navArgument
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailScreen
 import com.chs.yoursplash.presentation.browse.photo_detail.ImageDetailScreen
-import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
 import com.chs.yoursplash.presentation.browse.user.UserDetailScreen
+import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
 import com.chs.yoursplash.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class BrowseActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

@@ -48,7 +48,9 @@ class CollectionDetailViewModel @Inject constructor(
         }
     }
 
-    fun getCollectionPhotos(id: String): Flow<PagingData<Photo>> {
-        return getCollectionPhotoUserCase(id).cachedIn(viewModelScope)
+    fun getCollectionPhotos(id: String) {
+        state = state.copy(
+            collectionPhotos = getCollectionPhotoUserCase(id).cachedIn(viewModelScope)
+        )
     }
 }

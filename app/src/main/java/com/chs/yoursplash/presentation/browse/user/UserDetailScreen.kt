@@ -146,6 +146,7 @@ fun UserDetailScreen(
                     when (pager) {
                         0 -> {
                             UserDetailPhotoScreen(
+                                context = context,
                                 navController = navController,
                                 state.userDetailPhotoList?.collectAsLazyPagingItems()
                             )
@@ -153,11 +154,13 @@ fun UserDetailScreen(
                         1 -> {
                             if (tabList[1] == "LIKES") {
                                 UserDetailLikeScreen(
+                                    context = context,
                                     navController = navController,
                                     state.userDetailLikeList?.collectAsLazyPagingItems()
                                 )
                             } else {
                                 UserDetailCollectionScreen(
+                                    context = context,
                                     navController = navController,
                                     state.userDetailCollection?.collectAsLazyPagingItems()
                                 )
@@ -165,6 +168,7 @@ fun UserDetailScreen(
                         }
                         2 -> {
                             UserDetailCollectionScreen(
+                                context = context,
                                 navController = navController,
                                 state.userDetailCollection?.collectAsLazyPagingItems()
                             )

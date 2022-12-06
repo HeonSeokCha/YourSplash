@@ -1,12 +1,17 @@
 package com.chs.yoursplash.presentation.search
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Filter
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -25,6 +30,7 @@ import com.chs.yoursplash.presentation.base.UserCard
 import com.chs.yoursplash.presentation.browse.BrowseActivity
 import com.chs.yoursplash.util.Constants
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SearchResultScreen(
     query: String,
@@ -34,6 +40,8 @@ fun SearchResultScreen(
 
     val state = viewModel.state
     val context = LocalContext.current
+    val lazyListState = rememberLazyListState()
+
     viewModel.searchPage = type
 
     LaunchedEffect(query) {
@@ -57,103 +65,161 @@ fun SearchResultScreen(
         }
     }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
+    Scaffold(
+        floatingActionButton = {
+            if (type == Constants.SEARCH_PHOTO && query.isNotEmpty()) {
+                SearchFloatingActionButton(extend = lazyListState.isScrollingUp()) {
+
+                }
+            }
+        }
     ) {
-        when (viewModel.searchPage) {
-            Constants.SEARCH_PHOTO -> {
-                pagingList?.let {
-                    val photoList = it as LazyPagingItems<Photo>
-                    items(photoList) { item ->
-                        ImageCard(
-                            photoInfo = item,
-                            userClickAble = { userName ->
-                                context.startActivity(
-                                    Intent(context, BrowseActivity::class.java).apply {
-                                        putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
-                                        putExtra(Constants.TARGET_ID, userName)
-                                    }
-                                )
-                            }, photoClickAble = { photoId ->
-                                context.startActivity(
-                                    Intent(context, BrowseActivity::class.java).apply {
-                                        putExtra(Constants.TARGET_TYPE, Constants.TARGET_PHOTO)
-                                        putExtra(Constants.TARGET_ID, photoId)
-                                    }
-                                )
-                            }
-                        )
-                    }
-                }
-            }
-            Constants.SEARCH_COLLECTION -> {
-                pagingList?.let {
-                    val photoList = it as LazyPagingItems<UnSplashCollection>
-                    items(photoList) { item ->
-                        CollectionCard(
-                            collectionInfo = item,
-                            userClickAble = { userName ->
-                                context.startActivity(
-                                    Intent(context, BrowseActivity::class.java).apply {
-                                        putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
-                                        putExtra(Constants.TARGET_ID, userName)
-                                    }
-                                )
-                            }, collectionClickAble = { collectionId ->
-                                context.startActivity(
-                                    Intent(context, BrowseActivity::class.java).apply {
-                                        putExtra(Constants.TARGET_TYPE, Constants.TARGET_COLLECTION)
-                                        putExtra(Constants.TARGET_ID, collectionId)
-                                    }
-                                )
-                            }
-                        )
-                    }
-                }
-            }
-            Constants.SEARCH_USER -> {
-                pagingList?.let {
-                    val photoList = it as LazyPagingItems<User>
-                    items(photoList) { item ->
-                        UserCard(
-                            userInfo = item,
-                            userClickAble = { userName ->
-                                Intent(context, BrowseActivity::class.java).apply {
-                                    putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
-                                    putExtra(Constants.TARGET_ID, userName)
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize(),
+            state = lazyListState,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
+        ) {
+            when (viewModel.searchPage) {
+                Constants.SEARCH_PHOTO -> {
+                    pagingList?.let {
+                        val photoList = it as LazyPagingItems<Photo>
+                        items(photoList) { item ->
+                            ImageCard(
+                                photoInfo = item,
+                                userClickAble = { userName ->
+                                    context.startActivity(
+                                        Intent(context, BrowseActivity::class.java).apply {
+                                            putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
+                                            putExtra(Constants.TARGET_ID, userName)
+                                        }
+                                    )
+                                }, photoClickAble = { photoId ->
+                                    context.startActivity(
+                                        Intent(context, BrowseActivity::class.java).apply {
+                                            putExtra(Constants.TARGET_TYPE, Constants.TARGET_PHOTO)
+                                            putExtra(Constants.TARGET_ID, photoId)
+                                        }
+                                    )
                                 }
-                            }, photoClickAble = { photoId ->
-                                context.startActivity(
+                            )
+                        }
+                    }
+                }
+                Constants.SEARCH_COLLECTION -> {
+                    pagingList?.let {
+                        val photoList = it as LazyPagingItems<UnSplashCollection>
+                        items(photoList) { item ->
+                            CollectionCard(
+                                collectionInfo = item,
+                                userClickAble = { userName ->
+                                    context.startActivity(
+                                        Intent(context, BrowseActivity::class.java).apply {
+                                            putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
+                                            putExtra(Constants.TARGET_ID, userName)
+                                        }
+                                    )
+                                }, collectionClickAble = { collectionId ->
+                                    context.startActivity(
+                                        Intent(context, BrowseActivity::class.java).apply {
+                                            putExtra(
+                                                Constants.TARGET_TYPE,
+                                                Constants.TARGET_COLLECTION
+                                            )
+                                            putExtra(Constants.TARGET_ID, collectionId)
+                                        }
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
+                Constants.SEARCH_USER -> {
+                    pagingList?.let {
+                        val photoList = it as LazyPagingItems<User>
+                        items(photoList) { item ->
+                            UserCard(
+                                userInfo = item,
+                                userClickAble = { userName ->
                                     Intent(context, BrowseActivity::class.java).apply {
-                                        putExtra(Constants.TARGET_TYPE, Constants.TARGET_PHOTO)
-                                        putExtra(Constants.TARGET_ID, photoId)
+                                        putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
+                                        putExtra(Constants.TARGET_ID, userName)
                                     }
-                                )
-                            }
-                        )
+                                }, photoClickAble = { photoId ->
+                                    context.startActivity(
+                                        Intent(context, BrowseActivity::class.java).apply {
+                                            putExtra(Constants.TARGET_TYPE, Constants.TARGET_PHOTO)
+                                            putExtra(Constants.TARGET_ID, photoId)
+                                        }
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
             }
         }
-    }
 
-    when (pagingList?.loadState?.source?.refresh) {
-        is LoadState.Loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
+
+        when (pagingList?.loadState?.source?.refresh) {
+            is LoadState.Loading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center,
                 ) {
-                CircularProgressIndicator()
+                    CircularProgressIndicator()
+                }
+            }
+
+            is LoadState.Error -> {
+                Toast.makeText(context, "An error occurred while loading...", Toast.LENGTH_SHORT)
+                    .show()
+            }
+            else -> {}
+        }
+    }
+}
+
+@Composable
+fun SearchFloatingActionButton(
+    extend: Boolean,
+    onClick: () -> Unit
+) {
+    FloatingActionButton(onClick = onClick) {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Filter,
+                contentDescription = null
+            )
+
+            AnimatedVisibility (extend) {
+                Text(
+                    text = "FILTER",
+                    modifier = Modifier
+                        .padding(start = 8.dp, top = 3.dp)
+                )
             }
         }
-
-        is LoadState.Error -> {
-            Toast.makeText(context, "An error occurred while loading...", Toast.LENGTH_SHORT).show()
-        }
-        else -> {}
     }
+}
 
+@Composable
+private fun LazyListState.isScrollingUp(): Boolean {
+    var previousIndex by remember(this) { mutableStateOf(firstVisibleItemIndex) }
+    var previousScrollOffset by remember(this) { mutableStateOf(firstVisibleItemScrollOffset) }
+    return remember(this) {
+        derivedStateOf {
+            if (previousIndex != firstVisibleItemIndex) {
+                previousIndex > firstVisibleItemIndex
+            } else {
+                previousScrollOffset >= firstVisibleItemScrollOffset
+            }.also {
+                previousIndex = firstVisibleItemIndex
+                previousScrollOffset = firstVisibleItemScrollOffset
+            }
+        }
+    }.value
 }

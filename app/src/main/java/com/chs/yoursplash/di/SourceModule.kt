@@ -1,9 +1,14 @@
 package com.chs.yoursplash.di
 
+import android.app.Application
+import android.content.Context
+import androidx.room.Room
 import com.chs.yoursplash.data.api.UnSplashService
+import com.chs.yoursplash.data.db.YourSplashDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.*
 import io.ktor.client.engine.android.*
@@ -35,4 +40,13 @@ object SourceModule {
         )
     }
 
+    @Singleton
+    @Provides
+    fun provideDatabase(@ApplicationContext context: Context): YourSplashDatabase {
+        return Room.databaseBuilder(
+            context,
+            YourSplashDatabase::class.java,
+            "your_splash_db"
+        ).build()
+    }
 }

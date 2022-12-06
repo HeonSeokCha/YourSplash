@@ -10,7 +10,7 @@ data class ResponsePhoto(
     @SerialName("color")
     val color: String,
     @SerialName("blur_hash")
-    val blurHash: String,
+    val blurHash: String?,
     @SerialName("width")
     val width: Int,
     @SerialName("height")
