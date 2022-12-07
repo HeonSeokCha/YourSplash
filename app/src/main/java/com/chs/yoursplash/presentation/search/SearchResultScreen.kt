@@ -29,7 +29,9 @@ import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.presentation.base.UserCard
 import com.chs.yoursplash.presentation.browse.BrowseActivity
 import com.chs.yoursplash.util.Constants
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SearchResultScreen(
@@ -41,7 +43,11 @@ fun SearchResultScreen(
     val state = viewModel.state
     val context = LocalContext.current
     val lazyListState = rememberLazyListState()
-
+    val scope = rememberCoroutineScope()
+    val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
+    val scaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = sheetState
+    )
     viewModel.searchPage = type
 
     LaunchedEffect(query) {
@@ -65,13 +71,23 @@ fun SearchResultScreen(
         }
     }
 
-    Scaffold(
+    BottomSheetScaffold(
+        scaffoldState =  scaffoldState,
         floatingActionButton = {
             if (type == Constants.SEARCH_PHOTO && query.isNotEmpty()) {
                 SearchFloatingActionButton(extend = lazyListState.isScrollingUp()) {
-
+                    scope.launch {
+                        if (sheetState.isCollapsed) {
+                            sheetState.expand()
+                        } else {
+                            sheetState.collapse()
+                        }
+                    }
                 }
             }
+        },
+        sheetContent = {
+            Box(modifier = Modifier.fillMaxWidth().height(500.dp))
         }
     ) {
         LazyColumn(

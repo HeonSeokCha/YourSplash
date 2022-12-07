@@ -103,4 +103,8 @@ dependencies {
 
     // Paging
     implementation("androidx.paging:paging-compose:1.0.0-alpha17")
+
+    // Room
+    implementation("androidx.room:room-ktx:2.4.3")
+    kapt("androidx.room:room-compiler:2.4.3")
 }

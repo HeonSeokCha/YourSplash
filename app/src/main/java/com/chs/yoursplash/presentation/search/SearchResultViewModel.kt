@@ -1,6 +1,5 @@
 package com.chs.yoursplash.presentation.search
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -22,7 +21,6 @@ class SearchResultViewModel @Inject constructor(
 ) : ViewModel() {
 
     var searchPage: String = ""
-    var searchQuery: String = ""
     var orderBy: String = "relevant"
     var color: String? = null
     var orientation: String? = null

@@ -13,4 +13,25 @@ object Constants {
     const val SEARCH_PHOTO: String = "search_photo"
     const val SEARCH_COLLECTION: String = "search_collection"
     const val SEARCH_USER: String = "search_user"
+
+    val SEARCH_COLOR_LIST = hashMapOf(
+        Pair("Any", null),
+        Pair("Black And White", "black_and_white"),
+        Pair("Black", "black"),
+        Pair("white", "white"),
+        Pair("Yellow", "yellow"),
+        Pair("Orange", "orange"),
+        Pair("Red", "red"),
+        Pair("Purple", "purple"),
+        Pair("Magenta", "magenta"),
+        Pair("Green", "green"),
+        Pair("Teal", "teal")
+    )
+
+    val SEARCH_ORI_LIST = hashMapOf(
+        Pair("Any", null),
+        Pair("Landscape", "landscape"),
+        Pair("Portrait", "portrait"),
+        Pair("Squarish", "squarish"),
+    )
 }
