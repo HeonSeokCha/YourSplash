@@ -1,9 +1,11 @@
 package com.chs.yoursplash.presentation.main
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -44,10 +46,12 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             val scaffoldState = rememberScaffoldState()
+            val modalState = rememberBottomDrawerState(BottomDrawerValue.Closed)
             val navController = rememberNavController()
             var searchKeyword by remember { mutableStateOf("") }
             val scope = rememberCoroutineScope()
@@ -82,8 +86,8 @@ class MainActivity : ComponentActivity() {
                             ),
                             onItemClick = {
                                 when (it.id) {
-                                    "Setting" -> { }
-                                    "About" -> { }
+                                    "Setting" -> {}
+                                    "About" -> {}
                                 }
                             }
                         )
@@ -91,21 +95,39 @@ class MainActivity : ComponentActivity() {
                         BottomBar(navController = navController)
                     }
                 ) {
-                    NavHost(
-                        navController = navController,
-                        modifier = Modifier.padding(it),
-                        startDestination = BottomNavScreen.HomeScreen.route
-                    ) {
-                        composable(BottomNavScreen.HomeScreen.route) {
-                            HomeScreen()
-                        }
-                        composable(BottomNavScreen.CollectionScreen.route) {
-                            CollectionScreen()
-                        }
-                        composable(Screen.SearchScreen.route) {
-                            SearchScreen(
-                                searchKeyWord = searchKeyword
-                            )
+                    BottomDrawer(
+                        drawerState = modalState,
+                        drawerContent = {
+                        Box(modifier = Modifier
+                            .fillMaxWidth()
+                            .height(500.dp))
+                    }) {
+                        NavHost(
+                            navController = navController,
+                            modifier = Modifier.padding(it),
+                            startDestination = BottomNavScreen.HomeScreen.route
+                        ) {
+                            composable(BottomNavScreen.HomeScreen.route) {
+                                HomeScreen()
+                            }
+                            composable(BottomNavScreen.CollectionScreen.route) {
+                                CollectionScreen()
+                            }
+                            composable(Screen.SearchScreen.route) {
+                                SearchScreen(
+                                    searchKeyWord = searchKeyword,
+                                    modalClick = {
+                                        Log.e("NavHost", "0")
+                                        scope.launch {
+                                            if (modalState.isOpen) {
+                                                modalState.close()
+                                            } else {
+                                                modalState.open()
+                                            }
+                                        }
+                                    }
+                                )
+                            }
                         }
                     }
                 }

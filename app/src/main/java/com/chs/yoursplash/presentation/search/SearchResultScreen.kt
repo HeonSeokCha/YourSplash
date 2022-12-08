@@ -2,6 +2,7 @@ package com.chs.yoursplash.presentation.search
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
@@ -31,12 +32,12 @@ import com.chs.yoursplash.presentation.browse.BrowseActivity
 import com.chs.yoursplash.util.Constants
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SearchResultScreen(
     query: String,
     type: String,
+    modalClick:() -> Unit,
     viewModel: SearchResultViewModel = hiltViewModel()
 ) {
 
@@ -44,10 +45,6 @@ fun SearchResultScreen(
     val context = LocalContext.current
     val lazyListState = rememberLazyListState()
     val scope = rememberCoroutineScope()
-    val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
-    val scaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = sheetState
-    )
     viewModel.searchPage = type
 
     LaunchedEffect(query) {
@@ -71,23 +68,14 @@ fun SearchResultScreen(
         }
     }
 
-    BottomSheetScaffold(
-        scaffoldState =  scaffoldState,
+    Scaffold(
         floatingActionButton = {
             if (type == Constants.SEARCH_PHOTO && query.isNotEmpty()) {
                 SearchFloatingActionButton(extend = lazyListState.isScrollingUp()) {
-                    scope.launch {
-                        if (sheetState.isCollapsed) {
-                            sheetState.expand()
-                        } else {
-                            sheetState.collapse()
-                        }
-                    }
+                    Log.e("FABCLICK", "0")
+                    modalClick()
                 }
             }
-        },
-        sheetContent = {
-            Box(modifier = Modifier.fillMaxWidth().height(500.dp))
         }
     ) {
         LazyColumn(
@@ -211,7 +199,7 @@ fun SearchFloatingActionButton(
                 contentDescription = null
             )
 
-            AnimatedVisibility (extend) {
+            AnimatedVisibility(extend) {
                 Text(
                     text = "FILTER",
                     modifier = Modifier
