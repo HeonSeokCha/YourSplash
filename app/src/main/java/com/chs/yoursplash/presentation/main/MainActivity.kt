@@ -51,57 +51,57 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val scaffoldState = rememberScaffoldState()
-            val modalState = rememberBottomDrawerState(BottomDrawerValue.Closed)
+            val bottomSheetScaffoldState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
             val navController = rememberNavController()
             var searchKeyword by remember { mutableStateOf("") }
             val scope = rememberCoroutineScope()
             YourSplashTheme {
-                Scaffold(
-                    scaffoldState = scaffoldState,
-                    topBar = {
-                        MainTopBar(
-                            navController = navController,
-                            onNavigationIconClick = {
-                                scope.launch { scaffoldState.drawerState.open() }
-                            }
-                        ) {
-                            searchKeyword = it
-                        }
-                    },
-                    drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
-                    drawerContent = {
-                        DrawerHeader()
-                        DrawerBody(
-                            items = listOf(
-                                MenuItem(
-                                    id = "Setting",
-                                    title = "Setting",
-                                    icon = Icons.Default.Home
-                                ),
-                                MenuItem(
-                                    id = "About",
-                                    title = "About",
-                                    icon = Icons.Default.Home
-                                )
-                            ),
-                            onItemClick = {
-                                when (it.id) {
-                                    "Setting" -> {}
-                                    "About" -> {}
+                ModalBottomSheetLayout(
+                    sheetState = bottomSheetScaffoldState,
+                    sheetContent = {
+                    Box(modifier = Modifier
+                        .fillMaxWidth()
+                        .height(500.dp))
+                }) {
+                    Scaffold(
+                        scaffoldState = scaffoldState,
+                        topBar = {
+                            MainTopBar(
+                                navController = navController,
+                                onNavigationIconClick = {
+                                    scope.launch { scaffoldState.drawerState.open() }
                                 }
+                            ) {
+                                searchKeyword = it
                             }
-                        )
-                    }, bottomBar = {
-                        BottomBar(navController = navController)
-                    }
-                ) {
-                    BottomDrawer(
-                        drawerState = modalState,
+                        },
+                        drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
                         drawerContent = {
-                        Box(modifier = Modifier
-                            .fillMaxWidth()
-                            .height(500.dp))
-                    }) {
+                            DrawerHeader()
+                            DrawerBody(
+                                items = listOf(
+                                    MenuItem(
+                                        id = "Setting",
+                                        title = "Setting",
+                                        icon = Icons.Default.Home
+                                    ),
+                                    MenuItem(
+                                        id = "About",
+                                        title = "About",
+                                        icon = Icons.Default.Home
+                                    )
+                                ),
+                                onItemClick = {
+                                    when (it.id) {
+                                        "Setting" -> {}
+                                        "About" -> {}
+                                    }
+                                }
+                            )
+                        }, bottomBar = {
+                            BottomBar(navController = navController)
+                        }
+                    ) {
                         NavHost(
                             navController = navController,
                             modifier = Modifier.padding(it),
@@ -117,12 +117,11 @@ class MainActivity : ComponentActivity() {
                                 SearchScreen(
                                     searchKeyWord = searchKeyword,
                                     modalClick = {
-                                        Log.e("NavHost", "0")
                                         scope.launch {
-                                            if (modalState.isOpen) {
-                                                modalState.close()
+                                            if (bottomSheetScaffoldState.isVisible) {
+                                                bottomSheetScaffoldState.hide()
                                             } else {
-                                                modalState.open()
+                                                bottomSheetScaffoldState.show()
                                             }
                                         }
                                     }
