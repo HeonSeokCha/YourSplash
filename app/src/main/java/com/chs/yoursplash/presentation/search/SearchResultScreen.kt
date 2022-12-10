@@ -30,12 +30,14 @@ import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.presentation.base.UserCard
 import com.chs.yoursplash.presentation.browse.BrowseActivity
 import com.chs.yoursplash.util.Constants
+import com.chs.yoursplash.util.SearchFilter
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SearchResultScreen(
     query: String,
+    searchFilter: SearchFilter? = null,
     type: String,
     modalClick:() -> Unit,
     viewModel: SearchResultViewModel = hiltViewModel()
@@ -44,7 +46,6 @@ fun SearchResultScreen(
     val state = viewModel.state
     val context = LocalContext.current
     val lazyListState = rememberLazyListState()
-    val scope = rememberCoroutineScope()
     viewModel.searchPage = type
 
     LaunchedEffect(query) {
@@ -52,6 +53,14 @@ fun SearchResultScreen(
             viewModel.searchResult(query)
         }
     }
+    LaunchedEffect(searchFilter) {
+        if (searchFilter != null) {
+            viewModel.orderBy = searchFilter.orderBy
+            viewModel.color = searchFilter.color
+            viewModel.orientation = searchFilter.orderBy
+        }
+    }
+
 
     val pagingList = when (type) {
         Constants.SEARCH_PHOTO -> {

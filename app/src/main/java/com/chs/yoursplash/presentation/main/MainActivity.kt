@@ -5,10 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -41,6 +38,7 @@ import com.chs.yoursplash.presentation.main.home.HomeScreen
 import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
 import com.chs.yoursplash.presentation.main.about.Screen
 import com.chs.yoursplash.presentation.search.SearchScreen
+import com.chs.yoursplash.util.SearchFilter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -54,14 +52,19 @@ class MainActivity : ComponentActivity() {
             val bottomSheetScaffoldState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
             val navController = rememberNavController()
             var searchKeyword by remember { mutableStateOf("") }
+            var searchFilter by remember { mutableStateOf(SearchFilter()) }
             val scope = rememberCoroutineScope()
             YourSplashTheme {
                 ModalBottomSheetLayout(
                     sheetState = bottomSheetScaffoldState,
                     sheetContent = {
-                    Box(modifier = Modifier
-                        .fillMaxWidth()
-                        .height(500.dp))
+                        SearchBottomSheet {
+                             searchFilter = searchFilter.copy(
+                                 orderBy = it.orderBy,
+                                 color = it.color,
+                                 orientation = it.orientation
+                             )
+                        }
                 }) {
                     Scaffold(
                         scaffoldState = scaffoldState,
@@ -116,6 +119,7 @@ class MainActivity : ComponentActivity() {
                             composable(Screen.SearchScreen.route) {
                                 SearchScreen(
                                     searchKeyWord = searchKeyword,
+                                    searchFilter = searchFilter,
                                     modalClick = {
                                         scope.launch {
                                             if (bottomSheetScaffoldState.isVisible) {
@@ -270,13 +274,37 @@ fun BottomBar(
                             contentDescription = stringResource(destination.label)
                         )
                     },
-                    label = {
-                        Text(
-                            text = stringResource(destination.label),
-                        )
-                    }
+                    label = { Text(stringResource(destination.label)) }
                 )
             }
         }
+    }
+}
+
+@Composable
+fun SearchBottomSheet(
+    onClick: (SearchFilter) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(500.dp)
+            .padding(start = 8.dp)
+    ) {
+        Text(text = "Sort By")
+        Text(text = "Color")
+        Text(text = "Orientation")
+
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentWidth(),
+            onClick = {
+                onClick(SearchFilter())
+            }
+        ) {
+            Text(text = "APPLY")
+        }
+
     }
 }

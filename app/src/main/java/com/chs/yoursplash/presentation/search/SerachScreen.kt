@@ -10,6 +10,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import com.chs.yoursplash.util.Constants
+import com.chs.yoursplash.util.SearchFilter
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun SearchScreen(
     searchKeyWord: String,
+    searchFilter: SearchFilter,
     modalClick: () -> Unit
 ) {
     val pagerState = rememberPagerState()
@@ -72,6 +74,7 @@ fun SearchScreen(
                     SearchResultScreen(
                         query = searchKeyWord,
                         type = Constants.SEARCH_PHOTO,
+                        searchFilter = searchFilter,
                         modalClick = {
                             Log.e("HorizontalPager", "0")
                             modalClick()
