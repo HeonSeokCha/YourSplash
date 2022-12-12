@@ -14,6 +14,11 @@ object Constants {
     const val SEARCH_COLLECTION: String = "search_collection"
     const val SEARCH_USER: String = "search_user"
 
+    val SORT_BY_LIST = hashMapOf(
+        Pair("RELEVANCE", "relevant"),
+        Pair("LATEST", "latest")
+    )
+
     val SEARCH_COLOR_LIST = hashMapOf(
         Pair("Any", null),
         Pair("Black And White", "black_and_white"),

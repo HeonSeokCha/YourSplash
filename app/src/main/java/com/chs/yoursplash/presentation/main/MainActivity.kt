@@ -38,6 +38,7 @@ import com.chs.yoursplash.presentation.main.home.HomeScreen
 import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
 import com.chs.yoursplash.presentation.main.about.Screen
 import com.chs.yoursplash.presentation.search.SearchScreen
+import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.SearchFilter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -58,12 +59,15 @@ class MainActivity : ComponentActivity() {
                 ModalBottomSheetLayout(
                     sheetState = bottomSheetScaffoldState,
                     sheetContent = {
-                        SearchBottomSheet {
+                        SearchBottomSheet(searchFilter) {
                              searchFilter = searchFilter.copy(
                                  orderBy = it.orderBy,
                                  color = it.color,
                                  orientation = it.orientation
                              )
+                            scope.launch {
+                                bottomSheetScaffoldState.hide()
+                            }
                         }
                 }) {
                     Scaffold(
@@ -141,7 +145,7 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun MainTopBar(
+private fun MainTopBar(
     navController: NavHostController,
     onNavigationIconClick: () -> Unit,
     searchClicked: (String) -> Unit
@@ -183,7 +187,7 @@ fun MainTopBar(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun SearchAppBar(
+private fun SearchAppBar(
     navController: NavHostController,
     searchClicked: (String) -> Unit
 ) {
@@ -240,7 +244,7 @@ fun SearchAppBar(
 }
 
 @Composable
-fun BottomBar(
+private fun BottomBar(
     navController: NavHostController
 ) {
     val items = listOf(
@@ -281,10 +285,15 @@ fun BottomBar(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SearchBottomSheet(
+private fun SearchBottomSheet(
+    searchFilter: SearchFilter,
     onClick: (SearchFilter) -> Unit
 ) {
+    var expanded by remember { mutableStateOf(false) }
+    var selectedColor by remember { mutableStateOf(Constants.SEARCH_COLOR_LIST.keys.toList()[0]) }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -292,19 +301,64 @@ fun SearchBottomSheet(
             .padding(start = 8.dp)
     ) {
         Text(text = "Sort By")
+        TabRow(selectedTabIndex = Constants.SORT_BY_LIST.values.indexOf(searchFilter.orderBy)) {
+            Constants.SORT_BY_LIST.keys.forEach { title ->
+                Text(text = title)
+            }
+        }
+
         Text(text = "Color")
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = { !expanded }
+        ) {
+            TextField(
+                readOnly = true,
+                value = selectedColor,
+                onValueChange = { },
+                label = { Text("Categories") },
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(
+                        expanded = expanded
+                    )
+                },
+                colors = ExposedDropdownMenuDefaults.textFieldColors()
+            )
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = {
+                    expanded = false
+                }
+            ) {
+                Constants.SEARCH_COLOR_LIST.keys.forEach { selectionOption ->
+                    DropdownMenuItem(
+                        onClick = {
+                            selectedColor = selectionOption
+                            expanded = false
+                        }
+                    ) {
+                        Text(text = selectionOption)
+                    }
+                }
+            }
+        }
+
         Text(text = "Orientation")
+        TabRow(selectedTabIndex = Constants.SEARCH_ORI_LIST.values.indexOf(searchFilter.orientation)) {
+            Constants.SEARCH_ORI_LIST.keys.forEach { title ->
+                Text(text = title)
+            }
+        }
 
         Button(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentWidth(),
             onClick = {
-                onClick(SearchFilter())
+                onClick(searchFilter)
             }
         ) {
             Text(text = "APPLY")
         }
-
     }
 }
