@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.twotone.Search
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -293,6 +294,7 @@ private fun SearchBottomSheet(
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedColor by remember { mutableStateOf(Constants.SEARCH_COLOR_LIST.keys.toList()[0]) }
+    var searchFilter2 by remember { mutableStateOf(SearchFilter()) }
 
     Column(
         modifier = Modifier
@@ -303,14 +305,24 @@ private fun SearchBottomSheet(
         Text(text = "Sort By")
         TabRow(selectedTabIndex = Constants.SORT_BY_LIST.values.indexOf(searchFilter.orderBy)) {
             Constants.SORT_BY_LIST.keys.forEach { title ->
-                Text(text = title)
+                Row(
+                    modifier = Modifier
+                        .clickable(onClick = { searchFilter2 = searchFilter2.copy(orderBy = title) })
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = title)
+                }
             }
         }
 
         Text(text = "Color")
         ExposedDropdownMenuBox(
+            modifier = Modifier
+                .fillMaxWidth(),
             expanded = expanded,
-            onExpandedChange = { !expanded }
+            onExpandedChange = { expanded = !expanded }
         ) {
             TextField(
                 readOnly = true,

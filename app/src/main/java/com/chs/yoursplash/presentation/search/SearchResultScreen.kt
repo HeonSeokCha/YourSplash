@@ -53,6 +53,8 @@ fun SearchResultScreen(
             viewModel.searchResult(query)
         }
     }
+
+    Log.e("SEARCHFILTER123", searchFilter.toString())
 //    LaunchedEffect(searchFilter) {
 //        if (searchFilter != null) {
 //            viewModel.orderBy = searchFilter.orderBy
