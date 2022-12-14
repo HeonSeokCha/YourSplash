@@ -54,14 +54,14 @@ fun SearchResultScreen(
         }
     }
 
-    Log.e("SEARCHFILTER123", searchFilter.toString())
-//    LaunchedEffect(searchFilter) {
-//        if (searchFilter != null) {
-//            viewModel.orderBy = searchFilter.orderBy
-//            viewModel.color = searchFilter.color
-//            viewModel.orientation = searchFilter.orderBy
-//        }
-//    }
+    LaunchedEffect(searchFilter) {
+        if (searchFilter != null && searchFilter != SearchFilter()) {
+            Log.e("SEARCHFILTER123", searchFilter.toString())
+            viewModel.orderBy = searchFilter.orderBy
+            viewModel.color = searchFilter.color
+            viewModel.orientation = searchFilter.orientation
+        }
+    }
 
 
     val pagingList = when (type) {

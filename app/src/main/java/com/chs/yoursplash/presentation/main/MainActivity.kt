@@ -293,8 +293,9 @@ private fun SearchBottomSheet(
     onClick: (SearchFilter) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedColor by remember { mutableStateOf(Constants.SEARCH_COLOR_LIST.keys.toList()[0]) }
-    var searchFilter2 by remember { mutableStateOf(SearchFilter()) }
+    var selectOrder by remember { mutableStateOf(searchFilter.orderBy) }
+    var selectedColor by remember { mutableStateOf(searchFilter.color) }
+    var selectOri by remember { mutableStateOf(searchFilter.orientation) }
 
     Column(
         modifier = Modifier
@@ -303,11 +304,11 @@ private fun SearchBottomSheet(
             .padding(start = 8.dp)
     ) {
         Text(text = "Sort By")
-        TabRow(selectedTabIndex = Constants.SORT_BY_LIST.values.indexOf(searchFilter.orderBy)) {
+        TabRow(selectedTabIndex = Constants.SORT_BY_LIST.keys.indexOf(selectOrder)) {
             Constants.SORT_BY_LIST.keys.forEach { title ->
                 Row(
                     modifier = Modifier
-                        .clickable(onClick = { searchFilter2 = searchFilter2.copy(orderBy = title) })
+                        .clickable(onClick = { selectOrder = title })
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
@@ -358,7 +359,15 @@ private fun SearchBottomSheet(
         Text(text = "Orientation")
         TabRow(selectedTabIndex = Constants.SEARCH_ORI_LIST.values.indexOf(searchFilter.orientation)) {
             Constants.SEARCH_ORI_LIST.keys.forEach { title ->
-                Text(text = title)
+                Row(
+                    modifier = Modifier
+                        .clickable(onClick = { selectOri = title })
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = title)
+                }
             }
         }
 
@@ -367,6 +376,11 @@ private fun SearchBottomSheet(
                 .fillMaxWidth()
                 .wrapContentWidth(),
             onClick = {
+                SearchFilter(
+                    orderBy = Constants.SORT_BY_LIST[selectOrder] ?: selectOrder,
+                    color = Constants.SEARCH_COLOR_LIST[selectedColor],
+                    orientation = Constants.SEARCH_ORI_LIST[selectOri]
+                )
                 onClick(searchFilter)
             }
         ) {
