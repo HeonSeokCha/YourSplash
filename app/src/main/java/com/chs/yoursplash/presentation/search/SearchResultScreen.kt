@@ -39,7 +39,7 @@ fun SearchResultScreen(
     query: String,
     searchFilter: SearchFilter? = null,
     type: String,
-    modalClick:() -> Unit,
+    modalClick: () -> Unit,
     viewModel: SearchResultViewModel = hiltViewModel()
 ) {
 
@@ -56,10 +56,10 @@ fun SearchResultScreen(
 
     LaunchedEffect(searchFilter) {
         if (searchFilter != null && searchFilter != SearchFilter()) {
-            Log.e("SEARCHFILTER123", searchFilter.toString())
-            viewModel.orderBy = searchFilter.orderBy
-            viewModel.color = searchFilter.color
-            viewModel.orientation = searchFilter.orientation
+            viewModel.orderBy = Constants.SORT_BY_LIST[searchFilter.orderBy]!!
+            viewModel.color = Constants.SEARCH_COLOR_LIST[searchFilter.color]
+            viewModel.orientation = Constants.SEARCH_ORI_LIST[searchFilter.orientation]
+            viewModel.searchResult(query)
         }
     }
 

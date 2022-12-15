@@ -69,6 +69,10 @@ class MainActivity : ComponentActivity() {
                             scope.launch {
                                 bottomSheetScaffoldState.hide()
                             }
+                            Log.e("searchFilter1", it.orderBy)
+                            Log.e("searchFilter2", it.color)
+                            Log.e("searchFilter3", it.orientation)
+                            Log.e("searchFilter", searchFilter.toString())
                         }
                 }) {
                     Scaffold(
@@ -297,6 +301,8 @@ private fun SearchBottomSheet(
     var selectedColor by remember { mutableStateOf(searchFilter.color) }
     var selectOri by remember { mutableStateOf(searchFilter.orientation) }
 
+    Log.e("searchFilter", searchFilter.toString())
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -304,7 +310,10 @@ private fun SearchBottomSheet(
             .padding(start = 8.dp)
     ) {
         Text(text = "Sort By")
-        TabRow(selectedTabIndex = Constants.SORT_BY_LIST.keys.indexOf(selectOrder)) {
+        TabRow(
+            selectedTabIndex = Constants.SORT_BY_LIST.keys.indexOf(selectOrder),
+            backgroundColor = Color.LightGray
+        ) {
             Constants.SORT_BY_LIST.keys.forEach { title ->
                 Row(
                     modifier = Modifier
@@ -357,16 +366,25 @@ private fun SearchBottomSheet(
         }
 
         Text(text = "Orientation")
-        TabRow(selectedTabIndex = Constants.SEARCH_ORI_LIST.values.indexOf(searchFilter.orientation)) {
+        TabRow(
+            selectedTabIndex = Constants.SEARCH_ORI_LIST.keys.indexOf(selectOri),
+            backgroundColor = Color.LightGray
+        ) {
             Constants.SEARCH_ORI_LIST.keys.forEach { title ->
                 Row(
                     modifier = Modifier
-                        .clickable(onClick = { selectOri = title })
+                        .clickable(onClick = {
+                            Log.e("Click", title)
+                            selectOri = title
+                        })
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = title)
+                    Text(
+                        text = title,
+                        maxLines = 1
+                    )
                 }
             }
         }
@@ -376,12 +394,13 @@ private fun SearchBottomSheet(
                 .fillMaxWidth()
                 .wrapContentWidth(),
             onClick = {
-                SearchFilter(
-                    orderBy = Constants.SORT_BY_LIST[selectOrder] ?: selectOrder,
-                    color = Constants.SEARCH_COLOR_LIST[selectedColor],
-                    orientation = Constants.SEARCH_ORI_LIST[selectOri]
+                onClick(
+                    SearchFilter(
+                        orderBy = selectOrder,
+                        color = selectedColor,
+                        orientation = selectOri
+                    )
                 )
-                onClick(searchFilter)
             }
         ) {
             Text(text = "APPLY")
