@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -306,10 +307,19 @@ private fun SearchBottomSheet(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(500.dp)
-            .padding(start = 8.dp)
+            .wrapContentHeight()
+            .padding(
+                start = 12.dp,
+                end = 12.dp,
+                top = 16.dp,
+                bottom = 16.dp
+            )
     ) {
-        Text(text = "Sort By")
+        Text(
+            text = "Sort By",
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(Modifier.height(8.dp))
         TabRow(
             selectedTabIndex = Constants.SORT_BY_LIST.keys.indexOf(selectOrder),
             backgroundColor = Color.LightGray
@@ -326,8 +336,13 @@ private fun SearchBottomSheet(
                 }
             }
         }
+        Spacer(Modifier.height(12.dp))
 
-        Text(text = "Color")
+        Text(
+            text = "Color",
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(Modifier.height(8.dp))
         ExposedDropdownMenuBox(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -335,6 +350,7 @@ private fun SearchBottomSheet(
             onExpandedChange = { expanded = !expanded }
         ) {
             TextField(
+                modifier = Modifier.fillMaxWidth(),
                 readOnly = true,
                 value = selectedColor,
                 onValueChange = { },
@@ -364,8 +380,13 @@ private fun SearchBottomSheet(
                 }
             }
         }
+        Spacer(Modifier.height(12.dp))
 
-        Text(text = "Orientation")
+        Text(
+            text = "Orientation",
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(Modifier.height(8.dp))
         TabRow(
             selectedTabIndex = Constants.SEARCH_ORI_LIST.keys.indexOf(selectOri),
             backgroundColor = Color.LightGray
@@ -388,11 +409,12 @@ private fun SearchBottomSheet(
                 }
             }
         }
+        Spacer(Modifier.height(8.dp))
 
         Button(
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentWidth(),
+                .wrapContentHeight(),
             onClick = {
                 onClick(
                     SearchFilter(

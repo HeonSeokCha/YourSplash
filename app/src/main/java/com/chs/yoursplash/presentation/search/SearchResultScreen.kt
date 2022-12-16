@@ -83,7 +83,6 @@ fun SearchResultScreen(
         floatingActionButton = {
             if (type == Constants.SEARCH_PHOTO && query.isNotEmpty()) {
                 SearchFloatingActionButton(extend = lazyListState.isScrollingUp()) {
-                    Log.e("FABCLICK", "0")
                     modalClick()
                 }
             }
