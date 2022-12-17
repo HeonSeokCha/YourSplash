@@ -1,6 +1,7 @@
 package com.chs.yoursplash.presentation.browse.user
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -33,6 +34,7 @@ fun UserDetailCollectionScreen(
         modifier = Modifier.fillMaxSize(),
     ) {
         items(collectionList?.itemCount ?: 0) { idx ->
+            Log.e("Item", collectionList?.get(idx).toString())
             AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -51,7 +53,7 @@ fun UserDetailCollectionScreen(
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 placeholder = BitmapPainter(
-                    BlurHashDecoder.decode(blurHash = collectionList?.get(idx)?.previewPhotos?.get(idx)?.blurHash)!!.asImageBitmap()
+                    BlurHashDecoder.decode(blurHash = collectionList?.get(0)?.previewPhotos?.get(idx)?.blurHash)!!.asImageBitmap()
                 ),
             )
         }

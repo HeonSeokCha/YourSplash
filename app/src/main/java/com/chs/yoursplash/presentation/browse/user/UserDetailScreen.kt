@@ -48,6 +48,7 @@ fun UserDetailScreen(
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberLazyListState()
+    val tabList = mutableListOf<String>()
 
     LaunchedEffect(context, viewModel) {
         viewModel.getUserDetail(userName)
@@ -56,27 +57,16 @@ fun UserDetailScreen(
         viewModel.getUserDetailCollections(userName)
     }
 
-    val tabList = if (
-        state.userDetailInfo?.totalCollections == 0
-            && state.userDetailInfo.totalLikes == 0
-    ) {
-        listOf("PHOTOS")
-    } else if (state.userDetailInfo?.totalCollections == 0) {
-        listOf(
-            "PHOTOS",
-            "LIKES",
-        )
-    } else if (state.userDetailInfo?.totalLikes == 0) {
-        listOf(
-            "PHOTOS",
-            "COLLECTIONS"
-        )
-    } else {
-        listOf(
-            "PHOTOS",
-            "LIKES",
-            "COLLECTIONS"
-        )
+    if (state.userDetailInfo?.totalPhotos != 0) {
+        tabList.add("PHOTOS")
+    }
+
+    if (state.userDetailInfo?.totalLikes != 0) {
+        tabList.add("LIKES")
+    }
+
+    if (state.userDetailInfo?.totalCollections != 0) {
+        tabList.add("COLLECTIONS")
     }
 
     BoxWithConstraints {
@@ -145,11 +135,26 @@ fun UserDetailScreen(
                 ) { pager ->
                     when (pager) {
                         0 -> {
-                            UserDetailPhotoScreen(
-                                context = context,
-                                navController = navController,
-                                state.userDetailPhotoList?.collectAsLazyPagingItems()
-                            )
+                            if (tabList[0] == "PHOTOS") {
+                                UserDetailPhotoScreen(
+                                    context = context,
+                                    navController = navController,
+                                    state.userDetailPhotoList?.collectAsLazyPagingItems()
+                                )
+                            } else if (tabList[0] == "LIKES") {
+                                UserDetailLikeScreen(
+                                    context = context,
+                                    navController = navController,
+                                    state.userDetailLikeList?.collectAsLazyPagingItems()
+                                )
+                            } else {
+                                UserDetailCollectionScreen(
+                                    context = context,
+                                    navController = navController,
+                                    state.userDetailCollection?.collectAsLazyPagingItems()
+                                )
+                            }
+
                         }
                         1 -> {
                             if (tabList[1] == "LIKES") {
