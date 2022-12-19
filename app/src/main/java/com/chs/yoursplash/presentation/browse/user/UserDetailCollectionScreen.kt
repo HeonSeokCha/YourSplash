@@ -34,7 +34,6 @@ fun UserDetailCollectionScreen(
         modifier = Modifier.fillMaxSize(),
     ) {
         items(collectionList?.itemCount ?: 0) { idx ->
-            Log.e("Item", collectionList?.get(idx).toString())
             AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth()

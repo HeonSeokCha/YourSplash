@@ -76,7 +76,6 @@ fun SearchScreen(
                         type = Constants.SEARCH_PHOTO,
                         searchFilter = searchFilter,
                         modalClick = {
-                            Log.e("HorizontalPager", "0")
                             modalClick()
                         }
                     )

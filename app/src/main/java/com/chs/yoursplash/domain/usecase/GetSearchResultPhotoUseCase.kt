@@ -16,7 +16,6 @@ class GetSearchResultPhotoUseCase @Inject constructor(
         color: String?,
         orientation: String?
     ): Flow<PagingData<Photo>> {
-        Log.e("searchResult", query)
         return repository.getSearchResultPhoto(
             query = query,
             orderBy = orderBy,

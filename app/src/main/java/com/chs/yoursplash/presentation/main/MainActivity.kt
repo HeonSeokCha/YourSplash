@@ -70,10 +70,6 @@ class MainActivity : ComponentActivity() {
                             scope.launch {
                                 bottomSheetScaffoldState.hide()
                             }
-                            Log.e("searchFilter1", it.orderBy)
-                            Log.e("searchFilter2", it.color)
-                            Log.e("searchFilter3", it.orientation)
-                            Log.e("searchFilter", searchFilter.toString())
                         }
                 }) {
                     Scaffold(
@@ -83,10 +79,13 @@ class MainActivity : ComponentActivity() {
                                 navController = navController,
                                 onNavigationIconClick = {
                                     scope.launch { scaffoldState.drawerState.open() }
+                                }, searchClicked = {
+                                    searchKeyword = it
+                                }, onBackClicked = {
+                                    searchKeyword = ""
+                                    navController.navigateUp()
                                 }
-                            ) {
-                                searchKeyword = it
-                            }
+                            )
                         },
                         drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
                         drawerContent = {
@@ -154,7 +153,8 @@ class MainActivity : ComponentActivity() {
 private fun MainTopBar(
     navController: NavHostController,
     onNavigationIconClick: () -> Unit,
-    searchClicked: (String) -> Unit
+    searchClicked: (String) -> Unit,
+    onBackClicked: () -> Unit
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     if (navBackStackEntry?.destination?.route == BottomNavScreen.HomeScreen.route
@@ -184,9 +184,10 @@ private fun MainTopBar(
             contentColor = MaterialTheme.colors.onPrimary
         )
     } else {
-        SearchAppBar(navController) { searchQuery ->
-            searchClicked(searchQuery)
-        }
+        SearchAppBar(searchClicked = { searchQuery ->
+                searchClicked(searchQuery)
+            }, onBackClicked = onBackClicked
+        )
     }
 }
 
@@ -194,8 +195,8 @@ private fun MainTopBar(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun SearchAppBar(
-    navController: NavHostController,
-    searchClicked: (String) -> Unit
+    searchClicked: (String) -> Unit,
+    onBackClicked: () -> Unit
 ) {
     var textState by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -232,7 +233,7 @@ private fun SearchAppBar(
                     contentDescription = null,
                     tint = Color.White,
                     modifier = Modifier.clickable {
-                        navController.navigateUp()
+                        onBackClicked()
                     }
                 )
             },
@@ -301,8 +302,6 @@ private fun SearchBottomSheet(
     var selectOrder by remember { mutableStateOf(searchFilter.orderBy) }
     var selectedColor by remember { mutableStateOf(searchFilter.color) }
     var selectOri by remember { mutableStateOf(searchFilter.orientation) }
-
-    Log.e("searchFilter", searchFilter.toString())
 
     Column(
         modifier = Modifier
@@ -395,7 +394,6 @@ private fun SearchBottomSheet(
                 Row(
                     modifier = Modifier
                         .clickable(onClick = {
-                            Log.e("Click", title)
                             selectOri = title
                         })
                         .padding(16.dp),
