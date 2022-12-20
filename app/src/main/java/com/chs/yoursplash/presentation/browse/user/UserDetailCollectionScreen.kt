@@ -6,14 +6,20 @@ import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -22,6 +28,7 @@ import coil.compose.AsyncImage
 import coil.size.Size
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.presentation.Screens
+import com.chs.yoursplash.presentation.base.CollectionCard
 import com.chs.yoursplash.util.BlurHashDecoder
 
 @Composable
@@ -32,29 +39,54 @@ fun UserDetailCollectionScreen(
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(8.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         items(collectionList?.itemCount ?: 0) { idx ->
-            AsyncImage(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(
-                        start = 8.dp,
-                        end = 8.dp,
-                        bottom = 16.dp
-                    )
-                    .clickable {
-                        navController.navigate(
+                    .height(250.dp)
+            ) {
+                AsyncImage(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(RoundedCornerShape(10.dp))
+                        .clickable {
+                            navController.navigate(
                             "${Screens.CollectionDetailScreen.route}/${collectionList?.get(idx)?.id}"
+                            )
+                        },
+                    model = collectionList?.get(idx)?.previewPhotos?.get(0)?.urls?.small_s3,
+                    contentScale = ContentScale.Crop,
+                    contentDescription = null,
+                    placeholder = BitmapPainter(
+                        BlurHashDecoder.decode(blurHash = collectionList?.get(idx)?.previewPhotos?.get(0)?.blurHash)!!.asImageBitmap()
+                    ),
+                )
+
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(
+                            start = 16.dp,
+                            bottom = 16.dp
                         )
-                    },
-                model = collectionList?.get(idx)?.previewPhotos?.get(0)?.urls?.thumb,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                placeholder = BitmapPainter(
-                    BlurHashDecoder.decode(blurHash = collectionList?.get(0)?.previewPhotos?.get(idx)?.blurHash)!!.asImageBitmap()
-                ),
-            )
+                ) {
+                    Text(
+                        text = collectionList?.get(idx)?.title ?: "...",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                    Text(
+                        text = "${collectionList?.get(idx)?.totalPhotos ?: 0} Photos",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.White
+                    )
+                }
+            }
         }
     }
 

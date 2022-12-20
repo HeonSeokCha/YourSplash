@@ -194,6 +194,7 @@ private fun UserDetailInfo(userInfo: UserDetail?) {
             .padding(
                 start = 8.dp,
                 end = 8.dp,
+                top = 16.dp,
                 bottom = 16.dp
             ),
         verticalAlignment = Alignment.CenterVertically
@@ -205,57 +206,60 @@ private fun UserDetailInfo(userInfo: UserDetail?) {
             model = userInfo?.profileImage?.large,
             contentDescription = null,
         )
-
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .padding(start = 16.dp)
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = "Photos",
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = userInfo?.totalPhotos?.toString() ?: "",
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+            Text(
+                text = userInfo?.userName ?: "Unknown",
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 18.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            
+            Spacer(modifier = Modifier.height(12.dp))
 
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = "Likes",
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                UserDetailInfoItem(
+                    title = "Photos",
+                    text = userInfo?.totalPhotos?.toString() ?: "0"
                 )
-                Text(
-                    text = userInfo?.totalLikes?.toString() ?: "",
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
 
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = "Collections",
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                UserDetailInfoItem(
+                    title = "Likes",
+                    text = userInfo?.totalLikes?.toString() ?: "0"
                 )
-                Text(
-                    text = userInfo?.totalCollections?.toString() ?: "",
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+
+                UserDetailInfoItem(
+                    title = "Collections",
+                    text = userInfo?.totalCollections?.toString() ?: "0"
                 )
             }
         }
+    }
+}
+
+@Composable
+fun UserDetailInfoItem(title: String, text: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            text = title,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        Text(
+            text = text,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }

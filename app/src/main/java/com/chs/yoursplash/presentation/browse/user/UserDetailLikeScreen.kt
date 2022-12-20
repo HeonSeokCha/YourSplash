@@ -20,6 +20,7 @@ import androidx.paging.compose.items
 import coil.compose.AsyncImage
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.presentation.Screens
+import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.util.BlurHashDecoder
 
 @Composable
@@ -30,28 +31,21 @@ fun UserDetailLikeScreen(
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(8.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         items(photoList?.itemCount ?: 0) { idx ->
-            AsyncImage(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .padding(
-                        start = 8.dp,
-                        end = 8.dp,
-                        bottom = 16.dp
+            ImageCard(
+                photoInfo = photoList?.get(idx),
+                photoClickAble = {
+                    navController.navigate(
+                        "${Screens.ImageDetailScreen.route}/${photoList?.get(idx)?.id}"
                     )
-                    .clickable {
-                        navController.navigate(
-                            "${Screens.ImageDetailScreen.route}/${photoList?.get(idx)?.id}"
-                        )
-                    },
-                model = photoList?.get(idx)?.urls?.small,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                placeholder = BitmapPainter(
-                    BlurHashDecoder.decode(blurHash = photoList?.get(idx)?.blurHash)!!.asImageBitmap()
-                ),
+                }, userClickAble = {
+                    navController.navigate(
+                        "${Screens.UserDetailScreen.route}/${photoList?.get(idx)?.user?.userName}"
+                    )
+                }
             )
         }
     }
