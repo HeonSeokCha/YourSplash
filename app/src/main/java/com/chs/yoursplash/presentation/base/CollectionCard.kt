@@ -8,6 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
@@ -70,15 +72,24 @@ fun CollectionCard(
                 modifier = Modifier
                     .fillMaxSize()
                     .clip(RoundedCornerShape(10.dp))
+                    .drawWithContent {
+                        drawContent()
+                        drawRect(
+                            brush = Brush.verticalGradient(listOf(Color.Transparent, Color.Black)),
+                            alpha = 0.4f
+                        )
+                    }
                     .clickable {
                         collectionClickAble(collectionInfo?.id ?: "")
                     },
-                model = collectionInfo?.previewPhotos?.get(0)?.urls?.small_s3,
+                model = collectionInfo?.previewPhotos?.get(0)?.urls?.small,
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
-                placeholder = BitmapPainter(
-                    BlurHashDecoder.decode(blurHash = collectionInfo?.previewPhotos?.get(0)?.blurHash)!!.asImageBitmap()
-                ),
+                placeholder = if (collectionInfo?.previewPhotos != null) {
+                    BitmapPainter(
+                        BlurHashDecoder.decode(blurHash = collectionInfo.previewPhotos[0].blurHash)!!.asImageBitmap()
+                    )
+                } else { null },
             )
 
             Column(
