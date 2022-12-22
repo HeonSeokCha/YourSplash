@@ -171,7 +171,7 @@ fun ImageDetailScreen(
                                     IconButton(
                                         modifier = Modifier.size(24.dp),
                                         onClick = {
-
+                                            Toast.makeText(context, "File is DownLoading", Toast.LENGTH_SHORT).show()
                                         }) {
                                         Icon(
                                             imageVector = Icons.Default.Downloading,
@@ -183,7 +183,7 @@ fun ImageDetailScreen(
                                     IconButton(
                                         modifier = Modifier.size(24.dp),
                                         onClick = {
-
+                                            Toast.makeText(context, "File is DownLoaded", Toast.LENGTH_SHORT).show()
                                         }) {
                                         Icon(
                                             imageVector = Icons.Default.DownloadDone,
@@ -276,11 +276,7 @@ fun ImageDetailScreen(
                                         .clickable {
                                             navController.navigate(
                                                 "${Screens.CollectionDetailScreen.route}/" +
-                                                        "${
-                                                            state.imageDetailInfo?.relatedCollection?.result?.get(
-                                                                idx
-                                                            )?.id
-                                                        }"
+                                                        "${state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.id}"
                                             )
                                         },
                                     model = state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.previewPhotos?.get(0)?.urls?.small_s3,
