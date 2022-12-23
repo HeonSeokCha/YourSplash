@@ -5,6 +5,9 @@ import com.chs.yoursplash.BuildConfig
 object Constants {
     const val UNSPLAH_URL: String = "https://api.unsplash.com"
     const val CLIENT_ID: String = BuildConfig.API_ACCESS_KEY
+    const val PREFERENCE_NAME: String = "setting_preferences"
+    const val PREFERENCE_KEY_LOAD_QUALITY: String ="load_quality"
+    const val PREFERENCE_KEY_DOWNLOAD_QUALITY: String ="download_quality"
     const val TARGET_ID: String = "target_id"
     const val TARGET_TYPE: String = "target_type"
     const val TARGET_PHOTO: String = "target_photo"

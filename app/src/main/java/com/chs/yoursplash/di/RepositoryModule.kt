@@ -1,6 +1,8 @@
 package com.chs.yoursplash.di
 
+import com.chs.yoursplash.data.repository.SettingRepositoryImpl
 import com.chs.yoursplash.data.repository.SplashRepositoryImpl
+import com.chs.yoursplash.domain.repository.SettingRepository
 import com.chs.yoursplash.domain.repository.SplashRepository
 import dagger.Binds
 import dagger.Module
@@ -15,5 +17,10 @@ abstract class RepositoryModule {
     abstract fun bindSplashRepository(
         splashRepositoryImpl: SplashRepositoryImpl
     ): SplashRepository
+
+    @Binds
+    abstract fun bindSettingRepository(
+        settingRepositoryImpl: SettingRepositoryImpl
+    ): SettingRepository
 
 }
