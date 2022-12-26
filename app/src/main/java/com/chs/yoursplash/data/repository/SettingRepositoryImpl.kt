@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.chs.yoursplash.domain.repository.SettingRepository
 import com.chs.yoursplash.util.Constants
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -18,7 +19,7 @@ import javax.inject.Inject
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = Constants.PREFERENCE_NAME)
 
 class SettingRepositoryImpl @Inject constructor(
-    context: Context
+    @ApplicationContext private val context: Context
 ) : SettingRepository {
 
     private val dataStore = context.dataStore

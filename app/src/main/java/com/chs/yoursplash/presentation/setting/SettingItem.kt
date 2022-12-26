@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,7 +21,9 @@ fun SettingItem(
     clickAble: (String) -> Unit
 ) {
     Column(
-        modifier = Modifier.clickable {
+        modifier = Modifier
+            .padding(bottom = 32.dp)
+            .clickable {
             clickAble(title)
         }
     ) {
@@ -33,7 +36,7 @@ fun SettingItem(
             text = subTitle,
             fontSize = 14.sp,
             color = Color.Gray,
-            fontWeight = FontWeight.ExtraLight
+            fontWeight = FontWeight.Light
         )
     }
 }

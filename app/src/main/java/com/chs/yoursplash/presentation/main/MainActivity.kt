@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.twotone.Search
@@ -40,6 +41,7 @@ import com.chs.yoursplash.presentation.main.home.HomeScreen
 import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
 import com.chs.yoursplash.presentation.main.about.Screen
 import com.chs.yoursplash.presentation.search.SearchScreen
+import com.chs.yoursplash.presentation.setting.SettingScreen
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.SearchFilter
 import dagger.hilt.android.AndroidEntryPoint
@@ -105,9 +107,12 @@ class MainActivity : ComponentActivity() {
                                 ),
                                 onItemClick = {
                                     when (it.id) {
-                                        "Setting" -> {}
+                                        "Setting" -> {
+                                            navController.navigate(Screen.SettingScreen.route)
+                                        }
                                         "About" -> {}
                                     }
+                                    scope.launch { scaffoldState.drawerState.close() }
                                 }
                             )
                         }, bottomBar = {
@@ -140,6 +145,9 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             }
+                            composable(Screen.SettingScreen.route) {
+                                SettingScreen()
+                            }
                         }
                     }
                 }
@@ -157,37 +165,62 @@ private fun MainTopBar(
     onBackClicked: () -> Unit
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    if (navBackStackEntry?.destination?.route == BottomNavScreen.HomeScreen.route
-        || navBackStackEntry?.destination?.route == BottomNavScreen.CollectionScreen.route) {
-        TopAppBar(
-            title = {
-                Text(
-                    text = stringResource(id = R.string.app_name),
-                    fontSize = 20.sp
-                )
-            }, navigationIcon = {
-                IconButton(onClick = {
-                    onNavigationIconClick()
-                }) {
-                    Icon(Icons.Filled.Menu, contentDescription = null)
-                }
-            }, actions = {
-                IconButton(onClick = {
-                    navController.navigate(Screen.SearchScreen.route)
-                }) {
-                    Icon(
-                        imageVector = Icons.TwoTone.Search,
-                        contentDescription = null
+    when(navBackStackEntry?.destination?.route) {
+        BottomNavScreen.HomeScreen.route, BottomNavScreen.CollectionScreen.route -> {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.app_name),
+                        fontSize = 20.sp
                     )
-                }
-            }, backgroundColor = MaterialTheme.colors.primary,
-            contentColor = MaterialTheme.colors.onPrimary
-        )
-    } else {
-        SearchAppBar(searchClicked = { searchQuery ->
+                }, navigationIcon = {
+                    IconButton(onClick = {
+                        onNavigationIconClick()
+                    }) {
+                        Icon(Icons.Filled.Menu, contentDescription = null)
+                    }
+                }, actions = {
+                    IconButton(onClick = {
+                        navController.navigate(Screen.SearchScreen.route)
+                    }) {
+                        Icon(
+                            imageVector = Icons.TwoTone.Search,
+                            contentDescription = null
+                        )
+                    }
+                }, backgroundColor = MaterialTheme.colors.primary,
+                contentColor = MaterialTheme.colors.onPrimary
+            )
+        }
+
+        Screen.SettingScreen.route -> {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Settings"
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navController.navigateUp()
+                    }) {
+                        Icon(Icons.Filled.ArrowBack, contentDescription = null)
+                    }
+                },
+                elevation = 0.dp,
+                contentColor = Color.White
+            )
+        }
+
+        Screen.SearchScreen.route -> {
+            SearchAppBar(searchClicked = { searchQuery ->
                 searchClicked(searchQuery)
             }, onBackClicked = onBackClicked
-        )
+            )
+        }
+        else -> {
+
+        }
     }
 }
 
