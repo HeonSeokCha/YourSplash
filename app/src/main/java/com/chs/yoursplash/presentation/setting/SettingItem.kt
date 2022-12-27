@@ -29,14 +29,13 @@ fun SettingItem(
     ) {
         Text(
             text = title,
-            fontSize = 18.sp
+            fontSize = 22.sp
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = subTitle,
-            fontSize = 14.sp,
+            fontSize = 18.sp,
             color = Color.Gray,
-            fontWeight = FontWeight.Light
         )
     }
 }
