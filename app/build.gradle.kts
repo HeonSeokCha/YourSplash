@@ -87,19 +87,19 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     //Ktor
-    implementation("io.ktor:ktor-client-core:2.1.3")
-    implementation("io.ktor:ktor-client-android:2.1.3")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.1.3")
-    implementation("io.ktor:ktor-client-content-negotiation:2.1.3")
-    implementation("io.ktor:ktor-client-logging:2.1.3")
+    implementation("io.ktor:ktor-client-core:2.2.1")
+    implementation("io.ktor:ktor-client-android:2.2.1")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.1")
+    implementation("io.ktor:ktor-client-content-negotiation:2.2.1")
+    implementation("io.ktor:ktor-client-logging:2.2.1")
     implementation("ch.qos.logback:logback-classic:1.2.3")
 
     // Coil
     implementation("io.coil-kt:coil-compose:2.2.2")
 
     // Pager
-    implementation("com.google.accompanist:accompanist-pager:0.27.1")
-    implementation("com.google.accompanist:accompanist-pager-indicators:0.27.1")
+    implementation("com.google.accompanist:accompanist-pager:0.28.0")
+    implementation("com.google.accompanist:accompanist-pager-indicators:0.28.0")
 
     // Paging
     implementation("androidx.paging:paging-compose:1.0.0-alpha17")
