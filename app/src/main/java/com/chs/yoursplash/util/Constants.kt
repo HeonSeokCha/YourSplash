@@ -43,4 +43,12 @@ object Constants {
         Pair("Portrait", "portrait"),
         Pair("Squarish", "squarish"),
     )
+
+    val QUALITY_LIST = linkedMapOf(
+        Pair("Raw", "raw"),
+        Pair("Full", "full"),
+        Pair("Regular", "Regular"),
+        Pair("Small", "small"),
+        Pair("Thumb", "thumb"),
+    )
 }

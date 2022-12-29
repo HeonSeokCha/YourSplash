@@ -25,9 +25,12 @@ class SettingViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             state = state.copy(
-                downLoadQualityValue = getStringPrefUseCase(Constants.PREFERENCE_KEY_DOWNLOAD_QUALITY).first().ifEmpty { "Regular" },
-                loadQualityValue = getStringPrefUseCase(Constants.PREFERENCE_KEY_LOAD_QUALITY).first().ifEmpty { "Full" },
-                wallpaperQualityValue = getStringPrefUseCase(Constants.PREFERENCE_KEY_WALLPAPER_QUALITY).first().ifEmpty { "Full" }
+                downLoadQualityValue = getStringPrefUseCase(Constants.PREFERENCE_KEY_DOWNLOAD_QUALITY).first()
+                    .ifEmpty { "Regular" },
+                loadQualityValue = getStringPrefUseCase(Constants.PREFERENCE_KEY_LOAD_QUALITY).first()
+                    .ifEmpty { "Full" },
+                wallpaperQualityValue = getStringPrefUseCase(Constants.PREFERENCE_KEY_WALLPAPER_QUALITY).first()
+                    .ifEmpty { "Full" }
             )
         }
     }
@@ -43,6 +46,29 @@ class SettingViewModel @Inject constructor(
                 }
                 "Wallpaper Quality" -> {
                     putStringPrefUseCase(Constants.PREFERENCE_KEY_WALLPAPER_QUALITY, value)
+                }
+                else -> Unit
+            }
+        }
+    }
+
+    fun getSettingPreference(title: String) {
+        viewModelScope.launch {
+            when (title) {
+                "Load Quality" -> {
+                    state = state.copy(
+                        loadQualityValue = getStringPrefUseCase(Constants.PREFERENCE_KEY_LOAD_QUALITY).first()
+                    )
+                }
+                "Download Quality" -> {
+                    state = state.copy(
+                        downLoadQualityValue = getStringPrefUseCase(Constants.PREFERENCE_KEY_DOWNLOAD_QUALITY).first()
+                    )
+                }
+                "Wallpaper Quality" -> {
+                    state = state.copy(
+                        loadQualityValue = getStringPrefUseCase(Constants.PREFERENCE_KEY_WALLPAPER_QUALITY).first()
+                    )
                 }
                 else -> Unit
             }

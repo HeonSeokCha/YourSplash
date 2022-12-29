@@ -24,7 +24,7 @@ fun SettingItem(
         modifier = Modifier
             .padding(bottom = 32.dp)
             .clickable {
-            clickAble(title)
+            clickAble(subTitle)
         }
     ) {
         Text(
