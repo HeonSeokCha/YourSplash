@@ -1,27 +1,24 @@
 package com.chs.yoursplash.presentation.setting
 
-import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.chs.yoursplash.presentation.ui.theme.Purple500
 import com.chs.yoursplash.util.Constants
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 @Composable
 fun SettingScreen(
     viewModel: SettingViewModel = hiltViewModel()
 ) {
     var openDialog by remember { mutableStateOf(false) }
-    var selectButtonTitle by remember { mutableStateOf("") }
-    var selectButton by remember { mutableStateOf(viewModel.state.loadQualityValue) }
+    var selectButtonTitle by remember { mutableStateOf("" to "") }
 
     Column(
         modifier = Modifier
@@ -41,7 +38,7 @@ fun SettingScreen(
             title = "Load Quality",
             subTitle = viewModel.state.loadQualityValue,
         ) {
-            selectButtonTitle = it
+            selectButtonTitle = Constants.PREFERENCE_KEY_LOAD_QUALITY to it
             openDialog = true
         }
 
@@ -49,7 +46,7 @@ fun SettingScreen(
             title = "Download Quality",
             subTitle = viewModel.state.downLoadQualityValue,
         ) {
-            selectButtonTitle = it
+            selectButtonTitle = Constants.PREFERENCE_KEY_DOWNLOAD_QUALITY to it
             openDialog = true
         }
 
@@ -57,7 +54,7 @@ fun SettingScreen(
             title = "Wallpaper Quality",
             subTitle = viewModel.state.wallpaperQualityValue,
         ) {
-            selectButtonTitle = it
+            selectButtonTitle = Constants.PREFERENCE_KEY_WALLPAPER_QUALITY to it
             openDialog = true
         }
 
@@ -69,22 +66,30 @@ fun SettingScreen(
                 buttons = {
                     Button(
                         onClick = {
+                            Log.e("ABC", selectButtonTitle.toString())
+                            viewModel.putSettingPreference(
+                                selectButtonTitle.first,
+                                selectButtonTitle.second
+                            )
                             openDialog = false
                         }) {
-                        Text("CONFIRM")
+                        Text("APPLY")
                     }
                 },title = {
                     Column {
                         Constants.QUALITY_LIST.forEach {
-                            val isSelected = it.value == selectButton
+                            val isSelected = it.value == selectButtonTitle.second
                             val color = RadioButtonDefaults.colors(
                                 selectedColor = Purple500,
                                 unselectedColor = Color.LightGray
                             )
                             Row {
                                 RadioButton(
+                                    colors = color,
                                     selected = isSelected,
-                                    onClick = { selectButton = it.value }
+                                    onClick = {
+                                        selectButtonTitle = selectButtonTitle.copy(second = it.value)
+                                    }
                                 )
                                 Text(text = it.key)
                             }

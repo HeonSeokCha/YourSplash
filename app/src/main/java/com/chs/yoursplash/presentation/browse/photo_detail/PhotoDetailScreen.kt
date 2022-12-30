@@ -245,7 +245,7 @@ fun ImageDetailScreen(
                                                 "${Screens.ImageDetailScreen.route}/${photo.id}"
                                             )
                                         },
-                                    model = photo.urls.small_s3,
+                                    model = photo.urls.small,
                                     contentDescription = null,
                                     contentScale = ContentScale.Crop,
                                     placeholder = if (photo.blurHash != null) {
@@ -279,7 +279,7 @@ fun ImageDetailScreen(
                                                         "${state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.id}"
                                             )
                                         },
-                                    model = state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.previewPhotos?.get(0)?.urls?.small_s3,
+                                    model = state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.previewPhotos?.get(0)?.urls?.small,
                                     contentDescription = null,
                                     contentScale = ContentScale.Crop,
                                     placeholder = BitmapPainter(

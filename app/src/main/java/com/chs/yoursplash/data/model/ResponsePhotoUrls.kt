@@ -9,10 +9,10 @@ data class ResponsePhotoUrls(
     val raw: String,
     @SerialName("full")
     val full: String,
+    @SerialName("regular")
+    val regular: String,
     @SerialName("small")
     val small: String,
     @SerialName("thumb")
-    val thumb: String,
-    @SerialName("small_s3")
-    val small_s3: String
+    val thumb: String
 )

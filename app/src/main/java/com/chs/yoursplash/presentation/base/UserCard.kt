@@ -71,7 +71,7 @@ fun UserCard(
                             .clickable {
                                 photoClickAble(userInfo?.photos?.get(idx)?.id ?: "")
                             },
-                        model = userInfo?.photos?.get(idx)?.urls?.small_s3,
+                        model = userInfo?.photos?.get(idx)?.urls?.small,
                         contentScale = ContentScale.Crop,
                         contentDescription = null,
                         placeholder = BitmapPainter(
