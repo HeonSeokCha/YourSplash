@@ -37,6 +37,7 @@ fun CollectionScreen(
         items(lazyPagingItems!!) { collectionInfo ->
             CollectionCard(
                 collectionInfo = collectionInfo,
+                loadQuality = state.loadQuality,
                 userClickAble = { userName ->
                     context.startActivity(
                         Intent(context, BrowseActivity::class.java).apply {

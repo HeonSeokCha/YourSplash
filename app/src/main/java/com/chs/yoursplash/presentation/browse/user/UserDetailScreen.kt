@@ -139,19 +139,22 @@ fun UserDetailScreen(
                                 UserDetailPhotoScreen(
                                     context = context,
                                     navController = navController,
-                                    state.userDetailPhotoList?.collectAsLazyPagingItems()
+                                    state.userDetailPhotoList?.collectAsLazyPagingItems(),
+                                    state.loadQuality
                                 )
                             } else if (tabList[0] == "LIKES") {
                                 UserDetailLikeScreen(
                                     context = context,
                                     navController = navController,
-                                    state.userDetailLikeList?.collectAsLazyPagingItems()
+                                    state.userDetailLikeList?.collectAsLazyPagingItems(),
+                                    state.loadQuality
                                 )
                             } else {
                                 UserDetailCollectionScreen(
                                     context = context,
                                     navController = navController,
-                                    state.userDetailCollection?.collectAsLazyPagingItems()
+                                    state.userDetailCollection?.collectAsLazyPagingItems(),
+                                    state.loadQuality
                                 )
                             }
 
@@ -161,13 +164,15 @@ fun UserDetailScreen(
                                 UserDetailLikeScreen(
                                     context = context,
                                     navController = navController,
-                                    state.userDetailLikeList?.collectAsLazyPagingItems()
+                                    state.userDetailLikeList?.collectAsLazyPagingItems(),
+                                    state.loadQuality
                                 )
                             } else {
                                 UserDetailCollectionScreen(
                                     context = context,
                                     navController = navController,
-                                    state.userDetailCollection?.collectAsLazyPagingItems()
+                                    state.userDetailCollection?.collectAsLazyPagingItems(),
+                                    state.loadQuality
                                 )
                             }
                         }
@@ -175,7 +180,8 @@ fun UserDetailScreen(
                             UserDetailCollectionScreen(
                                 context = context,
                                 navController = navController,
-                                state.userDetailCollection?.collectAsLazyPagingItems()
+                                state.userDetailCollection?.collectAsLazyPagingItems(),
+                                state.loadQuality
                             )
                         }
                     }

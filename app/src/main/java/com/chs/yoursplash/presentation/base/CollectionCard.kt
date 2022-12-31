@@ -22,10 +22,12 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.util.BlurHashDecoder
+import com.chs.yoursplash.util.Constants
 
 @Composable
 fun CollectionCard(
     collectionInfo: UnSplashCollection?,
+    loadQuality: String,
     userClickAble: (userName: String) -> Unit,
     collectionClickAble: (collectionId: String) -> Unit
 ) {
@@ -82,7 +84,7 @@ fun CollectionCard(
                     .clickable {
                         collectionClickAble(collectionInfo?.id ?: "")
                     },
-                model = collectionInfo?.previewPhotos?.get(0)?.urls?.small,
+                model = Constants.getPhotoQualityUrl(collectionInfo?.previewPhotos?.get(0)?.urls, loadQuality),
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
                 placeholder = if (collectionInfo?.previewPhotos != null) {

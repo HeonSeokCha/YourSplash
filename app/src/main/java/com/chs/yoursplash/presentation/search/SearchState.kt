@@ -12,4 +12,5 @@ data class SearchState(
     val searchPhotoList: Flow<PagingData<Photo>>? = null,
     val searchCollectionList: Flow<PagingData<UnSplashCollection>>? = null,
     val searchUserList: Flow<PagingData<User>>? = null,
+    val loadQuality: String = "regular"
 )

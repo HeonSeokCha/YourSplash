@@ -27,7 +27,8 @@ import com.chs.yoursplash.util.BlurHashDecoder
 fun UserDetailLikeScreen(
     context: Context,
     navController: NavHostController,
-    photoList: LazyPagingItems<Photo>?
+    photoList: LazyPagingItems<Photo>?,
+    loadQuality: String
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -37,6 +38,7 @@ fun UserDetailLikeScreen(
         items(photoList?.itemCount ?: 0) { idx ->
             ImageCard(
                 photoInfo = photoList?.get(idx),
+                loadQuality = loadQuality,
                 photoClickAble = {
                     navController.navigate(
                         "${Screens.ImageDetailScreen.route}/${photoList?.get(idx)?.id}"

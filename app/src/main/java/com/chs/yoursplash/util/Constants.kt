@@ -1,6 +1,7 @@
 package com.chs.yoursplash.util
 
 import com.chs.yoursplash.BuildConfig
+import com.chs.yoursplash.domain.model.PhotoUrls
 
 object Constants {
     const val UNSPLAH_URL: String = "https://api.unsplash.com"
@@ -51,4 +52,28 @@ object Constants {
         Pair("Small", "small"),
         Pair("Thumb", "thumb"),
     )
+
+    fun getPhotoQualityUrl(
+        urlInfo: PhotoUrls?,
+        quality: String
+    ): String? {
+        return when(quality) {
+            "raw" -> {
+                urlInfo?.raw
+            }
+            "full" -> {
+                urlInfo?.full
+            }
+            "regular" -> {
+                urlInfo?.regular
+            }
+            "small" -> {
+                urlInfo?.small
+            }
+            "thumb" -> {
+                urlInfo?.thumb
+            }
+            else -> null
+        }
+    }
 }

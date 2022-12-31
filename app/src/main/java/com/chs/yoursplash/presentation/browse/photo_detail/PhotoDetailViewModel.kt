@@ -10,10 +10,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chs.yoursplash.data.db.PhotoSaveInfo
 import com.chs.yoursplash.domain.usecase.*
+import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.DownLoadState
 import com.chs.yoursplash.util.PhotoSaveState
 import com.chs.yoursplash.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -24,13 +26,26 @@ class PhotoDetailViewModel @Inject constructor(
     private val getPhotoRelatedListUseCase: GetPhotoRelatedListUseCase,
     private val getPhotoSaveInfoUseCase: GetPhotoSaveInfoUseCase,
     private val insertPhotoSaveInfoUseCase: InsertPhotoSaveInfoUseCase,
-    private val deletePhotoSaveInfoUseCase: DeletePhotoSaveInfoUseCase
+    private val deletePhotoSaveInfoUseCase: DeletePhotoSaveInfoUseCase,
+    private val getStringPrefUseCase: GetStringPrefUseCase
 ) : ViewModel() {
 
     var state by mutableStateOf(PhotoDetailState())
     private set
 
     private lateinit var downLoadFileName: String
+
+    init {
+        getImageLoadQuality()
+    }
+
+    private fun getImageLoadQuality() {
+        viewModelScope.launch {
+            state = state.copy(
+                wallpaperQuality = getStringPrefUseCase(Constants.PREFERENCE_KEY_WALLPAPER_QUALITY).first()
+            )
+        }
+    }
 
     fun setPhotoDownloadState(photoState: DownLoadState) {
         when (photoState) {

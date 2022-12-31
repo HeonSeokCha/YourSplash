@@ -34,12 +34,14 @@ import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.base.CollectionCard
 import com.chs.yoursplash.util.BlurHashDecoder
+import com.chs.yoursplash.util.Constants
 
 @Composable
 fun UserDetailCollectionScreen(
     context: Context,
     navController: NavHostController,
-    collectionList: LazyPagingItems<UnSplashCollection>?
+    collectionList: LazyPagingItems<UnSplashCollection>?,
+    loadQuality: String
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -68,7 +70,7 @@ fun UserDetailCollectionScreen(
                             "${Screens.CollectionDetailScreen.route}/${collectionList?.get(idx)?.id}"
                             )
                         },
-                    model = collectionList?.get(idx)?.previewPhotos?.get(0)?.urls?.small,
+                    model = Constants.getPhotoQualityUrl(collectionList?.get(idx)?.previewPhotos?.get(0)?.urls, loadQuality),
                     contentScale = ContentScale.Crop,
                     contentDescription = null,
                     placeholder = if (collectionList?.get(idx)?.previewPhotos != null) {

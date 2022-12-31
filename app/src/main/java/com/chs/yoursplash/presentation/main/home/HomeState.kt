@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 @Immutable
 data class HomeState(
     val pagingImageList: Flow<PagingData<Photo>>? = null,
+    val loadQuality: String = "regular",
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val errorMessage: String? = null

@@ -20,11 +20,13 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.util.BlurHashDecoder
+import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.color
 
 @Composable
 fun ImageCard(
     photoInfo: Photo?,
+    loadQuality: String,
     userClickAble: (userName: String) -> Unit,
     photoClickAble: (photoId: String) -> Unit
 ) {
@@ -69,7 +71,7 @@ fun ImageCard(
                 .clickable {
                    photoClickAble(photoInfo?.id ?: "")
                 },
-            model = photoInfo?.urls?.small,
+            model = Constants.getPhotoQualityUrl(photoInfo?.urls, loadQuality),
             contentScale = ContentScale.Crop,
             placeholder = BitmapPainter(BlurHashDecoder.decode(blurHash = photoInfo?.blurHash)!!.asImageBitmap()),
             contentDescription = null,

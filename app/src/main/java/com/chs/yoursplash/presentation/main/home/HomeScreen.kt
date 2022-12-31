@@ -38,6 +38,7 @@ fun HomeScreen(
         items(lazyPagingItems!!) { photo ->
             ImageCard(
                 photoInfo = photo,
+                loadQuality = state.loadQuality,
                 userClickAble = { userName ->
                     context.startActivity(
                         Intent(context, BrowseActivity::class.java).apply {

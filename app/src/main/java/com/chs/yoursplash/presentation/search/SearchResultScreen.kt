@@ -102,6 +102,7 @@ fun SearchResultScreen(
                         items(photoList) { item ->
                             ImageCard(
                                 photoInfo = item,
+                                loadQuality = state.loadQuality,
                                 userClickAble = { userName ->
                                     context.startActivity(
                                         Intent(context, BrowseActivity::class.java).apply {
@@ -127,6 +128,7 @@ fun SearchResultScreen(
                         items(photoList) { item ->
                             CollectionCard(
                                 collectionInfo = item,
+                                loadQuality = state.loadQuality,
                                 userClickAble = { userName ->
                                     context.startActivity(
                                         Intent(context, BrowseActivity::class.java).apply {

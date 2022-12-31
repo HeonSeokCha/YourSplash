@@ -25,13 +25,15 @@ import coil.compose.AsyncImage
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.util.BlurHashDecoder
+import com.chs.yoursplash.util.Constants
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun UserDetailPhotoScreen(
     context: Context,
     navController: NavHostController,
-    photoList: LazyPagingItems<Photo>?
+    photoList: LazyPagingItems<Photo>?,
+    loadQuality: String
 ) {
     LazyVerticalStaggeredGrid(
         modifier = Modifier.fillMaxSize(),
@@ -50,7 +52,7 @@ fun UserDetailPhotoScreen(
                             "${Screens.ImageDetailScreen.route}/${photoList?.get(idx)?.id}"
                         )
                     },
-                model = photoList?.get(idx)?.urls?.small,
+                model = Constants.getPhotoQualityUrl(photoList?.get(idx)?.urls, loadQuality),
                 placeholder = BitmapPainter(
                     BlurHashDecoder.decode(blurHash = photoList?.get(idx)?.blurHash)!!.asImageBitmap()
                 ),

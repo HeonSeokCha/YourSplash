@@ -10,13 +10,12 @@ import androidx.paging.cachedIn
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.UnSplashCollection
-import com.chs.yoursplash.domain.usecase.GetUserCollectionUseCase
-import com.chs.yoursplash.domain.usecase.GetUserDetailUseCase
-import com.chs.yoursplash.domain.usecase.GetUserLikesUseCase
-import com.chs.yoursplash.domain.usecase.GetUserPhotoUseCase
+import com.chs.yoursplash.domain.usecase.*
+import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,10 +24,23 @@ class UserDetailViewModel @Inject constructor(
     private val getUserDetailUseCase: GetUserDetailUseCase,
     private val getUserPhotoUseCase: GetUserPhotoUseCase,
     private val getUserLikesUseCase: GetUserLikesUseCase,
-    private val getUserCollectionUseCase: GetUserCollectionUseCase
+    private val getUserCollectionUseCase: GetUserCollectionUseCase,
+    private val getStringPrefUseCase: GetStringPrefUseCase
 ) : ViewModel() {
 
     var state by mutableStateOf(UserDetailState())
+
+    init {
+        getImageLoadQuality()
+    }
+
+    private fun getImageLoadQuality() {
+        viewModelScope.launch {
+            state = state.copy(
+                loadQuality = getStringPrefUseCase(Constants.PREFERENCE_KEY_LOAD_QUALITY).first()
+            )
+        }
+    }
 
     fun getUserDetail(userName: String) {
         viewModelScope.launch {

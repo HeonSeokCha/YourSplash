@@ -11,6 +11,7 @@ data class PhotoDetailState(
     val imageDetailInfo: PhotoDetail? = null,
     val imageRelatedList: List<Photo> = listOf(),
     val imageSaveState: PhotoSaveState = PhotoSaveState.NOT_DOWNLOAD,
+    val wallpaperQuality: String = "full",
     val isError: Boolean = false,
 )
 

@@ -47,10 +47,7 @@ import coil.compose.AsyncImage
 import com.chs.yoursplash.R
 import com.chs.yoursplash.domain.model.PhotoDetail
 import com.chs.yoursplash.presentation.Screens
-import com.chs.yoursplash.util.BlurHashDecoder
-import com.chs.yoursplash.util.DownLoadState
-import com.chs.yoursplash.util.PhotoSaveState
-import com.chs.yoursplash.util.color
+import com.chs.yoursplash.util.*
 import java.io.File
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -74,11 +71,13 @@ fun ImageDetailScreen(
         DownloadBroadCastReceiver(downLoadQueueId) {
             when (it) {
                 DownLoadState.DOWNLOAD_FAILED -> {
-                    Toast.makeText(context, "Photo Download UnSuccessful...", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Photo Download UnSuccessful...", Toast.LENGTH_SHORT)
+                        .show()
                     viewModel.setPhotoDownloadState(DownLoadState.DOWNLOAD_FAILED)
                 }
                 DownLoadState.DOWNLOAD_SUCCESS -> {
-                    Toast.makeText(context, "Photo Download Successful...", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Photo Download Successful...", Toast.LENGTH_SHORT)
+                        .show()
                     viewModel.setPhotoDownloadState(DownLoadState.DOWNLOAD_SUCCESS)
                 }
                 DownLoadState.DOWNLOADING -> {
@@ -103,7 +102,10 @@ fun ImageDetailScreen(
                         .fillMaxWidth()
                         .height(((state.imageDetailInfo?.height ?: 2000) / 10).dp),
                     contentScale = ContentScale.Crop,
-                    model = state.imageDetailInfo?.urls?.full ?: "",
+                    model = Constants.getPhotoQualityUrl(
+                        state.imageDetailInfo?.urls,
+                        state.wallpaperQuality
+                    ),
                     contentDescription = null,
                     placeholder = ColorPainter(state.imageDetailInfo?.color?.color ?: Color.White)
                 )
@@ -150,48 +152,56 @@ fun ImageDetailScreen(
                             )
                         }
 
-                            when (state.imageSaveState) {
-                                PhotoSaveState.NOT_DOWNLOAD -> {
-                                    IconButton(
-                                        modifier = Modifier.size(24.dp),
-                                        onClick = {
-                                            downloadPhoto(
-                                                context,
-                                                state.imageDetailInfo,
-                                                downloadStart = { downLoadQueueId = it }
-                                            )
-                                        }) {
-                                        Icon(
-                                            imageVector = Icons.Default.Download,
-                                            contentDescription = "download"
+                        when (state.imageSaveState) {
+                            PhotoSaveState.NOT_DOWNLOAD -> {
+                                IconButton(
+                                    modifier = Modifier.size(24.dp),
+                                    onClick = {
+                                        downloadPhoto(
+                                            context,
+                                            state.imageDetailInfo,
+                                            downloadStart = { downLoadQueueId = it }
                                         )
-                                    }
-                                }
-                                PhotoSaveState.DOWNLOADING -> {
-                                    IconButton(
-                                        modifier = Modifier.size(24.dp),
-                                        onClick = {
-                                            Toast.makeText(context, "File is DownLoading", Toast.LENGTH_SHORT).show()
-                                        }) {
-                                        Icon(
-                                            imageVector = Icons.Default.Downloading,
-                                            contentDescription = "downloading"
-                                        )
-                                    }
-                                }
-                                PhotoSaveState.DOWNLOADED -> {
-                                    IconButton(
-                                        modifier = Modifier.size(24.dp),
-                                        onClick = {
-                                            Toast.makeText(context, "File is DownLoaded", Toast.LENGTH_SHORT).show()
-                                        }) {
-                                        Icon(
-                                            imageVector = Icons.Default.DownloadDone,
-                                            contentDescription = "fileIsSaved"
-                                        )
-                                    }
+                                    }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Download,
+                                        contentDescription = "download"
+                                    )
                                 }
                             }
+                            PhotoSaveState.DOWNLOADING -> {
+                                IconButton(
+                                    modifier = Modifier.size(24.dp),
+                                    onClick = {
+                                        Toast.makeText(
+                                            context,
+                                            "File is DownLoading",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Downloading,
+                                        contentDescription = "downloading"
+                                    )
+                                }
+                            }
+                            PhotoSaveState.DOWNLOADED -> {
+                                IconButton(
+                                    modifier = Modifier.size(24.dp),
+                                    onClick = {
+                                        Toast.makeText(
+                                            context,
+                                            "File is DownLoaded",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }) {
+                                    Icon(
+                                        imageVector = Icons.Default.DownloadDone,
+                                        contentDescription = "fileIsSaved"
+                                    )
+                                }
+                            }
+                        }
 
                     }
                     Divider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
@@ -249,7 +259,10 @@ fun ImageDetailScreen(
                                     contentDescription = null,
                                     contentScale = ContentScale.Crop,
                                     placeholder = if (photo.blurHash != null) {
-                                        BitmapPainter(BlurHashDecoder.decode(blurHash = photo.blurHash)!!.asImageBitmap())
+                                        BitmapPainter(
+                                            BlurHashDecoder.decode(blurHash = photo.blurHash)!!
+                                                .asImageBitmap()
+                                        )
                                     } else ColorPainter(photo.color.color),
                                 )
                             }
@@ -269,22 +282,33 @@ fun ImageDetailScreen(
                                 .wrapContentHeight(),
                             columns = GridCells.Fixed(2)
                         ) {
-                            items(state.imageDetailInfo?.relatedCollection?.result?.size ?: 0) { idx ->
+                            items(
+                                state.imageDetailInfo?.relatedCollection?.result?.size ?: 0
+                            ) { idx ->
                                 AsyncImage(
                                     modifier = Modifier
                                         .size(200.dp, 100.dp)
                                         .clickable {
                                             navController.navigate(
                                                 "${Screens.CollectionDetailScreen.route}/" +
-                                                        "${state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.id}"
+                                                        "${
+                                                            state.imageDetailInfo?.relatedCollection?.result?.get(
+                                                                idx
+                                                            )?.id
+                                                        }"
                                             )
                                         },
-                                    model = state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.previewPhotos?.get(0)?.urls?.small,
+                                    model = state.imageDetailInfo?.relatedCollection?.result?.get(
+                                        idx
+                                    )?.previewPhotos?.get(0)?.urls?.small,
                                     contentDescription = null,
                                     contentScale = ContentScale.Crop,
                                     placeholder = BitmapPainter(
                                         BlurHashDecoder.decode(
-                                            blurHash = state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.previewPhotos?.get(0)?.blurHash)!!.asImageBitmap()
+                                            blurHash = state.imageDetailInfo?.relatedCollection?.result?.get(
+                                                idx
+                                            )?.previewPhotos?.get(0)?.blurHash
+                                        )!!.asImageBitmap()
                                     ),
                                 )
                             }
@@ -325,7 +349,8 @@ private fun downloadPhoto(
         .setAllowedOverMetered(true)
         .setAllowedOverRoaming(true)
 
-    val downloadManger: DownloadManager = context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+    val downloadManger: DownloadManager =
+        context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
 
     downloadStart(downloadManger.enqueue(request))
 

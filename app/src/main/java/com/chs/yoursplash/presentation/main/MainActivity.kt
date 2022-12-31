@@ -218,9 +218,6 @@ private fun MainTopBar(
             }, onBackClicked = onBackClicked
             )
         }
-        else -> {
-
-        }
     }
 }
 

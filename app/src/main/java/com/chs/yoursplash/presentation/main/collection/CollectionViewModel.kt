@@ -9,13 +9,18 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.usecase.GetHomeCollectionsUseCase
+import com.chs.yoursplash.domain.usecase.GetStringPrefUseCase
+import com.chs.yoursplash.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CollectionViewModel @Inject constructor(
-    private val getHomeCollectionsUseCase: GetHomeCollectionsUseCase
+    private val getHomeCollectionsUseCase: GetHomeCollectionsUseCase,
+    private val getStringPrefUseCase: GetStringPrefUseCase
 ) : ViewModel() {
 
     var state by mutableStateOf(CollectionState())
@@ -23,11 +28,20 @@ class CollectionViewModel @Inject constructor(
 
     init {
         getHomeCollections()
+        getImageLoadQuality()
     }
 
     private fun getHomeCollections() {
         state = state.copy(
             collectionList = getHomeCollectionsUseCase().cachedIn(viewModelScope)
         )
+    }
+
+    private fun getImageLoadQuality() {
+        viewModelScope.launch {
+            state = state.copy(
+                loadQuality = getStringPrefUseCase(Constants.PREFERENCE_KEY_LOAD_QUALITY).first()
+            )
+        }
     }
 }
