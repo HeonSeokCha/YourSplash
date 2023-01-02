@@ -18,13 +18,13 @@ import androidx.compose.ui.unit.sp
 fun SettingItem(
     title: String,
     subTitle: String,
-    clickAble: (String) -> Unit
+    clickAble: (String, String) -> Unit
 ) {
     Column(
         modifier = Modifier
             .padding(bottom = 32.dp)
             .clickable {
-            clickAble(subTitle)
+            clickAble(title, subTitle)
         }
     ) {
         Text(
@@ -38,10 +38,4 @@ fun SettingItem(
             color = Color.Gray,
         )
     }
-}
-
-@Preview(backgroundColor = 0xFFFFFF, showBackground = true)
-@Composable
-fun PreViewSettingItem() {
-    SettingItem(title = "Test", subTitle = "This is Test Item") { }
 }

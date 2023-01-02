@@ -157,6 +157,7 @@ fun SearchResultScreen(
                         items(photoList) { item ->
                             UserCard(
                                 userInfo = item,
+                                loadQuality = state.loadQuality,
                                 userClickAble = { userName ->
                                     Intent(context, BrowseActivity::class.java).apply {
                                         putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)

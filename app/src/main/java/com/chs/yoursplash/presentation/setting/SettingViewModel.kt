@@ -33,8 +33,6 @@ class SettingViewModel @Inject constructor(
                 wallpaperQualityValue = getStringPrefUseCase(Constants.PREFERENCE_KEY_WALLPAPER_QUALITY).first()
                     .ifEmpty { "Full" }
             )
-
-            Log.e("State", state.toString())
         }
     }
 

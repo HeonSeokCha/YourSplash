@@ -255,7 +255,7 @@ fun ImageDetailScreen(
                                                 "${Screens.ImageDetailScreen.route}/${photo.id}"
                                             )
                                         },
-                                    model = photo.urls.small,
+                                    model = Constants.getPhotoQualityUrl(photo.urls, state.loadQuality),
                                     contentDescription = null,
                                     contentScale = ContentScale.Crop,
                                     placeholder = if (photo.blurHash != null) {
@@ -290,17 +290,14 @@ fun ImageDetailScreen(
                                         .size(200.dp, 100.dp)
                                         .clickable {
                                             navController.navigate(
-                                                "${Screens.CollectionDetailScreen.route}/" +
-                                                        "${
-                                                            state.imageDetailInfo?.relatedCollection?.result?.get(
-                                                                idx
-                                                            )?.id
-                                                        }"
+                                        "${Screens.CollectionDetailScreen.route}/" +
+                                                "${state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.id}"
                                             )
                                         },
-                                    model = state.imageDetailInfo?.relatedCollection?.result?.get(
-                                        idx
-                                    )?.previewPhotos?.get(0)?.urls?.small,
+                                    model = Constants.getPhotoQualityUrl(
+                                        state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.previewPhotos?.get(0)?.urls,
+                                        state.loadQuality
+                                    ),
                                     contentDescription = null,
                                     contentScale = ContentScale.Crop,
                                     placeholder = BitmapPainter(

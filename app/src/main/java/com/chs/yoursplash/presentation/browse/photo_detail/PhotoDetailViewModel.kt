@@ -42,7 +42,8 @@ class PhotoDetailViewModel @Inject constructor(
     private fun getImageLoadQuality() {
         viewModelScope.launch {
             state = state.copy(
-                wallpaperQuality = getStringPrefUseCase(Constants.PREFERENCE_KEY_WALLPAPER_QUALITY).first()
+                wallpaperQuality = getStringPrefUseCase(Constants.PREFERENCE_KEY_WALLPAPER_QUALITY).first(),
+                loadQuality = getStringPrefUseCase(Constants.PREFERENCE_KEY_LOAD_QUALITY).first()
             )
         }
     }

@@ -12,6 +12,7 @@ data class PhotoDetailState(
     val imageRelatedList: List<Photo> = listOf(),
     val imageSaveState: PhotoSaveState = PhotoSaveState.NOT_DOWNLOAD,
     val wallpaperQuality: String = "full",
+    val loadQuality: String = "regular",
     val isError: Boolean = false,
 )
 
