@@ -10,10 +10,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.twotone.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -53,7 +50,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val scaffoldState = rememberScaffoldState()
             val bottomSheetScaffoldState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
             val navController = rememberNavController()
             var searchKeyword by remember { mutableStateOf("") }
@@ -75,49 +71,19 @@ class MainActivity : ComponentActivity() {
                         }
                 }) {
                     Scaffold(
-                        scaffoldState = scaffoldState,
                         topBar = {
                             MainTopBar(
                                 navController = navController,
-                                onNavigationIconClick = {
-                                    scope.launch { scaffoldState.drawerState.open() }
-                                }, searchClicked = {
+                                searchClicked = {
                                     searchKeyword = it
                                 }, onBackClicked = {
                                     searchKeyword = ""
                                     navController.navigateUp()
                                 }
                             )
-                        },
-                        drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
-                        drawerContent = {
-                            DrawerHeader()
-                            DrawerBody(
-                                items = listOf(
-                                    MenuItem(
-                                        id = "Setting",
-                                        title = "Setting",
-                                        icon = Icons.Default.Home
-                                    ),
-                                    MenuItem(
-                                        id = "About",
-                                        title = "About",
-                                        icon = Icons.Default.Home
-                                    )
-                                ),
-                                onItemClick = {
-                                    when (it.id) {
-                                        "Setting" -> {
-                                            navController.navigate(Screen.SettingScreen.route)
-                                        }
-                                        "About" -> {}
-                                    }
-                                    scope.launch { scaffoldState.drawerState.close() }
-                                }
-                            )
                         }, bottomBar = {
                             BottomBar(navController = navController)
-                        }
+                        },
                     ) {
                         NavHost(
                             navController = navController,
@@ -160,7 +126,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun MainTopBar(
     navController: NavHostController,
-    onNavigationIconClick: () -> Unit,
     searchClicked: (String) -> Unit,
     onBackClicked: () -> Unit
 ) {
@@ -173,13 +138,7 @@ private fun MainTopBar(
                         text = stringResource(id = R.string.app_name),
                         fontSize = 20.sp
                     )
-                }, navigationIcon = {
-                    IconButton(onClick = {
-                        onNavigationIconClick()
-                    }) {
-                        Icon(Icons.Filled.Menu, contentDescription = null)
-                    }
-                }, actions = {
+                },actions = {
                     IconButton(onClick = {
                         navController.navigate(Screen.SearchScreen.route)
                     }) {
@@ -187,6 +146,12 @@ private fun MainTopBar(
                             imageVector = Icons.TwoTone.Search,
                             contentDescription = null
                         )
+                    }
+
+                    IconButton(onClick = {
+                        navController.navigate(Screen.SettingScreen.route)
+                    }) {
+                        Icon(Icons.Filled.Settings, contentDescription = null)
                     }
                 }, backgroundColor = MaterialTheme.colors.primary,
                 contentColor = MaterialTheme.colors.onPrimary

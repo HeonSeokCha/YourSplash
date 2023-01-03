@@ -12,9 +12,11 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Filter
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -203,13 +205,15 @@ fun SearchFloatingActionButton(
     extend: Boolean,
     onClick: () -> Unit
 ) {
-    FloatingActionButton(onClick = onClick) {
+    FloatingActionButton(
+        onClick = onClick
+    ) {
         Row(
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
             Icon(
-                imageVector = Icons.Default.Filter,
-                contentDescription = null
+                imageVector = Icons.Default.FilterList,
+                contentDescription = null,
             )
 
             AnimatedVisibility(extend) {

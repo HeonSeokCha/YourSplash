@@ -1,6 +1,5 @@
 package com.chs.yoursplash.presentation.setting
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -48,29 +47,6 @@ class SettingViewModel @Inject constructor(
                 }
                 Constants.PREFERENCE_KEY_WALLPAPER_QUALITY -> {
                     state = state.copy(wallpaperQualityValue = value)
-                }
-                else -> Unit
-            }
-        }
-    }
-
-    fun getSettingPreference(title: String) {
-        viewModelScope.launch {
-            when (title) {
-                "Load Quality" -> {
-                    state = state.copy(
-                        loadQualityValue = getStringPrefUseCase(Constants.PREFERENCE_KEY_LOAD_QUALITY).first()
-                    )
-                }
-                "Download Quality" -> {
-                    state = state.copy(
-                        downLoadQualityValue = getStringPrefUseCase(Constants.PREFERENCE_KEY_DOWNLOAD_QUALITY).first()
-                    )
-                }
-                "Wallpaper Quality" -> {
-                    state = state.copy(
-                        loadQualityValue = getStringPrefUseCase(Constants.PREFERENCE_KEY_WALLPAPER_QUALITY).first()
-                    )
                 }
                 else -> Unit
             }
