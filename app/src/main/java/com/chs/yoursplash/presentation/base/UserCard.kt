@@ -12,11 +12,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.chs.yoursplash.domain.model.User
 import com.chs.yoursplash.util.BlurHashDecoder
 import com.chs.yoursplash.util.Constants
@@ -41,7 +43,10 @@ fun UserCard(
             modifier = Modifier
                 .size(50.dp)
                 .clip(RoundedCornerShape(100)),
-            model = userInfo?.photoProfile?.large,
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(userInfo?.photoProfile?.large)
+                .crossfade(true)
+                .build(),
             contentDescription = null
         )
 
@@ -73,10 +78,13 @@ fun UserCard(
                             .clickable {
                                 photoClickAble(userInfo?.photos?.get(idx)?.id ?: "")
                             },
-                        model = Constants.getPhotoQualityUrl(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(Constants.getPhotoQualityUrl(
                             userInfo?.photos?.get(idx)?.urls,
                             loadQuality
-                        ),
+                        ))
+                            .crossfade(true)
+                            .build(),
 
                         contentScale = ContentScale.Crop,
                         contentDescription = null,

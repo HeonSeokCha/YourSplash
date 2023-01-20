@@ -44,6 +44,7 @@ import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.chs.yoursplash.R
 import com.chs.yoursplash.domain.model.PhotoDetail
 import com.chs.yoursplash.presentation.Screens
@@ -102,10 +103,12 @@ fun ImageDetailScreen(
                         .fillMaxWidth()
                         .height(((state.imageDetailInfo?.height ?: 2000) / 10).dp),
                     contentScale = ContentScale.Crop,
-                    model = Constants.getPhotoQualityUrl(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(Constants.getPhotoQualityUrl(
                         state.imageDetailInfo?.urls,
-                        state.wallpaperQuality
-                    ),
+                        state.wallpaperQuality)
+                    ).crossfade(true)
+                        .build(),
                     contentDescription = null,
                     placeholder = ColorPainter(state.imageDetailInfo?.color?.color ?: Color.White)
                 )
@@ -136,7 +139,10 @@ fun ImageDetailScreen(
                                     }
                                     .size(40.dp)
                                     .clip(RoundedCornerShape(100)),
-                                model = state.imageDetailInfo?.user?.photoProfile?.large,
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(state.imageDetailInfo?.user?.photoProfile?.large)
+                                    .crossfade(true)
+                                    .build(),
                                 placeholder = ColorPainter(
                                     state.imageDetailInfo?.color?.color ?: Color.LightGray
                                 ),
@@ -255,7 +261,10 @@ fun ImageDetailScreen(
                                                 "${Screens.ImageDetailScreen.route}/${photo.id}"
                                             )
                                         },
-                                    model = Constants.getPhotoQualityUrl(photo.urls, state.loadQuality),
+                                    model = ImageRequest.Builder(LocalContext.current)
+                                        .data(Constants.getPhotoQualityUrl(photo.urls, state.loadQuality))
+                                        .crossfade(true)
+                                        .build(),
                                     contentDescription = null,
                                     contentScale = ContentScale.Crop,
                                     placeholder = if (photo.blurHash != null) {
@@ -294,10 +303,13 @@ fun ImageDetailScreen(
                                                 "${state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.id}"
                                             )
                                         },
-                                    model = Constants.getPhotoQualityUrl(
+                                    model = ImageRequest.Builder(LocalContext.current)
+                                        .data(Constants.getPhotoQualityUrl(
                                         state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.previewPhotos?.get(0)?.urls,
                                         state.loadQuality
-                                    ),
+                                    ))
+                                        .crossfade(true)
+                                        .build(),
                                     contentDescription = null,
                                     contentScale = ContentScale.Crop,
                                     placeholder = BitmapPainter(

@@ -7,7 +7,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("kotlin-parcelize")
     id("kotlinx-serialization")
-    id("com.google.devtools.ksp") version "1.7.10-1.0.6"
+    id("com.google.devtools.ksp") version "1.7.20-1.0.8"
 }
 
 fun getApiKey(propertyKey: String): String {
@@ -49,7 +49,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.1"
+        kotlinCompilerExtensionVersion = "1.3.2"
     }
     packagingOptions {
         resources {
@@ -63,20 +63,20 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.core:core-splashscreen:1.0.0")
-    implementation("androidx.appcompat:appcompat:1.5.1")
+    implementation("androidx.appcompat:appcompat:1.6.0")
     implementation("com.google.android.material:material:1.7.0")
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.4")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.3.2")
-    debugImplementation("androidx.compose.ui:ui-tooling:1.3.2")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.3.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.3.3")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.3.3")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.3.3")
 
     // Compose dependencies
-    implementation("androidx.compose.ui:ui:1.3.2")
+    implementation("androidx.compose.ui:ui:1.3.3")
     implementation("androidx.compose.material:material:1.3.1")
     implementation("androidx.compose.material:material-icons-extended:1.3.1")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.3.2")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.3.3")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
     implementation("androidx.activity:activity-compose:1.6.1")
     implementation("androidx.navigation:navigation-compose:2.5.3")
@@ -87,11 +87,11 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     //Ktor
-    implementation("io.ktor:ktor-client-core:2.2.1")
-    implementation("io.ktor:ktor-client-android:2.2.1")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.1")
-    implementation("io.ktor:ktor-client-content-negotiation:2.2.1")
-    implementation("io.ktor:ktor-client-logging:2.2.1")
+    implementation("io.ktor:ktor-client-core:2.2.2")
+    implementation("io.ktor:ktor-client-android:2.2.2")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.2")
+    implementation("io.ktor:ktor-client-content-negotiation:2.2.2")
+    implementation("io.ktor:ktor-client-logging:2.2.2")
     implementation("ch.qos.logback:logback-classic:1.2.3")
 
     // Coil
@@ -105,8 +105,8 @@ dependencies {
     implementation("androidx.paging:paging-compose:1.0.0-alpha17")
 
     // Room
-    implementation("androidx.room:room-ktx:2.4.3")
-    kapt("androidx.room:room-compiler:2.4.3")
+    implementation("androidx.room:room-ktx:2.5.0")
+    kapt("androidx.room:room-compiler:2.5.0")
 
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")

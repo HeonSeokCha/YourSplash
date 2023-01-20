@@ -6,4 +6,3 @@ import androidx.compose.ui.graphics.Color
 
 val String.color
     get() =  Color(parseColor(this))
-

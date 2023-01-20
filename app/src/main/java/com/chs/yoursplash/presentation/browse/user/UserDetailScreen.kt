@@ -27,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.chs.yoursplash.domain.model.UserDetail
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -209,7 +210,10 @@ private fun UserDetailInfo(userInfo: UserDetail?) {
             modifier = Modifier
                 .size(100.dp, 100.dp)
                 .clip(RoundedCornerShape(100)),
-            model = userInfo?.profileImage?.large,
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(userInfo?.profileImage?.large)
+                .crossfade(true)
+                .build(),
             contentDescription = null,
         )
         Column(

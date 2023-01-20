@@ -13,11 +13,13 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.util.BlurHashDecoder
 import com.chs.yoursplash.util.Constants
@@ -50,7 +52,11 @@ fun ImageCard(
                 modifier = Modifier
                     .size(50.dp)
                     .clip(RoundedCornerShape(100)),
-                model = photoInfo?.user?.photoProfile?.large,
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(photoInfo?.user?.photoProfile?.large)
+                    .crossfade(true)
+                    .build()
+                ,
                 placeholder = ColorPainter(photoInfo?.color?.color ?: Color.White),
                 contentDescription = null
             )
@@ -71,7 +77,10 @@ fun ImageCard(
                 .clickable {
                    photoClickAble(photoInfo?.id ?: "")
                 },
-            model = Constants.getPhotoQualityUrl(photoInfo?.urls, loadQuality),
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(Constants.getPhotoQualityUrl(photoInfo?.urls, loadQuality))
+                .crossfade(true)
+                .build(),
             contentScale = ContentScale.Crop,
             placeholder = BitmapPainter(BlurHashDecoder.decode(blurHash = photoInfo?.blurHash)!!.asImageBitmap()),
             contentDescription = null,

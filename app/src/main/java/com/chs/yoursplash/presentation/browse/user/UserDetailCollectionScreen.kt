@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,6 +30,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.items
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import coil.size.Size
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.presentation.Screens
@@ -70,7 +72,10 @@ fun UserDetailCollectionScreen(
                             "${Screens.CollectionDetailScreen.route}/${collectionList?.get(idx)?.id}"
                             )
                         },
-                    model = Constants.getPhotoQualityUrl(collectionList?.get(idx)?.previewPhotos?.get(0)?.urls, loadQuality),
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(Constants.getPhotoQualityUrl(collectionList?.get(idx)?.previewPhotos?.get(0)?.urls, loadQuality))
+                        .crossfade(true)
+                        .build(),
                     contentScale = ContentScale.Crop,
                     contentDescription = null,
                     placeholder = if (collectionList?.get(idx)?.previewPhotos != null) {

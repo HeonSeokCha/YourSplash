@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.util.BlurHashDecoder
 import com.chs.yoursplash.util.Constants
@@ -52,7 +53,10 @@ fun CollectionCard(
                 modifier = Modifier
                     .size(50.dp)
                     .clip(RoundedCornerShape(100)),
-                model = collectionInfo?.user?.photoProfile?.large,
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(collectionInfo?.user?.photoProfile?.large)
+                    .crossfade(true)
+                    .build(),
                 contentDescription = null
             )
             Spacer(modifier = Modifier.width(16.dp))
@@ -84,7 +88,11 @@ fun CollectionCard(
                     .clickable {
                         collectionClickAble(collectionInfo?.id ?: "")
                     },
-                model = Constants.getPhotoQualityUrl(collectionInfo?.previewPhotos?.get(0)?.urls, loadQuality),
+                model = ImageRequest.Builder(LocalContext.current)
+                   .data(Constants.getPhotoQualityUrl(collectionInfo?.previewPhotos?.get(0)?.urls, loadQuality))
+                    .crossfade(true)
+                    .build()
+                ,
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
                 placeholder = if (collectionInfo?.previewPhotos != null) {

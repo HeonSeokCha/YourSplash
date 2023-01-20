@@ -17,11 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.util.BlurHashDecoder
@@ -52,7 +54,10 @@ fun UserDetailPhotoScreen(
                             "${Screens.ImageDetailScreen.route}/${photoList?.get(idx)?.id}"
                         )
                     },
-                model = Constants.getPhotoQualityUrl(photoList?.get(idx)?.urls, loadQuality),
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(Constants.getPhotoQualityUrl(photoList?.get(idx)?.urls, loadQuality))
+                    .crossfade(true)
+                    .build(),
                 placeholder = BitmapPainter(
                     BlurHashDecoder.decode(blurHash = photoList?.get(idx)?.blurHash)!!.asImageBitmap()
                 ),
