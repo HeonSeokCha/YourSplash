@@ -16,142 +16,16 @@ import javax.inject.Singleton
 class UnSplashService @Inject constructor(
     private val service: HttpClient
 ) {
-
-    suspend fun getPhotos(page: Int): List<ResponsePhoto> {
-        return service.get("${Constants.UNSPLAH_URL}/photos") {
-            this.headers.append("Accept-Version", "v1")
-            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
-            this.parameter("page", page)
-        }.body()
-    }
-
-    suspend fun getPhotoDetail(id: String): ResponsePhotoDetail {
-        return service.get("${Constants.UNSPLAH_URL}/photos/$id") {
-            this.headers.append("Accept-Version", "v1")
-            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
-        }.body()
-    }
-
-    suspend fun getPhotoRelated(id: String): ResponseRelatedPhoto {
-        return service.get("${Constants.UNSPLAH_URL}/photos/$id/related") {
-            this.headers.append("Accept-Version", "v1")
-            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
-        }.body()
-    }
-
-    suspend fun getCollection(page: Int): List<ResponseCollection> {
-        return service.get("${Constants.UNSPLAH_URL}/collections") {
-            this.headers.append("Accept-Version", "v1")
-            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
-            this.parameter("page", page)
-        }.body()
-    }
-
-    suspend fun getCollectionDetail(id: String): ResponseCollection {
-        return service.get("${Constants.UNSPLAH_URL}/collections/$id") {
-            this.headers.append("Accept-Version", "v1")
-            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
-        }.body()
-    }
-
-    suspend fun getCollectionPhotos(
-        id: String,
-        page: Int
+    suspend fun requestUnsplash(
+        url: String,
+        params: HashMap<String, String>,
     ): List<ResponsePhoto> {
-        return service.get("${Constants.UNSPLAH_URL}/collections/$id/photos") {
+        return service.get("${Constants.UNSPLAH_BASE_URL}$url") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
-            this.parameter("page", page)
-        }.body()
-    }
-
-    suspend fun getCollectionRelated(id: String): List<ResponseCollection> {
-        return service.get("${Constants.UNSPLAH_URL}/collections/$id/related") {
-            this.headers.append("Accept-Version", "v1")
-            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
-        }.body()
-    }
-
-    suspend fun getUserDetail(userName: String): ResponseUserDetail {
-        return service.get("${Constants.UNSPLAH_URL}/users/$userName") {
-            this.headers.append("Accept-Version", "v1")
-            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
-        }.body()
-    }
-
-
-    suspend fun getUserPhotos(
-        userName: String,
-        page: Int
-    ): List<ResponsePhoto> {
-        return service.get("${Constants.UNSPLAH_URL}/users/$userName/photos") {
-            this.headers.append("Accept-Version", "v1")
-            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
-            this.parameter("page", page)
-        }.body()
-    }
-
-    suspend fun getUserLikes(
-        userName: String,
-        page: Int
-    ): List<ResponsePhoto> {
-        return service.get("${Constants.UNSPLAH_URL}/users/$userName/likes") {
-            this.headers.append("Accept-Version", "v1")
-            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
-            this.parameter("page", page)
-        }.body()
-    }
-
-    suspend fun getUserCollections(
-        userName: String,
-        page: Int
-    ): List<ResponseCollection> {
-        return service.get("${Constants.UNSPLAH_URL}/users/$userName/collections") {
-            this.headers.append("Accept-Version", "v1")
-            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
-            this.parameter("page", page)
-        }.body()
-    }
-
-    suspend fun getSearchResultPhoto(
-        query: String,
-        page: Int,
-        orderBy: String,
-        color: String?,
-        orientation: String?
-    ): ResponseSearchPhotos {
-        return service.get("${Constants.UNSPLAH_URL}/search/photos") {
-            this.headers.append("Accept-Version", "v1")
-            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
-            this.parameter("query", query)
-            this.parameter("page", page)
-            this.parameter("order_by", orderBy)
-            if (color != null) this.parameter("color", color)
-            if (orientation != null) this.parameter("orientation", orientation)
-        }.body()
-    }
-
-    suspend fun getSearchResultCollection(
-        query: String,
-        page: Int,
-    ): ResponseSearchCollections {
-        return service.get("${Constants.UNSPLAH_URL}/search/collections") {
-            this.headers.append("Accept-Version", "v1")
-            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
-            this.parameter("query", query)
-            this.parameter("page", page)
-        }.body()
-    }
-
-    suspend fun getSearchResultUser(
-        query: String,
-        page: Int,
-    ): ResponseSearchUsers {
-        return service.get("${Constants.UNSPLAH_URL}/search/users") {
-            this.headers.append("Accept-Version", "v1")
-            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
-            this.parameter("query", query)
-            this.parameter("page", page)
+            params.forEach { key, value ->
+                this.parameter(key, value)
+            }
         }.body()
     }
 }
