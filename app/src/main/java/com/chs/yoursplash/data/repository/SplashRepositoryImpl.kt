@@ -8,9 +8,14 @@ import com.chs.yoursplash.data.mapper.*
 import com.chs.yoursplash.data.api.UnSplashService
 import com.chs.yoursplash.data.db.PhotoSaveInfo
 import com.chs.yoursplash.data.db.YourSplashDatabase
+import com.chs.yoursplash.data.model.ResponseCollection
+import com.chs.yoursplash.data.model.ResponsePhotoDetail
+import com.chs.yoursplash.data.model.ResponseRelatedPhoto
+import com.chs.yoursplash.data.model.ResponseUserDetail
 import com.chs.yoursplash.data.paging.*
 import com.chs.yoursplash.domain.model.*
 import com.chs.yoursplash.domain.repository.SplashRepository
+import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -18,8 +23,7 @@ import java.io.IOException
 import javax.inject.Inject
 
 class SplashRepositoryImpl @Inject constructor(
-    private val client: UnSplashService,
-    private val db: YourSplashDatabase
+    private val client: UnSplashService, private val db: YourSplashDatabase
 ) : SplashRepository {
     override fun getSplashPhoto(): Flow<PagingData<Photo>> {
         return Pager(
@@ -41,8 +45,12 @@ class SplashRepositoryImpl @Inject constructor(
         return flow {
             emit(Resource.Loading(true))
             try {
-                emit(Resource.Success(
-                    client.getPhotoDetail(id).toUnSplashImageDetail())
+                emit(
+                    Resource.Success(
+                        (client.requestUnsplash(
+                            Constants.GET_PHOTO_DETAIL(id)
+                        ) as ResponsePhotoDetail).toUnSplashImageDetail()
+                    )
                 )
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -58,13 +66,9 @@ class SplashRepositoryImpl @Inject constructor(
         return flow {
             emit(Resource.Loading(true))
             try {
-                emit(
-                    Resource.Success(
-                        client.getPhotoRelated(id).results.map {
-                            it.toUnSplashImage()
-                        }
-                    )
-                )
+                emit(Resource.Success((client.requestUnsplash(
+                    Constants.GET_PHOTO_RELATED(id)
+                ) as ResponseRelatedPhoto).results.map { it.toUnSplashImage() }))
             } catch (e: IOException) {
                 e.printStackTrace()
                 emit(Resource.Error("Couldn't load date"))
@@ -81,7 +85,9 @@ class SplashRepositoryImpl @Inject constructor(
             try {
                 emit(
                     Resource.Success(
-                        client.getCollectionDetail(id).toPhotoCollection()
+                        (client.requestUnsplash(
+                            Constants.GET_COLLECTION_DETAILED(id)
+                        ) as ResponseCollection).toPhotoCollection()
                     )
                 )
             } catch (e: IOException) {
@@ -106,13 +112,9 @@ class SplashRepositoryImpl @Inject constructor(
         return flow {
             emit(Resource.Loading(true))
             try {
-                emit(
-                    Resource.Success(
-                        client.getCollectionRelated(id).map {
-                            it.toPhotoCollection()
-                        }
-                    )
-                )
+                emit(Resource.Success((client.requestUnsplash(
+                    Constants.GET_COLLECTION_RELATED(id)
+                ) as List<ResponseCollection>).map { it.toPhotoCollection() }))
             } catch (e: IOException) {
                 e.printStackTrace()
                 emit(Resource.Error("Couldn't load date"))
@@ -129,7 +131,9 @@ class SplashRepositoryImpl @Inject constructor(
             try {
                 emit(
                     Resource.Success(
-                        client.getUserDetail(userName).toUserDetail()
+                        (client.requestUnsplash(
+                            Constants.GET_USER_DETAILED(userName)
+                        ) as ResponseUserDetail).toUserDetail()
                     )
                 )
             } catch (e: IOException) {
@@ -167,10 +171,7 @@ class SplashRepositoryImpl @Inject constructor(
     }
 
     override fun getSearchResultPhoto(
-        query: String,
-        orderBy: String,
-        color: String?,
-        orientation: String?
+        query: String, orderBy: String, color: String?, orientation: String?
     ): Flow<PagingData<Photo>> {
         return Pager(
             PagingConfig(pageSize = 10)
@@ -189,7 +190,7 @@ class SplashRepositoryImpl @Inject constructor(
         return Pager(
             PagingConfig(pageSize = 10)
         ) {
-            SearchCollectionPaging(client,query)
+            SearchCollectionPaging(client, query)
         }.flow
     }
 
@@ -197,7 +198,7 @@ class SplashRepositoryImpl @Inject constructor(
         return Pager(
             PagingConfig(pageSize = 10)
         ) {
-            SearchUserPaging(client,query)
+            SearchUserPaging(client, query)
         }.flow
     }
 

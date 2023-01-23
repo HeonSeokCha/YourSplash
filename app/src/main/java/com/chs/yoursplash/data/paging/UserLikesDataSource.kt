@@ -4,7 +4,9 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.chs.yoursplash.data.api.UnSplashService
 import com.chs.yoursplash.data.mapper.toUnSplashImage
+import com.chs.yoursplash.data.model.ResponsePhoto
 import com.chs.yoursplash.domain.model.Photo
+import com.chs.yoursplash.util.Constants
 
 class UserLikesDataSource(
     private val api: UnSplashService,
@@ -20,7 +22,12 @@ class UserLikesDataSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Photo> {
         return try {
             val page = params.key ?: 1
-            val response = api.getUserLikes(userName, page).map { it.toUnSplashImage() }
+            val response = (api.requestUnsplash(
+                Constants.GET_USER_LIKES(userName),
+                hashMapOf(
+                    "page" to page.toString()
+                )
+            ) as List<ResponsePhoto>).map { it.toUnSplashImage() }
             LoadResult.Page(
                 data = response,
                 prevKey = if (page == 1) null else page - 1,

@@ -5,7 +5,9 @@ import androidx.paging.PagingState
 import com.chs.yoursplash.data.api.UnSplashService
 import com.chs.yoursplash.data.mapper.toPhotoCollection
 import com.chs.yoursplash.data.mapper.toUnSplashImage
+import com.chs.yoursplash.data.model.ResponseSearchPhotos
 import com.chs.yoursplash.domain.model.Photo
+import com.chs.yoursplash.util.Constants
 
 class SearchPhotoPaging(
     private val api: UnSplashService,
@@ -24,13 +26,17 @@ class SearchPhotoPaging(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Photo> {
         return try {
             val page = params.key ?: 1
-            val response = api.getSearchResultPhoto(
-                query = query,
-                page = page,
-                orderBy = orderBy,
-                color = color,
-                orientation = orientation
-            ).result.map {
+            val response = (api.requestUnsplash(
+                Constants.SEARCH_PHOTO,
+                hashMapOf(
+                    "query" to query,
+                    "page" to page.toString(),
+                    "order_by" to orderBy,
+                ).apply {
+                    if (color != null) this["color"] = color
+                    if (orientation != null) this["orientation"] = orientation
+                }
+            ) as ResponseSearchPhotos).result.map {
                 it.toUnSplashImage()
             }
             LoadResult.Page(

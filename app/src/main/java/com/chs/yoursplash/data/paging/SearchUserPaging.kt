@@ -5,7 +5,9 @@ import androidx.paging.PagingState
 import com.chs.yoursplash.data.api.UnSplashService
 import com.chs.yoursplash.data.mapper.toUnSplashImage
 import com.chs.yoursplash.data.mapper.toUnSplashUser
+import com.chs.yoursplash.data.model.ResponseSearchUsers
 import com.chs.yoursplash.domain.model.User
+import com.chs.yoursplash.util.Constants
 
 class SearchUserPaging(
     private val api: UnSplashService,
@@ -21,10 +23,13 @@ class SearchUserPaging(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, User> {
         return try {
             val page = params.key ?: 1
-            val response = api.getSearchResultUser(
-                query = query,
-                page = page,
-            ).result.map {
+            val response = (api.requestUnsplash(
+                Constants.SEARCH_USER,
+                hashMapOf(
+                    "query" to query,
+                    "page" to page.toString()
+                )
+            ) as ResponseSearchUsers).result.map {
                 it.toUnSplashUser()
             }
             LoadResult.Page(

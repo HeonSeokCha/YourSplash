@@ -4,7 +4,9 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.chs.yoursplash.data.api.UnSplashService
 import com.chs.yoursplash.data.mapper.toPhotoCollection
+import com.chs.yoursplash.data.model.ResponseCollection
 import com.chs.yoursplash.domain.model.UnSplashCollection
+import com.chs.yoursplash.util.Constants
 
 class HomeCollectionDataSource(
     private val api: UnSplashService
@@ -19,7 +21,13 @@ class HomeCollectionDataSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, UnSplashCollection> {
         return try {
             val page = params.key ?: 1
-            val response = api.getCollection(page).map { it.toPhotoCollection() }
+            val response: List<UnSplashCollection> = (
+                    api.requestUnsplash(
+                Constants.GET_COLLECTION,
+                hashMapOf("page" to page.toString())
+            ) as List<ResponseCollection>)
+                .map { it.toPhotoCollection() }
+
             LoadResult.Page(
                 data = response,
                 prevKey = if (page == 1) null else page - 1,
