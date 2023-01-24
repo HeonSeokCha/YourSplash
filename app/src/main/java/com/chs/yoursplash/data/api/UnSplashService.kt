@@ -10,12 +10,12 @@ import javax.inject.Singleton
 
 @Singleton
 class UnSplashService @Inject constructor(
-    private val service: HttpClient
+    val service: HttpClient
 ) {
-    suspend fun requestUnsplash(
+    suspend inline fun <reified T>requestUnsplash(
         url: String,
         params: HashMap<String, String> = hashMapOf(),
-    ): Any {
+    ): T {
         return service.get("${Constants.UNSPLAH_BASE_URL}$url") {
             this.headers.append("Accept-Version", "v1")
             this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")

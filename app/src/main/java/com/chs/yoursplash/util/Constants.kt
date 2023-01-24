@@ -61,12 +61,12 @@ object Constants {
         Pair("Squarish", "squarish"),
     )
 
-    val QUALITY_LIST = linkedMapOf(
-        Pair("Raw", "raw"),
-        Pair("Full", "full"),
-        Pair("Regular", "regular"),
-        Pair("Small", "small"),
-        Pair("Thumb", "thumb"),
+    val QUALITY_LIST: List<String> = listOf(
+        "Raw",
+        "Full",
+        "Regular",
+        "Small",
+        "Thumb"
     )
 
     fun getPhotoQualityUrl(
@@ -74,21 +74,11 @@ object Constants {
         quality: String
     ): String? {
         return when(quality) {
-            "raw" -> {
-                urlInfo?.raw
-            }
-            "full" -> {
-                urlInfo?.full
-            }
-            "regular" -> {
-                urlInfo?.regular
-            }
-            "small" -> {
-                urlInfo?.small
-            }
-            "thumb" -> {
-                urlInfo?.thumb
-            }
+            "Raw" -> { urlInfo?.raw }
+            "Full" -> { urlInfo?.full }
+            "Regular" -> { urlInfo?.regular }
+            "Small" -> { urlInfo?.small }
+            "Thumb" -> { urlInfo?.thumb }
             else -> null
         }
     }

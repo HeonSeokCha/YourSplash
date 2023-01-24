@@ -24,7 +24,7 @@ class SearchUserPaging(
         return try {
             val page = params.key ?: 1
             val response = (api.requestUnsplash(
-                Constants.SEARCH_USER,
+                Constants.GET_SEARCH_USERS,
                 hashMapOf(
                     "query" to query,
                     "page" to page.toString()

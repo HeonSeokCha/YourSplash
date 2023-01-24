@@ -1,7 +1,5 @@
 package com.chs.yoursplash.presentation.setting
 
-import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -69,9 +67,7 @@ fun SettingScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight(),
-                onDismissRequest = {
-                    openDialog = false
-                },
+                onDismissRequest = { openDialog = false },
                 confirmButton = {
                     Button(
                         onClick = {
@@ -94,7 +90,7 @@ fun SettingScreen(
                 }, text = {
                     Column {
                         Constants.QUALITY_LIST.forEach {
-                            val isSelected = it.value == selectButtonInfo.second
+                            val isSelected = it == selectButtonInfo.second
                             val color = RadioButtonDefaults.colors(
                                 selectedColor = Purple500,
                                 unselectedColor = Color.LightGray
@@ -106,11 +102,11 @@ fun SettingScreen(
                                     colors = color,
                                     selected = isSelected,
                                     onClick = {
-                                        selectButtonInfo = selectButtonInfo.copy(second = it.value)
+                                        selectButtonInfo = selectButtonInfo.copy(second = it)
                                     }
                                 )
                                 Text(
-                                    text = it.key,
+                                    text = it,
                                     fontSize = 16.sp,
                                     color = Color.Black
                                 )

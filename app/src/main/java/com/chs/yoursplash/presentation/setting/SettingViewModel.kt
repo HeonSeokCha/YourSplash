@@ -25,12 +25,9 @@ class SettingViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             state = state.copy(
-                downLoadQualityValue = getStringPrefUseCase(Constants.PREFERENCE_KEY_DOWNLOAD_QUALITY).first()
-                    .ifEmpty { "Regular" },
-                loadQualityValue = getStringPrefUseCase(Constants.PREFERENCE_KEY_LOAD_QUALITY).first()
-                    .ifEmpty { "Full" },
+                downLoadQualityValue = getStringPrefUseCase(Constants.PREFERENCE_KEY_DOWNLOAD_QUALITY).first(),
+                loadQualityValue = getStringPrefUseCase(Constants.PREFERENCE_KEY_LOAD_QUALITY).first(),
                 wallpaperQualityValue = getStringPrefUseCase(Constants.PREFERENCE_KEY_WALLPAPER_QUALITY).first()
-                    .ifEmpty { "Full" }
             )
         }
     }

@@ -1,6 +1,7 @@
 package com.chs.yoursplash.data.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -32,10 +33,9 @@ class SettingRepositoryImpl @Inject constructor(
 
     override suspend fun getString(keyName: String): Flow<String> = dataStore.data
         .catch { e ->
-            if (e is IOException) {
-                emit(emptyPreferences())
-            } else { throw e }
+            Log.e("SettingRepositoryImpl", "Catch SettingRepositoryImpl Exception ${e.message}")
+            emit(emptyPreferences())
         }.map { preferences ->
-            preferences[stringPreferencesKey(name = keyName)] ?: ""
+            preferences[stringPreferencesKey(name = keyName)] ?: "Regular"
         }
 }

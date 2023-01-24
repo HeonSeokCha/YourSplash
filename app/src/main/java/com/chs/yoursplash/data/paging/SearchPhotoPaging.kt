@@ -1,5 +1,6 @@
 package com.chs.yoursplash.data.paging
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.chs.yoursplash.data.api.UnSplashService
@@ -27,7 +28,7 @@ class SearchPhotoPaging(
         return try {
             val page = params.key ?: 1
             val response = (api.requestUnsplash(
-                Constants.SEARCH_PHOTO,
+                Constants.GET_SEARCH_PHOTOS,
                 hashMapOf(
                     "query" to query,
                     "page" to page.toString(),
@@ -45,6 +46,7 @@ class SearchPhotoPaging(
                 nextKey = if(response.isNotEmpty()) page + 1 else null
             )
         } catch (e: Exception) {
+            Log.e("HomePhotosDataSource", e.message.toString())
             LoadResult.Error(e)
         }
     }
