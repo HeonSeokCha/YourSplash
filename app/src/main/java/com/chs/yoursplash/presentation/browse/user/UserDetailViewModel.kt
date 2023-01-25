@@ -56,7 +56,6 @@ class UserDetailViewModel @Inject constructor(
                         )
                     }
                     is Resource.Error -> {
-
                         state = state.copy(
                             isLoading = false,
                             isError = true

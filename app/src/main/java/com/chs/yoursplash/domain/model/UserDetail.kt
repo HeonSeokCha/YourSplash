@@ -7,9 +7,9 @@ data class UserDetail(
     val bio: String?,
     val location: String?,
     val profileImage: UserProfileImage,
-    val totalCollections: Int,
-    val totalLikes: Int,
-    val totalPhotos: Int,
+    val totalCollections: Int = 0,
+    val totalLikes: Int = 0,
+    val totalPhotos: Int = 0,
     val tags: List<UnSplashTag>,
     val followersCount: Int
 )

@@ -1,5 +1,6 @@
 package com.chs.yoursplash.presentation.browse.user
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -17,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -58,17 +58,17 @@ fun UserDetailScreen(
         viewModel.getUserDetailCollections(userName)
     }
 
-    if (state.userDetailInfo?.totalPhotos != 0) {
-        tabList.add("PHOTOS")
-    }
-
-    if (state.userDetailInfo?.totalLikes != 0) {
-        tabList.add("LIKES")
-    }
-
-    if (state.userDetailInfo?.totalCollections != 0) {
-        tabList.add("COLLECTIONS")
-    }
+   state.userDetailInfo?.let {
+       if (it.totalPhotos != 0) {
+           tabList.add("PHOTOS")
+       }
+       if (it.totalLikes != 0) {
+            tabList.add("LIKES")
+       }
+       if (it.totalCollections != 0) {
+           tabList.add("COLLECTIONS")
+       }
+   }
 
     BoxWithConstraints {
         val screenHeight = maxHeight
@@ -80,77 +80,104 @@ fun UserDetailScreen(
             item {
                 UserDetailInfo(userInfo = state.userDetailInfo)
             }
-            item {
-                TabRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    selectedTabIndex = pagerState.currentPage,
-                    backgroundColor = Color.White,
-                    indicator = { tabPositions ->
-                        TabRowDefaults.Indicator(
-                            modifier = Modifier
-                                .pagerTabIndicatorOffset(pagerState, tabPositions),
-                            color = Purple200
-                        )
+            if (tabList.isNotEmpty()) {
+                item {
+                    TabRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        selectedTabIndex = pagerState.currentPage,
+                        backgroundColor = Color.White,
+                        indicator = { tabPositions ->
+                            TabRowDefaults.Indicator(
+                                modifier = Modifier
+                                    .pagerTabIndicatorOffset(pagerState, tabPositions),
+                                color = Purple200
+                            )
+                        }
+                    ) {
+                        tabList.forEachIndexed { index, title ->
+                            Tab(
+                                text = {
+                                    Text(
+                                        text = title,
+                                        maxLines = 1,
+                                        color = Purple200,
+                                        overflow = TextOverflow.Ellipsis,
+                                        fontSize = 13.sp
+                                    )
+                                },
+                                selected = pagerState.currentPage == index,
+                                onClick = {
+                                    coroutineScope.launch {
+                                        pagerState.animateScrollToPage(index)
+                                    }
+                                },
+                            )
+                        }
                     }
-                ) {
-                    tabList.forEachIndexed { index, title ->
-                        Tab(
-                            text = {
-                                Text(
-                                    text = title,
-                                    maxLines = 1,
-                                    color = Purple200,
-                                    overflow = TextOverflow.Ellipsis,
-                                    fontSize = 13.sp
-                                )
-                            },
-                            selected = pagerState.currentPage == index,
-                            onClick = {
-                                coroutineScope.launch {
-                                    pagerState.animateScrollToPage(index)
-                                }
-                            },
-                        )
-                    }
-                }
 
-                HorizontalPager(
-                    modifier = Modifier
-                        .height(screenHeight)
-                        .nestedScroll(remember {
-                            object : NestedScrollConnection {
-                                override fun onPreScroll(
-                                    available: Offset,
-                                    source: NestedScrollSource
-                                ): Offset {
-                                    return if (available.y > 0) Offset.Zero else Offset(
-                                        x = 0f,
-                                        y = -scrollState.dispatchRawDelta(-available.y)
+                    HorizontalPager(
+                        modifier = Modifier
+                            .height(screenHeight)
+                            .nestedScroll(remember {
+                                object : NestedScrollConnection {
+                                    override fun onPreScroll(
+                                        available: Offset,
+                                        source: NestedScrollSource
+                                    ): Offset {
+                                        return if (available.y > 0) Offset.Zero else Offset(
+                                            x = 0f,
+                                            y = -scrollState.dispatchRawDelta(-available.y)
+                                        )
+                                    }
+                                }
+                            }),
+                        count = tabList.size,
+                        state = pagerState,
+                        userScrollEnabled = false,
+                    ) { pager ->
+                        when (pager) {
+                            0 -> {
+                                if (tabList[0] == "PHOTOS") {
+                                    UserDetailPhotoScreen(
+                                        context = context,
+                                        navController = navController,
+                                        state.userDetailPhotoList?.collectAsLazyPagingItems(),
+                                        state.loadQuality
+                                    )
+                                } else if (tabList[0] == "LIKES") {
+                                    UserDetailLikeScreen(
+                                        context = context,
+                                        navController = navController,
+                                        state.userDetailLikeList?.collectAsLazyPagingItems(),
+                                        state.loadQuality
+                                    )
+                                } else {
+                                    UserDetailCollectionScreen(
+                                        context = context,
+                                        navController = navController,
+                                        state.userDetailCollection?.collectAsLazyPagingItems(),
+                                        state.loadQuality
                                     )
                                 }
                             }
-                        }),
-                    count = tabList.size,
-                    state = pagerState,
-                    userScrollEnabled = false,
-                ) { pager ->
-                    when (pager) {
-                        0 -> {
-                            if (tabList[0] == "PHOTOS") {
-                                UserDetailPhotoScreen(
-                                    context = context,
-                                    navController = navController,
-                                    state.userDetailPhotoList?.collectAsLazyPagingItems(),
-                                    state.loadQuality
-                                )
-                            } else if (tabList[0] == "LIKES") {
-                                UserDetailLikeScreen(
-                                    context = context,
-                                    navController = navController,
-                                    state.userDetailLikeList?.collectAsLazyPagingItems(),
-                                    state.loadQuality
-                                )
-                            } else {
+                            1 -> {
+                                if (tabList[1] == "LIKES") {
+                                    UserDetailLikeScreen(
+                                        context = context,
+                                        navController = navController,
+                                        state.userDetailLikeList?.collectAsLazyPagingItems(),
+                                        state.loadQuality
+                                    )
+                                } else {
+                                    UserDetailCollectionScreen(
+                                        context = context,
+                                        navController = navController,
+                                        state.userDetailCollection?.collectAsLazyPagingItems(),
+                                        state.loadQuality
+                                    )
+                                }
+                            }
+                            2 -> {
                                 UserDetailCollectionScreen(
                                     context = context,
                                     navController = navController,
@@ -158,32 +185,6 @@ fun UserDetailScreen(
                                     state.loadQuality
                                 )
                             }
-
-                        }
-                        1 -> {
-                            if (tabList[1] == "LIKES") {
-                                UserDetailLikeScreen(
-                                    context = context,
-                                    navController = navController,
-                                    state.userDetailLikeList?.collectAsLazyPagingItems(),
-                                    state.loadQuality
-                                )
-                            } else {
-                                UserDetailCollectionScreen(
-                                    context = context,
-                                    navController = navController,
-                                    state.userDetailCollection?.collectAsLazyPagingItems(),
-                                    state.loadQuality
-                                )
-                            }
-                        }
-                        2 -> {
-                            UserDetailCollectionScreen(
-                                context = context,
-                                navController = navController,
-                                state.userDetailCollection?.collectAsLazyPagingItems(),
-                                state.loadQuality
-                            )
                         }
                     }
                 }
