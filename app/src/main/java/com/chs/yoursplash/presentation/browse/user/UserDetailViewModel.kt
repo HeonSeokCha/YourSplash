@@ -52,7 +52,22 @@ class UserDetailViewModel @Inject constructor(
                     is Resource.Success -> {
                         state = state.copy(
                             isLoading = false,
-                            userDetailInfo = result.data
+                            userDetailInfo = result.data,
+                            userTabLabList = result.data.run {
+                                val tempTabList: MutableList<String> = mutableListOf()
+                                this?.let {
+                                    if (it.totalPhotos != 0) {
+                                        tempTabList.add("PHOTOS")
+                                    }
+                                    if (it.totalCollections!= 0) {
+                                        tempTabList.add("COLLECTIONS")
+                                    }
+                                    if (it.totalLikes != 0) {
+                                        tempTabList.add("LIKES")
+                                    }
+                                }
+                                tempTabList
+                            }
                         )
                     }
                     is Resource.Error -> {
