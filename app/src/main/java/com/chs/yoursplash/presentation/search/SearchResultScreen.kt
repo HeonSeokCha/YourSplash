@@ -58,9 +58,9 @@ fun SearchResultScreen(
 
     LaunchedEffect(searchFilter) {
         if (searchFilter != null && searchFilter != SearchFilter()) {
-            viewModel.orderBy = Constants.SORT_BY_LIST[searchFilter.orderBy]!!
-            viewModel.color = Constants.SEARCH_COLOR_LIST[searchFilter.color]
-            viewModel.orientation = Constants.SEARCH_ORI_LIST[searchFilter.orientation]
+            viewModel.orderBy = searchFilter.orderBy
+            viewModel.color = searchFilter.color
+            viewModel.orientation = searchFilter.orientation
             viewModel.searchResult(query)
         }
     }

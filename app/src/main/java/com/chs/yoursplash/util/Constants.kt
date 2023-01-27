@@ -35,16 +35,16 @@ object Constants {
     const val SEARCH_COLLECTION: String = "search_collection"
     const val SEARCH_USER: String = "search_user"
 
-    val SORT_BY_LIST = hashMapOf(
+    val SORT_BY_LIST = listOf(
         Pair("RELEVANCE", "relevant"),
         Pair("LATEST", "latest")
     )
 
-    val SEARCH_COLOR_LIST = hashMapOf(
+    val SEARCH_COLOR_LIST = listOf(
         Pair("Any", null),
         Pair("Black And White", "black_and_white"),
         Pair("Black", "black"),
-        Pair("white", "white"),
+        Pair("White", "white"),
         Pair("Yellow", "yellow"),
         Pair("Orange", "orange"),
         Pair("Red", "red"),
@@ -54,7 +54,7 @@ object Constants {
         Pair("Teal", "teal")
     )
 
-    val SEARCH_ORI_LIST = hashMapOf(
+    val SEARCH_ORI_LIST = listOf(
         Pair("Any", null),
         Pair("Landscape", "landscape"),
         Pair("Portrait", "portrait"),

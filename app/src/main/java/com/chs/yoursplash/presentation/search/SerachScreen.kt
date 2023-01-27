@@ -1,6 +1,5 @@
 package com.chs.yoursplash.presentation.search
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
