@@ -1,6 +1,8 @@
 package com.chs.yoursplash.presentation.search
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -21,12 +23,24 @@ import kotlinx.coroutines.launch
 fun SearchScreen(
     searchKeyWord: String,
     searchFilter: SearchFilter,
-    modalClick: () -> Unit
+    modalClick: () -> Unit,
+    onBack: () -> Unit,
 ) {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     val tabList = listOf("PHOTOS", "COLLECTIONS", "USERS")
 
+    DisposableEffect(Unit) {
+        onDispose {
+            onBack()
+        }
+    }
+    LaunchedEffect(pagerState) {
+        // Collect from the pager state a snapshotFlow reading the currentPage
+        snapshotFlow { pagerState.currentPage }.collect { page ->
+            Log.e("SEARCHSCREEN", page.toString())
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()

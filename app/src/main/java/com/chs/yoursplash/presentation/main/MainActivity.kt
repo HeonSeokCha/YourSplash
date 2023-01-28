@@ -3,6 +3,7 @@ package com.chs.yoursplash.presentation.main
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -51,7 +52,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val bottomSheetScaffoldState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+            val bottomSheetScaffoldState =
+                rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
             val navController = rememberNavController()
             var searchKeyword by remember { mutableStateOf("") }
             var searchFilter by remember { mutableStateOf(SearchFilter()) }
@@ -60,17 +62,21 @@ class MainActivity : ComponentActivity() {
                 ModalBottomSheetLayout(
                     sheetState = bottomSheetScaffoldState,
                     sheetContent = {
-                        SearchBottomSheet(searchFilter) {
-                             searchFilter = searchFilter.copy(
-                                 orderBy = it.orderBy,
-                                 color = it.color,
-                                 orientation = it.orientation
-                             )
-                            scope.launch {
-                                bottomSheetScaffoldState.hide()
+                        SearchBottomSheet(
+                            searchFilter = searchFilter,
+                            onClick = {
+                                searchFilter = searchFilter.copy(
+                                    orderBy = it.orderBy,
+                                    color = it.color,
+                                    orientation = it.orientation
+                                )
+                                scope.launch {
+                                    bottomSheetScaffoldState.hide()
+                                }
                             }
-                        }
-                }) {
+                        )
+                    }
+                ) {
                     Scaffold(
                         topBar = {
                             MainTopBar(
@@ -82,7 +88,8 @@ class MainActivity : ComponentActivity() {
                                     navController.navigateUp()
                                 }
                             )
-                        }, bottomBar = {
+                        },
+                        bottomBar = {
                             BottomBar(navController = navController)
                         },
                     ) {
@@ -109,8 +116,17 @@ class MainActivity : ComponentActivity() {
                                                 bottomSheetScaffoldState.show()
                                             }
                                         }
+                                    }, onBack = {
+                                        searchKeyword = ""
+                                        searchFilter = SearchFilter()
                                     }
                                 )
+
+                                BackHandler(enabled = bottomSheetScaffoldState.isVisible) {
+                                    scope.launch {
+                                        bottomSheetScaffoldState.hide()
+                                    }
+                                }
                             }
                             composable(Screen.SettingScreen.route) {
                                 SettingScreen()
@@ -131,7 +147,7 @@ private fun MainTopBar(
     onBackClicked: () -> Unit
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    when(navBackStackEntry?.destination?.route) {
+    when (navBackStackEntry?.destination?.route) {
         BottomNavScreen.HomeScreen.route, BottomNavScreen.CollectionScreen.route -> {
             TopAppBar(
                 title = {
@@ -139,7 +155,7 @@ private fun MainTopBar(
                         text = stringResource(id = R.string.app_name),
                         fontSize = 20.sp
                     )
-                },actions = {
+                }, actions = {
                     IconButton(onClick = {
                         navController.navigate(Screen.SearchScreen.route)
                     }) {
@@ -179,9 +195,10 @@ private fun MainTopBar(
         }
 
         Screen.SearchScreen.route -> {
-            SearchAppBar(searchClicked = { searchQuery ->
-                searchClicked(searchQuery)
-            }, onBackClicked = onBackClicked
+            SearchAppBar(
+                searchClicked = { searchQuery ->
+                    searchClicked(searchQuery)
+                }, onBackClicked = onBackClicked
             )
         }
     }

@@ -18,8 +18,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -47,8 +50,11 @@ fun SearchResultScreen(
 
     val state = viewModel.state
     val context = LocalContext.current
-    val lazyListState = rememberLazyListState()
-    viewModel.searchPage = type
+    val scrollState = rememberLazyListState()
+
+    LaunchedEffect(context, viewModel) {
+        viewModel.searchPage = type
+    }
 
     LaunchedEffect(query) {
         if (query.isNotEmpty()) {
@@ -84,7 +90,7 @@ fun SearchResultScreen(
     Scaffold(
         floatingActionButton = {
             if (type == Constants.SEARCH_PHOTO && query.isNotEmpty()) {
-                SearchFloatingActionButton(extend = lazyListState.isScrollingUp()) {
+                SearchFloatingActionButton(extend = scrollState.isScrollingUp()) {
                     modalClick()
                 }
             }
@@ -93,7 +99,7 @@ fun SearchResultScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize(),
-            state = lazyListState,
+            state = scrollState,
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
         ) {
