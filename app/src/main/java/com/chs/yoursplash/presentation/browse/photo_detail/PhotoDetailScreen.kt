@@ -8,12 +8,10 @@ import android.os.Environment
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -25,22 +23,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.ColorPainter
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.getSystemService
-import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -49,7 +41,6 @@ import com.chs.yoursplash.R
 import com.chs.yoursplash.domain.model.PhotoDetail
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.util.*
-import java.io.File
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -89,252 +80,195 @@ fun ImageDetailScreen(
         }
     }
 
-
-    BoxWithConstraints {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize(),
-            state = scrollState
-        ) {
-
-            item {
+    LazyVerticalStaggeredGrid(
+        columns = StaggeredGridCells.Fixed(2),
+    ) {
+        item(span = StaggeredGridItemSpan.FullLine) {
+            Column {
                 AsyncImage(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(((state.imageDetailInfo?.height ?: 2000) / 10).dp),
                     contentScale = ContentScale.Crop,
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(Constants.getPhotoQualityUrl(
-                        state.imageDetailInfo?.urls,
-                        state.wallpaperQuality)
-                    ).crossfade(true)
+                        .data(
+                            Constants.getPhotoQualityUrl(
+                                state.imageDetailInfo?.urls,
+                                state.wallpaperQuality
+                            )
+                        ).crossfade(true)
                         .build(),
                     contentDescription = null,
                     placeholder = ColorPainter(state.imageDetailInfo?.color?.color ?: Color.White)
                 )
 
-                Column(
+                Row(
                     modifier = Modifier
+                        .fillMaxWidth()
                         .padding(
+                            top = 16.dp,
                             start = 16.dp,
                             end = 16.dp
-                        )
+                        ),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 16.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            AsyncImage(
-                                modifier = Modifier
-                                    .clickable {
-                                        navController.navigate(
-                                            "${Screens.UserDetailScreen.route}/${state.imageDetailInfo?.user?.userName}"
-                                        )
-                                    }
-                                    .size(40.dp)
-                                    .clip(RoundedCornerShape(100)),
-                                model = ImageRequest.Builder(LocalContext.current)
-                                    .data(state.imageDetailInfo?.user?.photoProfile?.large)
-                                    .crossfade(true)
-                                    .build(),
-                                placeholder = ColorPainter(
-                                    state.imageDetailInfo?.color?.color ?: Color.LightGray
-                                ),
-                                contentDescription = null
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Text(
-                                text = state.imageDetailInfo?.user?.name ?: "",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold,
-                                overflow = TextOverflow.Ellipsis,
-                                maxLines = 1
-                            )
-                        }
-
-                        when (state.imageSaveState) {
-                            PhotoSaveState.NOT_DOWNLOAD -> {
-                                IconButton(
-                                    modifier = Modifier.size(24.dp),
-                                    onClick = {
-                                        downloadPhoto(
-                                            context,
-                                            state.imageDetailInfo,
-                                            downloadStart = { downLoadQueueId = it }
-                                        )
-                                    }) {
-                                    Icon(
-                                        imageVector = Icons.Default.Download,
-                                        contentDescription = "download"
-                                    )
-                                }
-                            }
-                            PhotoSaveState.DOWNLOADING -> {
-                                IconButton(
-                                    modifier = Modifier.size(24.dp),
-                                    onClick = {
-                                        Toast.makeText(
-                                            context,
-                                            "File is DownLoading",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }) {
-                                    Icon(
-                                        imageVector = Icons.Default.Downloading,
-                                        contentDescription = "downloading"
-                                    )
-                                }
-                            }
-                            PhotoSaveState.DOWNLOADED -> {
-                                IconButton(
-                                    modifier = Modifier.size(24.dp),
-                                    onClick = {
-                                        Toast.makeText(
-                                            context,
-                                            "File is DownLoaded",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }) {
-                                    Icon(
-                                        imageVector = Icons.Default.DownloadDone,
-                                        contentDescription = "fileIsSaved"
-                                    )
-                                }
-                            }
-                        }
-
-                    }
-                    Divider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
-
-                    ImageDetailInfo(state.imageDetailInfo)
-                }
-            }
-
-            item {
-                Column(
-                    modifier = Modifier
-                        .height(maxHeight)
-                        .nestedScroll(remember {
-                            object : NestedScrollConnection {
-                                override fun onPreScroll(
-                                    available: Offset,
-                                    source: NestedScrollSource
-                                ): Offset {
-                                    return if (available.y > 0) Offset.Zero else Offset(
-                                        x = 0f,
-                                        y = -scrollState.dispatchRawDelta(-available.y)
-                                    )
-                                }
-                            }
-                        }),
-                ) {
-                    if (state.imageRelatedList.isNotEmpty()) {
-                        Text(
+                        AsyncImage(
                             modifier = Modifier
-                                .padding(start = 16.dp, bottom = 16.dp),
-                            text = "Related photos",
-                            fontWeight = FontWeight.Bold
+                                .clickable {
+                                    navController.navigate(
+                                        "${Screens.UserDetailScreen.route}/${state.imageDetailInfo?.user?.userName}"
+                                    )
+                                }
+                                .size(40.dp)
+                                .clip(RoundedCornerShape(100)),
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(state.imageDetailInfo?.user?.photoProfile?.large)
+                                .crossfade(true)
+                                .build(),
+                            placeholder = ColorPainter(
+                                state.imageDetailInfo?.color?.color ?: Color.LightGray
+                            ),
+                            contentDescription = null
                         )
-                        LazyVerticalStaggeredGrid(
-                            modifier = Modifier
-                                .padding(start = 16.dp)
-                                .fillMaxSize(),
-                            columns = StaggeredGridCells.Fixed(2),
-                        ) {
-                            items(state.imageRelatedList, key = { photo ->
-                                photo.id
-                            }) { photo ->
-                                AsyncImage(
-                                    modifier = Modifier
-                                        .padding(
-                                            end = 16.dp,
-                                            bottom = 16.dp
-                                        )
-                                        .clickable {
-                                            navController.navigate(
-                                                "${Screens.ImageDetailScreen.route}/${photo.id}"
-                                            )
-                                        },
-                                    model = ImageRequest.Builder(LocalContext.current)
-                                        .data(Constants.getPhotoQualityUrl(photo.urls, state.loadQuality))
-                                        .crossfade(true)
-                                        .build(),
-                                    contentDescription = null,
-                                    contentScale = ContentScale.Crop,
-                                    placeholder = if (photo.blurHash != null) {
-                                        BitmapPainter(
-                                            BlurHashDecoder.decode(blurHash = photo.blurHash)!!
-                                                .asImageBitmap()
-                                        )
-                                    } else ColorPainter(photo.color.color),
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Text(
+                            text = state.imageDetailInfo?.user?.name ?: "",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 1
+                        )
+                    }
+
+                    when (state.imageSaveState) {
+                        PhotoSaveState.NOT_DOWNLOAD -> {
+                            IconButton(
+                                modifier = Modifier.size(24.dp),
+                                onClick = {
+                                    downloadPhoto(
+                                        context,
+                                        state.imageDetailInfo,
+                                        downloadStart = { downLoadQueueId = it }
+                                    )
+                                }) {
+                                Icon(
+                                    imageVector = Icons.Default.Download,
+                                    contentDescription = "download"
+                                )
+                            }
+                        }
+                        PhotoSaveState.DOWNLOADING -> {
+                            IconButton(
+                                modifier = Modifier.size(24.dp),
+                                onClick = {
+                                    Toast.makeText(
+                                        context,
+                                        "File is DownLoading",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }) {
+                                Icon(
+                                    imageVector = Icons.Default.Downloading,
+                                    contentDescription = "downloading"
+                                )
+                            }
+                        }
+                        PhotoSaveState.DOWNLOADED -> {
+                            IconButton(
+                                modifier = Modifier.size(24.dp),
+                                onClick = {
+                                    Toast.makeText(
+                                        context,
+                                        "File is DownLoaded",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }) {
+                                Icon(
+                                    imageVector = Icons.Default.DownloadDone,
+                                    contentDescription = "fileIsSaved"
                                 )
                             }
                         }
                     }
 
-                    if (!state.imageDetailInfo?.relatedCollection?.result.isNullOrEmpty()) {
-                        Text(
-                            modifier = Modifier
-                                .padding(bottom = 16.dp),
-                            text = "Related Collections",
-                            fontWeight = FontWeight.Bold
-                        )
-
-                        LazyVerticalGrid(
-                            modifier = Modifier
-                                .wrapContentHeight(),
-                            columns = GridCells.Fixed(2)
-                        ) {
-                            items(
-                                state.imageDetailInfo?.relatedCollection?.result?.size ?: 0
-                            ) { idx ->
-                                AsyncImage(
-                                    modifier = Modifier
-                                        .size(200.dp, 100.dp)
-                                        .clickable {
-                                            navController.navigate(
-                                        "${Screens.CollectionDetailScreen.route}/" +
-                                                "${state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.id}"
-                                            )
-                                        },
-                                    model = ImageRequest.Builder(LocalContext.current)
-                                        .data(Constants.getPhotoQualityUrl(
-                                        state.imageDetailInfo?.relatedCollection?.result?.get(idx)?.previewPhotos?.get(0)?.urls,
-                                        state.loadQuality
-                                    ))
-                                        .crossfade(true)
-                                        .build(),
-                                    contentDescription = null,
-                                    contentScale = ContentScale.Crop,
-                                    placeholder = BitmapPainter(
-                                        BlurHashDecoder.decode(
-                                            blurHash = state.imageDetailInfo?.relatedCollection?.result?.get(
-                                                idx
-                                            )?.previewPhotos?.get(0)?.blurHash
-                                        )!!.asImageBitmap()
-                                    ),
-                                )
-                            }
-                        }
-                    }
                 }
+                Divider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
+
+                ImageDetailInfo(state.imageDetailInfo)
             }
         }
 
-        if (state.isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(color = MaterialTheme.colors.primary)
+        if (state.imageRelatedList.isNotEmpty()) {
+            items(state.imageRelatedList) { item ->
+                AsyncImage(
+                    modifier = Modifier
+                        .padding(
+                            end = 16.dp,
+                            bottom = 16.dp
+                        )
+                        .clickable {
+                            navController.navigate(
+                                "${Screens.ImageDetailScreen.route}/${item.id}"
+                            )
+                        },
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(Constants.getPhotoQualityUrl(item.urls, state.loadQuality))
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    placeholder = if (item.blurHash != null) {
+                        BitmapPainter(
+                            BlurHashDecoder.decode(blurHash = item.blurHash)!!
+                                .asImageBitmap()
+                        )
+                    } else ColorPainter(item.color.color),
+                )
             }
+        }
+
+        if (!state.imageDetailInfo?.relatedCollection?.result.isNullOrEmpty()) {
+            items(state.imageDetailInfo?.relatedCollection!!.result) { item ->
+                AsyncImage(
+                    modifier = Modifier
+                        .size(200.dp, 100.dp)
+                        .clickable {
+                            navController.navigate(
+                                "${Screens.CollectionDetailScreen.route}/${item.id}"
+                            )
+                        },
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(
+                            Constants.getPhotoQualityUrl(
+                                item.previewPhotos?.get(0)?.urls,
+                                state.loadQuality
+                            )
+                        )
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    placeholder = BitmapPainter(
+                        BlurHashDecoder.decode(
+                            blurHash = item.previewPhotos?.get(0)?.blurHash
+                        )!!.asImageBitmap()
+                    )
+                )
+            }
+        }
+    }
+
+    if (state.isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(color = MaterialTheme.colors.primary)
         }
     }
 }

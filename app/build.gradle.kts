@@ -7,7 +7,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("kotlin-parcelize")
     id("kotlinx-serialization")
-    id("com.google.devtools.ksp") version "1.7.20-1.0.8"
+    id("com.google.devtools.ksp") version "1.8.0-1.0.9"
 }
 
 fun getApiKey(propertyKey: String): String {
@@ -49,7 +49,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.2"
+        kotlinCompilerExtensionVersion = "1.4.0"
     }
     packagingOptions {
         resources {
@@ -64,7 +64,7 @@ dependencies {
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.core:core-splashscreen:1.0.0")
     implementation("androidx.appcompat:appcompat:1.6.0")
-    implementation("com.google.android.material:material:1.7.0")
+    implementation("com.google.android.material:material:1.8.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -73,8 +73,8 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.3.3")
 
     // Compose dependencies
-    implementation("androidx.compose.ui:ui:1.3.3")
-    implementation("androidx.compose.material:material:1.3.1")
+    implementation("androidx.compose.ui:ui:1.4.0-alpha05")
+    implementation("androidx.compose.material:material:1.4.0-alpha05")
     implementation("androidx.compose.material:material-icons-extended:1.3.1")
     implementation("androidx.compose.ui:ui-tooling-preview:1.3.3")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
@@ -98,7 +98,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.2.2")
 
     // Pager
-    implementation("com.google.accompanist:accompanist-pager:0.29.0-alpha")
+    implementation("com.google.accompanist:accompanist-pager:0.29.1-alpha")
     implementation("com.google.accompanist:accompanist-pager-indicators:0.29.0-alpha")
 
     // Paging
