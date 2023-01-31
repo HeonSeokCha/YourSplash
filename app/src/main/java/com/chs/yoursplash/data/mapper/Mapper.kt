@@ -112,7 +112,6 @@ fun ResponsePhotoDetail.toUnSplashImageDetail(): PhotoDetail {
         exif = exif.toUnSplashExif(),
         location = location.toUnSplashLocation(),
         tags = tags.map { it.toUnSplashTag() },
-        relatedCollection = relatedCollections.toRelatedPhotoCollection(),
         views = views,
         downloads = downloads
     )

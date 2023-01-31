@@ -29,8 +29,6 @@ data class ResponsePhotoDetail(
     val location: ResponsePhotoLocation,
     @SerialName("tags")
     val tags: List<ResponseUnSplashTag>,
-    @SerialName("related_collections")
-    val relatedCollections: ResponseRelatedPhotoCollection,
     @SerialName("views")
     val views: Int,
     @SerialName("downloads")

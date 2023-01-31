@@ -13,7 +13,6 @@ data class PhotoDetail(
     val exif: Exif,
     val location: PhotoLocation,
     val tags: List<UnSplashTag>,
-    val relatedCollection: RelatedPhotoCollection,
     val views: Int,
     val downloads: Int
 )

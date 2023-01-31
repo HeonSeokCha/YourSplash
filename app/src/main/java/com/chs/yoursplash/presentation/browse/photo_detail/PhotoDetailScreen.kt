@@ -230,36 +230,6 @@ fun ImageDetailScreen(
                 )
             }
         }
-
-        if (!state.imageDetailInfo?.relatedCollection?.result.isNullOrEmpty()) {
-            items(state.imageDetailInfo?.relatedCollection!!.result) { item ->
-                AsyncImage(
-                    modifier = Modifier
-                        .size(200.dp, 100.dp)
-                        .clickable {
-                            navController.navigate(
-                                "${Screens.CollectionDetailScreen.route}/${item.id}"
-                            )
-                        },
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(
-                            Constants.getPhotoQualityUrl(
-                                item.previewPhotos?.get(0)?.urls,
-                                state.loadQuality
-                            )
-                        )
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    placeholder = BitmapPainter(
-                        BlurHashDecoder.decode(
-                            blurHash = item.previewPhotos?.get(0)?.blurHash
-                        )!!.asImageBitmap()
-                    )
-                )
-            }
-        }
     }
 
     if (state.isLoading) {
