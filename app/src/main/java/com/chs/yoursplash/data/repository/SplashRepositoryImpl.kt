@@ -47,9 +47,9 @@ class SplashRepositoryImpl @Inject constructor(
             try {
                 emit(
                     Resource.Success(
-                        (client.requestUnsplash(
+                        (client.requestUnsplash<ResponsePhotoDetail>(
                             Constants.GET_PHOTO_DETAIL(id)
-                        ) as ResponsePhotoDetail).toUnSplashImageDetail()
+                        )).toUnSplashImageDetail()
                     )
                 )
             } catch (e: IOException) {
@@ -58,6 +58,8 @@ class SplashRepositoryImpl @Inject constructor(
             } catch (e: HttpException) {
                 e.printStackTrace()
                 emit(Resource.Error("Couldn't load date"))
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }

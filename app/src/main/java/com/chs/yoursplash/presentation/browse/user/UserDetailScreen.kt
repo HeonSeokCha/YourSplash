@@ -1,23 +1,22 @@
 package com.chs.yoursplash.presentation.browse.user
 
-import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
+import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -30,13 +29,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.chs.yoursplash.domain.model.UserDetail
 import com.chs.yoursplash.presentation.ui.theme.Purple200
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.pagerTabIndicatorOffset
-import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun UserDetailScreen(
     userName: String,
@@ -48,7 +43,6 @@ fun UserDetailScreen(
     val context = LocalContext.current
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
-    val scrollState = rememberLazyListState()
 
     LaunchedEffect(context, viewModel) {
         viewModel.getUserDetail(userName)
@@ -57,122 +51,99 @@ fun UserDetailScreen(
         viewModel.getUserDetailCollections(userName)
     }
 
-    BoxWithConstraints {
-        val screenHeight = maxHeight
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize(),
-            state = scrollState
-        ) {
-            item {
-                UserDetailInfo(userInfo = state.userDetailInfo)
-            }
-            if (state.userTabLabList.isNotEmpty()) {
-                item {
-                    TabRow(
-                        modifier = Modifier.fillMaxWidth(),
-                        selectedTabIndex = pagerState.currentPage,
-                        backgroundColor = Color.White,
-                        indicator = { tabPositions ->
-                            TabRowDefaults.Indicator(
-                                modifier = Modifier
-                                    .pagerTabIndicatorOffset(pagerState, tabPositions),
-                                color = Purple200
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+    ) {
+        UserDetailInfo(userInfo = state.userDetailInfo)
+
+        if (state.userTabLabList.isNotEmpty()) {
+            TabRow(
+                modifier = Modifier.fillMaxWidth(),
+                selectedTabIndex = pagerState.currentPage,
+                backgroundColor = Color.White,
+                indicator = { tabPositions ->
+                    TabRowDefaults.Indicator(
+                        modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
+                        color = Purple200
+                    )
+                }
+            ) {
+                state.userTabLabList.forEachIndexed { index, title ->
+                    Tab(
+                        text = {
+                            Text(
+                                text = title,
+                                maxLines = 1,
+                                color = Purple200,
+                                overflow = TextOverflow.Ellipsis,
+                                fontSize = 13.sp
                             )
-                        }
-                    ) {
-                        state.userTabLabList.forEachIndexed { index, title ->
-                            Tab(
-                                text = {
-                                    Text(
-                                        text = title,
-                                        maxLines = 1,
-                                        color = Purple200,
-                                        overflow = TextOverflow.Ellipsis,
-                                        fontSize = 13.sp
-                                    )
-                                },
-                                selected = pagerState.currentPage == index,
-                                onClick = {
-                                    coroutineScope.launch {
-                                        pagerState.animateScrollToPage(index)
-                                    }
-                                },
+                        },
+                        selected = pagerState.currentPage == index,
+                        onClick = {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(index)
+                            }
+                        },
+                    )
+                }
+            }
+
+            HorizontalPager(
+                pageCount = state.userTabLabList.size,
+                state = pagerState,
+                userScrollEnabled = false,
+            ) { pager ->
+                when (pager) {
+                    0 -> {
+                        if (state.userTabLabList[0] == "PHOTOS") {
+                            UserDetailPhotoScreen(
+                                context = context,
+                                navController = navController,
+                                state.userDetailPhotoList?.collectAsLazyPagingItems(),
+                                state.loadQuality
+                            )
+                        } else if (state.userTabLabList[0] == "LIKES") {
+                            UserDetailLikeScreen(
+                                context = context,
+                                navController = navController,
+                                state.userDetailLikeList?.collectAsLazyPagingItems(),
+                                state.loadQuality
+                            )
+                        } else {
+                            UserDetailCollectionScreen(
+                                context = context,
+                                navController = navController,
+                                state.userDetailCollection?.collectAsLazyPagingItems(),
+                                state.loadQuality
                             )
                         }
                     }
-
-                    HorizontalPager(
-                        modifier = Modifier
-                            .height(screenHeight)
-                            .nestedScroll(remember {
-                                object : NestedScrollConnection {
-                                    override fun onPreScroll(
-                                        available: Offset,
-                                        source: NestedScrollSource
-                                    ): Offset {
-                                        return if (available.y > 0) Offset.Zero else Offset(
-                                            x = 0f,
-                                            y = -scrollState.dispatchRawDelta(-available.y)
-                                        )
-                                    }
-                                }
-                            }),
-                        count = state.userTabLabList.size,
-                        state = pagerState,
-                        userScrollEnabled = false,
-                    ) { pager ->
-                        when (pager) {
-                            0 -> {
-                                if (state.userTabLabList[0] == "PHOTOS") {
-                                    UserDetailPhotoScreen(
-                                        context = context,
-                                        navController = navController,
-                                        state.userDetailPhotoList?.collectAsLazyPagingItems(),
-                                        state.loadQuality
-                                    )
-                                } else if (state.userTabLabList[0]== "LIKES") {
-                                    UserDetailLikeScreen(
-                                        context = context,
-                                        navController = navController,
-                                        state.userDetailLikeList?.collectAsLazyPagingItems(),
-                                        state.loadQuality
-                                    )
-                                } else {
-                                    UserDetailCollectionScreen(
-                                        context = context,
-                                        navController = navController,
-                                        state.userDetailCollection?.collectAsLazyPagingItems(),
-                                        state.loadQuality
-                                    )
-                                }
-                            }
-                            1 -> {
-                                if (state.userTabLabList[1] == "LIKES") {
-                                    UserDetailLikeScreen(
-                                        context = context,
-                                        navController = navController,
-                                        state.userDetailLikeList?.collectAsLazyPagingItems(),
-                                        state.loadQuality
-                                    )
-                                } else {
-                                    UserDetailCollectionScreen(
-                                        context = context,
-                                        navController = navController,
-                                        state.userDetailCollection?.collectAsLazyPagingItems(),
-                                        state.loadQuality
-                                    )
-                                }
-                            }
-                            2 -> {
-                                UserDetailCollectionScreen(
-                                    context = context,
-                                    navController = navController,
-                                    state.userDetailCollection?.collectAsLazyPagingItems(),
-                                    state.loadQuality
-                                )
-                            }
+                    1 -> {
+                        if (state.userTabLabList[1] == "LIKES") {
+                            UserDetailLikeScreen(
+                                context = context,
+                                navController = navController,
+                                state.userDetailLikeList?.collectAsLazyPagingItems(),
+                                state.loadQuality
+                            )
+                        } else {
+                            UserDetailCollectionScreen(
+                                context = context,
+                                navController = navController,
+                                state.userDetailCollection?.collectAsLazyPagingItems(),
+                                state.loadQuality
+                            )
                         }
+                    }
+                    2 -> {
+                        UserDetailCollectionScreen(
+                            context = context,
+                            navController = navController,
+                            state.userDetailCollection?.collectAsLazyPagingItems(),
+                            state.loadQuality
+                        )
                     }
                 }
             }
@@ -216,7 +187,7 @@ private fun UserDetailInfo(userInfo: UserDetail?) {
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            
+
             Spacer(modifier = Modifier.height(12.dp))
 
             Row(

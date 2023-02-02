@@ -1,9 +1,12 @@
 package com.chs.yoursplash.presentation.search
 
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.*
+import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -12,13 +15,9 @@ import androidx.compose.ui.unit.sp
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.SearchFilter
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.pagerTabIndicatorOffset
-import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SearchScreen(
     searchKeyWord: String,
@@ -51,8 +50,7 @@ fun SearchScreen(
             backgroundColor = Color.White,
             indicator = { tabPositions ->
                 TabRowDefaults.Indicator(
-                    modifier = Modifier
-                        .pagerTabIndicatorOffset(pagerState, tabPositions),
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
                     color = Purple200
                 )
             }
@@ -78,7 +76,7 @@ fun SearchScreen(
             }
         }
         HorizontalPager(
-            count = tabList.size,
+            pageCount = tabList.size,
             state = pagerState,
             userScrollEnabled = false,
         ) {

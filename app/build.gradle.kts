@@ -99,8 +99,8 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.2.2")
 
     // Pager
-    implementation("com.google.accompanist:accompanist-pager:0.29.1-alpha")
-    implementation("com.google.accompanist:accompanist-pager-indicators:0.29.0-alpha")
+//    implementation("com.google.accompanist:accompanist-pager:0.29.1-alpha")
+//    implementation("com.google.accompanist:accompanist-pager-indicators:0.29.0-alpha")
 
     // Paging
     implementation("androidx.paging:paging-compose:1.0.0-alpha17")
