@@ -13,7 +13,8 @@ import com.chs.yoursplash.domain.model.PhotoDetail
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun ImageDetailInfo(
-    imageDetailInfo: PhotoDetail?
+    imageDetailInfo: PhotoDetail?,
+    tagClick: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -59,23 +60,29 @@ fun ImageDetailInfo(
         }
         Divider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
 
-        Text(
-            text = "Related tags",
-        )
 
-        Spacer(modifier = Modifier.height(16.dp))
-        
-        FlowRow {
-            imageDetailInfo?.tags?.filter { it.type == "search" }?.forEach { tag ->
-               Chip(
-                  onClick = {},
-                  colors = ChipDefaults.chipColors(
-                      backgroundColor = Color.LightGray,
-                      contentColor = Color.Black
-                  )
-               ) {
-                   Text(tag.title)
-               }
+        Column(
+            modifier = Modifier
+                .padding(start = 8.dp)
+        ) {
+            Text(
+                text = "Related tags",
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            FlowRow {
+                imageDetailInfo?.tags?.filter { it.type == "search" }?.forEach { tag ->
+                    Chip(
+                        onClick = { tagClick(tag.title)},
+                        colors = ChipDefaults.chipColors(
+                            backgroundColor = Color.LightGray,
+                            contentColor = Color.Black
+                        )
+                    ) {
+                        Text(tag.title)
+                    }
+                }
             }
         }
     }
