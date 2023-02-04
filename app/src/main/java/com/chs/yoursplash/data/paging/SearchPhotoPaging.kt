@@ -1,10 +1,8 @@
 package com.chs.yoursplash.data.paging
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.chs.yoursplash.data.api.UnSplashService
-import com.chs.yoursplash.data.mapper.toPhotoCollection
 import com.chs.yoursplash.data.mapper.toUnSplashImage
 import com.chs.yoursplash.data.model.ResponseSearchPhotos
 import com.chs.yoursplash.domain.model.Photo
@@ -46,7 +44,6 @@ class SearchPhotoPaging(
                 nextKey = if(response.isNotEmpty()) page + 1 else null
             )
         } catch (e: Exception) {
-            Log.e("HomePhotosDataSource", e.message.toString())
             LoadResult.Error(e)
         }
     }

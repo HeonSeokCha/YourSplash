@@ -29,6 +29,7 @@ import androidx.navigation.navArgument
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailScreen
 import com.chs.yoursplash.presentation.browse.photo_detail.ImageDetailScreen
+import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListScreen
 import com.chs.yoursplash.presentation.browse.user.UserDetailScreen
 import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
 import com.chs.yoursplash.util.Constants
@@ -108,6 +109,21 @@ class BrowseActivity : ComponentActivity() {
                             ) { backStackEntry ->
                                 UserDetailScreen(
                                     userName = backStackEntry.arguments?.getString("userName")!!,
+                                    navController = navController
+                                )
+                            }
+
+                            composable(
+                                "${Screens.PhotoTagResultScreen.route}/{tag}",
+                                arguments = listOf(
+                                    navArgument("tag") {
+                                        type = NavType.StringType
+                                        defaultValue = ""
+                                    }
+                                )
+                            ) { backStackEntry ->
+                                PhotoTagListScreen(
+                                    tag = backStackEntry.arguments?.getString("tag")!!,
                                     navController = navController
                                 )
                             }

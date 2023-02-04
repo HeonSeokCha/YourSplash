@@ -197,8 +197,8 @@ fun ImageDetailScreen(
                 }
                 Divider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
 
-                ImageDetailInfo(state.imageDetailInfo) {
-                    TODO("Tag Click MOVE PhotoTagList")
+                ImageDetailInfo(state.imageDetailInfo) { selectTag ->
+                    navController.navigate("${Screens.PhotoTagResultScreen.route}/$selectTag")
                 }
             }
         }
