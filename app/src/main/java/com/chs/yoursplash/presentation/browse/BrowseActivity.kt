@@ -15,15 +15,19 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.chs.yoursplash.presentation.Screens
@@ -34,7 +38,6 @@ import com.chs.yoursplash.presentation.browse.user.UserDetailScreen
 import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
 import com.chs.yoursplash.util.Constants
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class BrowseActivity : ComponentActivity() {
@@ -58,7 +61,7 @@ class BrowseActivity : ComponentActivity() {
             YourSplashTheme {
                 Scaffold(
                     topBar = {
-                        ImageDetailTopBar()
+                        ImageDetailTopBar(navController)
                     }
                 ) { padding ->
                     Column(
@@ -137,18 +140,37 @@ class BrowseActivity : ComponentActivity() {
 
 
 @Composable
-fun ImageDetailTopBar() {
+fun ImageDetailTopBar(navController: NavHostController) {
     val activity = (LocalContext.current as? Activity)
-    TopAppBar(
-        title = { },
-        navigationIcon = {
-            IconButton(onClick = {
-                activity?.finish()
-            }) {
-                Icon(Icons.Filled.Close, contentDescription = null)
-            }
-        },
-        elevation = 0.dp,
-        contentColor = Color.White
-    )
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    when (navBackStackEntry?.destination?.route) {
+        "${Screens.PhotoTagResultScreen.route}/{tag}"-> {
+            TopAppBar(
+                title = { },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navController.navigateUp()
+                    }) {
+                        Icon(Icons.Filled.ArrowBack, contentDescription = null)
+                    }
+                },
+                elevation = 0.dp,
+                contentColor = Color.White
+            )
+        }
+        else -> {
+            TopAppBar(
+                title = { },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        activity?.finish()
+                    }) {
+                        Icon(Icons.Filled.Close, contentDescription = null)
+                    }
+                },
+                elevation = 0.dp,
+                contentColor = Color.White
+            )
+        }
+    }
 }
