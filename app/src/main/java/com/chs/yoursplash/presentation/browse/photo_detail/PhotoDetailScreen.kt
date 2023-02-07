@@ -51,7 +51,6 @@ fun ImageDetailScreen(
 ) {
     val state = viewModel.state
     val context = LocalContext.current
-    val scrollState = rememberLazyListState()
     var downLoadQueueId: Long by remember { mutableStateOf(0L) }
 
     LaunchedEffect(context, viewModel) {

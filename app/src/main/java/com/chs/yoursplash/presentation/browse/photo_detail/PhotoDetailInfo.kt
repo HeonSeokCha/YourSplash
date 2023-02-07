@@ -61,26 +61,30 @@ fun ImageDetailInfo(
         Divider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
 
 
-        Column(
-            modifier = Modifier
-                .padding(start = 8.dp)
-        ) {
-            Text(
-                text = "Related tags",
-            )
 
-            Spacer(modifier = Modifier.height(16.dp))
+        if (!imageDetailInfo?.tags.isNullOrEmpty()) {
+            Column(
+                modifier = Modifier
+                    .padding(start = 8.dp)
+            ) {
+                Text(
+                    text = "Related tags",
+                )
 
-            FlowRow {
-                imageDetailInfo?.tags?.filter { it.type == "search" }?.forEach { tag ->
-                    Chip(
-                        onClick = { tagClick(tag.title)},
-                        colors = ChipDefaults.chipColors(
-                            backgroundColor = Color.LightGray,
-                            contentColor = Color.Black
-                        )
-                    ) {
-                        Text(tag.title)
+                Spacer(modifier = Modifier.height(16.dp))
+
+                FlowRow {
+                    imageDetailInfo?.tags?.filter { it.type == "search" }?.forEach { tag ->
+                        Chip(
+                            modifier = Modifier.padding(end = 8.dp),
+                            onClick = { tagClick(tag.title)},
+                            colors = ChipDefaults.chipColors(
+                                backgroundColor = Color.LightGray,
+                                contentColor = Color.Black
+                            )
+                        ) {
+                            Text(tag.title)
+                        }
                     }
                 }
             }

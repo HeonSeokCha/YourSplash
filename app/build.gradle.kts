@@ -61,10 +61,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.core:core-splashscreen:1.0.0")
-    implementation("androidx.appcompat:appcompat:1.6.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.8.0")
     implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.core:core-ktx:+")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -73,8 +72,8 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.3.3")
 
     // Compose dependencies
-    implementation("androidx.compose.ui:ui:1.4.0-alpha05")
-    implementation("androidx.compose.material:material:1.4.0-alpha05")
+    implementation("androidx.compose.ui:ui:1.4.0-beta01")
+    implementation("androidx.compose.material:material:1.4.0-beta01")
     implementation("androidx.compose.material:material-icons-extended:1.3.1")
     implementation("androidx.compose.ui:ui-tooling-preview:1.3.3")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
@@ -87,22 +86,18 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     //Ktor
-    implementation("io.ktor:ktor-client-core:2.2.2")
-    implementation("io.ktor:ktor-client-android:2.2.2")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.2")
-    implementation("io.ktor:ktor-client-content-negotiation:2.2.2")
-    implementation("io.ktor:ktor-client-logging:2.2.2")
+    implementation("io.ktor:ktor-client-core:2.2.3")
+    implementation("io.ktor:ktor-client-android:2.2.3")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.3")
+    implementation("io.ktor:ktor-client-content-negotiation:2.2.3")
+    implementation("io.ktor:ktor-client-logging:2.2.3")
     implementation("ch.qos.logback:logback-classic:1.2.3")
 
     // Coil
     implementation("io.coil-kt:coil-compose:2.2.2")
 
-    // Pager
-//    implementation("com.google.accompanist:accompanist-pager:0.29.1-alpha")
-//    implementation("com.google.accompanist:accompanist-pager-indicators:0.29.0-alpha")
-
     // Paging
-    implementation("androidx.paging:paging-compose:1.0.0-alpha17")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha18")
 
     // Room
     implementation("androidx.room:room-ktx:2.5.0")
