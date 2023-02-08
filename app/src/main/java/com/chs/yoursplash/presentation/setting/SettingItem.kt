@@ -1,10 +1,7 @@
 package com.chs.yoursplash.presentation.setting
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -22,10 +19,11 @@ fun SettingItem(
 ) {
     Column(
         modifier = Modifier
+            .fillMaxWidth()
             .padding(bottom = 32.dp)
             .clickable {
-            clickAble(title, subTitle)
-        }
+                clickAble(title, subTitle)
+            }
     ) {
         Text(
             text = title,

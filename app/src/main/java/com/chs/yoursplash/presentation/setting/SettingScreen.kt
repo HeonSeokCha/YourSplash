@@ -26,6 +26,7 @@ fun SettingScreen(
             .fillMaxSize()
             .padding(
                 start = 64.dp,
+                end = 64.dp,
                 top = 16.dp
             )
     ) {

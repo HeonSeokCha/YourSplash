@@ -71,7 +71,7 @@ fun ImageDetailInfo(
                     text = "Related tags",
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 FlowRow {
                     imageDetailInfo?.tags?.filter { it.type == "search" }?.forEach { tag ->
@@ -87,6 +87,8 @@ fun ImageDetailInfo(
                         }
                     }
                 }
+
+                Spacer(modifier = Modifier.height(8.dp))
             }
         }
     }

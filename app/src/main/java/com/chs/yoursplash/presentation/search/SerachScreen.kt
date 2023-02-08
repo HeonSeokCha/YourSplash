@@ -34,12 +34,7 @@ fun SearchScreen(
             onBack()
         }
     }
-    LaunchedEffect(pagerState) {
-        // Collect from the pager state a snapshotFlow reading the currentPage
-        snapshotFlow { pagerState.currentPage }.collect { page ->
-            Log.e("SEARCHSCREEN", page.toString())
-        }
-    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -63,7 +58,6 @@ fun SearchScreen(
                             maxLines = 1,
                             color = Purple200,
                             overflow = TextOverflow.Ellipsis,
-                            fontSize = 13.sp
                         )
                     },
                     selected = pagerState.currentPage == index,
