@@ -2,6 +2,10 @@ package com.chs.yoursplash.presentation.browse.photo_detail
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -10,7 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.chs.yoursplash.domain.model.PhotoDetail
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ImageDetailInfo(
     imageDetailInfo: PhotoDetail?,
@@ -75,16 +79,14 @@ fun ImageDetailInfo(
 
                 FlowRow {
                     imageDetailInfo?.tags?.filter { it.type == "search" }?.forEach { tag ->
-                        Chip(
+                        AssistChip(
                             modifier = Modifier.padding(end = 8.dp),
                             onClick = { tagClick(tag.title)},
-                            colors = ChipDefaults.chipColors(
-                                backgroundColor = Color.LightGray,
-                                contentColor = Color.Black
-                            )
-                        ) {
-                            Text(tag.title)
-                        }
+                            colors = AssistChipDefaults.assistChipColors(
+                                containerColor = Color.LightGray,
+                                labelColor = Color.Black
+                            ), label = { Text(tag.title) }
+                        )
                     }
                 }
 

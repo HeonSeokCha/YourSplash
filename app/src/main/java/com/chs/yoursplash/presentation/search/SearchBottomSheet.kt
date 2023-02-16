@@ -3,7 +3,7 @@ package com.chs.yoursplash.presentation.search
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,7 +14,7 @@ import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.SearchFilter
 
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBottomSheet(
     searchFilter: SearchFilter,
@@ -43,7 +43,7 @@ fun SearchBottomSheet(
         Spacer(Modifier.height(8.dp))
         TabRow(
             selectedTabIndex = Constants.SORT_BY_LIST.indexOf(Constants.SORT_BY_LIST.find { it.second == selectOrder }),
-            backgroundColor = Color.LightGray
+            containerColor = Color.LightGray
         ) {
             Constants.SORT_BY_LIST.forEach { title ->
                 Row(
@@ -94,10 +94,11 @@ fun SearchBottomSheet(
                         onClick = {
                             selectedColor = selectionOption.second
                             expanded = false
+                        }, text = {
+
+                            Text(text = selectionOption.first)
                         }
-                    ) {
-                        Text(text = selectionOption.first)
-                    }
+                    )
                 }
             }
         }
@@ -111,7 +112,7 @@ fun SearchBottomSheet(
         TabRow(
             selectedTabIndex = Constants.SEARCH_ORI_LIST
                 .indexOf(Constants.SEARCH_ORI_LIST.find { it.second == selectOri }),
-            backgroundColor = Color.LightGray
+            containerColor = Color.LightGray
         ) {
             Constants.SEARCH_ORI_LIST.forEach { title ->
                 Row(

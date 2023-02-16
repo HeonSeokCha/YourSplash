@@ -1,15 +1,7 @@
 package com.chs.yoursplash.presentation.browse
 
 import android.app.Activity
-import android.app.DownloadManager
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
-import android.database.Cursor
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -17,6 +9,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -42,6 +35,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class BrowseActivity : ComponentActivity() {
 
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -139,6 +133,7 @@ class BrowseActivity : ComponentActivity() {
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImageDetailTopBar(navController: NavHostController) {
     val activity = (LocalContext.current as? Activity)
@@ -154,8 +149,6 @@ fun ImageDetailTopBar(navController: NavHostController) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = null)
                     }
                 },
-                elevation = 0.dp,
-                contentColor = Color.White
             )
         }
         else -> {
@@ -168,8 +161,6 @@ fun ImageDetailTopBar(navController: NavHostController) {
                         Icon(Icons.Filled.Close, contentDescription = null)
                     }
                 },
-                elevation = 0.dp,
-                contentColor = Color.White
             )
         }
     }

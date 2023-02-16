@@ -13,6 +13,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Filter
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +39,7 @@ import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.SearchFilter
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SearchResultScreen(
@@ -95,10 +97,11 @@ fun SearchResultScreen(
                 }
             }
         }
-    ) {
+    ) { padding ->
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(padding),
             state = scrollState,
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)

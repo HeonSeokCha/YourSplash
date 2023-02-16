@@ -1,7 +1,6 @@
 package com.chs.yoursplash.presentation.main
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -13,16 +12,14 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.twotone.Search
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,42 +38,41 @@ import com.chs.yoursplash.presentation.main.about.Screen
 import com.chs.yoursplash.presentation.search.SearchBottomSheet
 import com.chs.yoursplash.presentation.search.SearchScreen
 import com.chs.yoursplash.presentation.setting.SettingScreen
-import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.SearchFilter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterialApi::class)
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val bottomSheetScaffoldState =
-                rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+//            val bottomSheetScaffoldState =
+//                rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
             val navController = rememberNavController()
             var searchKeyword by remember { mutableStateOf("") }
             var searchFilter by remember { mutableStateOf(SearchFilter()) }
             val scope = rememberCoroutineScope()
             YourSplashTheme {
-                ModalBottomSheetLayout(
-                    sheetState = bottomSheetScaffoldState,
-                    sheetContent = {
-                        SearchBottomSheet(
-                            searchFilter = searchFilter,
-                            onClick = {
-                                searchFilter = searchFilter.copy(
-                                    orderBy = it.orderBy,
-                                    color = it.color,
-                                    orientation = it.orientation
-                                )
-                                scope.launch {
-                                    bottomSheetScaffoldState.hide()
-                                }
-                            }
-                        )
-                    }
-                ) {
+//                ModalBottomSheetLayout(
+//                    sheetState = bottomSheetScaffoldState,
+//                    sheetContent = {
+//                        SearchBottomSheet(
+//                            searchFilter = searchFilter,
+//                            onClick = {
+//                                searchFilter = searchFilter.copy(
+//                                    orderBy = it.orderBy,
+//                                    color = it.color,
+//                                    orientation = it.orientation
+//                                )
+//                                scope.launch {
+//                                    bottomSheetScaffoldState.hide()
+//                                }
+//                            }
+//                        )
+//                    }
+//                ) {
                     Scaffold(
                         topBar = {
                             MainTopBar(
@@ -110,11 +106,11 @@ class MainActivity : ComponentActivity() {
                                     searchFilter = searchFilter,
                                     modalClick = {
                                         scope.launch {
-                                            if (bottomSheetScaffoldState.isVisible) {
-                                                bottomSheetScaffoldState.hide()
-                                            } else {
-                                                bottomSheetScaffoldState.show()
-                                            }
+//                                            if (bottomSheetScaffoldState.isVisible) {
+//                                                bottomSheetScaffoldState.hide()
+//                                            } else {
+//                                                bottomSheetScaffoldState.show()
+//                                            }
                                         }
                                     }, onBack = {
                                         searchKeyword = ""
@@ -122,11 +118,11 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
 
-                                BackHandler(enabled = bottomSheetScaffoldState.isVisible) {
-                                    scope.launch {
-                                        bottomSheetScaffoldState.hide()
-                                    }
-                                }
+//                                BackHandler(enabled = bottomSheetScaffoldState.isVisible) {
+//                                    scope.launch {
+//                                        bottomSheetScaffoldState.hide()
+//                                    }
+//                                }
                             }
                             composable(Screen.SettingScreen.route) {
                                 SettingScreen()
@@ -137,9 +133,10 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
+//}
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainTopBar(
     navController: NavHostController,
@@ -170,8 +167,10 @@ private fun MainTopBar(
                     }) {
                         Icon(Icons.Filled.Settings, contentDescription = null)
                     }
-                }, backgroundColor = MaterialTheme.colors.primary,
-                contentColor = MaterialTheme.colors.onPrimary
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                )
             )
         }
 
@@ -189,8 +188,9 @@ private fun MainTopBar(
                         Icon(Icons.Filled.ArrowBack, contentDescription = null)
                     }
                 },
-                elevation = 0.dp,
-                contentColor = Color.White
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.White
+                )
             )
         }
 
@@ -205,7 +205,7 @@ private fun MainTopBar(
 }
 
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchAppBar(
     searchClicked: (String) -> Unit,
@@ -218,8 +218,7 @@ private fun SearchAppBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp),
-        elevation = AppBarDefaults.TopAppBarElevation,
-        color = MaterialTheme.colors.primary
+        color = MaterialTheme.colorScheme.primary
     ) {
         TextField(
             modifier = Modifier
@@ -230,14 +229,12 @@ private fun SearchAppBar(
             },
             placeholder = {
                 Text(
-                    modifier = Modifier
-                        .alpha(ContentAlpha.medium),
                     text = "Search here...",
                     color = Color.White
                 )
             },
             textStyle = TextStyle(
-                fontSize = MaterialTheme.typography.subtitle1.fontSize
+                fontSize = MaterialTheme.typography.bodyMedium.fontSize
             ),
             singleLine = true,
             leadingIcon = {
@@ -276,13 +273,17 @@ private fun BottomBar(
     if (navBackStackEntry?.destination?.route == BottomNavScreen.HomeScreen.route ||
         navBackStackEntry?.destination?.route == BottomNavScreen.CollectionScreen.route
     ) {
-        BottomNavigation {
+        NavigationBar {
             val currentDestination = navBackStackEntry?.destination
             items.forEach { destination ->
-                BottomNavigationItem(
+                NavigationBarItem(
                     selected = currentDestination?.hierarchy?.any { it.route == destination.route } == true,
-                    selectedContentColor = Color.White,
-                    unselectedContentColor = Color.White.copy(0.4f),
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = Color.White,
+                        selectedTextColor = Color.White,
+                        unselectedIconColor = Color.White.copy(0.4f),
+                        unselectedTextColor = Color.White.copy(0.4f)
+                    ),
                     onClick = {
                         navController.navigate(destination.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
