@@ -41,11 +41,11 @@ fun PhotoTagListScreen(
                 loadQuality = state.loadQuality,
                 userClickAble = { userName ->
                     navController.navigate(
-                        "${Screens.UserDetailScreen}/$userName"
+                        "${Screens.UserDetailScreen.route}/$userName"
                     )
                 }, photoClickAble = { photoId ->
                     navController.navigate(
-                        "${Screens.ImageDetailScreen}/$photoId"
+                        "${Screens.ImageDetailScreen.route}/$photoId"
                     )
                 }
             )

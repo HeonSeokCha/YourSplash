@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -73,66 +74,66 @@ class MainActivity : ComponentActivity() {
 //                        )
 //                    }
 //                ) {
-                    Scaffold(
-                        topBar = {
-                            MainTopBar(
-                                navController = navController,
-                                searchClicked = {
-                                    searchKeyword = it
-                                }, onBackClicked = {
-                                    searchKeyword = ""
-                                    navController.navigateUp()
-                                }
-                            )
-                        },
-                        bottomBar = {
-                            BottomBar(navController = navController)
-                        },
-                    ) {
-                        NavHost(
+                Scaffold(
+                    topBar = {
+                        MainTopBar(
                             navController = navController,
-                            modifier = Modifier.padding(it),
-                            startDestination = BottomNavScreen.HomeScreen.route
-                        ) {
-                            composable(BottomNavScreen.HomeScreen.route) {
-                                HomeScreen()
+                            searchClicked = {
+                                searchKeyword = it
+                            }, onBackClicked = {
+                                searchKeyword = ""
+                                navController.navigateUp()
                             }
-                            composable(BottomNavScreen.CollectionScreen.route) {
-                                CollectionScreen()
-                            }
-                            composable(Screen.SearchScreen.route) {
-                                SearchScreen(
-                                    searchKeyWord = searchKeyword,
-                                    searchFilter = searchFilter,
-                                    modalClick = {
-                                        scope.launch {
+                        )
+                    },
+                    bottomBar = {
+                        BottomBar(navController = navController)
+                    },
+                ) {
+                    NavHost(
+                        navController = navController,
+                        modifier = Modifier.padding(it),
+                        startDestination = BottomNavScreen.HomeScreen.route
+                    ) {
+                        composable(BottomNavScreen.HomeScreen.route) {
+                            HomeScreen()
+                        }
+                        composable(BottomNavScreen.CollectionScreen.route) {
+                            CollectionScreen()
+                        }
+                        composable(Screen.SearchScreen.route) {
+                            SearchScreen(
+                                searchKeyWord = searchKeyword,
+                                searchFilter = searchFilter,
+                                modalClick = {
+                                    scope.launch {
 //                                            if (bottomSheetScaffoldState.isVisible) {
 //                                                bottomSheetScaffoldState.hide()
 //                                            } else {
 //                                                bottomSheetScaffoldState.show()
 //                                            }
-                                        }
-                                    }, onBack = {
-                                        searchKeyword = ""
-                                        searchFilter = SearchFilter()
                                     }
-                                )
+                                }, onBack = {
+                                    searchKeyword = ""
+                                    searchFilter = SearchFilter()
+                                }
+                            )
 
 //                                BackHandler(enabled = bottomSheetScaffoldState.isVisible) {
 //                                    scope.launch {
 //                                        bottomSheetScaffoldState.hide()
 //                                    }
 //                                }
-                            }
-                            composable(Screen.SettingScreen.route) {
-                                SettingScreen()
-                            }
+                        }
+                        composable(Screen.SettingScreen.route) {
+                            SettingScreen()
                         }
                     }
                 }
             }
         }
     }
+}
 //}
 
 
@@ -150,7 +151,9 @@ private fun MainTopBar(
                 title = {
                     Text(
                         text = stringResource(id = R.string.app_name),
-                        fontSize = 20.sp
+                        fontSize = 20.sp,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
                     )
                 }, actions = {
                     IconButton(onClick = {
@@ -158,14 +161,19 @@ private fun MainTopBar(
                     }) {
                         Icon(
                             imageVector = Icons.TwoTone.Search,
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = Color.White
                         )
                     }
 
                     IconButton(onClick = {
                         navController.navigate(Screen.SettingScreen.route)
                     }) {
-                        Icon(Icons.Filled.Settings, contentDescription = null)
+                        Icon(
+                            Icons.Filled.Settings,
+                            contentDescription = null,
+                            tint = Color.White
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -214,50 +222,47 @@ private fun SearchAppBar(
     var textState by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    Surface(
+    TextField(
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp),
-        color = MaterialTheme.colorScheme.primary
-    ) {
-        TextField(
-            modifier = Modifier
-                .fillMaxWidth(),
-            value = textState,
-            onValueChange = {
-                textState = it
-            },
-            placeholder = {
-                Text(
-                    text = "Search here...",
-                    color = Color.White
-                )
-            },
-            textStyle = TextStyle(
-                fontSize = MaterialTheme.typography.bodyMedium.fontSize
-            ),
-            singleLine = true,
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.clickable {
-                        onBackClicked()
-                    }
-                )
-            },
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Search
-            ),
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    searchClicked(textState)
-                    keyboardController?.hide()
+        colors = TextFieldDefaults.textFieldColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        ),
+        value = textState,
+        onValueChange = {
+            textState = it
+        },
+        placeholder = {
+            Text(
+                text = "Search here...",
+                color = Color.White
+            )
+        },
+        textStyle = TextStyle(
+            fontSize = MaterialTheme.typography.bodyMedium.fontSize
+        ),
+        singleLine = true,
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.clickable {
+                    onBackClicked()
                 }
             )
+        },
+        keyboardOptions = KeyboardOptions(
+            imeAction = ImeAction.Search
+        ),
+        keyboardActions = KeyboardActions(
+            onSearch = {
+                searchClicked(textState)
+                keyboardController?.hide()
+            }
         )
-    }
+    )
 }
 
 @Composable
@@ -273,7 +278,9 @@ private fun BottomBar(
     if (navBackStackEntry?.destination?.route == BottomNavScreen.HomeScreen.route ||
         navBackStackEntry?.destination?.route == BottomNavScreen.CollectionScreen.route
     ) {
-        NavigationBar {
+        NavigationBar(
+            containerColor = MaterialTheme.colorScheme.primary
+        ) {
             val currentDestination = navBackStackEntry?.destination
             items.forEach { destination ->
                 NavigationBarItem(
@@ -282,7 +289,8 @@ private fun BottomBar(
                         selectedIconColor = Color.White,
                         selectedTextColor = Color.White,
                         unselectedIconColor = Color.White.copy(0.4f),
-                        unselectedTextColor = Color.White.copy(0.4f)
+                        unselectedTextColor = Color.White.copy(0.4f),
+                        indicatorColor = MaterialTheme.colorScheme.primary
                     ),
                     onClick = {
                         navController.navigate(destination.route) {
