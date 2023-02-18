@@ -16,6 +16,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -32,11 +33,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.chs.yoursplash.R
+import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.main.collection.CollectionScreen
 import com.chs.yoursplash.presentation.main.home.HomeScreen
 import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
-import com.chs.yoursplash.presentation.main.about.Screen
-import com.chs.yoursplash.presentation.search.SearchBottomSheet
 import com.chs.yoursplash.presentation.search.SearchScreen
 import com.chs.yoursplash.presentation.setting.SettingScreen
 import com.chs.yoursplash.util.SearchFilter
@@ -101,7 +101,7 @@ class MainActivity : ComponentActivity() {
                         composable(BottomNavScreen.CollectionScreen.route) {
                             CollectionScreen()
                         }
-                        composable(Screen.SearchScreen.route) {
+                        composable(MainScreens.SearchScreen.route) {
                             SearchScreen(
                                 searchKeyWord = searchKeyword,
                                 searchFilter = searchFilter,
@@ -125,7 +125,7 @@ class MainActivity : ComponentActivity() {
 //                                    }
 //                                }
                         }
-                        composable(Screen.SettingScreen.route) {
+                        composable(MainScreens.SettingScreen.route) {
                             SettingScreen()
                         }
                     }
@@ -157,7 +157,7 @@ private fun MainTopBar(
                     )
                 }, actions = {
                     IconButton(onClick = {
-                        navController.navigate(Screen.SearchScreen.route)
+                        navController.navigate(MainScreens.SearchScreen.route)
                     }) {
                         Icon(
                             imageVector = Icons.TwoTone.Search,
@@ -167,7 +167,7 @@ private fun MainTopBar(
                     }
 
                     IconButton(onClick = {
-                        navController.navigate(Screen.SettingScreen.route)
+                        navController.navigate(MainScreens.SettingScreen.route)
                     }) {
                         Icon(
                             Icons.Filled.Settings,
@@ -182,7 +182,7 @@ private fun MainTopBar(
             )
         }
 
-        Screen.SettingScreen.route -> {
+        MainScreens.SettingScreen.route -> {
             TopAppBar(
                 title = {
                     Text(
@@ -202,7 +202,7 @@ private fun MainTopBar(
             )
         }
 
-        Screen.SearchScreen.route -> {
+        MainScreens.SearchScreen.route -> {
             SearchAppBar(
                 searchClicked = { searchQuery ->
                     searchClicked(searchQuery)
@@ -213,7 +213,10 @@ private fun MainTopBar(
 }
 
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalComposeUiApi::class,
+    ExperimentalMaterial3Api::class
+)
 @Composable
 private fun SearchAppBar(
     searchClicked: (String) -> Unit,
@@ -227,7 +230,9 @@ private fun SearchAppBar(
             .fillMaxWidth()
             .height(56.dp),
         colors = TextFieldDefaults.textFieldColors(
-            containerColor = MaterialTheme.colorScheme.primary
+            containerColor = MaterialTheme.colorScheme.primary,
+            textColor = Color.White,
+            cursorColor = Color.White,
         ),
         value = textState,
         onValueChange = {

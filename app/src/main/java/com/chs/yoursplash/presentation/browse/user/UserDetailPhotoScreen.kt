@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
@@ -40,30 +42,30 @@ fun UserDetailPhotoScreen(
         modifier = Modifier.fillMaxSize(),
         columns = StaggeredGridCells.Fixed(2),
     ) {
-        items(photoList?.itemCount ?: 0) { idx ->
-            AsyncImage(
-                modifier = Modifier
-                    .padding(
-                        start = 8.dp,
-                        end = 8.dp,
-                        bottom = 16.dp
-                    )
-                    .clickable {
-                        navController.navigate(
-                            "${Screens.ImageDetailScreen.route}/${photoList?.get(idx)?.id}"
-                        )
-                    },
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(Constants.getPhotoQualityUrl(photoList?.get(idx)?.urls, loadQuality))
-                    .crossfade(true)
-                    .build(),
-                placeholder = BitmapPainter(
-                    BlurHashDecoder.decode(blurHash = photoList?.get(idx)?.blurHash)!!.asImageBitmap()
-                ),
-                contentDescription = null,
-                contentScale = ContentScale.Crop
-            )
+        if (photoList != null) {
+            items(photoList.itemCount) { idx ->
+                AsyncImage(
+                    modifier = Modifier
+                        .padding(
+                            start = 8.dp,
+                            end = 8.dp,
+                            bottom = 16.dp
+                        ).clickable {
+                            navController.navigate(
+                                "${Screens.ImageDetailScreen.route}/${photoList[idx]?.id}"
+                            )
+                        },
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(Constants.getPhotoQualityUrl(photoList[idx]?.urls, loadQuality))
+                        .crossfade(true)
+                        .build(),
+                    placeholder = Constants.getPlaceHolder(photoList[idx]?.blurHash),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop
+                )
+            }
         }
+
     }
 
     when (photoList?.loadState?.source?.refresh) {

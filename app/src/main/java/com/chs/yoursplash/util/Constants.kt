@@ -1,5 +1,11 @@
 package com.chs.yoursplash.util
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.painter.ColorPainter
+import androidx.compose.ui.graphics.painter.Painter
 import com.chs.yoursplash.BuildConfig
 import com.chs.yoursplash.domain.model.PhotoUrls
 
@@ -81,5 +87,11 @@ object Constants {
             "Thumb" -> { urlInfo?.thumb }
             else -> null
         }
+    }
+
+    fun getPlaceHolder(blurHash: String?): Painter {
+        if (blurHash == null) return ColorPainter(Color.White)
+        if (BlurHashDecoder.decode(blurHash) == null) ColorPainter(Color.White)
+        return BitmapPainter(BlurHashDecoder.decode(blurHash)!!.asImageBitmap())
     }
 }

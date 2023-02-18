@@ -221,12 +221,7 @@ fun ImageDetailScreen(
                         .build(),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    placeholder = if (item.blurHash != null) {
-                        BitmapPainter(
-                            BlurHashDecoder.decode(blurHash = item.blurHash)!!
-                                .asImageBitmap()
-                        )
-                    } else ColorPainter(item.color.color),
+                    placeholder = Constants.getPlaceHolder(item.blurHash)
                 )
             }
         }

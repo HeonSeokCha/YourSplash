@@ -72,11 +72,7 @@ fun UserDetailCollectionScreen(
                         .build(),
                     contentScale = ContentScale.Crop,
                     contentDescription = null,
-                    placeholder = if (collectionList?.get(idx)?.previewPhotos != null) {
-                        BitmapPainter(
-                            BlurHashDecoder.decode(blurHash = collectionList[idx]?.previewPhotos?.get(0)?.blurHash)!!.asImageBitmap()
-                        )
-                    } else { null }
+                    placeholder = Constants.getPlaceHolder(collectionList?.get(idx)?.previewPhotos?.get(0)?.blurHash)
                 )
 
                 Column(

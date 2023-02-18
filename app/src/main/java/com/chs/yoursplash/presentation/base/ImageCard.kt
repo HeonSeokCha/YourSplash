@@ -82,7 +82,7 @@ fun ImageCard(
                 .crossfade(true)
                 .build(),
             contentScale = ContentScale.Crop,
-            placeholder = BitmapPainter(BlurHashDecoder.decode(blurHash = photoInfo?.blurHash)!!.asImageBitmap()),
+            placeholder = Constants.getPlaceHolder(photoInfo?.blurHash),
             contentDescription = null,
         )
     }

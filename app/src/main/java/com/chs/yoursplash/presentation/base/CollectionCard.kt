@@ -95,11 +95,7 @@ fun CollectionCard(
                 ,
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
-                placeholder = if (collectionInfo?.previewPhotos != null) {
-                    BitmapPainter(
-                        BlurHashDecoder.decode(blurHash = collectionInfo.previewPhotos[0].blurHash)!!.asImageBitmap()
-                    )
-                } else { null },
+                placeholder = Constants.getPlaceHolder(collectionInfo?.previewPhotos?.get(0)?.blurHash)
             )
 
             Column(
