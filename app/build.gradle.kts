@@ -1,28 +1,28 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
-    id("com.android.application")
     kotlin("android")
-    id("dagger.hilt.android.plugin")
-    id("kotlin-parcelize")
-    id("kotlinx-serialization")
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
+
 fun getApiKey(propertyKey: String): String {
-    return gradleLocalProperties(rootDir).getProperty(propertyKey)
+    return gradleLocalProperties(rootDir, providers).getProperty(propertyKey)
 }
 
 android {
     namespace = "com.chs.yoursplash"
-    compileSdk =  33
+    compileSdk = libs.versions.compileSdkVersion.get().toInt()
 
     defaultConfig {
         applicationId = "com.chs.yoursplash"
-        minSdk = 29
-        targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = libs.versions.minSdkVersion.get().toInt()
+        targetSdk = libs.versions.targetSdkVersion.get().toInt()
+        versionCode = libs.versions.versionCode.get().toInt()
+        versionName = libs.versions.versionName.get()
+
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -31,77 +31,55 @@ android {
         buildConfigField("String", "API_ACCESS_KEY", getApiKey("api.AccessKey"))
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-    compileOptions {
+   compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
-    buildFeatures {
-        compose = true
-    }
+
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
     packagingOptions {
         resources.excludes.add("/META-INF/{AL2.0,LGPL2.1}")
     }
+
 }
 
 dependencies {
+    implementation(libs.bundles.android)
+    implementation(libs.bundles.compose)
 
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.core:core-splashscreen:1.0.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.8.0")
-    implementation("androidx.core:core-ktx:1.9.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.3.3")
-    debugImplementation("androidx.compose.ui:ui-tooling:1.3.3")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.3.3")
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
 
-    // Compose dependencies
-    implementation("androidx.compose.ui:ui:1.4.0-beta01")
-    implementation("androidx.compose.material3:material3:1.1.0-alpha06")
-    implementation("androidx.compose.material:material-icons-extended:1.3.1")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.3.3")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1")
-    implementation("androidx.activity:activity-compose:1.6.1")
-    implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation(libs.androidX.paging.compose)
+    implementation(libs.kotlin.coroutine.core)
+    implementation(libs.kotlin.serialization)
 
-    //Dagger - Hilt
-    implementation("com.google.dagger:hilt-android:2.48")
-    ksp("com.google.dagger:hilt-android-compiler:2.48")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation(libs.androidX.navigation.compose)
+    implementation(libs.androidX.paging.compose)
+    implementation(libs.coil.compose)
 
-    //Ktor
-    implementation("io.ktor:ktor-client-core:2.2.3")
-    implementation("io.ktor:ktor-client-android:2.2.3")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.3")
-    implementation("io.ktor:ktor-client-content-negotiation:2.2.3")
-    implementation("io.ktor:ktor-client-logging:2.2.3")
-    implementation("ch.qos.logback:logback-classic:1.2.3")
-
-    // Coil
-    implementation("io.coil-kt:coil-compose:2.2.2")
-
-    // Paging
-    implementation("androidx.paging:paging-compose:1.0.0-alpha18")
-
-    // Room
-    implementation("androidx.room:room-ktx:2.5.0")
-    ksp("androidx.room:room-compiler:2.5.0")
-
-    // DataStore
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation(libs.bundles.ktor)
+    implementation(libs.androidX.room.ktx)
+    ksp(libs.androidX.room.compiler)
+    implementation(libs.android.datastore.preference)
 }
