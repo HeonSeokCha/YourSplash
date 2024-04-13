@@ -11,8 +11,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -22,7 +20,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.chs.yoursplash.domain.model.UnSplashCollection
-import com.chs.yoursplash.util.BlurHashDecoder
 import com.chs.yoursplash.util.Constants
 
 @Composable
@@ -89,13 +86,13 @@ fun CollectionCard(
                         collectionClickAble(collectionInfo?.id ?: "")
                     },
                 model = ImageRequest.Builder(LocalContext.current)
-                   .data(Constants.getPhotoQualityUrl(collectionInfo?.previewPhotos?.get(0)?.urls, loadQuality))
+                   .data(Constants.getPhotoQualityUrl(collectionInfo?.previewPhotos?.first()?.urls, loadQuality))
                     .crossfade(true)
                     .build()
                 ,
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
-                placeholder = Constants.getPlaceHolder(collectionInfo?.previewPhotos?.get(0)?.blurHash)
+                placeholder = Constants.getPlaceHolder(collectionInfo?.previewPhotos?.first()?.blurHash)
             )
 
             Column(

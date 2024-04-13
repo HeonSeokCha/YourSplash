@@ -19,8 +19,7 @@ hilt = "2.50"
 kotlin = "1.9.23"
 ksp = "1.9.23-1.0.19"
 kotlin-coroutine = "1.8.0"
-ktor = "2.3.9"
-apollo = "3.8.3"
+ktor = "2.3.10"
 
 [libraries]
 # AndroidX
@@ -47,14 +46,13 @@ android-datastore-preference = "androidx.datastore:datastore-preferences:1.0.0"
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
 hilt-navigation-compose = "androidx.hilt:hilt-navigation-compose:1.2.0"
-javax-inject = { module = "javax.inject:javax.inject", version = "1" }
 
 ## Kotlin
 kotlin-coroutine-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlin-coroutine" }
 kotlin-coroutine-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlin-coroutine" }
 kotlin-coroutine-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlin-coroutine" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
-kotlin-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0"
+kotlin-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3"
 
 ## Ktor
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor"}

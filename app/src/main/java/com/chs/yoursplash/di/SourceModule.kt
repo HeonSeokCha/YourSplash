@@ -1,6 +1,5 @@
 package com.chs.yoursplash.di
 
-import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.chs.yoursplash.data.api.UnSplashService

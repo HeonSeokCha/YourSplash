@@ -4,11 +4,8 @@ import com.chs.yoursplash.util.Constants
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
-import java.util.Objects
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class UnSplashService @Inject constructor(
     val service: HttpClient
 ) {
@@ -22,6 +19,6 @@ class UnSplashService @Inject constructor(
             params.forEach { (key, value) ->
                 this.parameter(key, value)
             }
-        }.body()
+        }.body<T>()
     }
 }

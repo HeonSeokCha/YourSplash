@@ -1,21 +1,18 @@
 package com.chs.yoursplash.presentation.search
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.*
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.sp
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.SearchFilter
@@ -29,9 +26,9 @@ fun SearchScreen(
     modalClick: () -> Unit,
     onBack: () -> Unit,
 ) {
-    val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     val tabList = listOf("PHOTOS", "COLLECTIONS", "USERS")
+    val pagerState = rememberPagerState { tabList.size }
 
     DisposableEffect(Unit) {
         onDispose {
@@ -48,7 +45,7 @@ fun SearchScreen(
             selectedTabIndex = pagerState.currentPage,
             containerColor = Color.White,
             indicator = { tabPositions ->
-                TabRowDefaults.Indicator(
+                SecondaryIndicator(
                     modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
                     color = Purple200
                 )
@@ -74,7 +71,6 @@ fun SearchScreen(
             }
         }
         HorizontalPager(
-            pageCount = tabList.size,
             state = pagerState,
             userScrollEnabled = false,
         ) {

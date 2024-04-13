@@ -10,7 +10,7 @@ import com.chs.yoursplash.util.Constants
 
 class HomeCollectionDataSource(
     private val api: UnSplashService
-): PagingSource<Int, UnSplashCollection>() {
+) : PagingSource<Int, UnSplashCollection>() {
     override fun getRefreshKey(state: PagingState<Int, UnSplashCollection>): Int? {
         return state.anchorPosition?.let { position ->
             val page = state.closestPageToPosition(position)
@@ -21,17 +21,15 @@ class HomeCollectionDataSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, UnSplashCollection> {
         return try {
             val page = params.key ?: 1
-            val response: List<UnSplashCollection> = (
-                    api.requestUnsplash(
+            val response: List<UnSplashCollection> = api.requestUnsplash<List<ResponseCollection>>(
                 Constants.GET_COLLECTION,
                 hashMapOf("page" to page.toString())
-            ) as List<ResponseCollection>)
-                .map { it.toPhotoCollection() }
+            ).map { it.toPhotoCollection() }
 
             LoadResult.Page(
                 data = response,
                 prevKey = if (page == 1) null else page - 1,
-                nextKey = if(response.isNotEmpty()) page + 1 else null
+                nextKey = if (response.isNotEmpty()) page + 1 else null
             )
         } catch (e: Exception) {
             LoadResult.Error(e)

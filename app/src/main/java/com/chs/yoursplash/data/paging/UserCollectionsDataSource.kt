@@ -24,12 +24,13 @@ class UserCollectionsDataSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, UnSplashCollection> {
         return try {
             val page = params.key ?: 1
-            val response = (api.requestUnsplash(
+            val response = api.requestUnsplash<List<ResponseCollection>>(
                 Constants.GET_USER_COLLECTIONS(userName),
                 hashMapOf(
                     "page" to page.toString()
                 )
-            ) as List<ResponseCollection>).map { it.toPhotoCollection() }
+            ).map { it.toPhotoCollection() }
+
             LoadResult.Page(
                 data = response,
                 prevKey = if (page == 1) null else page - 1,

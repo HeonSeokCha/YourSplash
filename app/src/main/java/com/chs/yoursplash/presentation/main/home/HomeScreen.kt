@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.presentation.browse.BrowseActivity
 import com.chs.yoursplash.util.Constants
@@ -35,27 +34,33 @@ fun HomeScreen(
         contentPadding = PaddingValues(vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(32.dp),
     ) {
-        items(lazyPagingItems!!) { photo ->
-            ImageCard(
-                photoInfo = photo,
-                loadQuality = state.loadQuality,
-                userClickAble = { userName ->
-                    context.startActivity(
-                        Intent(context, BrowseActivity::class.java).apply {
-                            putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
-                            putExtra(Constants.TARGET_ID, userName)
-                        }
-                    )
-                }, photoClickAble = { photoId ->
-                    context.startActivity(
-                        Intent(context, BrowseActivity::class.java).apply {
-                            putExtra(Constants.TARGET_TYPE, Constants.TARGET_PHOTO)
-                            putExtra(Constants.TARGET_ID, photoId)
-                        }
-                    )
-                }
-            )
+        if (lazyPagingItems != null && lazyPagingItems.itemCount != 0) {
+            items(
+                count = lazyPagingItems.itemCount
+            ) {idx ->
+                val photo = lazyPagingItems[idx]
+                ImageCard(
+                    photoInfo = photo,
+                    loadQuality = state.loadQuality,
+                    userClickAble = { userName ->
+                        context.startActivity(
+                            Intent(context, BrowseActivity::class.java).apply {
+                                putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
+                                putExtra(Constants.TARGET_ID, userName)
+                            }
+                        )
+                    }, photoClickAble = { photoId ->
+                        context.startActivity(
+                            Intent(context, BrowseActivity::class.java).apply {
+                                putExtra(Constants.TARGET_TYPE, Constants.TARGET_PHOTO)
+                                putExtra(Constants.TARGET_ID, photoId)
+                            }
+                        )
+                    }
+                )
+            }
         }
+
     }
 
     when (lazyPagingItems?.loadState?.source?.refresh) {

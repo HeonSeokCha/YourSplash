@@ -2,32 +2,24 @@ package com.chs.yoursplash.presentation.search
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Filter
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.User
@@ -37,9 +29,7 @@ import com.chs.yoursplash.presentation.base.UserCard
 import com.chs.yoursplash.presentation.browse.BrowseActivity
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.SearchFilter
-import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun SearchResultScreen(
@@ -110,7 +100,10 @@ fun SearchResultScreen(
                 Constants.SEARCH_PHOTO -> {
                     pagingList?.let {
                         val photoList = it as LazyPagingItems<Photo>
-                        items(photoList) { item ->
+                        items(
+                            count = photoList.itemCount
+                        ) { idx ->
+                            val item = photoList[idx]
                             ImageCard(
                                 photoInfo = item,
                                 loadQuality = state.loadQuality,
@@ -136,7 +129,10 @@ fun SearchResultScreen(
                 Constants.SEARCH_COLLECTION -> {
                     pagingList?.let {
                         val photoList = it as LazyPagingItems<UnSplashCollection>
-                        items(photoList) { item ->
+                        items(
+                            count = photoList.itemCount
+                        ) { idx ->
+                            val item = photoList[idx]
                             CollectionCard(
                                 collectionInfo = item,
                                 loadQuality = state.loadQuality,
@@ -165,7 +161,10 @@ fun SearchResultScreen(
                 Constants.SEARCH_USER -> {
                     pagingList?.let {
                         val photoList = it as LazyPagingItems<User>
-                        items(photoList) { item ->
+                        items(
+                            count = photoList.itemCount
+                        ) { idx ->
+                            val item = photoList[idx]
                             UserCard(
                                 userInfo = item,
                                 loadQuality = state.loadQuality,

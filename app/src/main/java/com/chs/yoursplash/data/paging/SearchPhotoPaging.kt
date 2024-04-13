@@ -25,7 +25,7 @@ class SearchPhotoPaging(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Photo> {
         return try {
             val page = params.key ?: 1
-            val response = (api.requestUnsplash(
+            val response = api.requestUnsplash<ResponseSearchPhotos>(
                 Constants.GET_SEARCH_PHOTOS,
                 hashMapOf(
                     "query" to query,
@@ -35,9 +35,10 @@ class SearchPhotoPaging(
                     if (color != null) this["color"] = color
                     if (orientation != null) this["orientation"] = orientation
                 }
-            ) as ResponseSearchPhotos).result.map {
+            ).result.map {
                 it.toUnSplashImage()
             }
+
             LoadResult.Page(
                 data = response,
                 prevKey = if (page == 1) null else page - 1,

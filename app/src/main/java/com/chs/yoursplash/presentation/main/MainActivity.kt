@@ -2,21 +2,17 @@ package com.chs.yoursplash.presentation.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.twotone.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -33,7 +29,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.chs.yoursplash.R
-import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.main.collection.CollectionScreen
 import com.chs.yoursplash.presentation.main.home.HomeScreen
 import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
@@ -45,7 +40,6 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -90,51 +84,15 @@ class MainActivity : ComponentActivity() {
                         BottomBar(navController = navController)
                     },
                 ) {
-                    NavHost(
-                        navController = navController,
+                    MainNavHost(
                         modifier = Modifier.padding(it),
-                        startDestination = BottomNavScreen.HomeScreen.route
-                    ) {
-                        composable(BottomNavScreen.HomeScreen.route) {
-                            HomeScreen()
-                        }
-                        composable(BottomNavScreen.CollectionScreen.route) {
-                            CollectionScreen()
-                        }
-                        composable(MainScreens.SearchScreen.route) {
-                            SearchScreen(
-                                searchKeyWord = searchKeyword,
-                                searchFilter = searchFilter,
-                                modalClick = {
-                                    scope.launch {
-//                                            if (bottomSheetScaffoldState.isVisible) {
-//                                                bottomSheetScaffoldState.hide()
-//                                            } else {
-//                                                bottomSheetScaffoldState.show()
-//                                            }
-                                    }
-                                }, onBack = {
-                                    searchKeyword = ""
-                                    searchFilter = SearchFilter()
-                                }
-                            )
-
-//                                BackHandler(enabled = bottomSheetScaffoldState.isVisible) {
-//                                    scope.launch {
-//                                        bottomSheetScaffoldState.hide()
-//                                    }
-//                                }
-                        }
-                        composable(MainScreens.SettingScreen.route) {
-                            SettingScreen()
-                        }
-                    }
+                        navController = navController
+                    )
                 }
             }
         }
     }
 }
-//}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -213,10 +171,7 @@ private fun MainTopBar(
 }
 
 
-@OptIn(
-    ExperimentalComposeUiApi::class,
-    ExperimentalMaterial3Api::class
-)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchAppBar(
     searchClicked: (String) -> Unit,
@@ -231,7 +186,6 @@ private fun SearchAppBar(
             .height(56.dp),
         colors = TextFieldDefaults.textFieldColors(
             containerColor = MaterialTheme.colorScheme.primary,
-            textColor = Color.White,
             cursorColor = Color.White,
         ),
         value = textState,

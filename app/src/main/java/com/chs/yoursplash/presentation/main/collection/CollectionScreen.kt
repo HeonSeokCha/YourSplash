@@ -12,7 +12,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import com.chs.yoursplash.presentation.base.CollectionCard
 import com.chs.yoursplash.presentation.browse.BrowseActivity
 import com.chs.yoursplash.util.Constants
@@ -34,27 +33,33 @@ fun CollectionScreen(
         verticalArrangement = Arrangement.spacedBy(32.dp),
     ) {
 
-        items(lazyPagingItems!!) { collectionInfo ->
-            CollectionCard(
-                collectionInfo = collectionInfo,
-                loadQuality = state.loadQuality,
-                userClickAble = { userName ->
-                    context.startActivity(
-                        Intent(context, BrowseActivity::class.java).apply {
-                            putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
-                            putExtra(Constants.TARGET_ID, userName)
-                        }
-                    )
-                }, collectionClickAble = { collectionId ->
-                    context.startActivity(
-                        Intent(context, BrowseActivity::class.java).apply {
-                            putExtra(Constants.TARGET_TYPE, Constants.TARGET_COLLECTION)
-                            putExtra(Constants.TARGET_ID, collectionId)
-                        }
-                    )
-                }
-            )
+        if (lazyPagingItems != null && lazyPagingItems.itemCount != 0) {
+            items(
+                count = lazyPagingItems.itemCount
+            ) { idx ->
+                val collectionInfo = lazyPagingItems[idx]
+                CollectionCard(
+                    collectionInfo = collectionInfo,
+                    loadQuality = state.loadQuality,
+                    userClickAble = { userName ->
+                        context.startActivity(
+                            Intent(context, BrowseActivity::class.java).apply {
+                                putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
+                                putExtra(Constants.TARGET_ID, userName)
+                            }
+                        )
+                    }, collectionClickAble = { collectionId ->
+                        context.startActivity(
+                            Intent(context, BrowseActivity::class.java).apply {
+                                putExtra(Constants.TARGET_TYPE, Constants.TARGET_COLLECTION)
+                                putExtra(Constants.TARGET_ID, collectionId)
+                            }
+                        )
+                    }
+                )
+            }
         }
+
     }
 
     if (state.isLoading) {

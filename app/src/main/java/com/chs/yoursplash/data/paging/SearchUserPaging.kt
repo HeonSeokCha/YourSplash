@@ -23,13 +23,13 @@ class SearchUserPaging(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, User> {
         return try {
             val page = params.key ?: 1
-            val response = (api.requestUnsplash(
+            val response = api.requestUnsplash<ResponseSearchUsers>(
                 Constants.GET_SEARCH_USERS,
                 hashMapOf(
                     "query" to query,
                     "page" to page.toString()
                 )
-            ) as ResponseSearchUsers).result.map {
+            ).result.map {
                 it.toUnSplashUser()
             }
             LoadResult.Page(

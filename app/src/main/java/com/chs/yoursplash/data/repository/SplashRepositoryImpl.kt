@@ -23,7 +23,8 @@ import java.io.IOException
 import javax.inject.Inject
 
 class SplashRepositoryImpl @Inject constructor(
-    private val client: UnSplashService, private val db: YourSplashDatabase
+    private val client: UnSplashService,
+    private val db: YourSplashDatabase
 ) : SplashRepository {
     override fun getSplashPhoto(): Flow<PagingData<Photo>> {
         return Pager(

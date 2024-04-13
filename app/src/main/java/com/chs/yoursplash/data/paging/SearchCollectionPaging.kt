@@ -23,15 +23,16 @@ class SearchCollectionPaging(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, UnSplashCollection> {
         return try {
             val page = params.key ?: 1
-            val response = (api.requestUnsplash(
+            val response = api.requestUnsplash<ResponseSearchCollections>(
                 Constants.GET_SEARCH_COLLECTIONS,
                 hashMapOf(
                     "query" to query,
                     "page" to page.toString()
                 )
-            ) as ResponseSearchCollections).result.map {
+            ).result.map {
                 it.toPhotoCollection()
             }
+
             LoadResult.Page(
                 data = response,
                 prevKey = if (page == 1) null else page - 1,

@@ -23,10 +23,11 @@ class CollectionPhotoDataSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Photo> {
         return try {
             val page = params.key ?: 1
-            val response = (api.requestUnsplash(
+            val response = api.requestUnsplash<List<ResponsePhoto>>(
                 Constants.GET_COLLECTION_PHOTOS(collectionId),
                 hashMapOf("page" to page.toString())
-            ) as List<ResponsePhoto>).map { it.toUnSplashImage() }
+            ).map { it.toUnSplashImage() }
+
             LoadResult.Page(
                 data = response,
                 prevKey = if (page == 1) null else page - 1,

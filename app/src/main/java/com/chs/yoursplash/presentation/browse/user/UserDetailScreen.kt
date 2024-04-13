@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -39,7 +40,7 @@ fun UserDetailScreen(
 
     val state = viewModel.state
     val context = LocalContext.current
-    val pagerState = rememberPagerState()
+    val pagerState = rememberPagerState { state.userTabLabList.size }
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(context, viewModel) {
@@ -61,7 +62,7 @@ fun UserDetailScreen(
                 selectedTabIndex = pagerState.currentPage,
                 containerColor = Color.White,
                 indicator = { tabPositions ->
-                    TabRowDefaults.Indicator(
+                    SecondaryIndicator(
                         modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
                         color = Purple200
                     )
@@ -89,7 +90,6 @@ fun UserDetailScreen(
             }
 
             HorizontalPager(
-                pageCount = state.userTabLabList.size,
                 state = pagerState,
                 userScrollEnabled = false,
             ) { pager ->
