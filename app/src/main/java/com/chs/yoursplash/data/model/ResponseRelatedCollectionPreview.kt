@@ -10,5 +10,5 @@ data class ResponseRelatedCollectionPreview(
     @SerialName("urls")
     val urls: ResponsePhotoUrls,
     @SerialName("blur_hash")
-    val blurHash: String
+    val blurHash: String? = null
 )

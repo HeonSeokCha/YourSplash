@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.room.Query
 import com.chs.yoursplash.presentation.main.collection.CollectionScreen
 import com.chs.yoursplash.presentation.main.home.HomeScreen
 import com.chs.yoursplash.presentation.search.SearchScreen
@@ -16,7 +17,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainNavHost(
     modifier: Modifier = Modifier,
-    navController: NavHostController
+    navController: NavHostController,
+    searchQuery: String,
+    onBack: () -> Unit
 ) {
     NavHost(
         modifier = modifier,
@@ -31,19 +34,12 @@ fun MainNavHost(
             CollectionScreen()
         }
 
-//        composable(MainScreens.SearchScreen.route) {
-//            SearchScreen(
-//                searchKeyWord = searchKeyword,
-//                searchFilter = searchFilter,
-//                modalClick = {
-//                    scope.launch {
-//                    }
-//                }, onBack = {
-//                    searchKeyword = ""
-//                    searchFilter = SearchFilter()
-//                }
-//            )
-//        }
+        composable(MainScreens.SearchScreen.route) {
+            SearchScreen(
+                searchQuery = searchQuery,
+                onBack = onBack
+            )
+        }
 
         composable(MainScreens.SettingScreen.route) {
             SettingScreen()

@@ -35,7 +35,8 @@ fun CollectionScreen(
 
         if (lazyPagingItems != null && lazyPagingItems.itemCount != 0) {
             items(
-                count = lazyPagingItems.itemCount
+                count = lazyPagingItems.itemCount,
+                key = { lazyPagingItems[it]!!.id }
             ) { idx ->
                 val collectionInfo = lazyPagingItems[idx]
                 CollectionCard(

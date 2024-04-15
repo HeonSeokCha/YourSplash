@@ -36,7 +36,8 @@ fun HomeScreen(
     ) {
         if (lazyPagingItems != null && lazyPagingItems.itemCount != 0) {
             items(
-                count = lazyPagingItems.itemCount
+                count = lazyPagingItems.itemCount,
+                key = { lazyPagingItems[it]!!.id }
             ) {idx ->
                 val photo = lazyPagingItems[idx]
                 ImageCard(

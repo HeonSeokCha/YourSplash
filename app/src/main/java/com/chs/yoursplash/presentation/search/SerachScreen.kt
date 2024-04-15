@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.SearchFilter
@@ -21,9 +22,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SearchScreen(
-    searchKeyWord: String,
-    searchFilter: SearchFilter,
-    modalClick: () -> Unit,
+    searchQuery: String,
     onBack: () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -43,7 +42,6 @@ fun SearchScreen(
         TabRow(
             modifier = Modifier.fillMaxWidth(),
             selectedTabIndex = pagerState.currentPage,
-            containerColor = Color.White,
             indicator = { tabPositions ->
                 SecondaryIndicator(
                     modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
@@ -59,6 +57,7 @@ fun SearchScreen(
                             maxLines = 1,
                             color = Purple200,
                             overflow = TextOverflow.Ellipsis,
+                            fontSize = 12.sp
                         )
                     },
                     selected = pagerState.currentPage == index,
@@ -70,31 +69,27 @@ fun SearchScreen(
                 )
             }
         }
-        HorizontalPager(
-            state = pagerState,
-            userScrollEnabled = false,
-        ) {
+
+        HorizontalPager(state = pagerState) {
             when (pagerState.currentPage) {
                 0 -> {
                     SearchResultScreen(
-                        query = searchKeyWord,
+                        query = searchQuery,
                         type = Constants.SEARCH_PHOTO,
-                        searchFilter = searchFilter,
                         modalClick = {
-                            modalClick()
                         }
                     )
                 }
                 1 -> {
                     SearchResultScreen(
-                        query = searchKeyWord,
+                        query = searchQuery,
                         type = Constants.SEARCH_COLLECTION,
                         modalClick = { }
                     )
                 }
                 2 -> {
                     SearchResultScreen(
-                        query = searchKeyWord,
+                        query = searchQuery,
                         type = Constants.SEARCH_USER,
                         modalClick = { }
                     )

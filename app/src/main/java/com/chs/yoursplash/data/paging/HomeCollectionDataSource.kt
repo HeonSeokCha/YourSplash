@@ -1,5 +1,6 @@
 package com.chs.yoursplash.data.paging
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.chs.yoursplash.data.api.UnSplashService
@@ -32,6 +33,7 @@ class HomeCollectionDataSource(
                 nextKey = if (response.isNotEmpty()) page + 1 else null
             )
         } catch (e: Exception) {
+            Log.e("CHS_LOG", e.message.toString())
             LoadResult.Error(e)
         }
     }

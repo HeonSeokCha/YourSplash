@@ -3,8 +3,13 @@ package com.chs.yoursplash.presentation.main
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -21,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -40,43 +46,29 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val viewModel by viewModels<MainViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-//            val bottomSheetScaffoldState =
-//                rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
             val navController = rememberNavController()
-            var searchKeyword by remember { mutableStateOf("") }
-            var searchFilter by remember { mutableStateOf(SearchFilter()) }
-            val scope = rememberCoroutineScope()
+            var searchQuery: String by remember { mutableStateOf("") }
+            val state by viewModel.state.collectAsStateWithLifecycle()
+
             YourSplashTheme {
-//                ModalBottomSheetLayout(
-//                    sheetState = bottomSheetScaffoldState,
-//                    sheetContent = {
-//                        SearchBottomSheet(
-//                            searchFilter = searchFilter,
-//                            onClick = {
-//                                searchFilter = searchFilter.copy(
-//                                    orderBy = it.orderBy,
-//                                    color = it.color,
-//                                    orientation = it.orientation
-//                                )
-//                                scope.launch {
-//                                    bottomSheetScaffoldState.hide()
-//                                }
-//                            }
-//                        )
-//                    }
-//                ) {
                 Scaffold(
                     topBar = {
                         MainTopBar(
                             navController = navController,
-                            searchClicked = {
-                                searchKeyword = it
-                            }, onBackClicked = {
-                                searchKeyword = ""
-                                navController.navigateUp()
+                            searchHistoryList = state.searchHistory,
+                            onQueryChange = {
+                                if (it.isNotEmpty()) {
+                                    viewModel.insertSearchHistory(it)
+                                }
+                                searchQuery = it
+                            },
+                            onDeleteSearchHistory = {
+                                viewModel.deleteSearchHistory(it)
                             }
                         )
                     },
@@ -86,7 +78,9 @@ class MainActivity : ComponentActivity() {
                 ) {
                     MainNavHost(
                         modifier = Modifier.padding(it),
-                        navController = navController
+                        navController = navController,
+                        searchQuery = searchQuery,
+                        onBack = { searchQuery = "" }
                     )
                 }
             }
@@ -99,8 +93,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun MainTopBar(
     navController: NavHostController,
-    searchClicked: (String) -> Unit,
-    onBackClicked: () -> Unit
+    searchHistoryList: List<String>,
+    onQueryChange: (String) -> Unit,
+    onDeleteSearchHistory: (String) -> Unit
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     when (navBackStackEntry?.destination?.route) {
@@ -162,66 +157,112 @@ private fun MainTopBar(
 
         MainScreens.SearchScreen.route -> {
             SearchAppBar(
-                searchClicked = { searchQuery ->
-                    searchClicked(searchQuery)
-                }, onBackClicked = onBackClicked
+                onSearch = {
+                    onQueryChange(it)
+                },
+                searchHistoryList = searchHistoryList,
+                onDeleteSearchHistory = {
+                    onDeleteSearchHistory(it)
+                }
             )
         }
     }
 }
 
-
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-private fun SearchAppBar(
-    searchClicked: (String) -> Unit,
-    onBackClicked: () -> Unit
+fun SearchAppBar(
+    onSearch: (String) -> Unit,
+    searchHistoryList: List<String>,
+    onDeleteSearchHistory: (String) -> Unit
 ) {
-    var textState by remember { mutableStateOf("") }
-    val keyboardController = LocalSoftwareKeyboardController.current
+    var text by remember { mutableStateOf("") }
+    var isSearchActive by remember { mutableStateOf(false) }
+    var isShowDialog by remember { mutableStateOf(false) }
 
-    TextField(
+    SearchBar(
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp),
-        colors = TextFieldDefaults.textFieldColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            cursorColor = Color.White,
-        ),
-        value = textState,
-        onValueChange = {
-            textState = it
+            .padding(bottom = 8.dp),
+        query = text,
+        onQueryChange = { text = it },
+        onSearch = {
+            isSearchActive = false
+            onSearch(it)
         },
-        placeholder = {
-            Text(
-                text = "Search here...",
-                color = Color.White
-            )
-        },
-        textStyle = TextStyle(
-            fontSize = MaterialTheme.typography.bodyMedium.fontSize
-        ),
-        singleLine = true,
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier.clickable {
-                    onBackClicked()
+        active = isSearchActive,
+        onActiveChange = { isSearchActive = it },
+        placeholder = { Text("Search here...") },
+        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+        trailingIcon = {
+            IconButton(onClick = {
+                if (text.isNotEmpty()) {
+                    text = ""
+                } else {
+                    isSearchActive = false
+                }
+            }) {
+                Icon(
+                    Icons.Default.Close,
+                    contentDescription = null
+                )
+            }
+        }
+    ) {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(searchHistoryList) { title ->
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(all = 14.dp)
+                    .combinedClickable(
+                        onClick = {
+                            text = title
+                            isSearchActive = false
+                            onSearch(title)
+                        },
+                        onLongClick = {
+                            text = title
+                            isShowDialog = true
+                        }
+                    )
+                ) {
+                    Icon(
+                        modifier = Modifier.padding(end = 10.dp),
+                        imageVector = Icons.Default.History,
+                        contentDescription = null
+                    )
+                    Text(text = title)
+                }
+            }
+        }
+
+        if (isShowDialog) {
+            AlertDialog(
+                onDismissRequest = { isShowDialog = false },
+                title = { Text(text = text) },
+                text = { Text(text = "Are You Sure Delete Search History?") },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            isShowDialog = false
+                            onDeleteSearchHistory(text)
+                        }) {
+                        Text("Delete")
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = {
+                            isShowDialog = false
+                        }) {
+                        Text("Cancel")
+                    }
                 }
             )
-        },
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Search
-        ),
-        keyboardActions = KeyboardActions(
-            onSearch = {
-                searchClicked(textState)
-                keyboardController?.hide()
-            }
-        )
-    )
+        }
+    }
 }
 
 @Composable
