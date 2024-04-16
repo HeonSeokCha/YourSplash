@@ -1,14 +1,12 @@
 package com.chs.yoursplash.presentation.browse.photo_detail
 
 import android.os.Environment
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.chs.yoursplash.data.db.PhotoSaveInfo
+import com.chs.yoursplash.data.db.entity.PhotoSaveEntity
 import com.chs.yoursplash.domain.usecase.*
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.DownLoadState
@@ -134,7 +132,7 @@ class PhotoDetailViewModel @Inject constructor(
             if (isRealFileSave) { // 실제 파일이 있는데
                 if (!isDbInsertFileInfo) {  //DB에 없을 경우
                     insertPhotoSaveInfoUseCase.invoke(
-                        PhotoSaveInfo(fileName = fileName)
+                        PhotoSaveEntity(fileName = fileName)
                     )
                 }
                 state = state.copy(imageSaveState = PhotoSaveState.DOWNLOADED)
@@ -149,7 +147,7 @@ class PhotoDetailViewModel @Inject constructor(
     private fun insertSaveFile(fileName: String) { // broadcast를 통해 Success일 경우 호출
         viewModelScope.launch {
             insertPhotoSaveInfoUseCase.invoke(
-                PhotoSaveInfo(fileName = fileName)
+                PhotoSaveEntity(fileName = fileName)
             )
         }
         state = state.copy(imageSaveState = PhotoSaveState.DOWNLOADED)

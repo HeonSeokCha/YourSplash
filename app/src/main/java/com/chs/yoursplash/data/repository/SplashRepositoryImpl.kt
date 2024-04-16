@@ -6,8 +6,10 @@ import androidx.paging.PagingData
 import coil.network.HttpException
 import com.chs.yoursplash.data.mapper.*
 import com.chs.yoursplash.data.api.UnSplashService
-import com.chs.yoursplash.data.db.PhotoSaveInfo
+import com.chs.yoursplash.data.db.entity.PhotoSaveEntity
 import com.chs.yoursplash.data.db.YourSplashDatabase
+import com.chs.yoursplash.data.db.dao.PhotoSaveInfoDao
+import com.chs.yoursplash.data.db.dao.SearchHistoryDao
 import com.chs.yoursplash.data.model.ResponseCollection
 import com.chs.yoursplash.data.model.ResponsePhotoDetail
 import com.chs.yoursplash.data.model.ResponseRelatedPhoto
@@ -24,7 +26,8 @@ import javax.inject.Inject
 
 class SplashRepositoryImpl @Inject constructor(
     private val client: UnSplashService,
-    private val db: YourSplashDatabase
+    private val photoSaveInfoDao: PhotoSaveInfoDao,
+    private val searchHistoryDao: SearchHistoryDao
 ) : SplashRepository {
     override fun getSplashPhoto(): Flow<PagingData<Photo>> {
         return Pager(
@@ -205,15 +208,15 @@ class SplashRepositoryImpl @Inject constructor(
         }.flow
     }
 
-    override suspend fun getSavePhoto(fileName: String): PhotoSaveInfo? {
-        return db.photoSaveInfoDao.checkSavePhoto(fileName)
+    override suspend fun getSavePhoto(fileName: String): PhotoSaveEntity? {
+        return photoSaveInfoDao.checkSavePhoto(fileName)
     }
 
     override suspend fun deleteSavePhotoInfo(fileName: String): Int {
-        return db.photoSaveInfoDao.deleteSavePhoto(fileName)
+        return photoSaveInfoDao.deleteSavePhoto(fileName)
     }
 
-    override suspend fun insertSavePhotoInfo(photoSaveInfo: PhotoSaveInfo): Long {
-        return db.photoSaveInfoDao.insertPhotoSaveInfo(photoSaveInfo)
+    override suspend fun insertSavePhotoInfo(photoSaveEntity: PhotoSaveEntity): Long {
+        return photoSaveInfoDao.insertPhotoSaveInfo(photoSaveEntity)
     }
 }

@@ -13,9 +13,7 @@ class UnSplashService @Inject constructor(
         url: String,
         params: HashMap<String, String> = hashMapOf(),
     ): T {
-        return service.get("${Constants.UNSPLAH_BASE_URL}$url") {
-            this.headers.append("Accept-Version", "v1")
-            this.headers.append("Authorization", "Client-ID ${Constants.CLIENT_ID}")
+        return service.get(url) {
             params.forEach { (key, value) ->
                 this.parameter(key, value)
             }

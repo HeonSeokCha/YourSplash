@@ -1,7 +1,7 @@
 package com.chs.yoursplash.domain.repository
 
 import androidx.paging.PagingData
-import com.chs.yoursplash.data.db.PhotoSaveInfo
+import com.chs.yoursplash.data.db.entity.PhotoSaveEntity
 import com.chs.yoursplash.domain.model.*
 import com.chs.yoursplash.util.Resource
 import kotlinx.coroutines.flow.Flow
@@ -43,10 +43,10 @@ interface SplashRepository {
 
     fun getSearchResultUser(query: String): Flow<PagingData<User>>
 
-    suspend fun getSavePhoto(fileName: String): PhotoSaveInfo?
+    suspend fun getSavePhoto(fileName: String): PhotoSaveEntity?
 
     suspend fun deleteSavePhotoInfo(fileName: String): Int
 
-    suspend fun insertSavePhotoInfo(photoSaveInfo: PhotoSaveInfo): Long
+    suspend fun insertSavePhotoInfo(photoSaveEntity: PhotoSaveEntity): Long
 
 }

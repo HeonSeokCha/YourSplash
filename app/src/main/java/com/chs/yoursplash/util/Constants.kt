@@ -10,7 +10,7 @@ import com.chs.yoursplash.BuildConfig
 import com.chs.yoursplash.domain.model.PhotoUrls
 
 object Constants {
-    const val UNSPLAH_BASE_URL: String = "https://api.unsplash.com"
+    const val UNSPLAH_BASE_URL: String = "api.unsplash.com"
     const val GET_PHOTOS: String = "/photos"
     val GET_PHOTO_DETAIL: ((String) -> String) = {"/photos/$it"}
     val GET_PHOTO_RELATED: ((String) -> String) = {"/photos/$it/related"}
