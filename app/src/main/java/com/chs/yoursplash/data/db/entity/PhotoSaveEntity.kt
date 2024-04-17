@@ -11,5 +11,5 @@ data class PhotoSaveEntity(
     @ColumnInfo(name = "create_date")
     val createDate: Long = System.currentTimeMillis(),
     @ColumnInfo(name = "file_name")
-    val fileName: String,
+    val fileName: String
 )

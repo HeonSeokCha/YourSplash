@@ -1,9 +1,12 @@
 package com.chs.yoursplash.di
 
+import com.chs.yoursplash.data.repository.PhotoRepositoryImpl
+import com.chs.yoursplash.data.repository.SearchRepositoryImpl
 import com.chs.yoursplash.data.repository.SettingRepositoryImpl
-import com.chs.yoursplash.data.repository.SplashRepositoryImpl
+import com.chs.yoursplash.domain.repository.PhotoRepository
+import com.chs.yoursplash.domain.repository.SearchRepository
 import com.chs.yoursplash.domain.repository.SettingRepository
-import com.chs.yoursplash.domain.repository.SplashRepository
+import com.chs.yoursplash.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,9 +17,19 @@ import dagger.hilt.components.SingletonComponent
 abstract class RepositoryModule {
 
     @Binds
-    abstract fun bindSplashRepository(
-        splashRepositoryImpl: SplashRepositoryImpl
-    ): SplashRepository
+    abstract fun bindPhotoRepository(
+        photoRepositoryImpl: PhotoRepositoryImpl
+    ): PhotoRepository
+
+    @Binds
+    abstract fun bindSearchRepository(
+        searchRepositoryImpl: SearchRepositoryImpl
+    ): SearchRepository
+
+    @Binds
+    abstract fun bindPhotoRepository(
+        userRepositoryImpl: SearchRepositoryImpl
+    ): UserRepository
 
     @Binds
     abstract fun bindSettingRepository(

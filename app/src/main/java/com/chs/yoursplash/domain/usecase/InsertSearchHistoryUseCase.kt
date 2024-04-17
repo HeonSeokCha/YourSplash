@@ -3,10 +3,9 @@ package com.chs.yoursplash.domain.usecase
 import com.chs.yoursplash.domain.repository.PhotoRepository
 import javax.inject.Inject
 
-class DeletePhotoSaveInfoUseCase @Inject constructor(
+class InsertSearchHistoryUseCase @Inject constructor(
     private val repository: PhotoRepository
-){
-    suspend operator fun invoke(fileName: String): Int {
-        return repository.deleteSavePhotoInfo(fileName)
+) {
+    suspend operator fun invoke(searchHistory: String) {
     }
 }

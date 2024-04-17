@@ -1,6 +1,9 @@
 package com.chs.yoursplash.di
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import com.chs.yoursplash.data.api.UnSplashService
 import com.chs.yoursplash.data.db.YourSplashDatabase
@@ -23,9 +26,19 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import javax.inject.Singleton
 
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+    name = Constants.PREFERENCE_NAME
+)
+
 @Module
 @InstallIn(SingletonComponent::class)
 object SourceModule {
+
+    @Singleton
+    @Provides
+    fun provideDataStorePref(@ApplicationContext context: Context): DataStore<Preferences> {
+        return context.dataStore
+    }
 
     @Singleton
     @Provides
@@ -72,7 +85,6 @@ object SourceModule {
     fun provideSearchHistoryDao(db: YourSplashDatabase): SearchHistoryDao {
         return db.searchHistoryDao
     }
-
 
     @Provides
     fun providePhotoSaveInfoDao(db: YourSplashDatabase): PhotoSaveInfoDao {

@@ -1,14 +1,13 @@
 package com.chs.yoursplash.domain.usecase
 
-import android.util.Log
 import androidx.paging.PagingData
 import com.chs.yoursplash.domain.model.Photo
-import com.chs.yoursplash.domain.repository.SplashRepository
+import com.chs.yoursplash.domain.repository.SearchRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetSearchResultPhotoUseCase @Inject constructor(
-    private val repository: SplashRepository
+    private val repository: SearchRepository
 ) {
     operator fun invoke(
         query: String,

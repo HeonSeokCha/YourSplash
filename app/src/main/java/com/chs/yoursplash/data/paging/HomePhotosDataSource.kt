@@ -7,9 +7,7 @@ import com.chs.yoursplash.data.api.UnSplashService
 import com.chs.yoursplash.data.mapper.toUnSplashImage
 import com.chs.yoursplash.data.model.ResponsePhoto
 import com.chs.yoursplash.domain.model.Photo
-import com.chs.yoursplash.domain.repository.SplashRepository
 import com.chs.yoursplash.util.Constants
-import javax.inject.Inject
 
 class HomePhotosDataSource(
     private val api: UnSplashService
