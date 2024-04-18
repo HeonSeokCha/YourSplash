@@ -4,6 +4,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.chs.yoursplash.data.api.UnSplashService
+import com.chs.yoursplash.data.db.dao.SearchHistoryDao
+import com.chs.yoursplash.data.db.entity.SearchHistoryEntity
 import com.chs.yoursplash.data.paging.SearchCollectionPaging
 import com.chs.yoursplash.data.paging.SearchPhotoPaging
 import com.chs.yoursplash.data.paging.SearchUserPaging
@@ -15,7 +17,8 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SearchRepositoryImpl @Inject constructor(
-    private val client: UnSplashService
+    private val client: UnSplashService,
+    private val searchHistoryDao: SearchHistoryDao
 ) : SearchRepository {
 
     override fun getSearchResultPhoto(
@@ -51,5 +54,21 @@ class SearchRepositoryImpl @Inject constructor(
         ) {
             SearchUserPaging(client, query)
         }.flow
+    }
+
+    override suspend fun insertSearchHistory(query: String) {
+        searchHistoryDao.insertEntity(
+            SearchHistoryEntity(searchQuery = query)
+        )
+    }
+
+    override suspend fun deleteSearchHistory(query: String) {
+        searchHistoryDao.deleteEntity(
+            SearchHistoryEntity(searchQuery = query)
+        )
+    }
+
+    override fun getRecentSearchHistory(): Flow<List<String>> {
+        return searchHistoryDao.getRecentList()
     }
 }

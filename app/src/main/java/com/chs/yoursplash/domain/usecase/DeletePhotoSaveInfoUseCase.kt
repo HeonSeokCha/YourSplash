@@ -5,8 +5,8 @@ import javax.inject.Inject
 
 class DeletePhotoSaveInfoUseCase @Inject constructor(
     private val repository: PhotoRepository
-){
-    suspend operator fun invoke(fileName: String): Int {
-        return repository.deleteSavePhotoInfo(fileName)
+) {
+    suspend operator fun invoke(fileName: String) {
+        return repository.deletePhotoSaveInfo()
     }
 }

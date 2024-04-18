@@ -7,7 +7,7 @@ import javax.inject.Inject
 class InsertPhotoSaveInfoUseCase @Inject constructor(
     private val repository: PhotoRepository
 ) {
-    suspend operator fun invoke(photoSaveEntity: PhotoSaveEntity): Long {
-        return repository.insertSavePhotoInfo(photoSaveEntity)
+    suspend operator fun invoke(photoSaveEntity: PhotoSaveEntity) {
+        return repository.insertPhotoSaveInfo()
     }
 }

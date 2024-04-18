@@ -18,4 +18,10 @@ interface SearchRepository {
     fun getSearchResultCollection(query: String): Flow<PagingData<UnSplashCollection>>
 
     fun getSearchResultUser(query: String): Flow<PagingData<User>>
+
+    suspend fun insertSearchHistory(query: String)
+
+    suspend fun deleteSearchHistory(query: String)
+
+    fun getRecentSearchHistory(): Flow<List<String>>
 }

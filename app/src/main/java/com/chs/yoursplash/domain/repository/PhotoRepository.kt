@@ -22,6 +22,7 @@ interface PhotoRepository {
 
     suspend fun getPhotoSaveInfo()
 
+
     suspend fun insertPhotoSaveInfo()
 
     suspend fun deletePhotoSaveInfo()
