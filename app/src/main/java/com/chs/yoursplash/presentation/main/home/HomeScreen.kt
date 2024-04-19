@@ -61,7 +61,6 @@ fun HomeScreen(
                 )
             }
         }
-
     }
 
     when (lazyPagingItems?.loadState?.source?.refresh) {

@@ -36,7 +36,7 @@ object SourceModule {
 
     @Singleton
     @Provides
-    fun provideDataStorePref(@ApplicationContext context: Context): DataStore<Preferences> {
+    fun provideDtaStorePref(@ApplicationContext context: Context): DataStore<Preferences> {
         return context.dataStore
     }
 

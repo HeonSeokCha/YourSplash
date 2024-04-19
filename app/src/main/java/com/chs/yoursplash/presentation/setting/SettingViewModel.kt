@@ -6,7 +6,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.chs.yoursplash.domain.usecase.GetStringPrefUseCase
+import com.chs.yoursplash.domain.usecase.GetDownloadQualityUseCase
+import com.chs.yoursplash.domain.usecase.GetImageDetailQualityUseCase
+import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.domain.usecase.PutStringPrefUseCase
 import com.chs.yoursplash.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingViewModel @Inject constructor(
-    private val getStringPrefUseCase: GetStringPrefUseCase,
+    private val getDownloadQualityUseCase: GetDownloadQualityUseCase,
+    private val getLoadQualityUseCase: GetLoadQualityUseCase,
+    private val getImageDetailQualityUseCase: GetImageDetailQualityUseCase,
     private val putStringPrefUseCase: PutStringPrefUseCase
 ) : ViewModel() {
 
@@ -26,9 +30,9 @@ class SettingViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             state = state.copy(
-                downLoadQualityValue = getStringPrefUseCase(Constants.PREFERENCE_KEY_DOWNLOAD_QUALITY).first(),
-                loadQualityValue = getStringPrefUseCase(Constants.PREFERENCE_KEY_LOAD_QUALITY).first(),
-                wallpaperQualityValue = getStringPrefUseCase(Constants.PREFERENCE_KEY_WALLPAPER_QUALITY).first()
+                downLoadQualityValue = getDownloadQualityUseCase(),
+                loadQualityValue = getLoadQualityUseCase(),
+                wallpaperQualityValue = getImageDetailQualityUseCase()
             )
             Log.e("Setting", state.toString())
         }
