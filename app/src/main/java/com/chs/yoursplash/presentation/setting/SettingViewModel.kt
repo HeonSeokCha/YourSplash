@@ -12,7 +12,11 @@ import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.domain.usecase.PutStringPrefUseCase
 import com.chs.yoursplash.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,7 +38,6 @@ class SettingViewModel @Inject constructor(
                 loadQualityValue = getLoadQualityUseCase(),
                 wallpaperQualityValue = getImageDetailQualityUseCase()
             )
-            Log.e("Setting", state.toString())
         }
     }
 

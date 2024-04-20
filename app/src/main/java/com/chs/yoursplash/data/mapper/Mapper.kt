@@ -1,5 +1,6 @@
 package com.chs.yoursplash.data.mapper
 
+import com.chs.yoursplash.data.db.entity.PhotoSaveEntity
 import com.chs.yoursplash.data.model.*
 import com.chs.yoursplash.domain.model.*
 
@@ -149,5 +150,21 @@ fun ResponseCollection.toPhotoCollection(): UnSplashCollection {
         previewPhotos = previewPhotos?.map {
             it.toRelatedCollectionPreview()
         }
+    )
+}
+
+fun PhotoSaveInfo.toPhotoSaveEntity(): PhotoSaveEntity {
+    return PhotoSaveEntity(
+        photoId = this.id,
+        blurHash = this.blurHash,
+        photoUrl = this.url,
+    )
+}
+
+fun PhotoSaveEntity.toPhotoSaveInfo(): PhotoSaveInfo {
+    return PhotoSaveInfo(
+        id = this.photoId,
+        blurHash = this.blurHash,
+        url = this.photoUrl
     )
 }

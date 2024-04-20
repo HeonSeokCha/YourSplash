@@ -6,6 +6,8 @@ import androidx.paging.PagingData
 import com.chs.yoursplash.data.api.UnSplashService
 import com.chs.yoursplash.data.db.dao.PhotoSaveInfoDao
 import com.chs.yoursplash.data.mapper.toPhotoCollection
+import com.chs.yoursplash.data.mapper.toPhotoSaveEntity
+import com.chs.yoursplash.data.mapper.toPhotoSaveInfo
 import com.chs.yoursplash.data.mapper.toUnSplashImage
 import com.chs.yoursplash.data.mapper.toUnSplashImageDetail
 import com.chs.yoursplash.data.model.ResponseCollection
@@ -14,6 +16,7 @@ import com.chs.yoursplash.data.model.ResponseRelatedPhoto
 import com.chs.yoursplash.data.paging.CollectionPhotoDataSource
 import com.chs.yoursplash.data.paging.HomePhotosDataSource
 import com.chs.yoursplash.domain.model.Photo
+import com.chs.yoursplash.domain.model.PhotoSaveInfo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.repository.PhotoRepository
 import com.chs.yoursplash.util.Constants
@@ -67,12 +70,21 @@ class PhotoRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getPhotoSaveInfo() {
+    override suspend fun getPhotoSaveInfo(): List<PhotoSaveInfo> {
+        return photoSaveInfoDao.getSavePhotoList().map {
+            it.toPhotoSaveInfo()
+        }
     }
 
-    override suspend fun insertPhotoSaveInfo() {
+    override suspend fun insertPhotoSaveInfo(photoSaveInfo: PhotoSaveInfo) {
+        photoSaveInfoDao.insertEntity(
+            photoSaveInfo.toPhotoSaveEntity()
+        )
     }
 
-    override suspend fun deletePhotoSaveInfo() {
+    override suspend fun deletePhotoSaveInfo(photoSaveInfo: PhotoSaveInfo) {
+        photoSaveInfoDao.deleteEntity(
+            photoSaveInfo.toPhotoSaveEntity()
+        )
     }
 }

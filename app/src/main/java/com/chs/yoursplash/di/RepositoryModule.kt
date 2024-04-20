@@ -3,6 +3,7 @@ package com.chs.yoursplash.di
 import com.chs.yoursplash.data.repository.PhotoRepositoryImpl
 import com.chs.yoursplash.data.repository.SearchRepositoryImpl
 import com.chs.yoursplash.data.repository.SettingRepositoryImpl
+import com.chs.yoursplash.data.repository.UserRepositoryImpl
 import com.chs.yoursplash.domain.repository.PhotoRepository
 import com.chs.yoursplash.domain.repository.SearchRepository
 import com.chs.yoursplash.domain.repository.SettingRepository
@@ -12,8 +13,8 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
-@Module
 @InstallIn(SingletonComponent::class)
+@Module
 abstract class RepositoryModule {
 
     @Binds
@@ -27,8 +28,8 @@ abstract class RepositoryModule {
     ): SearchRepository
 
     @Binds
-    abstract fun bindPhotoRepository(
-        userRepositoryImpl: SearchRepositoryImpl
+    abstract fun bindUserRepository(
+        userRepositoryImpl: UserRepositoryImpl
     ): UserRepository
 
     @Binds

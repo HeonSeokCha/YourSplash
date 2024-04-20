@@ -18,23 +18,22 @@ class SettingRepositoryImpl @Inject constructor(
 ) : SettingRepository {
 
 
-    override suspend fun <T> putData(
-        key: Preferences.Key<T>,
-        value: T
+    override suspend fun putString(
+        keyName: String,
+        value: String
     ) {
         dataStore.edit { preference ->
-            preference[key] = value
+            preference[stringPreferencesKey(keyName)] = value
         }
     }
 
-    override suspend fun <T> getData(
-        key: Preferences.Key<T>,
-        defaultValue: T
-    ): T = dataStore.data
+    override suspend fun getString(
+        keyName: String,
+        defaultValue: String
+    ): String = dataStore.data
         .catch { e ->
-            Log.e("SettingRepositoryImpl", "Catch SettingRepositoryImpl Exception ${e.message}")
             emit(emptyPreferences())
         }.map { preferences ->
-            preferences[key] ?: defaultValue
+            preferences[stringPreferencesKey(keyName)] ?: defaultValue
         }.first()
 }

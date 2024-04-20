@@ -1,31 +1,24 @@
 package com.chs.yoursplash.presentation.browse.photo_detail
 
-import android.os.Environment
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.chs.yoursplash.data.db.entity.PhotoSaveEntity
 import com.chs.yoursplash.domain.usecase.*
-import com.chs.yoursplash.util.Constants
-import com.chs.yoursplash.util.DownLoadState
-import com.chs.yoursplash.util.PhotoSaveState
 import com.chs.yoursplash.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class PhotoDetailViewModel @Inject constructor(
     private val getPhotoDetailUseCase: GetPhotoDetailUseCase,
     private val getPhotoRelatedListUseCase: GetPhotoRelatedListUseCase,
+    private val loadQualityUseCase: GetLoadQualityUseCase,
+    private val imageDetailQualityUseCase: GetImageDetailQualityUseCase,
     private val getPhotoSaveInfoUseCase: GetPhotoSaveInfoUseCase,
-    private val insertPhotoSaveInfoUseCase: InsertPhotoSaveInfoUseCase,
-    private val deletePhotoSaveInfoUseCase: DeletePhotoSaveInfoUseCase,
-    private val getStringPrefUseCase: GetStringPrefUseCase
+    private val insertPhotoSaveInfoUseCase: InsertPhotoSaveInfoUseCase
 ) : ViewModel() {
 
     var state by mutableStateOf(PhotoDetailState())
@@ -40,27 +33,9 @@ class PhotoDetailViewModel @Inject constructor(
     private fun getImageLoadQuality() {
         viewModelScope.launch {
             state = state.copy(
-                wallpaperQuality = getStringPrefUseCase(Constants.PREFERENCE_KEY_WALLPAPER_QUALITY).first(),
-                loadQuality = getStringPrefUseCase(Constants.PREFERENCE_KEY_LOAD_QUALITY).first().ifEmpty { "Full" }
+                wallpaperQuality = imageDetailQualityUseCase(),
+                loadQuality = loadQualityUseCase()
             )
-        }
-    }
-
-    fun setPhotoDownloadState(photoState: DownLoadState) {
-        when (photoState) {
-            DownLoadState.DOWNLOAD_FAILED -> {
-                state = state.copy(
-                    imageSaveState = PhotoSaveState.NOT_DOWNLOAD
-                )
-            }
-            DownLoadState.DOWNLOAD_SUCCESS -> {
-                insertSaveFile(downLoadFileName)
-            }
-            DownLoadState.DOWNLOADING -> {
-                state = state.copy(
-                    imageSaveState = PhotoSaveState.DOWNLOADING
-                )
-            }
         }
     }
 
@@ -77,7 +52,6 @@ class PhotoDetailViewModel @Inject constructor(
                             isLoading = false,
                             imageDetailInfo = result.data
                         )
-                        checkSaveImage(downLoadFileName)
                     }
                     is Resource.Error -> {
                         state = state.copy(
@@ -112,44 +86,5 @@ class PhotoDetailViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    private suspend fun checkSaveImage(fileName: String) {
-        val downloadDir: File = File(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-            "YourSplash"
-        )
-
-        if (downloadDir.isDirectory) {
-            var isRealFileSave: Boolean = false
-            val isDbInsertFileInfo: Boolean = getPhotoSaveInfoUseCase(fileName) != null
-
-            downloadDir.listFiles()?.forEach { file ->
-                if (file.name == fileName) {
-                    isRealFileSave = true
-                }
-            }
-            if (isRealFileSave) { // 실제 파일이 있는데
-                if (!isDbInsertFileInfo) {  //DB에 없을 경우
-                    insertPhotoSaveInfoUseCase.invoke(
-                        PhotoSaveEntity(fileName = fileName)
-                    )
-                }
-                state = state.copy(imageSaveState = PhotoSaveState.DOWNLOADED)
-            } else { //실제 파일이 없는데
-                if (isDbInsertFileInfo) {  //DB에 있을 경우
-                    deletePhotoSaveInfoUseCase(fileName)
-                }
-            }
-        }
-    }
-
-    private fun insertSaveFile(fileName: String) { // broadcast를 통해 Success일 경우 호출
-        viewModelScope.launch {
-            insertPhotoSaveInfoUseCase.invoke(
-                PhotoSaveEntity(fileName = fileName)
-            )
-        }
-        state = state.copy(imageSaveState = PhotoSaveState.DOWNLOADED)
     }
 }
