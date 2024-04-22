@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -41,42 +42,41 @@ import com.chs.yoursplash.domain.model.PhotoDetail
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.util.*
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ImageDetailScreen(
     photoId: String,
     navController: NavHostController,
     viewModel: PhotoDetailViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    var downLoadQueueId: Long by remember { mutableStateOf(0L) }
+    var downLoadQueueId: Long by remember { mutableLongStateOf(0L) }
 
     LaunchedEffect(context, viewModel) {
         viewModel.getImageDetailInfo(photoId)
         viewModel.getImageRelatedList(photoId)
     }
 
-    if (downLoadQueueId != 0L) {
-        DownloadBroadCastReceiver(downLoadQueueId) {
-            when (it) {
-                DownLoadState.DOWNLOAD_FAILED -> {
-                    Toast.makeText(context, "Photo Download UnSuccessful...", Toast.LENGTH_SHORT)
-                        .show()
-                    viewModel.setPhotoDownloadState(DownLoadState.DOWNLOAD_FAILED)
-                }
-                DownLoadState.DOWNLOAD_SUCCESS -> {
-                    Toast.makeText(context, "Photo Download Successful...", Toast.LENGTH_SHORT)
-                        .show()
-                    viewModel.setPhotoDownloadState(DownLoadState.DOWNLOAD_SUCCESS)
-                }
-                DownLoadState.DOWNLOADING -> {
-                    Toast.makeText(context, "Photo Download Starting...", Toast.LENGTH_SHORT).show()
-                    viewModel.setPhotoDownloadState(DownLoadState.DOWNLOADING)
-                }
-            }
-        }
-    }
+//    if (downLoadQueueId != 0L) {
+//        DownloadBroadCastReceiver(downLoadQueueId) {
+//            when (it) {
+//                DownLoadState.DOWNLOAD_FAILED -> {
+//                    Toast.makeText(context, "Photo Download UnSuccessful...", Toast.LENGTH_SHORT)
+//                        .show()
+//                    viewModel.setPhotoDownloadState(DownLoadState.DOWNLOAD_FAILED)
+//                }
+//                DownLoadState.DOWNLOAD_SUCCESS -> {
+//                    Toast.makeText(context, "Photo Download Successful...", Toast.LENGTH_SHORT)
+//                        .show()
+//                    viewModel.setPhotoDownloadState(DownLoadState.DOWNLOAD_SUCCESS)
+//                }
+//                DownLoadState.DOWNLOADING -> {
+//                    Toast.makeText(context, "Photo Download Starting...", Toast.LENGTH_SHORT).show()
+//                    viewModel.setPhotoDownloadState(DownLoadState.DOWNLOADING)
+//                }
+//            }
+//        }
+//    }
 
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(2),

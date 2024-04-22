@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -40,12 +41,12 @@ fun SearchResultScreen(
     viewModel: SearchResultViewModel = hiltViewModel()
 ) {
 
-    val state = viewModel.state
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val scrollState = rememberLazyListState()
 
     LaunchedEffect(context, viewModel) {
-        viewModel.searchPage = type
+        viewModel.initSearchType(type)
     }
 
     LaunchedEffect(query) {
@@ -90,7 +91,7 @@ fun SearchResultScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
         ) {
-            when (viewModel.searchPage) {
+            when (state.searchType) {
                 Constants.SEARCH_PHOTO -> {
                     pagingList?.let {
                         val photoList = it as LazyPagingItems<Photo>

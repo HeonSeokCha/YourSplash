@@ -25,8 +25,8 @@ class UserCollectionsDataSource(
         return try {
             val page = params.key ?: 1
             val response = api.requestUnsplash<List<ResponseCollection>>(
-                Constants.GET_USER_COLLECTIONS(userName),
-                hashMapOf(
+                url = Constants.GET_USER_COLLECTIONS(userName),
+                params = hashMapOf(
                     "page" to page.toString()
                 )
             ).map { it.toPhotoCollection() }

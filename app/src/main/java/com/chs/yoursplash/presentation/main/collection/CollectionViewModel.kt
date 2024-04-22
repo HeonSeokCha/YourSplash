@@ -7,20 +7,25 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.chs.yoursplash.domain.usecase.GetHomeCollectionsUseCase
+import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CollectionViewModel @Inject constructor(
     private val getHomeCollectionsUseCase: GetHomeCollectionsUseCase,
-    private val getStringPrefUseCase: GetStringPrefUseCase
+    private val loadQualityUseCase: GetLoadQualityUseCase
 ) : ViewModel() {
 
-    var state by mutableStateOf(CollectionState())
-        private set
+    private var _state: MutableStateFlow<CollectionState> = MutableStateFlow(CollectionState())
+    val state: StateFlow<CollectionState> = _state.asStateFlow()
 
     init {
         getHomeCollections()
@@ -28,16 +33,20 @@ class CollectionViewModel @Inject constructor(
     }
 
     private fun getHomeCollections() {
-        state = state.copy(
-            collectionList = getHomeCollectionsUseCase().cachedIn(viewModelScope)
-        )
+        _state.update {
+            it.copy(
+                collectionList = getHomeCollectionsUseCase().cachedIn(viewModelScope)
+            )
+        }
     }
 
     private fun getImageLoadQuality() {
         viewModelScope.launch {
-            state = state.copy(
-                loadQuality = getStringPrefUseCase(Constants.PREFERENCE_KEY_LOAD_QUALITY).first()
-            )
+            _state.update {
+                it.copy(
+                    loadQuality = loadQualityUseCase()
+                )
+            }
         }
     }
 }

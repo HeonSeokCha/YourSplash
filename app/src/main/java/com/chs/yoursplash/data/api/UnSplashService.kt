@@ -1,6 +1,5 @@
 package com.chs.yoursplash.data.api
 
-import com.chs.yoursplash.util.Constants
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*

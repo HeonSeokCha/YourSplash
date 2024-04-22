@@ -23,8 +23,8 @@ class UserLikesDataSource(
         return try {
             val page = params.key ?: 1
             val response = api.requestUnsplash<List<ResponsePhoto>>(
-                Constants.GET_USER_LIKES(userName),
-                hashMapOf(
+                url = Constants.GET_USER_LIKES(userName),
+                params = hashMapOf(
                     "page" to page.toString()
                 )
             ).map { it.toUnSplashImage() }

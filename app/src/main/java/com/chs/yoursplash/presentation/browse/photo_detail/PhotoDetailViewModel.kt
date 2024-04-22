@@ -1,5 +1,6 @@
 package com.chs.yoursplash.presentation.browse.photo_detail
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,6 +9,10 @@ import androidx.lifecycle.viewModelScope
 import com.chs.yoursplash.domain.usecase.*
 import com.chs.yoursplash.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,10 +26,9 @@ class PhotoDetailViewModel @Inject constructor(
     private val insertPhotoSaveInfoUseCase: InsertPhotoSaveInfoUseCase
 ) : ViewModel() {
 
-    var state by mutableStateOf(PhotoDetailState())
-    private set
+    private var _state: MutableStateFlow<PhotoDetailState> = MutableStateFlow(PhotoDetailState())
+    val state: StateFlow<PhotoDetailState> = _state.asStateFlow()
 
-    private lateinit var downLoadFileName: String
 
     init {
         getImageLoadQuality()
@@ -32,32 +36,38 @@ class PhotoDetailViewModel @Inject constructor(
 
     private fun getImageLoadQuality() {
         viewModelScope.launch {
-            state = state.copy(
-                wallpaperQuality = imageDetailQualityUseCase(),
-                loadQuality = loadQualityUseCase()
-            )
+            _state.update {
+                it.copy(
+                    wallpaperQuality = imageDetailQualityUseCase(),
+                    loadQuality = loadQualityUseCase()
+                )
+            }
         }
     }
 
     fun getImageDetailInfo(imageId: String) {
         viewModelScope.launch {
             getPhotoDetailUseCase(imageId).collect { result ->
-                when (result) {
-                    is Resource.Loading -> {
-                        state = state.copy(isLoading = true)
-                    }
-                    is Resource.Success -> {
-                        downLoadFileName = "${result.data?.user?.userName}-${result.data?.id}.jpg"
-                        state = state.copy(
-                            isLoading = false,
-                            imageDetailInfo = result.data
-                        )
-                    }
-                    is Resource.Error -> {
-                        state = state.copy(
-                            isLoading = false,
-                            isError = true
-                        )
+                _state.update {
+                    when (result) {
+                        is Resource.Loading -> {
+                            it.copy(isLoading = true)
+                        }
+
+                        is Resource.Success -> {
+                            it.copy(
+                                isLoading = false,
+                                imageDetailInfo = result.data,
+                                downloadFileName = "${result.data?.user?.userName}-${result.data?.id}.jpg"
+                            )
+                        }
+
+                        is Resource.Error -> {
+                            it.copy(
+                                isLoading = false,
+                                isError = true
+                            )
+                        }
                     }
                 }
             }
@@ -67,21 +77,25 @@ class PhotoDetailViewModel @Inject constructor(
     fun getImageRelatedList(imageId: String) {
         viewModelScope.launch {
             getPhotoRelatedListUseCase(imageId).collect { result ->
-                when (result) {
-                    is Resource.Loading -> {
-                        state = state.copy(isLoading = true)
-                    }
-                    is Resource.Success -> {
-                        state = state.copy(
-                            isLoading = false,
-                            imageRelatedList = result.data!!
-                        )
-                    }
-                    is Resource.Error -> {
-                        state = state.copy(
-                            isLoading = false,
-                            isError = true
-                        )
+                _state.update {
+                    when (result) {
+                        is Resource.Loading -> {
+                            it.copy(isLoading = true)
+                        }
+
+                        is Resource.Success -> {
+                            it.copy(
+                                isLoading = false,
+                                imageRelatedList = result.data!!
+                            )
+                        }
+
+                        is Resource.Error -> {
+                            it.copy(
+                                isLoading = false,
+                                isError = true
+                            )
+                        }
                     }
                 }
             }

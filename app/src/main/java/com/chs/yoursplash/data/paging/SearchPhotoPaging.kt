@@ -26,8 +26,8 @@ class SearchPhotoPaging(
         return try {
             val page = params.key ?: 1
             val response = api.requestUnsplash<ResponseSearchPhotos>(
-                Constants.GET_SEARCH_PHOTOS,
-                hashMapOf(
+                url = Constants.GET_SEARCH_PHOTOS,
+                params = hashMapOf(
                     "query" to query,
                     "page" to page.toString(),
                     "order_by" to orderBy,

@@ -23,7 +23,8 @@ class HomePhotosDataSource(
         return try {
             val page = params.key ?: 1
             val response = api.requestUnsplash<List<ResponsePhoto>>(
-                Constants.GET_PHOTOS, hashMapOf("page" to page.toString())
+                url = Constants.GET_PHOTOS,
+                params = hashMapOf("page" to page.toString())
             ).map { it.toUnSplashImage() }
 
             LoadResult.Page(

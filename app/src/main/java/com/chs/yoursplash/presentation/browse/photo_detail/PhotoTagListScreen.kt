@@ -6,10 +6,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.chs.yoursplash.presentation.Screens
@@ -21,9 +23,9 @@ fun PhotoTagListScreen(
     navController: NavHostController,
     viewModel: PhotoTagListViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    val resultPagingItems = viewModel.state.tagSearchResultList?.collectAsLazyPagingItems()
+    val resultPagingItems = state.tagSearchResultList?.collectAsLazyPagingItems()
 
     LaunchedEffect(context, viewModel) {
         viewModel.getTagSearchResult(tag)

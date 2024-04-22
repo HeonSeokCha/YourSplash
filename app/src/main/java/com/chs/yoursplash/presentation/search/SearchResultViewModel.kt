@@ -1,8 +1,5 @@
 package com.chs.yoursplash.presentation.search
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -12,7 +9,10 @@ import com.chs.yoursplash.domain.usecase.GetSearchResultPhotoUseCase
 import com.chs.yoursplash.domain.usecase.GetSearchResultUserUseCase
 import com.chs.yoursplash.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,48 +24,61 @@ class SearchResultViewModel @Inject constructor(
     private val getLoadQualityUseCase: GetLoadQualityUseCase
 ) : ViewModel() {
 
-    var state by mutableStateOf(SearchState())
+    private var _state: MutableStateFlow<SearchState> = MutableStateFlow(SearchState())
+    val state: StateFlow<SearchState> = _state.asStateFlow()
 
     init {
         getImageLoadQuality()
     }
 
-    private fun getImageLoadQuality() {
-        viewModelScope.launch {
-            state = state.copy(
-                loadQuality = getLoadQualityUseCase()
+    fun initSearchType(searchType: String) {
+        _state.update {
+            it.copy(
+                searchType = searchType
             )
         }
     }
 
-    fun searchResult(
-        searchPage: String,
-        query: String
-    ) {
-        when (searchPage) {
-            Constants.SEARCH_PHOTO -> {
-                state = state.copy(
-                    searchPhotoList = searchResultPhotoUseCase(
-                        query = query,
-                        orderBy = orderBy,
-                        color = color,
-                        orientation = orientation
-                    ).cachedIn(viewModelScope)
+    private fun getImageLoadQuality() {
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    loadQuality = getLoadQualityUseCase()
                 )
             }
-            Constants.SEARCH_COLLECTION -> {
-                state = state.copy(
-                    searchCollectionList = searchResultCollectionUseCase(
-                        query
-                    ).cachedIn(viewModelScope)
-                )
-            }
-            Constants.SEARCH_USER -> {
-                state = state.copy(
-                    searchUserList = searchResultUserUseCase(
-                        query
-                    ).cachedIn(viewModelScope)
-                )
+        }
+    }
+
+    fun searchResult(query: String) {
+        _state.update {
+            when (it.searchType) {
+                Constants.SEARCH_PHOTO -> {
+                    it.copy(
+                        searchPhotoList = searchResultPhotoUseCase(
+                            query = query,
+                            orderBy = it.orderBy,
+                            color = it.color,
+                            orientation = it.orientation
+                        ).cachedIn(viewModelScope)
+                    )
+                }
+                Constants.SEARCH_COLLECTION -> {
+                    it.copy(
+                        searchCollectionList = searchResultCollectionUseCase(
+                            query
+                        ).cachedIn(viewModelScope)
+                    )
+                }
+                Constants.SEARCH_USER -> {
+                    it.copy(
+                        searchUserList = searchResultUserUseCase(
+                            query
+                        ).cachedIn(viewModelScope)
+                    )
+                }
+                else -> {
+                    it
+                }
             }
         }
     }

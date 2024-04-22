@@ -24,8 +24,8 @@ class SearchCollectionPaging(
         return try {
             val page = params.key ?: 1
             val response = api.requestUnsplash<ResponseSearchCollections>(
-                Constants.GET_SEARCH_COLLECTIONS,
-                hashMapOf(
+                url = Constants.GET_SEARCH_COLLECTIONS,
+                params = hashMapOf(
                     "query" to query,
                     "page" to page.toString()
                 )
