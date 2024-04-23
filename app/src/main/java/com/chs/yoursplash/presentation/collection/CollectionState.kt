@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.main.collection
+package com.chs.yoursplash.presentation.collection
 
 import androidx.paging.PagingData
 import com.chs.yoursplash.domain.model.UnSplashCollection

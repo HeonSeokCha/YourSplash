@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.main.home
+package com.chs.yoursplash.presentation.home
 
 import androidx.compose.runtime.Immutable
 import androidx.paging.PagingData

@@ -9,7 +9,7 @@ import javax.inject.Inject
 class GetCollectionDetailUseCase @Inject constructor(
     private val repository: PhotoRepository
 ) {
-    suspend operator fun invoke(id: String): Flow<Resource<UnSplashCollection>> {
-        return repository.getSplashCollectionDetail(id)
+    suspend operator fun invoke(id: String): UnSplashCollection {
+        return repository.getCollectionDetailInfo(id)
     }
 }

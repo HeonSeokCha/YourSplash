@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.main.home
+package com.chs.yoursplash.presentation.home
 
 import android.content.Intent
 import android.widget.Toast
@@ -7,11 +7,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.chs.yoursplash.presentation.base.ImageCard
@@ -23,7 +25,7 @@ import com.chs.yoursplash.util.Constants
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val lazyPagingItems = state.pagingImageList?.collectAsLazyPagingItems()
 

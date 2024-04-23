@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.main.collection
+package com.chs.yoursplash.presentation.collection
 
 import android.content.Intent
 import androidx.compose.foundation.layout.*
@@ -6,11 +6,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.chs.yoursplash.presentation.base.CollectionCard
 import com.chs.yoursplash.presentation.browse.BrowseActivity
@@ -20,7 +22,7 @@ import com.chs.yoursplash.util.Constants
 fun CollectionScreen(
     viewModel: CollectionViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
     val lazyPagingItems = state.collectionList?.collectAsLazyPagingItems()
@@ -60,7 +62,6 @@ fun CollectionScreen(
                 )
             }
         }
-
     }
 
     if (state.isLoading) {

@@ -44,18 +44,12 @@ import com.chs.yoursplash.util.*
 
 @Composable
 fun ImageDetailScreen(
-    photoId: String,
     navController: NavHostController,
     viewModel: PhotoDetailViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     var downLoadQueueId: Long by remember { mutableLongStateOf(0L) }
-
-    LaunchedEffect(context, viewModel) {
-        viewModel.getImageDetailInfo(photoId)
-        viewModel.getImageRelatedList(photoId)
-    }
 
 //    if (downLoadQueueId != 0L) {
 //        DownloadBroadCastReceiver(downLoadQueueId) {

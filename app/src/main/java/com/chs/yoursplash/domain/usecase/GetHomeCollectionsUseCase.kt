@@ -10,6 +10,6 @@ class GetHomeCollectionsUseCase @Inject constructor(
     private val repository: PhotoRepository
 ) {
     operator fun invoke(): Flow<PagingData<UnSplashCollection>> {
-        return repository.getSplashCollection()
+        return repository.getPagingCollection()
     }
 }

@@ -14,8 +14,10 @@ import com.chs.yoursplash.data.model.ResponseCollection
 import com.chs.yoursplash.data.model.ResponsePhotoDetail
 import com.chs.yoursplash.data.model.ResponseRelatedPhoto
 import com.chs.yoursplash.data.paging.CollectionPhotoDataSource
+import com.chs.yoursplash.data.paging.HomeCollectionDataSource
 import com.chs.yoursplash.data.paging.HomePhotosDataSource
 import com.chs.yoursplash.domain.model.Photo
+import com.chs.yoursplash.domain.model.PhotoDetail
 import com.chs.yoursplash.domain.model.PhotoSaveInfo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.repository.PhotoRepository
@@ -36,20 +38,28 @@ class PhotoRepositoryImpl @Inject constructor(
         }.flow
     }
 
-    override suspend fun getPhotoDetailInfo(id: String) {
-        client.requestUnsplash<ResponsePhotoDetail>(
+    override fun getPagingCollection(): Flow<PagingData<UnSplashCollection>> {
+        return Pager(
+            PagingConfig(pageSize = 10)
+        ) {
+            HomeCollectionDataSource(client)
+        }.flow
+    }
+
+    override suspend fun getPhotoDetailInfo(id: String): PhotoDetail {
+        return client.requestUnsplash<ResponsePhotoDetail>(
             Constants.GET_PHOTO_DETAIL(id)
         ).toUnSplashImageDetail()
     }
 
-    override suspend fun getRelatedPhotoList(id: String) {
-        client.requestUnsplash<ResponseRelatedPhoto>(
+    override suspend fun getRelatedPhotoList(id: String): List<Photo> {
+        return client.requestUnsplash<ResponseRelatedPhoto>(
             Constants.GET_PHOTO_RELATED(id)
         ).results.map { it.toUnSplashImage() }
     }
 
-    override suspend fun getCollectionDetailInfo(id: String) {
-        client.requestUnsplash<ResponseCollection>(
+    override suspend fun getCollectionDetailInfo(id: String): UnSplashCollection {
+        return client.requestUnsplash<ResponseCollection>(
             Constants.GET_COLLECTION_DETAILED(id)
         ).toPhotoCollection()
     }
@@ -62,8 +72,8 @@ class PhotoRepositoryImpl @Inject constructor(
         }.flow
     }
 
-    override suspend fun getRelatedCollectionList(id: String) {
-        client.requestUnsplash<List<ResponseCollection>>(
+    override suspend fun getRelatedCollectionList(id: String): List<UnSplashCollection> {
+        return client.requestUnsplash<List<ResponseCollection>>(
             Constants.GET_COLLECTION_RELATED(id)
         ).map {
             it.toPhotoCollection()

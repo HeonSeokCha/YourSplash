@@ -2,6 +2,7 @@ package com.chs.yoursplash.domain.repository
 
 import androidx.paging.PagingData
 import com.chs.yoursplash.domain.model.Photo
+import com.chs.yoursplash.domain.model.PhotoDetail
 import com.chs.yoursplash.domain.model.PhotoSaveInfo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.util.Resource
@@ -11,15 +12,17 @@ interface PhotoRepository {
 
     fun getPagingPhoto(): Flow<PagingData<Photo>>
 
-    suspend fun getPhotoDetailInfo(id: String)
+    fun getPagingCollection(): Flow<PagingData<UnSplashCollection>>
 
-    suspend fun getRelatedPhotoList(id: String)
+    suspend fun getPhotoDetailInfo(id: String): PhotoDetail
 
-    suspend fun getCollectionDetailInfo(id: String)
+    suspend fun getRelatedPhotoList(id: String): List<Photo>
+
+    suspend fun getCollectionDetailInfo(id: String): UnSplashCollection
 
     fun getPagingCollectionPhotos(id: String): Flow<PagingData<Photo>>
 
-    suspend fun getRelatedCollectionList(id: String)
+    suspend fun getRelatedCollectionList(id: String): List<UnSplashCollection>
 
     suspend fun getPhotoSaveInfo(): List<PhotoSaveInfo>
 

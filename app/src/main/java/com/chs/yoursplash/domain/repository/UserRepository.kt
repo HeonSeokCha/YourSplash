@@ -4,12 +4,11 @@ import androidx.paging.PagingData
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.UserDetail
-import com.chs.yoursplash.util.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
 
-    suspend fun getUserDetail(userName: String)
+    suspend fun getUserDetail(userName: String): UserDetail
 
     fun getUserDetailPhotos(userName: String): Flow<PagingData<Photo>>
 

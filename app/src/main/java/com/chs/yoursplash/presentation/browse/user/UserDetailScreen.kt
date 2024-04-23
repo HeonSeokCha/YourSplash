@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
@@ -33,22 +34,14 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun UserDetailScreen(
-    userName: String,
     navController: NavHostController,
     viewModel: UserDetailViewModel = hiltViewModel()
 ) {
 
-    val state = viewModel.state
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val pagerState = rememberPagerState { state.userTabLabList.size }
     val coroutineScope = rememberCoroutineScope()
-
-    LaunchedEffect(context, viewModel) {
-        viewModel.getUserDetail(userName)
-        viewModel.getUserDetailPhoto(userName)
-        viewModel.getUserDetailLikes(userName)
-        viewModel.getUserDetailCollections(userName)
-    }
 
     Column(
         modifier = Modifier

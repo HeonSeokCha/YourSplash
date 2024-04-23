@@ -9,7 +9,7 @@ import javax.inject.Inject
 class GetCollectionRelatedUseCase @Inject constructor(
     private val repository: PhotoRepository
 ) {
-    suspend operator fun invoke(id: String): Flow<Resource<List<UnSplashCollection>>> {
-        return repository.getSplashCollectionRelated(id)
+    suspend operator fun invoke(id: String): List<UnSplashCollection> {
+        return repository.getRelatedCollectionList(id)
     }
 }

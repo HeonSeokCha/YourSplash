@@ -10,6 +10,6 @@ class GetCollectionPhotoUserCase @Inject constructor(
     private val repository: PhotoRepository
 ) {
     operator fun invoke(id: String): Flow<PagingData<Photo>> {
-        return repository.getSplashCollectionPhotos(id)
+        return repository.getPagingCollectionPhotos(id)
     }
 }

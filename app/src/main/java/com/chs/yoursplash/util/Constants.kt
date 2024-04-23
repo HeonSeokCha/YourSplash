@@ -43,6 +43,11 @@ object Constants {
     const val SEARCH_COLLECTION: String = "search_collection"
     const val SEARCH_USER: String = "search_user"
 
+    const val ARG_KEY_PHOTO_ID: String = "arg_key_photo_id"
+    const val ARG_KEY_COLLECTION_ID: String = "arg_key_collection_id"
+    const val ARG_KEY_USER_NAME: String = "arg_key_user_name"
+    const val ARG_KEY_TAG_NAME: String = "arg_key_tag_name"
+
     val SORT_BY_LIST = listOf(
         Pair("RELEVANCE", "relevant"),
         Pair("LATEST", "latest")

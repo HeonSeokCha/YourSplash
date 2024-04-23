@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.chs.yoursplash.presentation.ui.theme.Purple500
 import com.chs.yoursplash.util.Constants
 
@@ -18,6 +19,7 @@ import com.chs.yoursplash.util.Constants
 fun SettingScreen(
     viewModel: SettingViewModel = hiltViewModel()
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
     var openDialog by remember { mutableStateOf(false) }
     var selectButtonInfo by remember { mutableStateOf("" to "") }
     var selectButtonTitle by remember { mutableStateOf("") }
@@ -39,7 +41,7 @@ fun SettingScreen(
         Spacer(modifier = Modifier.height(16.dp))
         SettingItem(
             title = "Load Quality",
-            subTitle = viewModel.state.loadQualityValue,
+            subTitle = state.loadQualityValue,
         ) { title, sub ->
             selectButtonTitle = title
             selectButtonInfo = Constants.PREFERENCE_KEY_LOAD_QUALITY to sub
@@ -48,7 +50,7 @@ fun SettingScreen(
 
         SettingItem(
             title = "Download Quality",
-            subTitle = viewModel.state.downLoadQualityValue,
+            subTitle = state.downLoadQualityValue,
         ) { title, sub ->
             selectButtonTitle = title
             selectButtonInfo = Constants.PREFERENCE_KEY_DOWNLOAD_QUALITY to sub
@@ -57,7 +59,7 @@ fun SettingScreen(
 
         SettingItem(
             title = "Wallpaper Quality",
-            subTitle = viewModel.state.wallpaperQualityValue,
+            subTitle = state.wallpaperQualityValue,
         ) { title, sub ->
             selectButtonTitle = title
             selectButtonInfo = Constants.PREFERENCE_KEY_WALLPAPER_QUALITY to sub

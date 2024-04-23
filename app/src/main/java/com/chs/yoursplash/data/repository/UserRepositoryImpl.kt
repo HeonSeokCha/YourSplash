@@ -21,8 +21,8 @@ class UserRepositoryImpl @Inject constructor(
     private val client: UnSplashService
 ) : UserRepository {
 
-    override suspend fun getUserDetail(userName: String) {
-        client.requestUnsplash<ResponseUserDetail>(
+    override suspend fun getUserDetail(userName: String): UserDetail {
+        return client.requestUnsplash<ResponseUserDetail>(
             Constants.GET_USER_DETAILED(userName)
         ).toUserDetail()
     }
