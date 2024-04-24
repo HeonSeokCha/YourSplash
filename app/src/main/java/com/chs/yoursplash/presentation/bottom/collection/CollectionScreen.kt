@@ -1,7 +1,6 @@
-package com.chs.yoursplash.presentation.home
+package com.chs.yoursplash.presentation.bottom.collection
 
 import android.content.Intent
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
@@ -14,20 +13,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.chs.yoursplash.presentation.base.ImageCard
+import com.chs.yoursplash.presentation.base.CollectionCard
 import com.chs.yoursplash.presentation.browse.BrowseActivity
 import com.chs.yoursplash.util.Constants
 
-
 @Composable
-fun HomeScreen(
-    viewModel: HomeViewModel = hiltViewModel()
+fun CollectionScreen(
+    state: CollectionState,
+    onEvent: () -> Unit
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    val lazyPagingItems = state.pagingImageList?.collectAsLazyPagingItems()
+
+    val lazyPagingItems = state.collectionList?.collectAsLazyPagingItems()
 
     LazyColumn(
         modifier = Modifier
@@ -36,14 +34,15 @@ fun HomeScreen(
         contentPadding = PaddingValues(vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(32.dp),
     ) {
+
         if (lazyPagingItems != null && lazyPagingItems.itemCount != 0) {
             items(
                 count = lazyPagingItems.itemCount,
                 key = { lazyPagingItems[it]!!.id }
-            ) {idx ->
-                val photo = lazyPagingItems[idx]
-                ImageCard(
-                    photoInfo = photo,
+            ) { idx ->
+                val collectionInfo = lazyPagingItems[idx]
+                CollectionCard(
+                    collectionInfo = collectionInfo,
                     loadQuality = state.loadQuality,
                     userClickAble = { userName ->
                         context.startActivity(
@@ -52,11 +51,11 @@ fun HomeScreen(
                                 putExtra(Constants.TARGET_ID, userName)
                             }
                         )
-                    }, photoClickAble = { photoId ->
+                    }, collectionClickAble = { collectionId ->
                         context.startActivity(
                             Intent(context, BrowseActivity::class.java).apply {
-                                putExtra(Constants.TARGET_TYPE, Constants.TARGET_PHOTO)
-                                putExtra(Constants.TARGET_ID, photoId)
+                                putExtra(Constants.TARGET_TYPE, Constants.TARGET_COLLECTION)
+                                putExtra(Constants.TARGET_ID, collectionId)
                             }
                         )
                     }
@@ -65,19 +64,13 @@ fun HomeScreen(
         }
     }
 
-    when (lazyPagingItems?.loadState?.source?.refresh) {
-        is LoadState.Loading -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-            }
+    if (state.isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
         }
-        is LoadState.Error -> {
-            Toast.makeText(context, "An error occurred while loading...", Toast.LENGTH_SHORT).show()
-        }
-        else -> {}
     }
 }

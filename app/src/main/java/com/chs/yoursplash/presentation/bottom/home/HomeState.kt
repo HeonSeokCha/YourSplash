@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.home
+package com.chs.yoursplash.presentation.bottom.home
 
 import androidx.compose.runtime.Immutable
 import androidx.paging.PagingData
@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 data class HomeState(
     val pagingImageList: Flow<PagingData<Photo>>? = null,
     val loadQuality: String = "regular",
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val isError: Boolean = false,
     val errorMessage: String? = null
 )

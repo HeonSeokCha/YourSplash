@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.chs.yoursplash.domain.model.Photo
-import com.chs.yoursplash.util.BlurHashDecoder
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.color
 
@@ -44,7 +43,9 @@ fun ImageCard(
                     start = 4.dp,
                     bottom = 8.dp
                 ).clickable {
-                    userClickAble(photoInfo?.user?.userName ?: "")
+                    if (photoInfo?.user?.userName != null) {
+                        userClickAble(photoInfo.user.userName)
+                    }
                 },
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -75,7 +76,9 @@ fun ImageCard(
                 .wrapContentHeight()
                 .clip(RoundedCornerShape(10.dp))
                 .clickable {
-                   photoClickAble(photoInfo?.id ?: "")
+                    if (photoInfo?.id != null) {
+                        photoClickAble(photoInfo.id)
+                    }
                 },
             model = ImageRequest.Builder(LocalContext.current)
                 .data(Constants.getPhotoQualityUrl(photoInfo?.urls, loadQuality))
