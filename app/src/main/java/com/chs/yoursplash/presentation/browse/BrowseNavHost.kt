@@ -1,5 +1,6 @@
 package com.chs.yoursplash.presentation.browse
 
+import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -16,10 +17,25 @@ import com.chs.yoursplash.util.Constants
 
 @Composable
 fun BrowseNavHost(
-    startDestination: String,
     modifier: Modifier,
-    navController: NavHostController
+    navController: NavHostController,
+    intent: Intent?
 ) {
+    val startDestination =
+        when (intent?.getStringExtra(Constants.TARGET_TYPE)) {
+            Constants.TARGET_PHOTO -> {
+                "${Screens.ImageDetailScreen.route}/${intent.getStringExtra(Constants.TARGET_ID)}"
+            }
+
+            Constants.TARGET_COLLECTION -> {
+                "${Screens.CollectionDetailScreen.route}/${intent.getStringExtra(Constants.TARGET_ID)}"
+            }
+
+            else -> {
+                "${Screens.UserDetailScreen.route}/${intent?.getStringExtra(Constants.TARGET_ID)}"
+            }
+        }
+
     NavHost(
         modifier = modifier,
         navController = navController,
@@ -30,6 +46,7 @@ fun BrowseNavHost(
             arguments = listOf(
                 navArgument(Constants.ARG_KEY_PHOTO_ID) {
                     type = NavType.StringType
+                    defaultValue = intent?.getStringExtra(Constants.TARGET_ID)!!
                     nullable = false
                 }
             )
@@ -44,6 +61,7 @@ fun BrowseNavHost(
             arguments = listOf(
                 navArgument(Constants.ARG_KEY_COLLECTION_ID) {
                     type = NavType.StringType
+                    defaultValue = intent?.getStringExtra(Constants.TARGET_ID)!!
                     nullable = false
                 }
             )
@@ -58,6 +76,7 @@ fun BrowseNavHost(
             arguments = listOf(
                 navArgument(Constants.ARG_KEY_USER_NAME) {
                     type = NavType.StringType
+                    defaultValue = intent?.getStringExtra(Constants.TARGET_ID)!!
                     nullable = false
                 }
             )
@@ -72,6 +91,7 @@ fun BrowseNavHost(
             arguments = listOf(
                 navArgument(Constants.ARG_KEY_TAG_NAME) {
                     type = NavType.StringType
+                    defaultValue = intent?.getStringExtra(Constants.TARGET_ID)!!
                     nullable = false
                 }
             )

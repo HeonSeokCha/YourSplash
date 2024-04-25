@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import com.chs.yoursplash.presentation.bottom.collection.CollectionScreen
 import com.chs.yoursplash.presentation.bottom.collection.CollectionViewModel
 import com.chs.yoursplash.presentation.bottom.home.HomeScreen
+import com.chs.yoursplash.presentation.bottom.home.HomeViewModel
 import com.chs.yoursplash.presentation.search.SearchScreen
 import com.chs.yoursplash.presentation.setting.SettingScreen
 
@@ -29,10 +30,8 @@ fun MainNavHost(
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(BottomNavScreen.HomeScreen.route)
             }
-            val viewModel: MainViewModel = hiltViewModel(parentEntry)
-            HomeScreen(viewModel.state) {
-
-            }
+            val viewModel: HomeViewModel = hiltViewModel(parentEntry)
+            HomeScreen(viewModel.state)
         }
 
         composable(BottomNavScreen.CollectionScreen.route) {
