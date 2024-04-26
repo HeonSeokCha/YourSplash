@@ -44,10 +44,9 @@ import com.chs.yoursplash.util.*
 
 @Composable
 fun ImageDetailScreen(
+    state: PhotoDetailState,
     navController: NavHostController,
-    viewModel: PhotoDetailViewModel = hiltViewModel()
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     var downLoadQueueId: Long by remember { mutableLongStateOf(0L) }
 

@@ -1,5 +1,8 @@
 package com.chs.yoursplash.presentation.browse.user
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -28,10 +31,12 @@ class UserDetailViewModel @Inject constructor(
 
     private val userName: String = savedStateHandle[Constants.ARG_KEY_USER_NAME] ?: ""
 
-    val state: StateFlow<UserDetailState> = flow {
-        emit(UserDetailState(isLoading = true))
-        emit(
-            UserDetailState(
+    var state by mutableStateOf(UserDetailState())
+        private set
+
+    init {
+        viewModelScope.launch {
+            state = UserDetailState(
                 isLoading = false,
                 loadQuality = getLoadQualityUseCase(),
                 userDetailInfo = getUserDetailUseCase(userName),
@@ -39,10 +44,6 @@ class UserDetailViewModel @Inject constructor(
                 userDetailCollection = getUserCollectionUseCase(userName),
                 userDetailLikeList = getUserLikesUseCase(userName)
             )
-        )
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5000L),
-        UserDetailState()
-    )
+        }
+    }
 }

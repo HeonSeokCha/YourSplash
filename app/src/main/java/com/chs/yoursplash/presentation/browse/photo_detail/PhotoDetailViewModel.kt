@@ -1,5 +1,8 @@
 package com.chs.yoursplash.presentation.browse.photo_detail
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -30,21 +33,19 @@ class PhotoDetailViewModel @Inject constructor(
 
     private val imageId: String = savedStateHandle[Constants.ARG_KEY_PHOTO_ID] ?: ""
 
-    val state = flow {
-        emit(PhotoDetailState(isLoading = true))
+    var state by mutableStateOf(PhotoDetailState())
+        private set
 
-        emit(
-            PhotoDetailState(
-                isLoading = false,
-                wallpaperQuality = imageDetailQualityUseCase(),
-                loadQuality = loadQualityUseCase(),
-                imageDetailInfo = getPhotoDetailUseCase(imageId),
-                imageRelatedList = getPhotoRelatedListUseCase(imageId)
-            )
-        )
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5000L),
-        PhotoDetailState()
-    )
+    init {
+        viewModelScope.launch {
+            state = PhotoDetailState(
+                    isLoading = false,
+                    wallpaperQuality = imageDetailQualityUseCase(),
+                    loadQuality = loadQualityUseCase(),
+                    imageDetailInfo = getPhotoDetailUseCase(imageId),
+                    imageRelatedList = getPhotoRelatedListUseCase(imageId)
+                )
+
+        }
+    }
 }

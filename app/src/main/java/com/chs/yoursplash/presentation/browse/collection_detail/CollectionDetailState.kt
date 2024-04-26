@@ -9,7 +9,7 @@ data class CollectionDetailState(
     val collectionDetailInfo: UnSplashCollection? = null,
     val collectionPhotos: Flow<PagingData<Photo>>? = null,
     val loadQuality: String = "regular",
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val isError: Boolean = false,
     val errorMessage: String? = null
 )

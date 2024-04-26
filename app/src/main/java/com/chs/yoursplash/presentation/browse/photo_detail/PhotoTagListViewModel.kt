@@ -1,5 +1,8 @@
 package com.chs.yoursplash.presentation.browse.photo_detail
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -28,10 +31,12 @@ class PhotoTagListViewModel @Inject constructor(
 
     private val tagName: String = savedStateHandle[Constants.ARG_KEY_TAG_NAME] ?: ""
 
-    val state: StateFlow<PhotoTagListState> = flow {
-        emit(PhotoTagListState(isLoading = true))
-        emit(
-            PhotoTagListState(
+    var state by mutableStateOf(PhotoTagListState())
+        private set
+
+    init {
+        viewModelScope.launch {
+            state = PhotoTagListState(
                 isLoading = false,
                 loadQuality = loadQualityUseCase(),
                 tagSearchResultList = getSearchResultPhotoUseCase(
@@ -41,10 +46,6 @@ class PhotoTagListViewModel @Inject constructor(
                     orientation = null
                 ).cachedIn(viewModelScope)
             )
-        )
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5000L),
-        PhotoTagListState()
-    )
+        }
+    }
 }

@@ -19,10 +19,9 @@ import com.chs.yoursplash.presentation.base.ImageCard
 
 @Composable
 fun PhotoTagListScreen(
+    state: PhotoTagListState,
     navController: NavHostController,
-    viewModel: PhotoTagListViewModel = hiltViewModel()
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
     val resultPagingItems = state.tagSearchResultList?.collectAsLazyPagingItems()
 
     LazyColumn(

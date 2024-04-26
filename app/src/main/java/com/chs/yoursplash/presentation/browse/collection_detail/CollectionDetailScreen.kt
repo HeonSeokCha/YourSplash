@@ -25,11 +25,10 @@ import com.chs.yoursplash.presentation.base.ImageCard
 
 @Composable
 fun CollectionDetailScreen(
+    state: CollectionDetailState,
     navController: NavHostController,
-    viewModel: CollectionDetailViewModel = hiltViewModel()
 ) {
 
-    val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val lazyPagingItems = state.collectionPhotos?.collectAsLazyPagingItems()
 

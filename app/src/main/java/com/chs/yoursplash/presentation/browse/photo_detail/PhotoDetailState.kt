@@ -7,7 +7,7 @@ import com.chs.yoursplash.util.PhotoSaveState
 
 @Immutable
 data class PhotoDetailState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val imageDetailInfo: PhotoDetail? = null,
     val imageRelatedList: List<Photo> = listOf(),
     val imageSaveState: PhotoSaveState = PhotoSaveState.NOT_DOWNLOAD,

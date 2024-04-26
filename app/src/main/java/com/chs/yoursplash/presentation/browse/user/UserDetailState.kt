@@ -13,7 +13,7 @@ data class UserDetailState(
     val userDetailCollection: Flow<PagingData<UnSplashCollection>>? = null,
     val userTabLabList: MutableList<String> = mutableListOf(),
     val loadQuality: String = "regular",
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val isError: Boolean = false,
     val errorMessage: String = ""
 )

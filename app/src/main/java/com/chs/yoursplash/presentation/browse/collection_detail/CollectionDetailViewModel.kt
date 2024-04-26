@@ -1,5 +1,8 @@
 package com.chs.yoursplash.presentation.browse.collection_detail
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -30,19 +33,17 @@ class CollectionDetailViewModel @Inject constructor(
 
     private val collectionId: String = savedStateHandle[Constants.ARG_KEY_COLLECTION_ID] ?: ""
 
-    val state: StateFlow<CollectionDetailState> = flow {
-        emit(CollectionDetailState(isLoading = true))
-        emit(
-            CollectionDetailState(
+    var state by mutableStateOf(CollectionDetailState())
+        private set
+
+    init {
+        viewModelScope.launch {
+            state = CollectionDetailState(
                 isLoading = false,
                 loadQuality = getLoadQualityUseCase(),
                 collectionDetailInfo = getCollectionDetailUseCase(collectionId),
                 collectionPhotos = getCollectionPhotoUserCase(collectionId)
             )
-        )
-    }.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5000L),
-        CollectionDetailState()
-    )
+        }
+    }
 }

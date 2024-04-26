@@ -34,11 +34,10 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun UserDetailScreen(
+    state: UserDetailState,
     navController: NavHostController,
-    viewModel: UserDetailViewModel = hiltViewModel()
 ) {
 
-    val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val pagerState = rememberPagerState { state.userTabLabList.size }
     val coroutineScope = rememberCoroutineScope()
