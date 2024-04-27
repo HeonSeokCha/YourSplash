@@ -2,9 +2,10 @@ package com.chs.yoursplash.data.db.dao
 
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.Upsert
 
 interface BaseDao<T> {
-    @Insert
+    @Upsert
     suspend fun insertEntity(entity: T)
 
     @Delete

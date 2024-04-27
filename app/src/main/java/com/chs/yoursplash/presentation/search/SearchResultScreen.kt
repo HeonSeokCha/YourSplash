@@ -1,7 +1,7 @@
 package com.chs.yoursplash.presentation.search
 
-import android.annotation.SuppressLint
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
@@ -21,6 +21,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.User
@@ -38,12 +39,14 @@ fun SearchResultScreen(
     query: String,
     type: String,
     modalClick: () -> Unit = { },
-    viewModel: SearchResultViewModel = hiltViewModel()
+    viewModel: SearchResultViewModel
 ) {
 
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val scrollState = rememberLazyListState()
+    var placeItemShow by remember { mutableStateOf(false) }
+    var isEmptyShow by remember { mutableStateOf(false) }
 
     LaunchedEffect(context, viewModel) {
         viewModel.initSearchType(type)
@@ -63,25 +66,24 @@ fun SearchResultScreen(
         Constants.SEARCH_PHOTO -> {
             state.searchPhotoList?.collectAsLazyPagingItems()
         }
+
         Constants.SEARCH_COLLECTION -> {
             state.searchCollectionList?.collectAsLazyPagingItems()
         }
-        Constants.SEARCH_USER -> {
-            state.searchUserList?.collectAsLazyPagingItems()
-        }
+
         else -> {
-            state.searchPhotoList?.collectAsLazyPagingItems()
+            state.searchUserList?.collectAsLazyPagingItems()
         }
     }
 
     Scaffold(
-        floatingActionButton = {
-            if (type == Constants.SEARCH_PHOTO && query.isNotEmpty()) {
-                SearchFloatingActionButton(extend = scrollState.isScrollingUp()) {
-                    modalClick()
-                }
-            }
-        }
+//        floatingActionButton = {
+//            if (type == Constants.SEARCH_PHOTO && query.isNotEmpty()) {
+//                SearchFloatingActionButton(extend = scrollState.isScrollingUp()) {
+//                    modalClick()
+//                }
+//            }
+//        }
     ) { padding ->
         LazyColumn(
             modifier = Modifier
@@ -93,10 +95,11 @@ fun SearchResultScreen(
         ) {
             when (state.searchType) {
                 Constants.SEARCH_PHOTO -> {
-                    pagingList?.let {
-                        val photoList = it as LazyPagingItems<Photo>
+                    val photoList = pagingList as LazyPagingItems<Photo>?
+                    if (photoList != null) {
                         items(
-                            count = photoList.itemCount
+                            count = photoList.itemCount,
+                            key = photoList.itemKey(key = { it.id })
                         ) { idx ->
                             val item = photoList[idx]
                             ImageCard(
@@ -120,12 +123,15 @@ fun SearchResultScreen(
                             )
                         }
                     }
+
                 }
+
                 Constants.SEARCH_COLLECTION -> {
-                    pagingList?.let {
-                        val photoList = it as LazyPagingItems<UnSplashCollection>
+                    val photoList = pagingList as LazyPagingItems<UnSplashCollection>?
+                    if (photoList != null) {
                         items(
-                            count = photoList.itemCount
+                            count = photoList.itemCount,
+                            key = photoList.itemKey(key = { it.id })
                         ) { idx ->
                             val item = photoList[idx]
                             CollectionCard(
@@ -152,12 +158,15 @@ fun SearchResultScreen(
                             )
                         }
                     }
+
                 }
+
                 Constants.SEARCH_USER -> {
-                    pagingList?.let {
-                        val photoList = it as LazyPagingItems<User>
+                    val photoList = pagingList as LazyPagingItems<User>?
+                    if (photoList != null) {
                         items(
-                            count = photoList.itemCount
+                            count = photoList.itemCount,
+                            key = photoList.itemKey(key = { it.id })
                         ) { idx ->
                             val item = photoList[idx]
                             UserCard(
@@ -184,21 +193,28 @@ fun SearchResultScreen(
         }
 
 
-        when (pagingList?.loadState?.source?.refresh) {
-            is LoadState.Loading -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    CircularProgressIndicator()
+
+        if (pagingList != null) {
+            placeItemShow = when (pagingList.loadState.source.refresh) {
+                is LoadState.Loading -> {
+                    true
+                }
+
+                is LoadState.Error -> {
+                    Toast.makeText(
+                        context,
+                        "An error occurred while loading...",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                    false
+                }
+
+                else -> {
+                    isEmptyShow = pagingList.itemCount == 0
+                    pagingList.itemCount < 0
                 }
             }
-
-            is LoadState.Error -> {
-                Toast.makeText(context, "An error occurred while loading...", Toast.LENGTH_SHORT)
-                    .show()
-            }
-            else -> {}
         }
     }
 }

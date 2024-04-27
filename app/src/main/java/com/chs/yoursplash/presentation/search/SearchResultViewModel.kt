@@ -1,5 +1,6 @@
 package com.chs.yoursplash.presentation.search
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -28,6 +29,7 @@ class SearchResultViewModel @Inject constructor(
     val state: StateFlow<SearchState> = _state.asStateFlow()
 
     init {
+        Log.e("CHS_LOG", "init" + _state.value.searchType.toString())
         getImageLoadQuality()
     }
 

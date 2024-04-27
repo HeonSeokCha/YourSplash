@@ -11,12 +11,11 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import com.chs.yoursplash.util.Constants
-import com.chs.yoursplash.util.SearchFilter
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -26,8 +25,8 @@ fun SearchScreen(
     onBack: () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val tabList = listOf("PHOTOS", "COLLECTIONS", "USERS")
-    val pagerState = rememberPagerState { tabList.size }
+    val tabList = remember { listOf("PHOTOS", "COLLECTIONS", "USERS") }
+    val pagerState = rememberPagerState(initialPage = 0) { tabList.size }
 
     DisposableEffect(Unit) {
         onDispose {
@@ -70,10 +69,12 @@ fun SearchScreen(
             }
         }
 
-        HorizontalPager(state = pagerState) {
-            when (pagerState.currentPage) {
+        HorizontalPager(state = pagerState) { page ->
+            when (page) {
                 0 -> {
+                    val viewModel: SearchResultViewModel = hiltViewModel(key = Constants.SEARCH_PHOTO)
                     SearchResultScreen(
+                        viewModel = viewModel,
                         query = searchQuery,
                         type = Constants.SEARCH_PHOTO,
                         modalClick = {
@@ -81,14 +82,18 @@ fun SearchScreen(
                     )
                 }
                 1 -> {
+                    val viewModel: SearchResultViewModel = hiltViewModel(key = Constants.SEARCH_COLLECTION)
                     SearchResultScreen(
+                        viewModel = viewModel,
                         query = searchQuery,
                         type = Constants.SEARCH_COLLECTION,
                         modalClick = { }
                     )
                 }
                 2 -> {
+                    val viewModel: SearchResultViewModel = hiltViewModel(key = Constants.SEARCH_USER)
                     SearchResultScreen(
+                        viewModel = viewModel,
                         query = searchQuery,
                         type = Constants.SEARCH_USER,
                         modalClick = { }
