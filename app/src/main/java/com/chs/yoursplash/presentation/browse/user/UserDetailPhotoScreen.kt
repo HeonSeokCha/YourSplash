@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.chs.yoursplash.domain.model.Photo
@@ -42,8 +43,11 @@ fun UserDetailPhotoScreen(
         modifier = Modifier.fillMaxSize(),
         columns = StaggeredGridCells.Fixed(2),
     ) {
-        if (photoList != null) {
-            items(photoList.itemCount) { idx ->
+        if (photoList != null && photoList.itemCount != 0) {
+            items(
+                count = photoList.itemCount,
+                key = { photoList.itemKey { it.id } }
+            ) { idx ->
                 AsyncImage(
                     modifier = Modifier
                         .padding(

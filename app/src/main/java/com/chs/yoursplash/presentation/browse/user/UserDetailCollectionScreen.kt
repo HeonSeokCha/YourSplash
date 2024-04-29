@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.chs.yoursplash.domain.model.UnSplashCollection
@@ -44,60 +45,66 @@ fun UserDetailCollectionScreen(
         contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        items(collectionList?.itemCount ?: 0) { idx ->
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(250.dp)
-            ) {
-                AsyncImage(
+        if (collectionList != null && collectionList.itemCount != 0) {
+            items(
+                count = collectionList.itemCount,
+                key = { collectionList.itemKey { it.id } }
+            ) { idx ->
+                Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(10.dp))
-                        .drawWithContent {
-                            drawContent()
-                            drawRect(
-                                brush = Brush.verticalGradient(listOf(Color.Transparent, Color.Black)),
-                                alpha = 0.4f
-                            )
-                        }
-                        .clickable {
-                            navController.navigate(
-                            "${Screens.CollectionDetailScreen.route}/${collectionList?.get(idx)?.id}"
-                            )
-                        },
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(Constants.getPhotoQualityUrl(collectionList?.get(idx)?.previewPhotos?.get(0)?.urls, loadQuality))
-                        .crossfade(true)
-                        .build(),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = null,
-                    placeholder = Constants.getPlaceHolder(collectionList?.get(idx)?.previewPhotos?.get(0)?.blurHash)
-                )
-
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .padding(
-                            start = 16.dp,
-                            bottom = 16.dp
-                        )
+                        .fillMaxWidth()
+                        .height(250.dp)
                 ) {
-                    Text(
-                        text = collectionList?.get(idx)?.title ?: "...",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
+                    AsyncImage(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(10.dp))
+                            .drawWithContent {
+                                drawContent()
+                                drawRect(
+                                    brush = Brush.verticalGradient(listOf(Color.Transparent, Color.Black)),
+                                    alpha = 0.4f
+                                )
+                            }
+                            .clickable {
+                                navController.navigate(
+                                    "${Screens.CollectionDetailScreen.route}/${collectionList?.get(idx)?.id}"
+                                )
+                            },
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(Constants.getPhotoQualityUrl(collectionList?.get(idx)?.previewPhotos?.get(0)?.urls, loadQuality))
+                            .crossfade(true)
+                            .build(),
+                        contentScale = ContentScale.Crop,
+                        contentDescription = null,
+                        placeholder = Constants.getPlaceHolder(collectionList?.get(idx)?.previewPhotos?.get(0)?.blurHash)
                     )
-                    Text(
-                        text = "${collectionList?.get(idx)?.totalPhotos ?: 0} Photos",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.White
-                    )
+
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(
+                                start = 16.dp,
+                                bottom = 16.dp
+                            )
+                    ) {
+                        Text(
+                            text = collectionList?.get(idx)?.title ?: "...",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                        Text(
+                            text = "${collectionList?.get(idx)?.totalPhotos ?: 0} Photos",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.White
+                        )
+                    }
                 }
             }
         }
+
     }
 
     when (collectionList?.loadState?.source?.refresh) {

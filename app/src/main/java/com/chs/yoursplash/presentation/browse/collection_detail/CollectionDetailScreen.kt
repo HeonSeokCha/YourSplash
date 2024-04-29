@@ -20,6 +20,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.base.ImageCard
 
@@ -50,20 +51,25 @@ fun CollectionDetailScreen(
             )
         }
 
-        items(lazyPagingItems?.itemCount ?: 0) { idx ->
-            ImageCard(
-                photoInfo = lazyPagingItems?.get(idx),
-                loadQuality = state.loadQuality,
-                userClickAble = { userName ->
-                    navController.navigate(
-                        "${Screens.UserDetailScreen.route}/$userName"
-                    )
-                }, photoClickAble = { photoId ->
-                    navController.navigate(
-                        "${Screens.ImageDetailScreen.route}/$photoId"
-                    )
-                }
-            )
+        if (lazyPagingItems != null && lazyPagingItems.itemCount != 0) {
+            items(
+                count = lazyPagingItems.itemCount,
+                key = { lazyPagingItems.itemKey { it.id } }
+            ) { idx ->
+                ImageCard(
+                    photoInfo = lazyPagingItems[idx],
+                    loadQuality = state.loadQuality,
+                    userClickAble = { userName ->
+                        navController.navigate(
+                            "${Screens.UserDetailScreen.route}/$userName"
+                        )
+                    }, photoClickAble = { photoId ->
+                        navController.navigate(
+                            "${Screens.ImageDetailScreen.route}/$photoId"
+                        )
+                    }
+                )
+            }
         }
     }
 

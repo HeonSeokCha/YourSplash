@@ -14,6 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.base.ImageCard
 
@@ -30,20 +31,25 @@ fun PhotoTagListScreen(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(32.dp)
     ) {
-        items(resultPagingItems?.itemCount ?: 0) {idx ->
-            ImageCard(
-                photoInfo = resultPagingItems?.get(idx),
-                loadQuality = state.loadQuality,
-                userClickAble = { userName ->
-                    navController.navigate(
-                        "${Screens.UserDetailScreen.route}/$userName"
-                    )
-                }, photoClickAble = { photoId ->
-                    navController.navigate(
-                        "${Screens.ImageDetailScreen.route}/$photoId"
-                    )
-                }
-            )
+        if (resultPagingItems != null && resultPagingItems.itemCount != 0) {
+            items(
+                count = resultPagingItems.itemCount,
+                key = { resultPagingItems.itemKey { it.id} }
+            ) {idx ->
+                ImageCard(
+                    photoInfo = resultPagingItems[idx],
+                    loadQuality = state.loadQuality,
+                    userClickAble = { userName ->
+                        navController.navigate(
+                            "${Screens.UserDetailScreen.route}/$userName"
+                        )
+                    }, photoClickAble = { photoId ->
+                        navController.navigate(
+                            "${Screens.ImageDetailScreen.route}/$photoId"
+                        )
+                    }
+                )
+            }
         }
     }
 }

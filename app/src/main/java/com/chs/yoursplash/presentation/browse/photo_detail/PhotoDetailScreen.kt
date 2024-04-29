@@ -195,7 +195,11 @@ fun ImageDetailScreen(
         }
 
         if (state.imageRelatedList.isNotEmpty()) {
-            items(state.imageRelatedList) { item ->
+            items(
+                count = state.imageRelatedList.size,
+                key = { state.imageRelatedList[it].id }
+            ) { idx ->
+                val item = state.imageRelatedList[idx]
                 AsyncImage(
                     modifier = Modifier
                         .padding(
