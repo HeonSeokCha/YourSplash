@@ -26,7 +26,7 @@ class HomeViewModel @Inject constructor(
             state = HomeState(
                 isLoading = false,
                 loadQuality = loadQualityUseCase(),
-                pagingImageList = getHomePhotosUseCase().cachedIn(viewModelScope)
+                pagingImageList = getHomePhotosUseCase().cachedIn(this)
             )
         }
     }

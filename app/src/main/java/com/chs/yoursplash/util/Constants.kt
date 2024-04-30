@@ -34,6 +34,7 @@ object Constants {
     const val PREFERENCE_KEY_LOAD_QUALITY: String = "load_quality"
     const val PREFERENCE_KEY_DOWNLOAD_QUALITY: String = "download_quality"
     const val PREFERENCE_KEY_WALLPAPER_QUALITY: String = "wallpaper_quality"
+    const val PAGING_SIZE: Int = 5
     const val TARGET_ID: String = "target_id"
     const val TARGET_TYPE: String = "target_type"
     const val TARGET_PHOTO: String = "target_photo"

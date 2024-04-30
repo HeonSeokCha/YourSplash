@@ -32,7 +32,7 @@ class PhotoRepositoryImpl @Inject constructor(
 ): PhotoRepository {
     override fun getPagingPhoto(): Flow<PagingData<Photo>> {
         return Pager(
-            PagingConfig(pageSize = 10)
+            PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
             HomePhotosDataSource(client)
         }.flow
@@ -40,7 +40,7 @@ class PhotoRepositoryImpl @Inject constructor(
 
     override fun getPagingCollection(): Flow<PagingData<UnSplashCollection>> {
         return Pager(
-            PagingConfig(pageSize = 10)
+            PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
             HomeCollectionDataSource(client)
         }.flow
@@ -66,7 +66,7 @@ class PhotoRepositoryImpl @Inject constructor(
 
     override fun getPagingCollectionPhotos(id: String): Flow<PagingData<Photo>> {
         return Pager(
-            PagingConfig(pageSize = 10)
+            PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
             CollectionPhotoDataSource(client, id)
         }.flow

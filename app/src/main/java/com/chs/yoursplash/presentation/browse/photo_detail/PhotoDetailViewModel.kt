@@ -45,7 +45,6 @@ class PhotoDetailViewModel @Inject constructor(
                     imageDetailInfo = getPhotoDetailUseCase(imageId),
                     imageRelatedList = getPhotoRelatedListUseCase(imageId)
                 )
-
         }
     }
 }

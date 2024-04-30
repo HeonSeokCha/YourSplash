@@ -1,4 +1,3 @@
-import com.android.build.api.dsl.Packaging
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {

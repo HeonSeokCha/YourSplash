@@ -11,15 +11,7 @@ import com.chs.yoursplash.domain.usecase.GetCollectionDetailUseCase
 import com.chs.yoursplash.domain.usecase.GetCollectionPhotoUserCase
 import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.util.Constants
-import com.chs.yoursplash.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -42,7 +34,7 @@ class CollectionDetailViewModel @Inject constructor(
                 isLoading = false,
                 loadQuality = getLoadQualityUseCase(),
                 collectionDetailInfo = getCollectionDetailUseCase(collectionId),
-                collectionPhotos = getCollectionPhotoUserCase(collectionId)
+                collectionPhotos = getCollectionPhotoUserCase(collectionId).cachedIn(this)
             )
         }
     }

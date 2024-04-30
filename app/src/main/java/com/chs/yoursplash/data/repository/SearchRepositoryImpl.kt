@@ -13,6 +13,7 @@ import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.User
 import com.chs.yoursplash.domain.repository.SearchRepository
+import com.chs.yoursplash.util.Constants
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -28,7 +29,7 @@ class SearchRepositoryImpl @Inject constructor(
         orientation: String?
     ): Flow<PagingData<Photo>> {
         return Pager(
-            PagingConfig(pageSize = 10)
+            PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
             SearchPhotoPaging(
                 api = client,
@@ -42,7 +43,7 @@ class SearchRepositoryImpl @Inject constructor(
 
     override fun getSearchResultCollection(query: String): Flow<PagingData<UnSplashCollection>> {
         return Pager(
-            PagingConfig(pageSize = 10)
+            PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
             SearchCollectionPaging(client, query)
         }.flow
@@ -50,7 +51,7 @@ class SearchRepositoryImpl @Inject constructor(
 
     override fun getSearchResultUser(query: String): Flow<PagingData<User>> {
         return Pager(
-            PagingConfig(pageSize = 10)
+            PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
             SearchUserPaging(client, query)
         }.flow

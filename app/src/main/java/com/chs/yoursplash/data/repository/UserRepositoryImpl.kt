@@ -29,7 +29,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override fun getUserDetailPhotos(userName: String): Flow<PagingData<Photo>> {
         return Pager(
-            PagingConfig(pageSize = 10)
+            PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
             UserPhotosDataSource(client, userName)
         }.flow
@@ -37,7 +37,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override fun getUserDetailLikePhotos(userName: String): Flow<PagingData<Photo>> {
         return Pager(
-            PagingConfig(pageSize = 10)
+            PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
             UserLikesDataSource(client, userName)
         }.flow
@@ -45,7 +45,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override fun getUserDetailCollections(userName: String): Flow<PagingData<UnSplashCollection>> {
         return Pager(
-            PagingConfig(pageSize = 10)
+            PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
             UserCollectionsDataSource(client, userName)
         }.flow

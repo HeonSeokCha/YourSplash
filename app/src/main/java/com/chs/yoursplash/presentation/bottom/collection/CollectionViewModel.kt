@@ -26,7 +26,7 @@ class CollectionViewModel @Inject constructor(
             state = CollectionState(
                 isLoading = false,
                 loadQuality = loadQualityUseCase(),
-                collectionList = getHomeCollectionsUseCase().cachedIn(viewModelScope)
+                collectionList = getHomeCollectionsUseCase().cachedIn(this)
             )
         }
     }

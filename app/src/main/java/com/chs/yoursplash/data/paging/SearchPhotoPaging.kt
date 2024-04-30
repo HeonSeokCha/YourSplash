@@ -41,7 +41,7 @@ class SearchPhotoPaging(
 
             LoadResult.Page(
                 data = response,
-                prevKey = if (page == 1) null else page - 1,
+                prevKey = null,
                 nextKey = if(response.isNotEmpty()) page + 1 else null
             )
         } catch (e: Exception) {

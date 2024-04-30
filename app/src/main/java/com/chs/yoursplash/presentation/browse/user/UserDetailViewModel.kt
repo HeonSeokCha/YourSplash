@@ -40,9 +40,9 @@ class UserDetailViewModel @Inject constructor(
                 isLoading = false,
                 loadQuality = getLoadQualityUseCase(),
                 userDetailInfo = getUserDetailUseCase(userName),
-                userDetailPhotoList = getUserPhotoUseCase(userName),
-                userDetailCollection = getUserCollectionUseCase(userName),
-                userDetailLikeList = getUserLikesUseCase(userName)
+                userDetailPhotoList = getUserPhotoUseCase(userName).cachedIn(viewModelScope),
+                userDetailCollection = getUserCollectionUseCase(userName).cachedIn(viewModelScope),
+                userDetailLikeList = getUserLikesUseCase(userName).cachedIn(viewModelScope)
             )
         }
     }

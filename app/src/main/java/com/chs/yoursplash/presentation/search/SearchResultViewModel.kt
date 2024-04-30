@@ -29,7 +29,6 @@ class SearchResultViewModel @Inject constructor(
     val state: StateFlow<SearchState> = _state.asStateFlow()
 
     init {
-        Log.e("CHS_LOG", "init" + _state.value.searchType.toString())
         getImageLoadQuality()
     }
 
