@@ -18,46 +18,32 @@ import com.chs.yoursplash.presentation.base.ImageCard
 
 @Composable
 fun UserDetailLikeScreen(
-    context: Context,
-    navController: NavHostController,
     photoList: LazyPagingItems<Photo>?,
-    loadQuality: String
+    loadQuality: String,
+    onNavigate: (String) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        items(photoList?.itemCount ?: 0) { idx ->
-            ImageCard(
-                photoInfo = photoList?.get(idx),
-                loadQuality = loadQuality,
-                photoClickAble = {
-                    navController.navigate(
-                        "${Screens.ImageDetailScreen.route}/${photoList?.get(idx)?.id}"
-                    )
-                }, userClickAble = {
-                    navController.navigate(
-                        "${Screens.UserDetailScreen.route}/${photoList?.get(idx)?.user?.userName}"
-                    )
-                }
-            )
-        }
-    }
+        if (photoList != null && photoList.itemCount != 0) {
+            items(photoList.itemCount) { idx ->
 
-    when (photoList?.loadState?.source?.refresh) {
-        is LoadState.Loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator()
+                ImageCard(
+                    photoInfo = photoList[idx],
+                    loadQuality = loadQuality,
+                    photoClickAble = {
+                        onNavigate(
+                            "${Screens.ImageDetailScreen.route}/${photoList[idx]?.id}"
+                        )
+                    }, userClickAble = {
+                        onNavigate(
+                            "${Screens.UserDetailScreen.route}/${photoList[idx]?.user?.userName}"
+                        )
+                    }
+                )
             }
         }
-
-        is LoadState.Error -> {
-            Toast.makeText(context, "An error occurred while loading...", Toast.LENGTH_SHORT).show()
-        }
-        else -> {}
     }
 }

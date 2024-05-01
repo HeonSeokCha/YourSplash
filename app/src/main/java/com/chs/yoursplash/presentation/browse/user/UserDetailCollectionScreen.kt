@@ -35,10 +35,9 @@ import com.chs.yoursplash.util.Constants
 
 @Composable
 fun UserDetailCollectionScreen(
-    context: Context,
-    navController: NavHostController,
     collectionList: LazyPagingItems<UnSplashCollection>?,
-    loadQuality: String
+    loadQuality: String,
+    onNavigate: (String) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -67,17 +66,17 @@ fun UserDetailCollectionScreen(
                                 )
                             }
                             .clickable {
-                                navController.navigate(
-                                    "${Screens.CollectionDetailScreen.route}/${collectionList?.get(idx)?.id}"
+                                onNavigate(
+                                    "${Screens.CollectionDetailScreen.route}/${collectionList[idx]?.id}"
                                 )
                             },
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(Constants.getPhotoQualityUrl(collectionList?.get(idx)?.previewPhotos?.get(0)?.urls, loadQuality))
+                            .data(Constants.getPhotoQualityUrl(collectionList[idx]?.previewPhotos?.first()?.urls, loadQuality))
                             .crossfade(true)
                             .build(),
                         contentScale = ContentScale.Crop,
                         contentDescription = null,
-                        placeholder = Constants.getPlaceHolder(collectionList?.get(idx)?.previewPhotos?.get(0)?.blurHash)
+                        placeholder = Constants.getPlaceHolder(collectionList[idx]?.previewPhotos?.first()?.blurHash)
                     )
 
                     Column(
@@ -89,13 +88,13 @@ fun UserDetailCollectionScreen(
                             )
                     ) {
                         Text(
-                            text = collectionList?.get(idx)?.title ?: "...",
+                            text = collectionList[idx]?.title ?: "...",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.White
                         )
                         Text(
-                            text = "${collectionList?.get(idx)?.totalPhotos ?: 0} Photos",
+                            text = "${collectionList[idx]?.totalPhotos ?: 0} Photos",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.White
@@ -104,22 +103,5 @@ fun UserDetailCollectionScreen(
                 }
             }
         }
-
-    }
-
-    when (collectionList?.loadState?.source?.refresh) {
-        is LoadState.Loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator()
-            }
-        }
-
-        is LoadState.Error -> {
-            Toast.makeText(context, "An error occurred while loading...", Toast.LENGTH_SHORT).show()
-        }
-        else -> {}
     }
 }

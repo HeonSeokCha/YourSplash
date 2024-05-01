@@ -89,51 +89,51 @@ fun UserDetailScreen(
                     0 -> {
                         if (state.userTabLabList[0] == "PHOTOS") {
                             UserDetailPhotoScreen(
-                                context = context,
-                                navController = navController,
                                 state.userDetailPhotoList?.collectAsLazyPagingItems(),
                                 state.loadQuality
-                            )
+                            ) {
+                                navController.navigate(it)
+                            }
                         } else if (state.userTabLabList[0] == "LIKES") {
                             UserDetailLikeScreen(
-                                context = context,
-                                navController = navController,
                                 state.userDetailLikeList?.collectAsLazyPagingItems(),
                                 state.loadQuality
-                            )
+                            ) {
+                                navController.navigate(it)
+                            }
                         } else {
                             UserDetailCollectionScreen(
-                                context = context,
-                                navController = navController,
                                 state.userDetailCollection?.collectAsLazyPagingItems(),
                                 state.loadQuality
-                            )
+                            ) {
+                                navController.navigate(it)
+                            }
                         }
                     }
                     1 -> {
                         if (state.userTabLabList[1] == "LIKES") {
                             UserDetailLikeScreen(
-                                context = context,
-                                navController = navController,
                                 state.userDetailLikeList?.collectAsLazyPagingItems(),
                                 state.loadQuality
-                            )
+                            ) {
+                                navController.navigate(it)
+                            }
                         } else {
                             UserDetailCollectionScreen(
-                                context = context,
-                                navController = navController,
                                 state.userDetailCollection?.collectAsLazyPagingItems(),
                                 state.loadQuality
-                            )
+                            ) {
+                                navController.navigate(it)
+                            }
                         }
                     }
                     2 -> {
                         UserDetailCollectionScreen(
-                            context = context,
-                            navController = navController,
                             state.userDetailCollection?.collectAsLazyPagingItems(),
                             state.loadQuality
-                        )
+                        ) {
+                            navController.navigate(it)
+                        }
                     }
                 }
             }
