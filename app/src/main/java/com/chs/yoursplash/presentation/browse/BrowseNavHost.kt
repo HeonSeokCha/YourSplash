@@ -29,15 +29,15 @@ fun BrowseNavHost(
     val startDestination =
         when (intent?.getStringExtra(Constants.TARGET_TYPE)) {
             Constants.TARGET_PHOTO -> {
-                "${Screens.ImageDetailScreen.route}/${intent.getStringExtra(Constants.TARGET_ID)}"
+                "${Screens.ImageDetailScreen.route}/{arg_key_photo_id}"
             }
 
             Constants.TARGET_COLLECTION -> {
-                "${Screens.CollectionDetailScreen.route}/${intent.getStringExtra(Constants.TARGET_ID)}"
+                "${Screens.CollectionDetailScreen.route}/{arg_key_collection_id}"
             }
 
             else -> {
-                "${Screens.UserDetailScreen.route}/${intent?.getStringExtra(Constants.TARGET_ID)}"
+                "${Screens.UserDetailScreen.route}/{arg_key_user_name}"
             }
         }
 

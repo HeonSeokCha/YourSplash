@@ -58,7 +58,7 @@ fun ImageCard(
                     .crossfade(true)
                     .build()
                 ,
-                placeholder = ColorPainter(photoInfo?.color?.color ?: Color.White),
+                placeholder = Constants.getPlaceHolder(photoInfo?.blurHash),
                 contentDescription = null
             )
             Spacer(modifier = Modifier.width(16.dp))

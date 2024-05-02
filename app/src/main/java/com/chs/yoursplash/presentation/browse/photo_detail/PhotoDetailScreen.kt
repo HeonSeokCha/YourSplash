@@ -90,7 +90,7 @@ fun ImageDetailScreen(
                         ).crossfade(true)
                         .build(),
                     contentDescription = null,
-                    placeholder = ColorPainter(state.imageDetailInfo?.color?.color ?: Color.White)
+                    placeholder = Constants.getPlaceHolder(state.imageDetailInfo?.blurHash)
                 )
 
                 Row(
@@ -134,62 +134,13 @@ fun ImageDetailScreen(
                             maxLines = 1
                         )
                     }
-
-                    when (state.imageSaveState) {
-                        PhotoSaveState.NOT_DOWNLOAD -> {
-                            IconButton(
-                                modifier = Modifier.size(24.dp),
-                                onClick = {
-                                    downloadPhoto(
-                                        context,
-                                        state.imageDetailInfo,
-                                        downloadStart = { downLoadQueueId = it }
-                                    )
-                                }) {
-                                Icon(
-                                    imageVector = Icons.Default.Download,
-                                    contentDescription = "download"
-                                )
-                            }
-                        }
-                        PhotoSaveState.DOWNLOADING -> {
-                            IconButton(
-                                modifier = Modifier.size(24.dp),
-                                onClick = {
-                                    Toast.makeText(
-                                        context,
-                                        "File is DownLoading",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }) {
-                                Icon(
-                                    imageVector = Icons.Default.Downloading,
-                                    contentDescription = "downloading"
-                                )
-                            }
-                        }
-                        PhotoSaveState.DOWNLOADED -> {
-                            IconButton(
-                                modifier = Modifier.size(24.dp),
-                                onClick = {
-                                    Toast.makeText(
-                                        context,
-                                        "File is DownLoaded",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }) {
-                                Icon(
-                                    imageVector = Icons.Default.DownloadDone,
-                                    contentDescription = "fileIsSaved"
-                                )
-                            }
-                        }
-                    }
                 }
                 HorizontalDivider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
 
-                ImageDetailInfo(state.imageDetailInfo) { selectTag ->
-                    navController.navigate("${Screens.PhotoTagResultScreen.route}/$selectTag")
+                if (state.imageDetailInfo != null) {
+                    ImageDetailInfo(state.imageDetailInfo) { selectTag ->
+                        navController.navigate("${Screens.PhotoTagResultScreen.route}/$selectTag")
+                    }
                 }
             }
         }

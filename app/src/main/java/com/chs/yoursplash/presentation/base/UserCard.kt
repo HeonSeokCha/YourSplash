@@ -70,27 +70,33 @@ fun UserCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 contentPadding = PaddingValues(top = 8.dp, end = 8.dp)
             ) {
-                items (userInfo?.photos?.size ?: 0) { idx ->
-                    AsyncImage(
-                        modifier = Modifier
-                            .size(90.dp, 190.dp)
-                            .clip(RoundedCornerShape(15))
-                            .clickable {
-                                photoClickAble(userInfo?.photos?.get(idx)?.id ?: "")
-                            },
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(Constants.getPhotoQualityUrl(
-                            userInfo?.photos?.get(idx)?.urls,
-                            loadQuality
-                        ))
-                            .crossfade(true)
-                            .build(),
+                if (userInfo?.photos != null && userInfo.photos.isNotEmpty()) {
+                    items(
+                        count = userInfo.photos.size,
+                        key = { userInfo.photos[it].id }
+                    ) { idx ->
+                        AsyncImage(
+                            modifier = Modifier
+                                .size(90.dp, 190.dp)
+                                .clip(RoundedCornerShape(15))
+                                .clickable {
+                                    photoClickAble(userInfo.photos[idx].id)
+                                },
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(Constants.getPhotoQualityUrl(
+                                    userInfo.photos[idx].urls,
+                                    loadQuality
+                                ))
+                                .crossfade(true)
+                                .build(),
 
-                        contentScale = ContentScale.Crop,
-                        contentDescription = null,
-                        placeholder = Constants.getPlaceHolder(userInfo?.photos?.get(idx)?.blurHash)
-                    )
+                            contentScale = ContentScale.Crop,
+                            contentDescription = null,
+                            placeholder = Constants.getPlaceHolder(userInfo.photos[idx].blurHash)
+                        )
+                    }
                 }
+
             }
         }
     }

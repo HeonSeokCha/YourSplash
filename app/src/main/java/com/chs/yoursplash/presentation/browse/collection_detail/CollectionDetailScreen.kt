@@ -40,21 +40,24 @@ fun CollectionDetailScreen(
         verticalArrangement = Arrangement.spacedBy(32.dp),
     ) {
 
-        item {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = "${state.collectionDetailInfo?.totalPhotos ?: 0} Photos ● " +
-                        "Create by ${state.collectionDetailInfo?.user?.name ?: ""}",
-                textAlign = TextAlign.Center,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold
-            )
+        if (state.collectionDetailInfo != null) {
+            item {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "${state.collectionDetailInfo.totalPhotos} Photos ● " +
+                            "Create by ${state.collectionDetailInfo.user.name}",
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
         }
+
 
         if (lazyPagingItems != null && lazyPagingItems.itemCount != 0) {
             items(
                 count = lazyPagingItems.itemCount,
-                key = { lazyPagingItems.itemKey { it.id } }
+//                key = { lazyPagingItems.itemKey { it.id } }
             ) { idx ->
                 ImageCard(
                     photoInfo = lazyPagingItems[idx],
