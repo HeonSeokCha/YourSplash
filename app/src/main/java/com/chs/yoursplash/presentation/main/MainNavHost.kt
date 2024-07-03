@@ -24,34 +24,32 @@ fun MainNavHost(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = BottomNavScreen.HomeScreen.route
+        startDestination = MainScreens.HomeScreen
     ) {
-        composable(BottomNavScreen.HomeScreen.route) {
+        composable<MainScreens.HomeScreen> {
             val parentEntry = remember(it) {
-                navController.getBackStackEntry(BottomNavScreen.HomeScreen.route)
+                navController.getBackStackEntry(MainScreens.HomeScreen)
             }
             val viewModel: HomeViewModel = hiltViewModel(parentEntry)
             HomeScreen(viewModel.state)
         }
 
-        composable(BottomNavScreen.CollectionScreen.route) {
+        composable<MainScreens.CollectionScreen> {
             val parentEntry = remember(it) {
-                navController.getBackStackEntry(BottomNavScreen.CollectionScreen.route)
+                navController.getBackStackEntry(MainScreens.CollectionScreen)
             }
             val viewmodel: CollectionViewModel = hiltViewModel(parentEntry)
-            CollectionScreen(viewmodel.state) {
-
-            }
+            CollectionScreen(viewmodel.state) { }
         }
 
-        composable(MainScreens.SearchScreen.route) {
+        composable<MainScreens.SearchScreen> {
             SearchScreen(
                 searchQuery = searchQuery,
                 onBack = onBack
             )
         }
 
-        composable(MainScreens.SettingScreen.route) {
+        composable<MainScreens.SettingScreen> {
             SettingScreen()
         }
     }

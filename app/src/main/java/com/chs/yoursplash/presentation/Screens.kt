@@ -1,10 +1,18 @@
 package com.chs.yoursplash.presentation
 
-sealed class Screens(
-    val route: String
-) {
-    object ImageDetailScreen : Screens("imageDetailScreen")
-    object UserDetailScreen : Screens("userDetailScreen")
-    object CollectionDetailScreen : Screens("collectionDetailScreen")
-    object PhotoTagResultScreen : Screens("photoTagResultScreen")
+import kotlinx.serialization.Serializable
+
+@Serializable
+sealed class Screens {
+    @Serializable
+    data class ImageDetailScreen(val id: String) : Screens()
+
+    @Serializable
+    data class UserDetailScreen(val usageName: String) : Screens()
+
+    @Serializable
+    data class CollectionDetailScreen(val id: String) : Screens()
+
+    @Serializable
+    data class PhotoTagResultScreen(val tageName: String) : Screens()
 }

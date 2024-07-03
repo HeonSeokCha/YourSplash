@@ -29,15 +29,15 @@ fun BrowseNavHost(
     val startDestination =
         when (intent?.getStringExtra(Constants.TARGET_TYPE)) {
             Constants.TARGET_PHOTO -> {
-                "${Screens.ImageDetailScreen.route}/{arg_key_photo_id}"
+                Screens.ImageDetailScreen(Constants.ARG_KEY_PHOTO_ID)
             }
 
             Constants.TARGET_COLLECTION -> {
-                "${Screens.CollectionDetailScreen.route}/{arg_key_collection_id}"
+                Screens.CollectionDetailScreen(Constants.ARG_KEY_COLLECTION_ID)
             }
 
             else -> {
-                "${Screens.UserDetailScreen.route}/{arg_key_user_name}"
+                Screens.UserDetailScreen(Constants.ARG_KEY_USER_NAME)
             }
         }
 
@@ -46,16 +46,7 @@ fun BrowseNavHost(
         navController = navController,
         startDestination = startDestination
     ) {
-        composable(
-            "${Screens.ImageDetailScreen.route}/{arg_key_photo_id}",
-            arguments = listOf(
-                navArgument(Constants.ARG_KEY_PHOTO_ID) {
-                    type = NavType.StringType
-                    defaultValue = intent?.getStringExtra(Constants.TARGET_ID)!!
-                    nullable = false
-                }
-            )
-        ) {
+        composable<Screens.ImageDetailScreen> {
             val viewModel: PhotoDetailViewModel = hiltViewModel()
             ImageDetailScreen(
                 state = viewModel.state,
@@ -63,16 +54,7 @@ fun BrowseNavHost(
             )
         }
 
-        composable(
-            "${Screens.CollectionDetailScreen.route}/{arg_key_collection_id}",
-            arguments = listOf(
-                navArgument(Constants.ARG_KEY_COLLECTION_ID) {
-                    type = NavType.StringType
-                    defaultValue = intent?.getStringExtra(Constants.TARGET_ID)!!
-                    nullable = false
-                }
-            )
-        ) {
+        composable<Screens.CollectionDetailScreen> {
             val viewModel: CollectionDetailViewModel = hiltViewModel()
             CollectionDetailScreen(
                 state = viewModel.state,
@@ -80,16 +62,7 @@ fun BrowseNavHost(
             )
         }
 
-        composable(
-            "${Screens.UserDetailScreen.route}/{arg_key_user_name}",
-            arguments = listOf(
-                navArgument(Constants.ARG_KEY_USER_NAME) {
-                    type = NavType.StringType
-                    defaultValue = intent?.getStringExtra(Constants.TARGET_ID)!!
-                    nullable = false
-                }
-            )
-        ) {
+        composable<Screens.UserDetailScreen> {
             val viewModel: UserDetailViewModel = hiltViewModel()
             UserDetailScreen(
                 state = viewModel.state,
@@ -97,16 +70,7 @@ fun BrowseNavHost(
             )
         }
 
-        composable(
-            "${Screens.PhotoTagResultScreen.route}/{arg_key_tag_name}",
-            arguments = listOf(
-                navArgument(Constants.ARG_KEY_TAG_NAME) {
-                    type = NavType.StringType
-                    defaultValue = intent?.getStringExtra(Constants.TARGET_ID)!!
-                    nullable = false
-                }
-            )
-        ) {
+        composable<Screens.PhotoTagResultScreen> {
             val viewModel: PhotoTagListViewModel = hiltViewModel()
             PhotoTagListScreen(
                 state = viewModel.state,
