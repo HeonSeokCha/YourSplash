@@ -1,5 +1,8 @@
 package com.chs.yoursplash.presentation.bottom
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Collections
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -9,32 +12,33 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.chs.yoursplash.presentation.main.MainScreens
+import com.chs.yoursplash.util.fromRoute
 
 @Composable
 fun BottomBar(
     navController: NavHostController
 ) {
     val items = listOf(
-        BottomNavScreen.HomeScreen,
-        BottomNavScreen.CollectionScreen,
+        Triple(MainScreens.HomeScreen, Icons.Default.Home, "Home"),
+        Triple(MainScreens.CollectionScreen, Icons.Default.Collections, "Collections")
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-    if (navBackStackEntry?.destination?.route == BottomNavScreen.HomeScreen.route ||
-        navBackStackEntry?.destination?.route == BottomNavScreen.CollectionScreen.route
+    if (navBackStackEntry?.fromRoute() is MainScreens.HomeScreen ||
+        navBackStackEntry?.fromRoute() is MainScreens.CollectionScreen
     ) {
         NavigationBar(
             containerColor = MaterialTheme.colorScheme.primary
         ) {
-            val currentDestination = navBackStackEntry?.destination
+
+            val currentDestination = navBackStackEntry?.fromRoute()
             items.forEach { destination ->
                 NavigationBarItem(
-                    selected = currentDestination?.hierarchy?.any { it.route == destination.route } == true,
+                    selected = items.any { it == currentDestination },
                     colors = NavigationBarItemDefaults.colors(
                         selectedIconColor = Color.White,
                         selectedTextColor = Color.White,
@@ -43,7 +47,7 @@ fun BottomBar(
                         indicatorColor = MaterialTheme.colorScheme.primary
                     ),
                     onClick = {
-                        navController.navigate(destination.route) {
+                        navController.navigate(destination) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
                             }
@@ -53,11 +57,11 @@ fun BottomBar(
                     },
                     icon = {
                         Icon(
-                            destination.icon,
-                            contentDescription = stringResource(destination.label)
+                            destination.second,
+                            contentDescription = null
                         )
                     },
-                    label = { Text(stringResource(destination.label)) }
+                    label = { Text(text = destination.third) }
                 )
             }
         }

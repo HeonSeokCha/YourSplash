@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.chs.yoursplash.R
+import com.chs.yoursplash.util.fromRoute
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,8 +51,8 @@ fun MainTopBar(
     onDeleteSearchHistory: (String) -> Unit
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    when (navBackStackEntry?.destination?.route) {
-        BottomNavScreen.HomeScreen.route, BottomNavScreen.CollectionScreen.route -> {
+    when (navBackStackEntry?.fromRoute()) {
+        is MainScreens.HomeScreen, MainScreens.CollectionScreen -> {
             TopAppBar(
                 title = {
                     Text(
@@ -62,7 +63,7 @@ fun MainTopBar(
                     )
                 }, actions = {
                     IconButton(onClick = {
-                        navController.navigate(MainScreens.SearchScreen.route)
+                        navController.navigate(MainScreens.SearchScreen)
                     }) {
                         Icon(
                             imageVector = Icons.TwoTone.Search,
@@ -72,7 +73,7 @@ fun MainTopBar(
                     }
 
                     IconButton(onClick = {
-                        navController.navigate(MainScreens.SettingScreen.route)
+                        navController.navigate(MainScreens.SettingScreen)
                     }) {
                         Icon(
                             Icons.Filled.Settings,
@@ -87,7 +88,7 @@ fun MainTopBar(
             )
         }
 
-        MainScreens.SettingScreen.route -> {
+        is MainScreens.SettingScreen -> {
             TopAppBar(
                 title = {
                     Text(
@@ -107,7 +108,7 @@ fun MainTopBar(
             )
         }
 
-        MainScreens.SearchScreen.route -> {
+        is MainScreens.SearchScreen -> {
             SearchAppBar(
                 onSearch = {
                     onQueryChange(it)
@@ -118,6 +119,8 @@ fun MainTopBar(
                 }
             )
         }
+
+        null -> Unit
     }
 }
 
