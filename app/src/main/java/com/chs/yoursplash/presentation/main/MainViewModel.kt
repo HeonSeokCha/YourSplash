@@ -23,13 +23,15 @@ class MainViewModel @Inject constructor(
     private val getRecentSearchHistoryUseCase: GetRecentSearchHistoryUseCase
 ) : ViewModel() {
 
-    private val _state: MutableStateFlow<MainState> = MutableStateFlow(MainState())
-    val state = _state.asStateFlow()
+    var state: MainState by mutableStateOf(MainState())
+        private set
 
     init {
         viewModelScope.launch {
             getRecentSearchHistoryUseCase().collect { list ->
-                _state.update { it.copy(searchHistory = list) }
+                state = state.copy(
+                    searchHistory = list
+                )
             }
         }
     }

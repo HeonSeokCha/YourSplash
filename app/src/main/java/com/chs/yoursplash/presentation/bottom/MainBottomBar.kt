@@ -16,7 +16,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.chs.yoursplash.presentation.main.MainScreens
-import com.chs.yoursplash.util.fromRoute
+import com.chs.yoursplash.util.fromMainRoute
 
 @Composable
 fun BottomBar(
@@ -27,15 +27,15 @@ fun BottomBar(
         Triple(MainScreens.CollectionScreen, Icons.Default.Collections, "Collections")
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.fromMainRoute()
 
-    if (navBackStackEntry?.fromRoute() is MainScreens.HomeScreen ||
-        navBackStackEntry?.fromRoute() is MainScreens.CollectionScreen
+    if (currentDestination is MainScreens.HomeScreen ||
+        currentDestination is MainScreens.CollectionScreen
     ) {
         NavigationBar(
             containerColor = MaterialTheme.colorScheme.primary
         ) {
 
-            val currentDestination = navBackStackEntry?.fromRoute()
             items.forEach { destination ->
                 NavigationBarItem(
                     selected = items.any { it == currentDestination },

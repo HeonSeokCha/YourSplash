@@ -14,14 +14,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.chs.yoursplash.presentation.Screens
+import com.chs.yoursplash.util.fromScreenRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImageDetailTopBar(navController: NavHostController) {
     val activity = (LocalContext.current as? Activity)
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    when (navBackStackEntry?.destination?.route) {
-        "${Screens.PhotoTagResultScreen.route}/{tag}"-> {
+
+    val currentDestination = navBackStackEntry?.fromScreenRoute()
+    when (currentDestination) {
+        is Screens.PhotoTagResultScreen -> {
             TopAppBar(
                 title = { },
                 navigationIcon = {
@@ -30,9 +33,10 @@ fun ImageDetailTopBar(navController: NavHostController) {
                     }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                     }
-                },
+                }
             )
         }
+
         else -> {
             TopAppBar(
                 title = { },
