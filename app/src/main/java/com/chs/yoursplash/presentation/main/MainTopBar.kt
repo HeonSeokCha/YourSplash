@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.chs.yoursplash.R
-import com.chs.yoursplash.util.fromRoute
+import com.chs.yoursplash.util.fromMainRoute
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +51,7 @@ fun MainTopBar(
     onDeleteSearchHistory: (String) -> Unit
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    when (navBackStackEntry?.fromRoute()) {
+    when (navBackStackEntry?.fromMainRoute()) {
         is MainScreens.HomeScreen, MainScreens.CollectionScreen -> {
             TopAppBar(
                 title = {

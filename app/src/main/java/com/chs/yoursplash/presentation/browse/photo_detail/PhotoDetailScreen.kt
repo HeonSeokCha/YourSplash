@@ -110,9 +110,11 @@ fun ImageDetailScreen(
                         AsyncImage(
                             modifier = Modifier
                                 .clickable {
-                                    navController.navigate(
-                                        "${Screens.UserDetailScreen.route}/${state.imageDetailInfo?.user?.userName}"
-                                    )
+                                    if (state.imageDetailInfo?.user != null) {
+                                        Screens.UserDetailScreen(
+                                            state.imageDetailInfo.user.userName
+                                        )
+                                    }
                                 }
                                 .size(40.dp)
                                 .clip(RoundedCornerShape(100)),
@@ -139,7 +141,9 @@ fun ImageDetailScreen(
 
                 if (state.imageDetailInfo != null) {
                     ImageDetailInfo(state.imageDetailInfo) { selectTag ->
-                        navController.navigate("${Screens.PhotoTagResultScreen.route}/$selectTag")
+                        navController.navigate(
+                            Screens.PhotoTagResultScreen(selectTag)
+                        )
                     }
                 }
             }
@@ -159,9 +163,7 @@ fun ImageDetailScreen(
                             bottom = 16.dp
                         )
                         .clickable {
-                            navController.navigate(
-                                "${Screens.ImageDetailScreen.route}/${item.id}"
-                            )
+                            navController.navigate(Screens.ImageDetailScreen(item.id))
                         },
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(Constants.getPhotoQualityUrl(item.urls, state.loadQuality))

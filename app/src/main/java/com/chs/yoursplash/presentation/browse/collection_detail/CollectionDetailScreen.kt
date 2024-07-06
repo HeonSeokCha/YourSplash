@@ -57,19 +57,15 @@ fun CollectionDetailScreen(
         if (lazyPagingItems != null && lazyPagingItems.itemCount != 0) {
             items(
                 count = lazyPagingItems.itemCount,
-//                key = { lazyPagingItems.itemKey { it.id } }
+                key = lazyPagingItems.itemKey { it.user.id }
             ) { idx ->
                 ImageCard(
                     photoInfo = lazyPagingItems[idx],
                     loadQuality = state.loadQuality,
-                    userClickAble = { userName ->
-                        navController.navigate(
-                            "${Screens.UserDetailScreen.route}/$userName"
+                    userClickAble = { userName -> navController.navigate(Screens.UserDetailScreen(userName)
                         )
                     }, photoClickAble = { photoId ->
-                        navController.navigate(
-                            "${Screens.ImageDetailScreen.route}/$photoId"
-                        )
+                        navController.navigate(Screens.ImageDetailScreen(photoId))
                     }
                 )
             }
