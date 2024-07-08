@@ -22,7 +22,7 @@ import com.chs.yoursplash.util.Constants
 fun UserDetailPhotoScreen(
     photoList: LazyPagingItems<Photo>?,
     loadQuality: String,
-    onNavigate: (String) -> Unit
+    onNavigate: (Screens) -> Unit
 ) {
     LazyVerticalStaggeredGrid(
         modifier = Modifier.fillMaxSize(),
@@ -40,9 +40,7 @@ fun UserDetailPhotoScreen(
                             end = 8.dp,
                             bottom = 16.dp
                         ).clickable {
-                            onNavigate(
-                                "${Screens.ImageDetailScreen.route}/${photoList[idx]?.id}"
-                            )
+                            onNavigate(Screens.ImageDetailScreen(photoList[idx]!!.id))
                         },
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(Constants.getPhotoQualityUrl(photoList[idx]?.urls, loadQuality))

@@ -16,6 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.presentation.browse.BrowseActivity
 import com.chs.yoursplash.util.Constants
@@ -36,8 +37,8 @@ fun HomeScreen(state: HomeState) {
         if (lazyPagingItems != null && lazyPagingItems.itemCount != 0) {
             items(
                 count = lazyPagingItems.itemCount,
-                key = { lazyPagingItems[it]!!.id }
-            ) {idx ->
+                key = lazyPagingItems.itemKey { it.id }
+            ) { idx ->
                 val photo = lazyPagingItems[idx]
                 ImageCard(
                     photoInfo = photo,

@@ -1,13 +1,11 @@
 package com.chs.yoursplash.presentation.browse.user
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
@@ -21,24 +19,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.chs.yoursplash.domain.model.UserDetail
+import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun UserDetailScreen(
     state: UserDetailState,
-    navController: NavHostController,
+    onNavigate: (Screens) -> Unit
 ) {
 
-    val context = LocalContext.current
     val pagerState = rememberPagerState { state.userTabLabList.size }
     val coroutineScope = rememberCoroutineScope()
 
@@ -92,21 +86,21 @@ fun UserDetailScreen(
                                 state.userDetailPhotoList?.collectAsLazyPagingItems(),
                                 state.loadQuality
                             ) {
-                                navController.navigate(it)
+                                onNavigate(it)
                             }
                         } else if (state.userTabLabList[0] == "LIKES") {
                             UserDetailLikeScreen(
                                 state.userDetailLikeList?.collectAsLazyPagingItems(),
                                 state.loadQuality
                             ) {
-                                navController.navigate(it)
+                                onNavigate(it)
                             }
                         } else {
                             UserDetailCollectionScreen(
                                 state.userDetailCollection?.collectAsLazyPagingItems(),
                                 state.loadQuality
                             ) {
-                                navController.navigate(it)
+                                onNavigate(it)
                             }
                         }
                     }
@@ -116,14 +110,14 @@ fun UserDetailScreen(
                                 state.userDetailLikeList?.collectAsLazyPagingItems(),
                                 state.loadQuality
                             ) {
-                                navController.navigate(it)
+                                onNavigate(it)
                             }
                         } else {
                             UserDetailCollectionScreen(
                                 state.userDetailCollection?.collectAsLazyPagingItems(),
                                 state.loadQuality
                             ) {
-                                navController.navigate(it)
+                                onNavigate(it)
                             }
                         }
                     }
@@ -132,7 +126,7 @@ fun UserDetailScreen(
                             state.userDetailCollection?.collectAsLazyPagingItems(),
                             state.loadQuality
                         ) {
-                            navController.navigate(it)
+                            onNavigate(it)
                         }
                     }
                 }

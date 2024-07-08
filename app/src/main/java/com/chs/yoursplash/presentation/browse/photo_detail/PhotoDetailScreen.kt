@@ -187,29 +187,29 @@ fun ImageDetailScreen(
         }
     }
 }
-
-private fun downloadPhoto(
-    context: Context,
-    photoDetail: PhotoDetail?,
-    downloadStart: (Long) -> Unit
-) {
-    val downloadUrl: String = photoDetail?.urls?.raw.toString()
-    val fileName: String = "${photoDetail?.user?.userName}-${photoDetail?.id}.jpg"
-    val saveDirPath: String = "/${context.getString(R.string.app_name)}/${fileName}"
-
-    val request = DownloadManager.Request(Uri.parse(downloadUrl))
-        .setTitle("Download YourSplash Photo")
-        .setDescription("Downloading YourSplash Photo")
-        .setMimeType("image/*")
-        .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-        .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, saveDirPath)
-        .setRequiresCharging(false)
-        .setAllowedOverMetered(true)
-        .setAllowedOverRoaming(true)
-
-    val downloadManger: DownloadManager =
-        context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-
-    downloadStart(downloadManger.enqueue(request))
-
-}
+//
+//private fun downloadPhoto(
+//    context: Context,
+//    photoDetail: PhotoDetail?,
+//    downloadStart: (Long) -> Unit
+//) {
+//    val downloadUrl: String = photoDetail?.urls?.raw.toString()
+//    val fileName: String = "${photoDetail?.user?.userName}-${photoDetail?.id}.jpg"
+//    val saveDirPath: String = "/${context.getString(R.string.app_name)}/${fileName}"
+//
+//    val request = DownloadManager.Request(Uri.parse(downloadUrl))
+//        .setTitle("Download YourSplash Photo")
+//        .setDescription("Downloading YourSplash Photo")
+//        .setMimeType("image/*")
+//        .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+//        .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, saveDirPath)
+//        .setRequiresCharging(false)
+//        .setAllowedOverMetered(true)
+//        .setAllowedOverRoaming(true)
+//
+//    val downloadManger: DownloadManager =
+//        context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+//
+//    downloadStart(downloadManger.enqueue(request))
+//
+//}

@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.chs.yoursplash.presentation.base.CollectionCard
 import com.chs.yoursplash.presentation.browse.BrowseActivity
 import com.chs.yoursplash.util.Constants
@@ -38,7 +39,7 @@ fun CollectionScreen(
         if (lazyPagingItems != null && lazyPagingItems.itemCount != 0) {
             items(
                 count = lazyPagingItems.itemCount,
-                key = { lazyPagingItems[it]!!.id }
+                key = lazyPagingItems.itemKey { it.id }
             ) { idx ->
                 val collectionInfo = lazyPagingItems[idx]
                 CollectionCard(
