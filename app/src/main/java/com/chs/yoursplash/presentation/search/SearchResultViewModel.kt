@@ -1,6 +1,8 @@
 package com.chs.yoursplash.presentation.search
 
-import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -25,61 +27,52 @@ class SearchResultViewModel @Inject constructor(
     private val getLoadQualityUseCase: GetLoadQualityUseCase
 ) : ViewModel() {
 
-    private var _state: MutableStateFlow<SearchState> = MutableStateFlow(SearchState())
-    val state: StateFlow<SearchState> = _state.asStateFlow()
+
+    var state: SearchState by mutableStateOf(SearchState())
 
     init {
         getImageLoadQuality()
     }
 
     fun initSearchType(searchType: String) {
-        _state.update {
-            it.copy(
-                searchType = searchType
-            )
-        }
+        state = state.copy(searchType = searchType)
     }
 
     private fun getImageLoadQuality() {
         viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    loadQuality = getLoadQualityUseCase()
-                )
-            }
+            state = state.copy(
+                loadQuality = getLoadQualityUseCase()
+            )
         }
     }
 
     fun searchResult(query: String) {
-        _state.update {
-            when (it.searchType) {
+        state = when (state.searchType) {
                 Constants.SEARCH_PHOTO -> {
-                    it.copy(
+                   state.copy(
                         searchPhotoList = searchResultPhotoUseCase(
                             query = query,
-                            orderBy = it.orderBy,
-                            color = it.color,
-                            orientation = it.orientation
+                            orderBy = state.orderBy,
+                            color = state.color,
+                            orientation = state.orientation
                         ).cachedIn(viewModelScope)
                     )
                 }
                 Constants.SEARCH_COLLECTION -> {
-                    it.copy(
+                   state.copy(
                         searchCollectionList = searchResultCollectionUseCase(
                             query
                         ).cachedIn(viewModelScope)
                     )
                 }
                 Constants.SEARCH_USER -> {
-                    it.copy(
+                   state.copy(
                         searchUserList = searchResultUserUseCase(
                             query
                         ).cachedIn(viewModelScope)
                     )
                 }
-                else -> {
-                    it
-                }
+                else -> state.copy()
             }
         }
     }

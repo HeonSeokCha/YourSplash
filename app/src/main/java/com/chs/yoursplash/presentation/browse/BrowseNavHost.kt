@@ -66,7 +66,7 @@ fun BrowseNavHost(
             val viewModel: UserDetailViewModel = hiltViewModel()
             UserDetailScreen(
                 state = viewModel.state,
-                navController = navController
+                onNavigate = { navController.navigate(it) }
             )
         }
 

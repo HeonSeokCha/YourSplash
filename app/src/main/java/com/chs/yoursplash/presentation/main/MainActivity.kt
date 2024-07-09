@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             var searchQuery: String by remember { mutableStateOf("") }
-            val state by viewModel.state.collectAsStateWithLifecycle()
+            val state = viewModel.state
 
             YourSplashTheme {
                 Scaffold(

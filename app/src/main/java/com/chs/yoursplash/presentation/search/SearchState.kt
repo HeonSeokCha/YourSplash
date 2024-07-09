@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.annotation.concurrent.Immutable
 
 data class SearchState(
+    val searchQuery: String? = null,
     val searchType: String? = null,
     val searchPhotoList: Flow<PagingData<Photo>>? = null,
     val searchCollectionList: Flow<PagingData<UnSplashCollection>>? = null,

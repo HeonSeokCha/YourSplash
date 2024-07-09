@@ -72,30 +72,28 @@ fun SearchScreen(
         HorizontalPager(state = pagerState) { page ->
             when (page) {
                 0 -> {
-                    val viewModel: SearchResultViewModel = hiltViewModel(key = Constants.SEARCH_PHOTO)
+                    val viewModel: SearchResultViewModel = hiltViewModel<SearchResultViewModel>(key = Constants.SEARCH_PHOTO).apply {
+                        initSearchType(Constants.SEARCH_PHOTO)
+                    }
                     SearchResultScreen(
-                        viewModel = viewModel,
-                        query = searchQuery,
-                        type = Constants.SEARCH_PHOTO,
-                        modalClick = {
-                        }
+                        state = viewModel.state,
+                        onSearch = {},
+                        modalClick = { }
                     )
                 }
                 1 -> {
                     val viewModel: SearchResultViewModel = hiltViewModel(key = Constants.SEARCH_COLLECTION)
                     SearchResultScreen(
-                        viewModel = viewModel,
-                        query = searchQuery,
-                        type = Constants.SEARCH_COLLECTION,
+                        state = viewModel.state,
+                        onSearch = {},
                         modalClick = { }
                     )
                 }
                 2 -> {
                     val viewModel: SearchResultViewModel = hiltViewModel(key = Constants.SEARCH_USER)
                     SearchResultScreen(
-                        viewModel = viewModel,
-                        query = searchQuery,
-                        type = Constants.SEARCH_USER,
+                        state = viewModel.state,
+                        onSearch = {},
                         modalClick = { }
                     )
                 }

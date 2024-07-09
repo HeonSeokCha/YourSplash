@@ -33,36 +33,32 @@ import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.SearchFilter
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNot
 
 @Composable
 fun SearchResultScreen(
-    query: String,
-    type: String,
+    state: SearchState,
+    onSearch: () -> Unit,
     modalClick: () -> Unit = { },
-    viewModel: SearchResultViewModel
 ) {
 
-    val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val scrollState = rememberLazyListState()
     var placeItemShow by remember { mutableStateOf(false) }
     var isEmptyShow by remember { mutableStateOf(false) }
 
-    LaunchedEffect(context, viewModel) {
-        viewModel.initSearchType(type)
-    }
 
-    LaunchedEffect(query) {
-        snapshotFlow { query }
+    LaunchedEffect(state.searchQuery) {
+        snapshotFlow { state.searchQuery }
             .distinctUntilChanged()
-            .filter { it.isNotEmpty() }
+            .filterNot{ it.isNullOrEmpty() }
             .collect {
-                viewModel.searchResult(it)
+                onSearch()
                 scrollState.scrollToItem(0, 0)
             }
     }
 
-    val pagingList = when (type) {
+    val pagingList = when (state.searchType) {
         Constants.SEARCH_PHOTO -> {
             state.searchPhotoList?.collectAsLazyPagingItems()
         }
