@@ -48,32 +48,34 @@ class SearchResultViewModel @Inject constructor(
 
     fun searchResult(query: String) {
         state = when (state.searchType) {
-                Constants.SEARCH_PHOTO -> {
-                   state.copy(
-                        searchPhotoList = searchResultPhotoUseCase(
-                            query = query,
-                            orderBy = state.orderBy,
-                            color = state.color,
-                            orientation = state.orientation
-                        ).cachedIn(viewModelScope)
-                    )
-                }
-                Constants.SEARCH_COLLECTION -> {
-                   state.copy(
-                        searchCollectionList = searchResultCollectionUseCase(
-                            query
-                        ).cachedIn(viewModelScope)
-                    )
-                }
-                Constants.SEARCH_USER -> {
-                   state.copy(
-                        searchUserList = searchResultUserUseCase(
-                            query
-                        ).cachedIn(viewModelScope)
-                    )
-                }
-                else -> state.copy()
+            Constants.SEARCH_PHOTO -> {
+                state.copy(
+                    searchPhotoList = searchResultPhotoUseCase(
+                        query = query,
+                        orderBy = state.orderBy,
+                        color = state.color,
+                        orientation = state.orientation
+                    ).cachedIn(viewModelScope)
+                )
             }
+
+            Constants.SEARCH_COLLECTION -> {
+                state.copy(
+                    searchCollectionList = searchResultCollectionUseCase(
+                        query
+                    ).cachedIn(viewModelScope)
+                )
+            }
+
+            Constants.SEARCH_USER -> {
+                state.copy(
+                    searchUserList = searchResultUserUseCase(
+                        query
+                    ).cachedIn(viewModelScope)
+                )
+            }
+
+            else -> state.copy()
         }
     }
 }

@@ -8,7 +8,7 @@ import com.chs.yoursplash.data.model.ResponsePhoto
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.util.Constants
 
-class CollectionPhotoDataSource(
+class CollectionPhotoPaging(
     private val api: UnSplashService,
     private val collectionId: String
 ): PagingSource<Int, Photo>() {

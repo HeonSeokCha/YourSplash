@@ -62,8 +62,7 @@ fun CollectionDetailScreen(
                 ImageCard(
                     photoInfo = lazyPagingItems[idx],
                     loadQuality = state.loadQuality,
-                    userClickAble = { userName -> navController.navigate(Screens.UserDetailScreen(userName)
-                        )
+                    userClickAble = { userName -> navController.navigate(Screens.UserDetailScreen(userName))
                     }, photoClickAble = { photoId ->
                         navController.navigate(Screens.ImageDetailScreen(photoId))
                     }

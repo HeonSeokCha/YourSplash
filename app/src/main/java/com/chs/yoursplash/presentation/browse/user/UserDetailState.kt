@@ -11,8 +11,8 @@ data class UserDetailState(
     val userDetailPhotoList: Flow<PagingData<Photo>>? = null,
     val userDetailLikeList: Flow<PagingData<Photo>>? = null,
     val userDetailCollection: Flow<PagingData<UnSplashCollection>>? = null,
-    val userTabLabList: MutableList<String> = mutableListOf(),
-    val loadQuality: String = "regular",
+    val userTabLabList: List<String> = listOf("PHOTOS", "LIKES", "COLLECT"),
+    val loadQuality: String = "Regular",
     val isLoading: Boolean = true,
     val isError: Boolean = false,
     val errorMessage: String = ""

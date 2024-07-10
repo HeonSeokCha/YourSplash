@@ -1,7 +1,9 @@
 package com.chs.yoursplash.presentation.main
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -11,8 +13,11 @@ import com.chs.yoursplash.presentation.bottom.collection.CollectionScreen
 import com.chs.yoursplash.presentation.bottom.collection.CollectionViewModel
 import com.chs.yoursplash.presentation.bottom.home.HomeScreen
 import com.chs.yoursplash.presentation.bottom.home.HomeViewModel
+import com.chs.yoursplash.presentation.search.SearchResultViewModel
 import com.chs.yoursplash.presentation.search.SearchScreen
 import com.chs.yoursplash.presentation.setting.SettingScreen
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNot
 
 @Composable
 fun MainNavHost(
@@ -43,8 +48,23 @@ fun MainNavHost(
         }
 
         composable<MainScreens.SearchScreen> {
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(MainScreens.SearchScreen)
+            }
+            val viewModel: SearchResultViewModel = hiltViewModel(parentEntry)
+
+            LaunchedEffect(searchQuery) {
+                snapshotFlow { searchQuery }
+                    .distinctUntilChanged()
+                    .filterNot{ it.isEmpty() }
+                    .collect {
+                        viewModel.searchResult(it)
+                    }
+            }
+
             SearchScreen(
-                searchQuery = searchQuery,
+                state = viewModel.state,
+                modalClick = { },
                 onBack = onBack
             )
         }

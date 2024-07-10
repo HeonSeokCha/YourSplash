@@ -36,7 +36,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-
     fun insertSearchHistory(query: String) {
         viewModelScope.launch {
             insertSearchHistoryUseCase(query)

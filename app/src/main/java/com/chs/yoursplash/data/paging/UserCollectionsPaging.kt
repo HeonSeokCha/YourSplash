@@ -4,13 +4,11 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.chs.yoursplash.data.api.UnSplashService
 import com.chs.yoursplash.data.mapper.toPhotoCollection
-import com.chs.yoursplash.data.mapper.toUnSplashImage
 import com.chs.yoursplash.data.model.ResponseCollection
-import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.util.Constants
 
-class UserCollectionsDataSource(
+class UserCollectionsPaging(
     private val api: UnSplashService,
     private val userName: String
 ): PagingSource<Int, UnSplashCollection>() {

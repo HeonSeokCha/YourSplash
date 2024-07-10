@@ -59,7 +59,7 @@ fun UserDetailCollectionScreen(
                             }
                             .clickable {
                                 onNavigate(
-                                    Screens.CollectionDetailScreen(id = collectionList[idx]!!.id)
+                                    Screens.CollectionDetailScreen(collectionList[idx]!!.id)
                                 )
                             },
                         model = ImageRequest.Builder(LocalContext.current)

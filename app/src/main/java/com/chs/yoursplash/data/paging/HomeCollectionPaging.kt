@@ -9,7 +9,7 @@ import com.chs.yoursplash.data.model.ResponseCollection
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.util.Constants
 
-class HomeCollectionDataSource(
+class HomeCollectionPaging(
     private val api: UnSplashService
 ) : PagingSource<Int, UnSplashCollection>() {
     override fun getRefreshKey(state: PagingState<Int, UnSplashCollection>): Int? {

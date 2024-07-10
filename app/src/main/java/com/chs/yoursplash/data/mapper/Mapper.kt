@@ -57,7 +57,7 @@ fun ResponseUserDetail.toUserDetail(): UserDetail {
         totalCollections = totalCollection,
         totalLikes = totalLikes,
         totalPhotos = totalPhotos,
-        tags = tags.custom.map { it.toUnSplashTag() },
+//        tags = tags.custom.map { it.toUnSplashTag() },
         followersCount = followersCount
     )
 }

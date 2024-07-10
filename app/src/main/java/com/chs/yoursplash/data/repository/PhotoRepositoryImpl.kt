@@ -13,16 +13,15 @@ import com.chs.yoursplash.data.mapper.toUnSplashImageDetail
 import com.chs.yoursplash.data.model.ResponseCollection
 import com.chs.yoursplash.data.model.ResponsePhotoDetail
 import com.chs.yoursplash.data.model.ResponseRelatedPhoto
-import com.chs.yoursplash.data.paging.CollectionPhotoDataSource
-import com.chs.yoursplash.data.paging.HomeCollectionDataSource
-import com.chs.yoursplash.data.paging.HomePhotosDataSource
+import com.chs.yoursplash.data.paging.CollectionPhotoPaging
+import com.chs.yoursplash.data.paging.HomeCollectionPaging
+import com.chs.yoursplash.data.paging.HomePhotosPaging
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.PhotoDetail
 import com.chs.yoursplash.domain.model.PhotoSaveInfo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.repository.PhotoRepository
 import com.chs.yoursplash.util.Constants
-import com.chs.yoursplash.util.Resource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -34,7 +33,7 @@ class PhotoRepositoryImpl @Inject constructor(
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
-            HomePhotosDataSource(client)
+            HomePhotosPaging(client)
         }.flow
     }
 
@@ -42,7 +41,7 @@ class PhotoRepositoryImpl @Inject constructor(
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
-            HomeCollectionDataSource(client)
+            HomeCollectionPaging(client)
         }.flow
     }
 
@@ -68,7 +67,7 @@ class PhotoRepositoryImpl @Inject constructor(
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
-            CollectionPhotoDataSource(client, id)
+            CollectionPhotoPaging(client, id)
         }.flow
     }
 

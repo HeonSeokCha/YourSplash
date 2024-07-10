@@ -47,7 +47,7 @@ fun BottomBar(
                         indicatorColor = MaterialTheme.colorScheme.primary
                     ),
                     onClick = {
-                        navController.navigate(destination) {
+                        navController.navigate(destination.first) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
                             }

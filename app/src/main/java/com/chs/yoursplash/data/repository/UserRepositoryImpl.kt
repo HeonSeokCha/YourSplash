@@ -6,9 +6,9 @@ import androidx.paging.PagingData
 import com.chs.yoursplash.data.api.UnSplashService
 import com.chs.yoursplash.data.mapper.toUserDetail
 import com.chs.yoursplash.data.model.ResponseUserDetail
-import com.chs.yoursplash.data.paging.UserCollectionsDataSource
-import com.chs.yoursplash.data.paging.UserLikesDataSource
-import com.chs.yoursplash.data.paging.UserPhotosDataSource
+import com.chs.yoursplash.data.paging.UserCollectionsPaging
+import com.chs.yoursplash.data.paging.UserLikesPhotoPaging
+import com.chs.yoursplash.data.paging.UserPhotosPaging
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.UserDetail
@@ -31,7 +31,7 @@ class UserRepositoryImpl @Inject constructor(
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
-            UserPhotosDataSource(client, userName)
+            UserPhotosPaging(client, userName)
         }.flow
     }
 
@@ -39,7 +39,7 @@ class UserRepositoryImpl @Inject constructor(
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
-            UserLikesDataSource(client, userName)
+            UserLikesPhotoPaging(client, userName)
         }.flow
     }
 
@@ -47,7 +47,7 @@ class UserRepositoryImpl @Inject constructor(
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
-            UserCollectionsDataSource(client, userName)
+            UserCollectionsPaging(client, userName)
         }.flow
     }
 }

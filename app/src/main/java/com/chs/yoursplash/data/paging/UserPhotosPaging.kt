@@ -8,7 +8,7 @@ import com.chs.yoursplash.data.model.ResponsePhoto
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.util.Constants
 
-class UserLikesDataSource(
+class UserPhotosPaging(
     private val api: UnSplashService,
     private val userName: String
 ): PagingSource<Int, Photo>() {
@@ -23,7 +23,7 @@ class UserLikesDataSource(
         return try {
             val page = params.key ?: 1
             val response = api.requestUnsplash<List<ResponsePhoto>>(
-                url = Constants.GET_USER_LIKES(userName),
+                url = Constants.GET_USER_PHOTOS(userName),
                 params = hashMapOf(
                     "page" to page.toString()
                 )

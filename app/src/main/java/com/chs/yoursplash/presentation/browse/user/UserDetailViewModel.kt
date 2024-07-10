@@ -1,5 +1,6 @@
 package com.chs.yoursplash.presentation.browse.user
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -36,6 +37,7 @@ class UserDetailViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            Log.e("CHS_LOG", userName)
             state = UserDetailState(
                 isLoading = false,
                 loadQuality = getLoadQualityUseCase(),

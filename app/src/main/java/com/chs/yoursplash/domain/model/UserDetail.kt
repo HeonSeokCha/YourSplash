@@ -10,6 +10,6 @@ data class UserDetail(
     val totalCollections: Int = 0,
     val totalLikes: Int = 0,
     val totalPhotos: Int = 0,
-    val tags: List<UnSplashTag>,
+//    val tags: List<UnSplashTag>,
     val followersCount: Int
 )

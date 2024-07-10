@@ -23,8 +23,8 @@ data class ResponseUserDetail(
     val totalLikes: Int,
     @SerialName("total_photos")
     val totalPhotos: Int,
-    @SerialName("tags")
-    val tags: ResponseUserDetailTags,
+//    @SerialName("tags")
+//    val tags: ResponseUserDetailTags,
     @SerialName("followers_count")
     val followersCount: Int
 )

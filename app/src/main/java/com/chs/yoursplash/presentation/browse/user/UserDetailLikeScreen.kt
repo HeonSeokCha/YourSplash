@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.itemKey
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.base.ImageCard
@@ -22,7 +23,10 @@ fun UserDetailLikeScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         if (photoList != null && photoList.itemCount != 0) {
-            items(photoList.itemCount) { idx ->
+            items(
+                count = photoList.itemCount,
+                key = photoList.itemKey { it.id }
+            ) { idx ->
 
                 ImageCard(
                     photoInfo = photoList[idx],

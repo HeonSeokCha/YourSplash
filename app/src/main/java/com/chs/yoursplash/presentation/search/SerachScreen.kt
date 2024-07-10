@@ -1,6 +1,6 @@
 package com.chs.yoursplash.presentation.search
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import android.content.Intent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -11,19 +11,21 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.chs.yoursplash.presentation.browse.BrowseActivity
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import com.chs.yoursplash.util.Constants
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SearchScreen(
-    searchQuery: String,
+    state: SearchState,
+    modalClick: () -> Unit,
     onBack: () -> Unit,
 ) {
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val tabList = remember { listOf("PHOTOS", "COLLECTIONS", "USERS") }
     val pagerState = rememberPagerState(initialPage = 0) { tabList.size }
@@ -72,30 +74,39 @@ fun SearchScreen(
         HorizontalPager(state = pagerState) { page ->
             when (page) {
                 0 -> {
-                    val viewModel: SearchResultViewModel = hiltViewModel<SearchResultViewModel>(key = Constants.SEARCH_PHOTO).apply {
-                        initSearchType(Constants.SEARCH_PHOTO)
+                    SearchResultPhotoScreen(
+                        state = state,
+                        modalClick = { modalClick() }
+                    ) {
+                        context.startActivity(
+                            Intent(context, BrowseActivity::class.java).apply {
+                                putExtra(Constants.TARGET_TYPE, it.first)
+                                putExtra(Constants.TARGET_ID, it.second)
+                            }
+                        )
                     }
-                    SearchResultScreen(
-                        state = viewModel.state,
-                        onSearch = {},
-                        modalClick = { }
-                    )
                 }
+
                 1 -> {
-                    val viewModel: SearchResultViewModel = hiltViewModel(key = Constants.SEARCH_COLLECTION)
-                    SearchResultScreen(
-                        state = viewModel.state,
-                        onSearch = {},
-                        modalClick = { }
-                    )
+                    SearchResultCollectionScreen(state = state) {
+                        context.startActivity(
+                            Intent(context, BrowseActivity::class.java).apply {
+                                putExtra(Constants.TARGET_TYPE, it.first)
+                                putExtra(Constants.TARGET_ID, it.second)
+                            }
+                        )
+                    }
                 }
+
                 2 -> {
-                    val viewModel: SearchResultViewModel = hiltViewModel(key = Constants.SEARCH_USER)
-                    SearchResultScreen(
-                        state = viewModel.state,
-                        onSearch = {},
-                        modalClick = { }
-                    )
+                    SearchResultUserScreen(state = state) {
+                        context.startActivity(
+                            Intent(context, BrowseActivity::class.java).apply {
+                                putExtra(Constants.TARGET_TYPE, it.first)
+                                putExtra(Constants.TARGET_ID, it.second)
+                            }
+                        )
+                    }
                 }
             }
         }

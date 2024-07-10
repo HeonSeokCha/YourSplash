@@ -56,9 +56,8 @@ fun ImageCard(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(photoInfo?.user?.photoProfile?.large)
                     .crossfade(true)
-                    .build()
-                ,
-                placeholder = Constants.getPlaceHolder(photoInfo?.blurHash),
+                    .build(),
+                placeholder = ColorPainter(Color.Gray),
                 contentDescription = null
             )
             Spacer(modifier = Modifier.width(16.dp))
