@@ -6,7 +6,7 @@ import com.chs.yoursplash.domain.repository.PhotoRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetCollectionPhotoUserCase @Inject constructor(
+class GetCollectionPhotoUseCase @Inject constructor(
     private val repository: PhotoRepository
 ) {
     operator fun invoke(id: String): Flow<PagingData<Photo>> {

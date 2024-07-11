@@ -69,6 +69,7 @@ fun ImageCard(
                 maxLines = 1
             )
         }
+
         AsyncImage(
             modifier = Modifier
                 .fillMaxWidth()

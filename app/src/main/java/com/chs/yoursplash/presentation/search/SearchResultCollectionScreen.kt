@@ -43,7 +43,7 @@ fun SearchResultCollectionScreen(
                     userClickAble = { userName ->
                         clickable(Constants.TARGET_USER to userName)
                     }, collectionClickAble = { collectId ->
-                        clickable(Constants.TARGET_PHOTO to collectId)
+                        clickable(Constants.TARGET_COLLECTION to collectId)
                     }
                 )
             }

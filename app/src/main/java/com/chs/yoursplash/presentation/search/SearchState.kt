@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 
 data class SearchState(
     val searchQuery: String? = null,
-    val searchType: String? = null,
     val searchPhotoList: Flow<PagingData<Photo>>? = null,
     val searchCollectionList: Flow<PagingData<UnSplashCollection>>? = null,
     val searchUserList: Flow<PagingData<User>>? = null,

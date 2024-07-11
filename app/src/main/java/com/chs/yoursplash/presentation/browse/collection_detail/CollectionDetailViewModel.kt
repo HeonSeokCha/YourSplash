@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.chs.yoursplash.domain.usecase.GetCollectionDetailUseCase
-import com.chs.yoursplash.domain.usecase.GetCollectionPhotoUserCase
+import com.chs.yoursplash.domain.usecase.GetCollectionPhotoUseCase
 import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class CollectionDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getCollectionDetailUseCase: GetCollectionDetailUseCase,
-    private val getCollectionPhotoUserCase: GetCollectionPhotoUserCase,
+    private val getCollectionPhotoUseCase: GetCollectionPhotoUseCase,
     private val getLoadQualityUseCase: GetLoadQualityUseCase
 ) : ViewModel() {
 
@@ -34,7 +34,7 @@ class CollectionDetailViewModel @Inject constructor(
                 isLoading = false,
                 loadQuality = getLoadQualityUseCase(),
                 collectionDetailInfo = getCollectionDetailUseCase(collectionId),
-                collectionPhotos = getCollectionPhotoUserCase(collectionId).cachedIn(this)
+                collectionPhotos = getCollectionPhotoUseCase(collectionId).cachedIn(this)
             )
         }
     }

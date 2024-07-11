@@ -27,15 +27,10 @@ class SearchResultViewModel @Inject constructor(
     private val getLoadQualityUseCase: GetLoadQualityUseCase
 ) : ViewModel() {
 
-
     var state: SearchState by mutableStateOf(SearchState())
 
     init {
         getImageLoadQuality()
-    }
-
-    fun initSearchType(searchType: String) {
-        state = state.copy(searchType = searchType)
     }
 
     private fun getImageLoadQuality() {
@@ -47,35 +42,15 @@ class SearchResultViewModel @Inject constructor(
     }
 
     fun searchResult(query: String) {
-        state = when (state.searchType) {
-            Constants.SEARCH_PHOTO -> {
-                state.copy(
-                    searchPhotoList = searchResultPhotoUseCase(
-                        query = query,
-                        orderBy = state.orderBy,
-                        color = state.color,
-                        orientation = state.orientation
-                    ).cachedIn(viewModelScope)
-                )
-            }
-
-            Constants.SEARCH_COLLECTION -> {
-                state.copy(
-                    searchCollectionList = searchResultCollectionUseCase(
-                        query
-                    ).cachedIn(viewModelScope)
-                )
-            }
-
-            Constants.SEARCH_USER -> {
-                state.copy(
-                    searchUserList = searchResultUserUseCase(
-                        query
-                    ).cachedIn(viewModelScope)
-                )
-            }
-
-            else -> state.copy()
-        }
+        state = state.copy(
+            searchPhotoList = searchResultPhotoUseCase(
+                query = query,
+                orderBy = state.orderBy,
+                color = state.color,
+                orientation = state.orientation
+            ).cachedIn(viewModelScope),
+            searchCollectionList = searchResultCollectionUseCase(query).cachedIn(viewModelScope),
+            searchUserList = searchResultUserUseCase(query).cachedIn(viewModelScope)
+        )
     }
 }
