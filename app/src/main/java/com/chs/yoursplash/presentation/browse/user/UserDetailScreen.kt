@@ -81,45 +81,57 @@ fun UserDetailScreen(
             ) { pager ->
                 when (pager) {
                     0 -> {
-                        if (state.userTabLabList[0] == "PHOTOS") {
-                            UserDetailPhotoScreen(
-                                state.userDetailPhotoList?.collectAsLazyPagingItems(),
-                                state.loadQuality
-                            ) {
-                                onNavigate(it)
-                            }
-                        } else if (state.userTabLabList[0] == "LIKES") {
-                            UserDetailLikeScreen(
-                                state.userDetailLikeList?.collectAsLazyPagingItems(),
-                                state.loadQuality
-                            ) {
-                                onNavigate(it)
-                            }
-                        } else {
-                            UserDetailCollectionScreen(
-                                state.userDetailCollection?.collectAsLazyPagingItems(),
-                                state.loadQuality
-                            ) {
-                                onNavigate(it)
-                            }
+                        UserDetailPhotoScreen(
+                            state.userDetailPhotoList?.collectAsLazyPagingItems(),
+                            state.loadQuality
+                        ) {
+                            onNavigate(it)
                         }
+//                        if (state.userTabLabList[0] == "PHOTOS") {
+//                            UserDetailPhotoScreen(
+//                                state.userDetailPhotoList?.collectAsLazyPagingItems(),
+//                                state.loadQuality
+//                            ) {
+//                                onNavigate(it)
+//                            }
+//                        } else if (state.userTabLabList[0] == "LIKES") {
+//                            UserDetailLikeScreen(
+//                                state.userDetailLikeList?.collectAsLazyPagingItems(),
+//                                state.loadQuality
+//                            ) {
+//                                onNavigate(it)
+//                            }
+//                        } else {
+//                            UserDetailCollectionScreen(
+//                                state.userDetailCollection?.collectAsLazyPagingItems(),
+//                                state.loadQuality
+//                            ) {
+//                                onNavigate(it)
+//                            }
+//                        }
                     }
                     1 -> {
-                        if (state.userTabLabList[1] == "LIKES") {
-                            UserDetailLikeScreen(
-                                state.userDetailLikeList?.collectAsLazyPagingItems(),
-                                state.loadQuality
-                            ) {
-                                onNavigate(it)
-                            }
-                        } else {
-                            UserDetailCollectionScreen(
-                                state.userDetailCollection?.collectAsLazyPagingItems(),
-                                state.loadQuality
-                            ) {
-                                onNavigate(it)
-                            }
+                        UserDetailLikeScreen(
+                            state.userDetailLikeList?.collectAsLazyPagingItems(),
+                            state.loadQuality
+                        ) {
+                            onNavigate(it)
                         }
+//                        if (state.userTabLabList[1] == "LIKES") {
+//                            UserDetailLikeScreen(
+//                                state.userDetailLikeList?.collectAsLazyPagingItems(),
+//                                state.loadQuality
+//                            ) {
+//                                onNavigate(it)
+//                            }
+//                        } else {
+//                            UserDetailCollectionScreen(
+//                                state.userDetailCollection?.collectAsLazyPagingItems(),
+//                                state.loadQuality
+//                            ) {
+//                                onNavigate(it)
+//                            }
+//                        }
                     }
                     2 -> {
                         UserDetailCollectionScreen(

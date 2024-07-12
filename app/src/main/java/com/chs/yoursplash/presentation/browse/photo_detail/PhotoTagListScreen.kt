@@ -34,7 +34,7 @@ fun PhotoTagListScreen(
         if (resultPagingItems != null && resultPagingItems.itemCount != 0) {
             items(
                 count = resultPagingItems.itemCount,
-                key = { resultPagingItems.itemKey { it.id} }
+                key = resultPagingItems.itemKey { it.id }
             ) {idx ->
                 ImageCard(
                     photoInfo = resultPagingItems[idx],

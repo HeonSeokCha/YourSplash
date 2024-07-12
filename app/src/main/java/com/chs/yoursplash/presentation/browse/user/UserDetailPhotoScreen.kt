@@ -1,8 +1,11 @@
 package com.chs.yoursplash.presentation.browse.user
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.runtime.Composable
@@ -16,6 +19,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.presentation.Screens
+import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.util.Constants
 
 @Composable
@@ -31,7 +35,7 @@ fun UserDetailPhotoScreen(
         if (photoList != null && photoList.itemCount != 0) {
             items(
                 count = photoList.itemCount,
-                key = { photoList.itemKey { it.id } }
+                key = photoList.itemKey { it.id }
             ) { idx ->
                 AsyncImage(
                     modifier = Modifier
