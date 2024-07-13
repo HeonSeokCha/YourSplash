@@ -37,79 +37,10 @@ class UserDetailViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val detailInfo = getUserDetailUseCase(userName)
-            if (detailInfo.totalPhotos == 0) {
-                state = if (detailInfo.totalLikes == 0) {
-                    state.copy(
-                        userTabLabList = listOf("COLLECT")
-                    )
-                } else {
-                    state.copy(
-                        userTabLabList = listOf("LIKES", "COLLECT")
-                    )
-                }
-
-                state = if (detailInfo.totalCollections == 0) {
-                    state.copy(
-                        userTabLabList = listOf("LIKES")
-                    )
-                } else {
-                    state.copy(
-                        userTabLabList = listOf("LIKES", "COLLECT")
-                    )
-                }
-            }
-
-            if (detailInfo.totalLikes == 0) {
-
-                state = if (detailInfo.totalPhotos == 0) {
-                    state.copy(
-                        userTabLabList = listOf("COLLECT")
-                    )
-                } else {
-                    state.copy(
-                        userTabLabList = listOf("PHOTOS", "COLLECT")
-                    )
-                }
-
-                state = if (detailInfo.totalCollections == 0) {
-                    state.copy(
-                        userTabLabList = listOf("PHOTOS")
-                    )
-                } else {
-                    state.copy(
-                        userTabLabList = listOf("PHOTOS", "COLLECT")
-                    )
-                }
-            }
-
-            if (detailInfo.totalCollections == 0) {
-
-                state = if (detailInfo.totalPhotos == 0) {
-                    state.copy(
-                        userTabLabList = listOf("LIKES")
-                    )
-                } else {
-                    state.copy(
-                        userTabLabList = listOf("PHOTOS", "LIKES")
-                    )
-                }
-
-                state = if (detailInfo.totalLikes == 0) {
-                    state.copy(
-                        userTabLabList = listOf("PHOTOS")
-                    )
-                } else {
-                    state.copy(
-                        userTabLabList = listOf("PHOTOS", "LIKES")
-                    )
-                }
-            }
-
             state = UserDetailState(
                 isLoading = false,
                 loadQuality = getLoadQualityUseCase(),
-                userDetailInfo = detailInfo,
+                userDetailInfo = getUserDetailUseCase(userName),
                 userDetailPhotoList = getUserPhotoUseCase(userName).cachedIn(viewModelScope),
                 userDetailCollection = getUserCollectionUseCase(userName).cachedIn(viewModelScope),
                 userDetailLikeList = getUserLikesUseCase(userName).cachedIn(viewModelScope)

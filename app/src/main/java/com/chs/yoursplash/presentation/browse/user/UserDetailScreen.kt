@@ -1,5 +1,6 @@
 package com.chs.yoursplash.presentation.browse.user
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -87,29 +88,8 @@ fun UserDetailScreen(
                         ) {
                             onNavigate(it)
                         }
-//                        if (state.userTabLabList[0] == "PHOTOS") {
-//                            UserDetailPhotoScreen(
-//                                state.userDetailPhotoList?.collectAsLazyPagingItems(),
-//                                state.loadQuality
-//                            ) {
-//                                onNavigate(it)
-//                            }
-//                        } else if (state.userTabLabList[0] == "LIKES") {
-//                            UserDetailLikeScreen(
-//                                state.userDetailLikeList?.collectAsLazyPagingItems(),
-//                                state.loadQuality
-//                            ) {
-//                                onNavigate(it)
-//                            }
-//                        } else {
-//                            UserDetailCollectionScreen(
-//                                state.userDetailCollection?.collectAsLazyPagingItems(),
-//                                state.loadQuality
-//                            ) {
-//                                onNavigate(it)
-//                            }
-//                        }
                     }
+
                     1 -> {
                         UserDetailLikeScreen(
                             state.userDetailLikeList?.collectAsLazyPagingItems(),
@@ -117,22 +97,8 @@ fun UserDetailScreen(
                         ) {
                             onNavigate(it)
                         }
-//                        if (state.userTabLabList[1] == "LIKES") {
-//                            UserDetailLikeScreen(
-//                                state.userDetailLikeList?.collectAsLazyPagingItems(),
-//                                state.loadQuality
-//                            ) {
-//                                onNavigate(it)
-//                            }
-//                        } else {
-//                            UserDetailCollectionScreen(
-//                                state.userDetailCollection?.collectAsLazyPagingItems(),
-//                                state.loadQuality
-//                            ) {
-//                                onNavigate(it)
-//                            }
-//                        }
                     }
+
                     2 -> {
                         UserDetailCollectionScreen(
                             state.userDetailCollection?.collectAsLazyPagingItems(),
@@ -177,7 +143,7 @@ private fun UserDetailInfo(userInfo: UserDetail?) {
                 .padding(start = 16.dp)
         ) {
             Text(
-                text = userInfo?.userName ?: "Unknown",
+                text = userInfo?.name ?: "Unknown",
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 18.sp,
                 maxLines = 1,
