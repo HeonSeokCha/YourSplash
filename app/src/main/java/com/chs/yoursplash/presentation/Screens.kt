@@ -14,5 +14,5 @@ sealed class Screens {
     data class CollectionDetailScreen(val collectionId: String) : Screens()
 
     @Serializable
-    data class PhotoTagResultScreen(val tageName: String) : Screens()
+    data class PhotoTagResultScreen(val tagName: String) : Screens()
 }

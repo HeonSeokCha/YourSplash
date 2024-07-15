@@ -61,7 +61,6 @@ android {
 }
 
 dependencies {
-    implementation(libs.bundles.android)
     implementation(libs.bundles.compose)
 
     implementation(libs.hilt.android)

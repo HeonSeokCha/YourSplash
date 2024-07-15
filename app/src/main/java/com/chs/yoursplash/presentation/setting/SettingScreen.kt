@@ -17,9 +17,9 @@ import com.chs.yoursplash.util.Constants
 
 @Composable
 fun SettingScreen(
-    viewModel: SettingViewModel = hiltViewModel()
+    state: SettingState,
+    onEvent: (SettingEvent) -> Unit
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
     var openDialog by remember { mutableStateOf(false) }
     var selectButtonInfo by remember { mutableStateOf("" to "") }
     var selectButtonTitle by remember { mutableStateOf("") }
@@ -75,9 +75,11 @@ fun SettingScreen(
                 confirmButton = {
                     Button(
                         onClick = {
-                            viewModel.putSettingPreference(
-                                selectButtonInfo.first,
-                                selectButtonInfo.second
+                            onEvent(
+                                SettingEvent.PutSettingValue(
+                                    key = selectButtonInfo.first,
+                                    value = selectButtonInfo.second
+                                )
                             )
                             openDialog = false
                         }

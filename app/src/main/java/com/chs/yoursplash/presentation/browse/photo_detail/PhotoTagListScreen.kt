@@ -5,14 +5,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.chs.yoursplash.presentation.Screens
@@ -21,7 +15,8 @@ import com.chs.yoursplash.presentation.base.ImageCard
 @Composable
 fun PhotoTagListScreen(
     state: PhotoTagListState,
-    navController: NavHostController,
+    onNavigateUser: (Screens.UserDetailScreen) -> Unit,
+    onNavigatePhoto: (Screens.ImageDetailScreen) -> Unit
 ) {
     val resultPagingItems = state.tagSearchResultList?.collectAsLazyPagingItems()
 
@@ -40,9 +35,9 @@ fun PhotoTagListScreen(
                     photoInfo = resultPagingItems[idx],
                     loadQuality = state.loadQuality,
                     userClickAble = { userName ->
-                        navController.navigate(Screens.UserDetailScreen(userName))
+                        onNavigateUser(Screens.UserDetailScreen(userName))
                     }, photoClickAble = { photoId ->
-                        navController.navigate(Screens.ImageDetailScreen(photoId))
+                        onNavigatePhoto(Screens.ImageDetailScreen(photoId))
                     }
                 )
             }

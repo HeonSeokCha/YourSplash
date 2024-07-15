@@ -1,14 +1,11 @@
 package com.chs.yoursplash.presentation.browse.photo_detail
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,7 +19,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.chs.yoursplash.presentation.Screens
@@ -31,7 +27,7 @@ import com.chs.yoursplash.util.*
 @Composable
 fun ImageDetailScreen(
     state: PhotoDetailState,
-    navController: NavHostController,
+    onNavigate: (Screens) -> Unit
 ) {
 //    val context = LocalContext.current
 //    var downLoadQueueId: Long by remember { mutableLongStateOf(0L) }
@@ -126,7 +122,7 @@ fun ImageDetailScreen(
 
                 if (state.imageDetailInfo != null) {
                     ImageDetailInfo(state.imageDetailInfo) { selectTag ->
-                        navController.navigate(
+                        onNavigate(
                             Screens.PhotoTagResultScreen(selectTag)
                         )
                     }
@@ -148,7 +144,7 @@ fun ImageDetailScreen(
                             bottom = 16.dp
                         )
                         .clickable {
-                            navController.navigate(Screens.ImageDetailScreen(item.id))
+                            onNavigate(Screens.ImageDetailScreen(item.id))
                         },
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(Constants.getPhotoQualityUrl(item.urls, state.loadQuality))

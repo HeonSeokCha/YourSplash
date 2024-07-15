@@ -27,7 +27,7 @@ import com.chs.yoursplash.presentation.base.ImageCard
 @Composable
 fun CollectionDetailScreen(
     state: CollectionDetailState,
-    navController: NavHostController,
+    onNavigate: (Screens) -> Unit
 ) {
 
     val context = LocalContext.current
@@ -62,9 +62,10 @@ fun CollectionDetailScreen(
                 ImageCard(
                     photoInfo = lazyPagingItems[idx],
                     loadQuality = state.loadQuality,
-                    userClickAble = { userName -> navController.navigate(Screens.UserDetailScreen(userName))
+                    userClickAble = { userName ->
+                        onNavigate(Screens.UserDetailScreen(userName))
                     }, photoClickAble = { photoId ->
-                        navController.navigate(Screens.ImageDetailScreen(photoId))
+                        onNavigate(Screens.ImageDetailScreen(photoId))
                     }
                 )
             }

@@ -16,6 +16,7 @@ import com.chs.yoursplash.presentation.bottom.home.HomeViewModel
 import com.chs.yoursplash.presentation.search.SearchResultViewModel
 import com.chs.yoursplash.presentation.search.SearchScreen
 import com.chs.yoursplash.presentation.setting.SettingScreen
+import com.chs.yoursplash.presentation.setting.SettingViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNot
 
@@ -70,7 +71,14 @@ fun MainNavHost(
         }
 
         composable<MainScreens.SettingScreen> {
-            SettingScreen()
+            val parentEntry = remember(it) {
+                navController.getBackStackEntry(MainScreens.SettingScreen)
+            }
+            val viewModel: SettingViewModel = hiltViewModel(parentEntry)
+            SettingScreen(
+                state = viewModel.state,
+                onEvent = viewModel::onEvent
+            )
         }
     }
 }

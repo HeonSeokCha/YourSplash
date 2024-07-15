@@ -1,5 +1,8 @@
 package com.chs.yoursplash.presentation.setting
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chs.yoursplash.domain.usecase.GetDownloadQualityUseCase
@@ -8,10 +11,6 @@ import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.domain.usecase.PutStringPrefUseCase
 import com.chs.yoursplash.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,43 +22,49 @@ class SettingViewModel @Inject constructor(
     private val putStringPrefUseCase: PutStringPrefUseCase
 ) : ViewModel() {
 
-    private var _state: MutableStateFlow<SettingState> = MutableStateFlow(SettingState())
-    val state: StateFlow<SettingState> = _state.asStateFlow()
+    var state by mutableStateOf(SettingState())
 
     init {
         viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    downLoadQualityValue = getDownloadQualityUseCase(),
-                    loadQualityValue = getLoadQualityUseCase(),
-                    wallpaperQualityValue = getImageDetailQualityUseCase()
+            state = state.copy(
+                downLoadQualityValue = getDownloadQualityUseCase(),
+                loadQualityValue = getLoadQualityUseCase(),
+                wallpaperQualityValue = getImageDetailQualityUseCase()
+            )
+        }
+    }
+
+    fun onEvent(event: SettingEvent) {
+        when (event) {
+            is SettingEvent.PutSettingValue -> {
+                putSettingValue(
+                    key = event.key,
+                    value = event.value
                 )
             }
         }
     }
 
-    fun putSettingPreference(
-        title: String,
+    private fun putSettingValue(
+        key: String,
         value: String
     ) {
         viewModelScope.launch {
-            putStringPrefUseCase(title, value)
-            _state.update {
-                when (title) {
-                    Constants.PREFERENCE_KEY_LOAD_QUALITY -> {
-                        it.copy(loadQualityValue = value)
-                    }
-
-                    Constants.PREFERENCE_KEY_DOWNLOAD_QUALITY -> {
-                        it.copy(downLoadQualityValue = value)
-                    }
-
-                    Constants.PREFERENCE_KEY_WALLPAPER_QUALITY -> {
-                        it.copy(wallpaperQualityValue = value)
-                    }
-
-                    else -> it
+            putStringPrefUseCase(key, value)
+            state = when (key) {
+                Constants.PREFERENCE_KEY_LOAD_QUALITY -> {
+                    state.copy(loadQualityValue = value)
                 }
+
+                Constants.PREFERENCE_KEY_DOWNLOAD_QUALITY -> {
+                    state.copy(downLoadQualityValue = value)
+                }
+
+                Constants.PREFERENCE_KEY_WALLPAPER_QUALITY -> {
+                    state.copy(wallpaperQualityValue = value)
+                }
+
+                else -> state
             }
         }
     }
