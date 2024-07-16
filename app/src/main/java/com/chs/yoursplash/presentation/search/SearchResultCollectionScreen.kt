@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -14,6 +16,8 @@ import androidx.paging.compose.itemKey
 import com.chs.yoursplash.presentation.base.CollectionCard
 import com.chs.yoursplash.util.Constants
 import io.ktor.websocket.Frame
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNot
 
 @Composable
 fun SearchResultCollectionScreen(
@@ -22,6 +26,17 @@ fun SearchResultCollectionScreen(
 ) {
     val pagingList = state.searchCollectionList?.collectAsLazyPagingItems()
     val scrollState = rememberLazyListState()
+
+    LaunchedEffect(state.searchQuery) {
+        if (state.searchQuery != null) {
+            snapshotFlow { state.searchQuery }
+                .distinctUntilChanged()
+                .filterNot { it.isNotEmpty() }
+                .collect {
+                    scrollState.scrollToItem(0)
+                }
+        }
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -32,10 +47,7 @@ fun SearchResultCollectionScreen(
     ) {
         if (pagingList != null) {
 
-            items(
-                count = pagingList.itemCount,
-                key = pagingList.itemKey(key = { it.id })
-            ) { idx ->
+            items(count = pagingList.itemCount) { idx ->
                 val item = pagingList[idx]
                 CollectionCard(
                     collectionInfo = item,

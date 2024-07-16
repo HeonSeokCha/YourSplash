@@ -86,17 +86,18 @@ fun ImageDetailScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Row(
+                        modifier = Modifier
+                            .clickable {
+                                if (state.imageDetailInfo?.user?.userName != null) {
+                                    onNavigate(
+                                        Screens.UserDetailScreen(state.imageDetailInfo.user.userName)
+                                    )
+                                }
+                            },
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         AsyncImage(
                             modifier = Modifier
-                                .clickable {
-                                    if (state.imageDetailInfo?.user != null) {
-                                        Screens.UserDetailScreen(
-                                            state.imageDetailInfo.user.userName
-                                        )
-                                    }
-                                }
                                 .size(40.dp)
                                 .clip(RoundedCornerShape(100)),
                             model = ImageRequest.Builder(LocalContext.current)

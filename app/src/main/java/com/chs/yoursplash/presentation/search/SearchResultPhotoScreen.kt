@@ -15,11 +15,13 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -27,6 +29,8 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.util.Constants
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNot
 
 @Composable
 fun SearchResultPhotoScreen(
@@ -37,6 +41,17 @@ fun SearchResultPhotoScreen(
     val pagingList = state.searchPhotoList?.collectAsLazyPagingItems()
     val scrollState = rememberLazyListState()
 
+    LaunchedEffect(state.searchQuery) {
+        if (state.searchQuery != null) {
+            snapshotFlow { state.searchQuery }
+                .distinctUntilChanged()
+                .filterNot { it.isNotEmpty() }
+                .collect {
+                    scrollState.scrollToItem(0)
+                }
+        }
+    }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize(),
@@ -45,10 +60,7 @@ fun SearchResultPhotoScreen(
         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
     ) {
         if (pagingList != null) {
-            items(
-                count = pagingList.itemCount,
-                key = pagingList.itemKey(key = { it.id })
-            ) { idx ->
+            items(count = pagingList.itemCount) { idx ->
                 val item = pagingList[idx]
                 ImageCard(
                     photoInfo = item,
