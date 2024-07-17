@@ -16,11 +16,17 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.*
+import io.ktor.client.call.body
 import io.ktor.client.engine.android.*
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.*
+import io.ktor.client.plugins.observer.ResponseObserver
 import io.ktor.client.request.headers
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
@@ -45,6 +51,7 @@ object SourceModule {
     fun providerKtorHttpClient(): UnSplashService {
         return UnSplashService(
             HttpClient(Android) {
+                expectSuccess = true
                 defaultRequest {
                     headers {
                         this.append("Accept-Version", "v1")
@@ -63,9 +70,22 @@ object SourceModule {
                 }
 
                 install(ContentNegotiation) {
-                    json(Json {
+                    json(
+                        Json {
                         ignoreUnknownKeys = true
                     })
+                }
+
+                HttpResponseValidator {
+                    handleResponseExceptionWithRequest { exception, request ->
+                        val clientException =
+                            exception as? ClientRequestException ?: return@handleResponseExceptionWithRequest
+                        val exceptionResponse = exception.response
+                        if (exceptionResponse.status == HttpStatusCode.Forbidden) {
+                            val exceptionResponseText = exceptionResponse.bodyAsText()
+                            throw ClientRequestException(exceptionResponse, exceptionResponseText)
+                        }
+                    }
                 }
             }
         )

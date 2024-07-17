@@ -8,9 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -23,7 +22,7 @@ import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.util.Constants
 
 @Composable
-fun CollectionCard(
+fun CollectionInfoCard(
     collectionInfo: UnSplashCollection?,
     loadQuality: String,
     userClickAble: (userName: String) -> Unit,
@@ -66,56 +65,114 @@ fun CollectionCard(
             )
         }
 
-        Box(
-           modifier = Modifier
-               .fillMaxWidth()
-               .height(250.dp)
+        CollectionCard(
+            collectionInfo = collectionInfo,
+            loadQuality = loadQuality
+        ) {
+            collectionClickAble(it)
+        }
+    }
+}
+
+@Composable
+fun CollectionSimpleCard(
+    collectionInfo: UnSplashCollection?,
+    loadQuality: String,
+    collectionClickAble: (collectionId: String) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+    ) {
+        CollectionCard(collectionInfo = collectionInfo, loadQuality = loadQuality) {
+            collectionClickAble(it)
+        }
+    }
+}
+
+@Composable
+private fun CollectionCard(
+    collectionInfo: UnSplashCollection?,
+    loadQuality: String,
+    collectionClickAble: (String) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(250.dp)
+            .clickable {
+                collectionClickAble(collectionInfo?.id ?: "")
+            }
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(6f)
         ) {
             AsyncImage(
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(RoundedCornerShape(10.dp))
-                    .drawWithContent {
-                        drawContent()
-                        drawRect(
-                            brush = Brush.verticalGradient(listOf(Color.Transparent, Color.Black)),
-                            alpha = 0.4f
-                        )
-                    }
-                    .clickable {
-                        collectionClickAble(collectionInfo?.id ?: "")
-                    },
+                    .padding(end = 4.dp)
+                    .clip(RoundedCornerShape(topStart = 10.dp, bottomStart = 10.dp)),
                 model = ImageRequest.Builder(LocalContext.current)
-                   .data(Constants.getPhotoQualityUrl(collectionInfo?.previewPhotos?.first()?.urls, loadQuality))
+                    .data(
+                        Constants.getPhotoQualityUrl(
+                            collectionInfo?.previewPhotos?.get(0)?.urls,
+                            loadQuality
+                        )
+                    )
                     .crossfade(true)
-                    .build()
-                ,
+                    .build(),
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
                 placeholder = Constants.getPlaceHolder(collectionInfo?.previewPhotos?.first()?.blurHash)
             )
+        }
 
-            Column(
+        Column(
+            modifier = Modifier
+                .weight(4f)
+        ) {
+            AsyncImage(
                 modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(
-                        start = 16.dp,
-                        bottom = 16.dp
+                    .fillMaxWidth()
+                    .height(125.dp)
+                    .padding(bottom = 2.dp)
+                    .clip(RoundedCornerShape(topEnd = 10.dp)),
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(
+                        Constants.getPhotoQualityUrl(
+                            collectionInfo?.previewPhotos?.get(1)?.urls,
+                            loadQuality
+                        )
                     )
-            ) {
-                Text(
-                    text = collectionInfo?.title ?: "...",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-                Text(
-                    text = "${collectionInfo?.totalPhotos ?: 0} Photos",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White
-                )
-            }
+                    .crossfade(true)
+                    .build(),
+                contentScale = ContentScale.Crop,
+                contentDescription = null,
+                placeholder = ColorPainter(Color.LightGray)
+            )
+
+            AsyncImage(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(125.dp)
+                    .padding(top = 2.dp)
+                    .clip(RoundedCornerShape(bottomEnd = 10.dp)),
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(
+                        Constants.getPhotoQualityUrl(
+                            collectionInfo?.previewPhotos?.get(2)?.urls,
+                            loadQuality
+                        )
+                    )
+                    .crossfade(true)
+                    .build(),
+                contentScale = ContentScale.Crop,
+                contentDescription = null,
+                placeholder = ColorPainter(Color.LightGray)
+            )
         }
     }
 }

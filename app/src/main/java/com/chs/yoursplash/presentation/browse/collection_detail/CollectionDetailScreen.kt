@@ -57,7 +57,6 @@ fun CollectionDetailScreen(
         if (lazyPagingItems != null && lazyPagingItems.itemCount != 0) {
             items(
                 count = lazyPagingItems.itemCount,
-                key = lazyPagingItems.itemKey { it.id }
             ) { idx ->
                 ImageCard(
                     photoInfo = lazyPagingItems[idx],

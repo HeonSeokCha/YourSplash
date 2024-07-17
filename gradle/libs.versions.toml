@@ -1,5 +1,5 @@
 [versions]
-androidStudioGradlePlugin = "8.5.0"
+androidStudioGradlePlugin = "8.5.1"
 
 compileSdkVersion = "34"
 kotlinGradlePlugin = "2.0.0"
@@ -14,11 +14,11 @@ lifecycle = "2.8.3"
 room = "2.6.1"
 paging = "3.3.0"
 coil = "2.6.0"
-hilt = "2.50"
+hilt = "2.51.1"
 kotlin = "2.0.0"
 ksp = "2.0.0-1.0.22"
 kotlin-coroutine = "1.8.1"
-ktor = "2.3.11"
+ktor = "2.3.12"
 
 [libraries]
 # AndroidX
@@ -44,9 +44,8 @@ hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.re
 hilt-navigation-compose = "androidx.hilt:hilt-navigation-compose:1.2.0"
 
 ## Kotlin
-kotlin-coroutine-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlin-coroutine" }
 kotlin-coroutine-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlin-coroutine" }
-kotlin-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3"
+kotlin-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1"
 
 ## Ktor
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor"}

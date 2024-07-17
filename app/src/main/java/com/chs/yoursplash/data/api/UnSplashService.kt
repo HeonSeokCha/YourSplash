@@ -1,5 +1,6 @@
 package com.chs.yoursplash.data.api
 
+import android.util.Log
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -13,14 +14,15 @@ class UnSplashService @Inject constructor(
         url: String,
         params: HashMap<String, String> = hashMapOf(),
     ): T {
-        val a = service.get(url) {
-            params.forEach { (key, value) ->
-                this.parameter(key, value)
-            }
+        return try {
+            service.get(url) {
+                params.forEach { (key, value) ->
+                    this.parameter(key, value)
+                }
+            }.body<T>()
+        } catch (e: Exception) {
+            Log.e("CHS_LOG", e.message.toString())
+            throw e
         }
-
-        val b = a.bodyAsText()
-
-        return a.body<T>()
     }
 }

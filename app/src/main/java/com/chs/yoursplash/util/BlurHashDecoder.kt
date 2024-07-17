@@ -31,7 +31,13 @@ object BlurHashDecoder {
      *                 if the cache does not exist yet it will be created and populated with new calculations.
      *                 By default it is true.
      */
-    fun decode(blurHash: String?, width: Int = 4, height: Int = 3, punch: Float = 1f, useCache: Boolean = true): Bitmap? {
+    fun decode(
+        blurHash: String?,
+        width: Int = 4,
+        height: Int = 3,
+        punch: Float = 1f,
+        useCache: Boolean = true
+    ): Bitmap? {
         if (blurHash == null || blurHash.length < 6) {
             return null
         }
@@ -124,7 +130,8 @@ object BlurHashDecoder {
                         b += color[2] * basis
                     }
                 }
-                imageArray[x + width * y] = Color.rgb(linearToSrgb(r), linearToSrgb(g), linearToSrgb(b))
+                imageArray[x + width * y] =
+                    Color.rgb(linearToSrgb(r), linearToSrgb(g), linearToSrgb(b))
             }
         }
         return Bitmap.createBitmap(imageArray, width, height, Bitmap.Config.ARGB_8888)
@@ -136,6 +143,7 @@ object BlurHashDecoder {
                 cacheCosinesY[height * numCompY] = it
             }
         }
+
         else -> {
             cacheCosinesY[height * numCompY]!!
         }
@@ -147,6 +155,7 @@ object BlurHashDecoder {
                 cacheCosinesX[width * numCompX] = it
             }
         }
+
         else -> cacheCosinesX[width * numCompX]!!
     }
 

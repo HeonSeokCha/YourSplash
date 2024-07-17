@@ -83,7 +83,7 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
 
     implementation(libs.androidX.paging.compose)
-    implementation(libs.kotlin.coroutine.core)
+    implementation(libs.kotlin.coroutine.android)
     implementation(libs.kotlin.serialization)
 
     implementation(libs.androidX.navigation.compose)

@@ -12,8 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.itemKey
-import com.chs.yoursplash.presentation.base.CollectionCard
+import com.chs.yoursplash.presentation.base.CollectionInfoCard
 import com.chs.yoursplash.util.Constants
 import io.ktor.websocket.Frame
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -49,7 +48,7 @@ fun SearchResultCollectionScreen(
 
             items(count = pagingList.itemCount) { idx ->
                 val item = pagingList[idx]
-                CollectionCard(
+                CollectionInfoCard(
                     collectionInfo = item,
                     loadQuality = state.loadQuality,
                     userClickAble = { userName ->
