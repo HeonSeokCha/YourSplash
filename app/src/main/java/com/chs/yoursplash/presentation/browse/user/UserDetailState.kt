@@ -14,6 +14,5 @@ data class UserDetailState(
     val userTabLabList: List<String> = listOf("PHOTOS", "LIKES", "COLLECT"),
     val loadQuality: String = "Regular",
     val isLoading: Boolean = true,
-    val isError: Boolean = false,
-    val errorMessage: String = ""
+    val errorMessage: String? = null
 )

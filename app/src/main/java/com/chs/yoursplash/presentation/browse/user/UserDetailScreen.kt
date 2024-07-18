@@ -1,6 +1,6 @@
 package com.chs.yoursplash.presentation.browse.user
 
-import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -33,9 +33,15 @@ fun UserDetailScreen(
     state: UserDetailState,
     onNavigate: (Screens) -> Unit
 ) {
-
+    val context = LocalContext.current
     val pagerState = rememberPagerState { state.userTabLabList.size }
     val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(state.errorMessage) {
+        if (state.errorMessage != null) {
+            Toast.makeText(context, state.errorMessage, Toast.LENGTH_SHORT).show()
+        }
+    }
 
     Column(
         modifier = Modifier

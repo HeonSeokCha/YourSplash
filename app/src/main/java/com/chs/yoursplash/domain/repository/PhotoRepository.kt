@@ -5,7 +5,7 @@ import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.PhotoDetail
 import com.chs.yoursplash.domain.model.PhotoSaveInfo
 import com.chs.yoursplash.domain.model.UnSplashCollection
-import com.chs.yoursplash.util.Resource
+import com.chs.yoursplash.util.NetworkResult
 import kotlinx.coroutines.flow.Flow
 
 interface PhotoRepository {
@@ -14,15 +14,15 @@ interface PhotoRepository {
 
     fun getPagingCollection(): Flow<PagingData<UnSplashCollection>>
 
-    suspend fun getPhotoDetailInfo(id: String): PhotoDetail
+    suspend fun getPhotoDetailInfo(id: String): Flow<NetworkResult<PhotoDetail>>
 
-    suspend fun getRelatedPhotoList(id: String): List<Photo>
+    suspend fun getRelatedPhotoList(id: String): Flow<NetworkResult<List<Photo>>>
 
-    suspend fun getCollectionDetailInfo(id: String): UnSplashCollection
+    suspend fun getCollectionDetailInfo(id: String): Flow<NetworkResult<UnSplashCollection>>
 
     fun getPagingCollectionPhotos(id: String): Flow<PagingData<Photo>>
 
-    suspend fun getRelatedCollectionList(id: String): List<UnSplashCollection>
+    suspend fun getRelatedCollectionList(id: String): Flow<NetworkResult<List<UnSplashCollection>>>
 
     suspend fun getPhotoSaveInfo(): List<PhotoSaveInfo>
 

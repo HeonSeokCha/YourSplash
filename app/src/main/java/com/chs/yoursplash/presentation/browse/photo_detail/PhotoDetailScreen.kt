@@ -1,5 +1,6 @@
 package com.chs.yoursplash.presentation.browse.photo_detail
 
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -29,7 +30,15 @@ fun ImageDetailScreen(
     state: PhotoDetailState,
     onNavigate: (Screens) -> Unit
 ) {
-//    val context = LocalContext.current
+
+    val context = LocalContext.current
+
+    LaunchedEffect(state.isError) {
+        if (state.isError != null) {
+            Toast.makeText(context, state.isError, Toast.LENGTH_SHORT).show()
+        }
+    }
+
 //    var downLoadQueueId: Long by remember { mutableLongStateOf(0L) }
 //    if (downLoadQueueId != 0L) {
 //        DownloadBroadCastReceiver(downLoadQueueId) {

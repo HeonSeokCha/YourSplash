@@ -22,13 +22,15 @@ import com.chs.yoursplash.domain.model.PhotoSaveInfo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.repository.PhotoRepository
 import com.chs.yoursplash.util.Constants
+import com.chs.yoursplash.util.NetworkResult
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class PhotoRepositoryImpl @Inject constructor(
     private val client: UnSplashService,
     private val photoSaveInfoDao: PhotoSaveInfoDao,
-): PhotoRepository {
+) : PhotoRepository {
     override fun getPagingPhoto(): Flow<PagingData<Photo>> {
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
@@ -45,22 +47,56 @@ class PhotoRepositoryImpl @Inject constructor(
         }.flow
     }
 
-    override suspend fun getPhotoDetailInfo(id: String): PhotoDetail {
-        return client.requestUnsplash<ResponsePhotoDetail>(
-            Constants.GET_PHOTO_DETAIL(id)
-        ).toUnSplashImageDetail()
+    override suspend fun getPhotoDetailInfo(id: String): Flow<NetworkResult<PhotoDetail>> {
+        return flow {
+            emit(NetworkResult.Loading())
+            try {
+                emit(
+                    NetworkResult.Success(
+                        client.requestUnsplash<ResponsePhotoDetail>(
+                            Constants.GET_PHOTO_DETAIL(id)
+                        ).toUnSplashImageDetail()
+                    )
+                )
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(e.message ?: "Unknown Error..."))
+            }
+        }
     }
 
-    override suspend fun getRelatedPhotoList(id: String): List<Photo> {
-        return client.requestUnsplash<ResponseRelatedPhoto>(
-            Constants.GET_PHOTO_RELATED(id)
-        ).results.map { it.toUnSplashImage() }
+    override suspend fun getRelatedPhotoList(id: String): Flow<NetworkResult<List<Photo>>> {
+        return flow {
+            emit(NetworkResult.Loading())
+            try {
+                emit(
+                    NetworkResult.Success(
+                        client.requestUnsplash<ResponseRelatedPhoto>(
+                            Constants.GET_PHOTO_RELATED(id)
+                        ).results.map { it.toUnSplashImage() }
+                    )
+                )
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(e.message ?: "Unknown Error..."))
+            }
+
+        }
     }
 
-    override suspend fun getCollectionDetailInfo(id: String): UnSplashCollection {
-        return client.requestUnsplash<ResponseCollection>(
-            Constants.GET_COLLECTION_DETAILED(id)
-        ).toPhotoCollection()
+    override suspend fun getCollectionDetailInfo(id: String): Flow<NetworkResult<UnSplashCollection>> {
+        return flow {
+            emit(NetworkResult.Loading())
+            try {
+                emit(
+                    NetworkResult.Success(
+                        client.requestUnsplash<ResponseCollection>(
+                            Constants.GET_COLLECTION_DETAILED(id)
+                        ).toPhotoCollection()
+                    )
+                )
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(e.message ?: "Unknown Error..."))
+            }
+        }
     }
 
     override fun getPagingCollectionPhotos(id: String): Flow<PagingData<Photo>> {
@@ -71,11 +107,22 @@ class PhotoRepositoryImpl @Inject constructor(
         }.flow
     }
 
-    override suspend fun getRelatedCollectionList(id: String): List<UnSplashCollection> {
-        return client.requestUnsplash<List<ResponseCollection>>(
-            Constants.GET_COLLECTION_RELATED(id)
-        ).map {
-            it.toPhotoCollection()
+    override suspend fun getRelatedCollectionList(id: String): Flow<NetworkResult<List<UnSplashCollection>>> {
+        return flow {
+            emit(NetworkResult.Loading())
+            try {
+                emit(
+                    NetworkResult.Success(
+                        client.requestUnsplash<List<ResponseCollection>>(
+                            Constants.GET_COLLECTION_RELATED(id)
+                        ).map {
+                            it.toPhotoCollection()
+                        }
+                    )
+                )
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(e.message ?: "Unknown Error..."))
+            }
         }
     }
 

@@ -2,8 +2,10 @@ package com.chs.yoursplash.presentation.browse
 
 import android.content.Intent
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -26,6 +28,7 @@ fun BrowseNavHost(
     navController: NavHostController,
     intent: Intent?
 ) {
+    val context = LocalContext.current
     val startDestination: Screens =
         when (intent?.getStringExtra(Constants.TARGET_TYPE)) {
             Constants.TARGET_PHOTO -> {
@@ -56,6 +59,11 @@ fun BrowseNavHost(
                 navController.getBackStackEntry(arg)
             }
             val viewModel: PhotoDetailViewModel = hiltViewModel(parentEntry)
+            LaunchedEffect(context, viewModel) {
+                viewModel.getImageDetailInfo()
+                viewModel.getImageRelatedList()
+            }
+
             ImageDetailScreen(viewModel.state) {
                 navController.navigate(it)
             }
@@ -67,6 +75,10 @@ fun BrowseNavHost(
                 navController.getBackStackEntry(arg)
             }
             val viewModel: CollectionDetailViewModel = hiltViewModel(parentEntry)
+            LaunchedEffect(context, viewModel) {
+                viewModel.getCollectionDetailInfo()
+            }
+
             CollectionDetailScreen(viewModel.state) {
                 navController.navigate(it)
             }
@@ -78,6 +90,10 @@ fun BrowseNavHost(
                 navController.getBackStackEntry(arg)
             }
             val viewModel: UserDetailViewModel = hiltViewModel(parentEntry)
+            LaunchedEffect(context, viewModel) {
+                viewModel.getUserDetailInfo()
+            }
+
             UserDetailScreen(viewModel.state) {
                 navController.navigate(it)
             }

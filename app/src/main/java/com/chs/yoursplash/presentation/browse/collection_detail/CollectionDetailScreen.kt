@@ -33,6 +33,12 @@ fun CollectionDetailScreen(
     val context = LocalContext.current
     val lazyPagingItems = state.collectionPhotos?.collectAsLazyPagingItems()
 
+    LaunchedEffect(state.errorMessage) {
+        if (state.errorMessage != null) {
+            Toast.makeText(context, state.errorMessage, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize(),

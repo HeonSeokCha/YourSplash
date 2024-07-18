@@ -14,17 +14,30 @@ import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.UserDetail
 import com.chs.yoursplash.domain.repository.UserRepository
 import com.chs.yoursplash.util.Constants
+import com.chs.yoursplash.util.NetworkResult
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val client: UnSplashService
 ) : UserRepository {
 
-    override suspend fun getUserDetail(userName: String): UserDetail {
-        return client.requestUnsplash<ResponseUserDetail>(
-            Constants.GET_USER_DETAILED(userName)
-        ).toUserDetail()
+    override suspend fun getUserDetail(userName: String): Flow<NetworkResult<UserDetail>> {
+        return flow {
+            emit(NetworkResult.Loading())
+            try {
+                emit(
+                    NetworkResult.Success(
+                        client.requestUnsplash<ResponseUserDetail>(
+                            Constants.GET_USER_DETAILED(userName)
+                        ).toUserDetail()
+                    )
+                )
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(e.message ?: "Unknown Error..."))
+            }
+        }
     }
 
     override fun getUserDetailPhotos(userName: String): Flow<PagingData<Photo>> {
