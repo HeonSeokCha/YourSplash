@@ -1,6 +1,5 @@
 package com.chs.yoursplash.presentation.browse.user
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -33,88 +32,90 @@ fun UserDetailScreen(
     state: UserDetailState,
     onNavigate: (Screens) -> Unit
 ) {
-    val context = LocalContext.current
     val pagerState = rememberPagerState { state.userTabLabList.size }
     val coroutineScope = rememberCoroutineScope()
-
-    LaunchedEffect(state.errorMessage) {
-        if (state.errorMessage != null) {
-            Toast.makeText(context, state.errorMessage, Toast.LENGTH_SHORT).show()
-        }
-    }
 
     Column(
         modifier = Modifier
             .fillMaxSize(),
     ) {
-        UserDetailInfo(userInfo = state.userDetailInfo)
+        if (state.isError) {
+            Text(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally),
+                text = state.errorMessage ?: "UnknownError"
+            )
+        } else {
+            UserDetailInfo(userInfo = state.userDetailInfo)
 
-        if (state.userTabLabList.isNotEmpty()) {
-            TabRow(
-                modifier = Modifier.fillMaxWidth(),
-                selectedTabIndex = pagerState.currentPage,
-                containerColor = Color.White,
-                indicator = { tabPositions ->
-                    SecondaryIndicator(
-                        modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
-                        color = Purple200
-                    )
+            if (state.userTabLabList.isNotEmpty()) {
+                TabRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    selectedTabIndex = pagerState.currentPage,
+                    containerColor = Color.White,
+                    indicator = { tabPositions ->
+                        SecondaryIndicator(
+                            modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
+                            color = Purple200
+                        )
+                    }
+                ) {
+                    state.userTabLabList.forEachIndexed { index, title ->
+                        Tab(
+                            text = {
+                                Text(
+                                    text = title,
+                                    maxLines = 1,
+                                    color = Purple200,
+                                    overflow = TextOverflow.Ellipsis,
+                                    fontSize = 13.sp
+                                )
+                            },
+                            selected = pagerState.currentPage == index,
+                            onClick = {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            },
+                        )
+                    }
                 }
-            ) {
-                state.userTabLabList.forEachIndexed { index, title ->
-                    Tab(
-                        text = {
-                            Text(
-                                text = title,
-                                maxLines = 1,
-                                color = Purple200,
-                                overflow = TextOverflow.Ellipsis,
-                                fontSize = 13.sp
-                            )
-                        },
-                        selected = pagerState.currentPage == index,
-                        onClick = {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(index)
+
+                HorizontalPager(
+                    state = pagerState,
+                    userScrollEnabled = false,
+                ) { pager ->
+                    when (pager) {
+                        0 -> {
+                            UserDetailPhotoScreen(
+                                state.userDetailPhotoList?.collectAsLazyPagingItems(),
+                                state.loadQuality
+                            ) {
+                                onNavigate(it)
                             }
-                        },
-                    )
-                }
-            }
-
-            HorizontalPager(
-                state = pagerState,
-                userScrollEnabled = false,
-            ) { pager ->
-                when (pager) {
-                    0 -> {
-                        UserDetailPhotoScreen(
-                            state.userDetailPhotoList?.collectAsLazyPagingItems(),
-                            state.loadQuality
-                        ) {
-                            onNavigate(it)
                         }
-                    }
 
-                    1 -> {
-                        UserDetailLikeScreen(
-                            state.userDetailLikeList?.collectAsLazyPagingItems(),
-                            state.loadQuality
-                        ) {
-                            onNavigate(it)
+                        1 -> {
+                            UserDetailLikeScreen(
+                                state.userDetailLikeList?.collectAsLazyPagingItems(),
+                                state.loadQuality
+                            ) {
+                                onNavigate(it)
+                            }
                         }
-                    }
 
-                    2 -> {
-                        UserDetailCollectionScreen(
-                            state.userDetailCollection?.collectAsLazyPagingItems(),
-                            state.loadQuality
-                        ) {
-                            onNavigate(it)
+                        2 -> {
+                            UserDetailCollectionScreen(
+                                state.userDetailCollection?.collectAsLazyPagingItems(),
+                                state.loadQuality
+                            ) {
+                                onNavigate(it)
+                            }
                         }
                     }
                 }
             }
+
         }
     }
 }

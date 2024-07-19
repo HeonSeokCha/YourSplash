@@ -10,5 +10,6 @@ data class CollectionDetailState(
     val collectionPhotos: Flow<PagingData<Photo>>? = null,
     val loadQuality: String = "Regular",
     val isLoading: Boolean = true,
+    val isError: Boolean = false,
     val errorMessage: String? = null
 )

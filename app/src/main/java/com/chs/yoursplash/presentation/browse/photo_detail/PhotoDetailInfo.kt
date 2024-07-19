@@ -26,7 +26,6 @@ import com.chs.yoursplash.domain.model.PhotoDetail
 import com.chs.yoursplash.domain.model.UnSplashTag
 import com.chs.yoursplash.util.color
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ImageDetailInfo(
     imageDetailInfo: PhotoDetail,

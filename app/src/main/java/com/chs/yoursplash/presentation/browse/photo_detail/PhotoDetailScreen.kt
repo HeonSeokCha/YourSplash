@@ -33,12 +33,6 @@ fun ImageDetailScreen(
 
     val context = LocalContext.current
 
-    LaunchedEffect(state.isError) {
-        if (state.isError != null) {
-            Toast.makeText(context, state.isError, Toast.LENGTH_SHORT).show()
-        }
-    }
-
 //    var downLoadQueueId: Long by remember { mutableLongStateOf(0L) }
 //    if (downLoadQueueId != 0L) {
 //        DownloadBroadCastReceiver(downLoadQueueId) {
@@ -64,108 +58,115 @@ fun ImageDetailScreen(
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(2),
     ) {
-        item(span = StaggeredGridItemSpan.FullLine) {
-            Column {
-                AsyncImage(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(((state.imageDetailInfo?.height ?: 2000) / 10).dp),
-                    contentScale = ContentScale.Crop,
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(
-                            Constants.getPhotoQualityUrl(
-                                state.imageDetailInfo?.urls,
-                                state.wallpaperQuality
-                            )
-                        ).crossfade(true)
-                        .build(),
-                    contentDescription = null,
-                    placeholder = Constants.getPlaceHolder(state.imageDetailInfo?.blurHash)
-                )
+        if (state.isError) {
+            item(span = StaggeredGridItemSpan.FullLine) {
+                Text(state.errorMessage ?: "UnknownError")
+            }
+        } else {
+            item(span = StaggeredGridItemSpan.FullLine) {
+                Column {
+                    AsyncImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(((state.imageDetailInfo?.height ?: 2000) / 10).dp),
+                        contentScale = ContentScale.Crop,
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(
+                                Constants.getPhotoQualityUrl(
+                                    state.imageDetailInfo?.urls,
+                                    state.wallpaperQuality
+                                )
+                            ).crossfade(true)
+                            .build(),
+                        contentDescription = null,
+                        placeholder = Constants.getPlaceHolder(state.imageDetailInfo?.blurHash)
+                    )
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            top = 16.dp,
-                            start = 16.dp,
-                            end = 16.dp
-                        ),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
                     Row(
                         modifier = Modifier
-                            .clickable {
-                                if (state.imageDetailInfo?.user?.userName != null) {
-                                    onNavigate(
-                                        Screens.UserDetailScreen(state.imageDetailInfo.user.userName)
-                                    )
-                                }
-                            },
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        AsyncImage(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(RoundedCornerShape(100)),
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data(state.imageDetailInfo?.user?.photoProfile?.large)
-                                .crossfade(true)
-                                .build(),
-                            placeholder = ColorPainter(
-                                state.imageDetailInfo?.color?.color ?: Color.LightGray
+                            .fillMaxWidth()
+                            .padding(
+                                top = 16.dp,
+                                start = 16.dp,
+                                end = 16.dp
                             ),
-                            contentDescription = null
-                        )
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Text(
-                            text = state.imageDetailInfo?.user?.name ?: "",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1
-                        )
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .clickable {
+                                    if (state.imageDetailInfo?.user?.userName != null) {
+                                        onNavigate(
+                                            Screens.UserDetailScreen(state.imageDetailInfo.user.userName)
+                                        )
+                                    }
+                                },
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            AsyncImage(
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .clip(RoundedCornerShape(100)),
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(state.imageDetailInfo?.user?.photoProfile?.large)
+                                    .crossfade(true)
+                                    .build(),
+                                placeholder = ColorPainter(
+                                    state.imageDetailInfo?.color?.color ?: Color.LightGray
+                                ),
+                                contentDescription = null
+                            )
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Text(
+                                text = state.imageDetailInfo?.user?.name ?: "",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 1
+                            )
+                        }
+                    }
+                    HorizontalDivider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
+
+                    if (state.imageDetailInfo != null) {
+                        ImageDetailInfo(state.imageDetailInfo) { selectTag ->
+                            onNavigate(
+                                Screens.PhotoTagResultScreen(selectTag)
+                            )
+                        }
                     }
                 }
-                HorizontalDivider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
+            }
 
-                if (state.imageDetailInfo != null) {
-                    ImageDetailInfo(state.imageDetailInfo) { selectTag ->
-                        onNavigate(
-                            Screens.PhotoTagResultScreen(selectTag)
-                        )
-                    }
+            if (state.imageRelatedList.isNotEmpty()) {
+                items(
+                    count = state.imageRelatedList.size,
+                    key = { state.imageRelatedList[it].id }
+                ) { idx ->
+                    val item = state.imageRelatedList[idx]
+                    AsyncImage(
+                        modifier = Modifier
+                            .padding(
+                                start = 8.dp,
+                                end = 16.dp,
+                                bottom = 16.dp
+                            )
+                            .clickable {
+                                onNavigate(Screens.ImageDetailScreen(item.id))
+                            },
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(Constants.getPhotoQualityUrl(item.urls, state.loadQuality))
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        placeholder = Constants.getPlaceHolder(item.blurHash)
+                    )
                 }
             }
         }
 
-        if (state.imageRelatedList.isNotEmpty()) {
-            items(
-                count = state.imageRelatedList.size,
-                key = { state.imageRelatedList[it].id }
-            ) { idx ->
-                val item = state.imageRelatedList[idx]
-                AsyncImage(
-                    modifier = Modifier
-                        .padding(
-                            start = 8.dp,
-                            end = 16.dp,
-                            bottom = 16.dp
-                        )
-                        .clickable {
-                            onNavigate(Screens.ImageDetailScreen(item.id))
-                        },
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(Constants.getPhotoQualityUrl(item.urls, state.loadQuality))
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    placeholder = Constants.getPlaceHolder(item.blurHash)
-                )
-            }
-        }
     }
 
     if (state.isLoading) {

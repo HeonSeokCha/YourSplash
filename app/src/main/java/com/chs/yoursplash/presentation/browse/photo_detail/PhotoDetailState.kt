@@ -12,6 +12,7 @@ data class PhotoDetailState(
     val wallpaperQuality: String = "full",
     val loadQuality: String = "Regular",
     val downloadFileName: String? = null,
-    val isError: String? = null,
+    val isError: Boolean = false,
+    val errorMessage: String? = null,
 )
 
