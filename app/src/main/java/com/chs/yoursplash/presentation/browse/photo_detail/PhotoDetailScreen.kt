@@ -68,7 +68,7 @@ fun ImageDetailScreen(
                     AsyncImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(((state.imageDetailInfo?.height ?: 2000) / 10).dp),
+                            .height(300.dp),
                         contentScale = ContentScale.Crop,
                         model = ImageRequest.Builder(LocalContext.current)
                             .data(

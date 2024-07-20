@@ -40,7 +40,6 @@ fun ImageDetailInfo(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-
             ItemDetailValue(title = "Views", value = imageDetailInfo.views)
             ItemDetailValue(title = "Downloads", value = imageDetailInfo.downloads)
             ItemDetailValue(title = "Likes", value = imageDetailInfo.likes)

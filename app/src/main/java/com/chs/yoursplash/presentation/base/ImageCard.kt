@@ -73,7 +73,7 @@ fun ImageCard(
         AsyncImage(
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight()
+                .heightIn(max = 400.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .clickable {
                     if (photoInfo?.id != null) {

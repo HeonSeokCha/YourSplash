@@ -44,7 +44,10 @@ class CollectionDetailViewModel @Inject constructor(
             getCollectionDetailUseCase(collectionId).collect { result ->
                 state = when (result) {
                     is NetworkResult.Loading -> {
-                        state.copy(isLoading = true)
+                        state.copy(
+                            isLoading = true,
+                            isError = false
+                        )
                     }
 
                     is NetworkResult.Success -> {
@@ -57,6 +60,7 @@ class CollectionDetailViewModel @Inject constructor(
                     is NetworkResult.Error -> {
                         state.copy(
                             isLoading = false,
+                            isError = true,
                             errorMessage = result.message
                         )
                     }

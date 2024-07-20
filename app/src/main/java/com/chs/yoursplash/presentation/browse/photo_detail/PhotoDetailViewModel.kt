@@ -44,7 +44,10 @@ class PhotoDetailViewModel @Inject constructor(
             getPhotoDetailUseCase(imageId).collect { result ->
                 state = when (result) {
                     is NetworkResult.Loading -> {
-                        state.copy(isLoading = true)
+                        state.copy(
+                            isLoading = true,
+                            isError = false
+                        )
                     }
 
                     is NetworkResult.Success -> {
@@ -57,7 +60,8 @@ class PhotoDetailViewModel @Inject constructor(
                     is NetworkResult.Error -> {
                         state.copy(
                             isLoading = false,
-                            isError = result.message
+                            isError = true,
+                            errorMessage = result.message
                         )
                     }
                 }
@@ -70,7 +74,10 @@ class PhotoDetailViewModel @Inject constructor(
             getPhotoRelatedListUseCase(imageId).collect { result ->
                 state = when (result) {
                     is NetworkResult.Loading -> {
-                        state.copy(isLoading = true)
+                        state.copy(
+                            isLoading = true,
+                            isError = false
+                        )
                     }
 
                     is NetworkResult.Success -> {
@@ -83,7 +90,8 @@ class PhotoDetailViewModel @Inject constructor(
                     is NetworkResult.Error -> {
                         state.copy(
                             isLoading = false,
-                            isError = result.message
+                            isError = true,
+                            errorMessage = result.message
                         )
                     }
                 }

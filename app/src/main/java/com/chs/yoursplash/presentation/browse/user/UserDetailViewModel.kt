@@ -46,7 +46,10 @@ class UserDetailViewModel @Inject constructor(
             getUserDetailUseCase(userName).collect { result ->
                 state = when (result) {
                     is NetworkResult.Loading -> {
-                        state.copy(isLoading = true)
+                        state.copy(
+                            isLoading = true,
+                            isError = false
+                        )
                     }
 
                     is NetworkResult.Success -> {
@@ -59,6 +62,7 @@ class UserDetailViewModel @Inject constructor(
                     is NetworkResult.Error -> {
                         state.copy(
                             isLoading = false,
+                            isError = true,
                             errorMessage = result.message
                         )
                     }
