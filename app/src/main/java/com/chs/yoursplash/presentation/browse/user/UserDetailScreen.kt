@@ -24,7 +24,11 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.chs.yoursplash.domain.model.UserDetail
 import com.chs.yoursplash.presentation.Screens
+import com.chs.yoursplash.presentation.base.PlaceholderHighlight
+import com.chs.yoursplash.presentation.base.placeholder
+import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.presentation.ui.theme.Purple200
+import com.chs.yoursplash.util.Constants
 import kotlinx.coroutines.launch
 
 @Composable
@@ -120,7 +124,6 @@ fun UserDetailScreen(
     }
 }
 
-
 @Composable
 private fun UserDetailInfo(userInfo: UserDetail?) {
     Row(
@@ -137,7 +140,11 @@ private fun UserDetailInfo(userInfo: UserDetail?) {
         AsyncImage(
             modifier = Modifier
                 .size(100.dp, 100.dp)
-                .clip(RoundedCornerShape(100)),
+                .clip(RoundedCornerShape(100))
+                .placeholder(
+                    visible = userInfo == null,
+                    highlight = PlaceholderHighlight.shimmer()
+                ),
             model = ImageRequest.Builder(LocalContext.current)
                 .data(userInfo?.profileImage?.large)
                 .crossfade(true)
@@ -150,7 +157,12 @@ private fun UserDetailInfo(userInfo: UserDetail?) {
                 .padding(start = 16.dp)
         ) {
             Text(
-                text = userInfo?.name ?: "Unknown",
+                modifier = Modifier
+                    .placeholder(
+                        visible = userInfo == null,
+                        highlight = PlaceholderHighlight.shimmer()
+                    ),
+                text = userInfo?.name ?: Constants.TEXT_PREVIEW,
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 18.sp,
                 maxLines = 1,

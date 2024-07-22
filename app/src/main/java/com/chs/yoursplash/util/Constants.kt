@@ -48,6 +48,7 @@ object Constants {
     const val ARG_KEY_COLLECTION_ID: String = "collectionId"
     const val ARG_KEY_USER_NAME: String = "userName"
     const val ARG_KEY_TAG_NAME: String = "tagName"
+    const val TEXT_PREVIEW: String = "This is Title."
 
     val SORT_BY_LIST = listOf(
         Pair("RELEVANCE", "relevant"),

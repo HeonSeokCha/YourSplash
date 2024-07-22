@@ -40,7 +40,11 @@ fun UserCard(
         AsyncImage(
             modifier = Modifier
                 .size(50.dp)
-                .clip(RoundedCornerShape(100)),
+                .clip(RoundedCornerShape(100))
+                .placeholder(
+                    visible = userInfo == null,
+                    highlight = PlaceholderHighlight.shimmer()
+                ),
             model = ImageRequest.Builder(LocalContext.current)
                 .data(userInfo?.photoProfile?.large)
                 .crossfade(true)
@@ -77,7 +81,10 @@ fun UserCard(
                             modifier = Modifier
                                 .size(90.dp, 190.dp)
                                 .clip(RoundedCornerShape(15))
-                                .clickable {
+                                .placeholder(
+                                    visible = userInfo == null,
+                                    highlight = PlaceholderHighlight.shimmer()
+                                ).clickable {
                                     photoClickAble(userInfo.photos[idx].id)
                                 },
                             model = ImageRequest.Builder(LocalContext.current)

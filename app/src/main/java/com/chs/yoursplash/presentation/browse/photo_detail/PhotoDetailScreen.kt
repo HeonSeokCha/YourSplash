@@ -23,6 +23,9 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.chs.yoursplash.presentation.Screens
+import com.chs.yoursplash.presentation.base.PlaceholderHighlight
+import com.chs.yoursplash.presentation.base.placeholder
+import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.util.*
 
 @Composable
@@ -68,7 +71,11 @@ fun ImageDetailScreen(
                     AsyncImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(300.dp),
+                            .height(300.dp)
+                            .placeholder(
+                                visible = state.imageDetailInfo == null,
+                                highlight = PlaceholderHighlight.shimmer()
+                            ),
                         contentScale = ContentScale.Crop,
                         model = ImageRequest.Builder(LocalContext.current)
                             .data(
@@ -107,7 +114,11 @@ fun ImageDetailScreen(
                             AsyncImage(
                                 modifier = Modifier
                                     .size(40.dp)
-                                    .clip(RoundedCornerShape(100)),
+                                    .clip(RoundedCornerShape(100))
+                                    .placeholder(
+                                        visible = state.imageDetailInfo == null,
+                                        highlight = PlaceholderHighlight.shimmer()
+                                    ),
                                 model = ImageRequest.Builder(LocalContext.current)
                                     .data(state.imageDetailInfo?.user?.photoProfile?.large)
                                     .crossfade(true)
@@ -117,9 +128,11 @@ fun ImageDetailScreen(
                                 ),
                                 contentDescription = null
                             )
+
                             Spacer(modifier = Modifier.width(16.dp))
+
                             Text(
-                                text = state.imageDetailInfo?.user?.name ?: "",
+                                text = state.imageDetailInfo?.user?.name ?: Constants.TEXT_PREVIEW,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
                                 overflow = TextOverflow.Ellipsis,
@@ -166,7 +179,6 @@ fun ImageDetailScreen(
                 }
             }
         }
-
     }
 
     if (state.isLoading) {

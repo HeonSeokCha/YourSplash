@@ -42,7 +42,8 @@ fun ImageCard(
                 .padding(
                     start = 4.dp,
                     bottom = 8.dp
-                ).clickable {
+                )
+                .clickable {
                     if (photoInfo?.user?.userName != null) {
                         userClickAble(photoInfo.user.userName)
                     }
@@ -52,7 +53,11 @@ fun ImageCard(
             AsyncImage(
                 modifier = Modifier
                     .size(50.dp)
-                    .clip(RoundedCornerShape(100)),
+                    .clip(RoundedCornerShape(100))
+                    .placeholder(
+                        visible = photoInfo == null,
+                        highlight = PlaceholderHighlight.shimmer()
+                    ),
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(photoInfo?.user?.photoProfile?.large)
                     .crossfade(true)
@@ -75,6 +80,10 @@ fun ImageCard(
                 .fillMaxWidth()
                 .heightIn(max = 400.dp)
                 .clip(RoundedCornerShape(10.dp))
+                .placeholder(
+                    visible = photoInfo == null,
+                    highlight = PlaceholderHighlight.shimmer()
+                )
                 .clickable {
                     if (photoInfo?.id != null) {
                         photoClickAble(photoInfo.id)

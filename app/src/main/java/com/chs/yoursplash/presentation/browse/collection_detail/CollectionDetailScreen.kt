@@ -23,6 +23,10 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.base.ImageCard
+import com.chs.yoursplash.presentation.base.PlaceholderHighlight
+import com.chs.yoursplash.presentation.base.placeholder
+import com.chs.yoursplash.presentation.base.shimmer
+import com.chs.yoursplash.util.Constants
 
 @Composable
 fun CollectionDetailScreen(
@@ -44,33 +48,40 @@ fun CollectionDetailScreen(
                 Text(state.errorMessage ?: "UnknownError")
             }
         } else {
-            if (state.collectionDetailInfo != null) {
-                item {
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        text = "${state.collectionDetailInfo.totalPhotos} Photos ● " +
-                                "Create by ${state.collectionDetailInfo.user.name}",
-                        textAlign = TextAlign.Center,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
+            item {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .placeholder(
+                            visible = state.collectionDetailInfo == null,
+                            highlight = PlaceholderHighlight.shimmer()
+                        ),
+                    text = if (state.collectionDetailInfo == null) {
+                        Constants.TEXT_PREVIEW
+                    } else {
+                        "${state.collectionDetailInfo.totalPhotos} Photos ● " +
+                                "Create by ${state.collectionDetailInfo.user.name}"
+                    },
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
             }
+        }
 
-            if (lazyPagingItems != null && lazyPagingItems.itemCount != 0) {
-                items(
-                    count = lazyPagingItems.itemCount,
-                ) { idx ->
-                    ImageCard(
-                        photoInfo = lazyPagingItems[idx],
-                        loadQuality = state.loadQuality,
-                        userClickAble = { userName ->
-                            onNavigate(Screens.UserDetailScreen(userName))
-                        }, photoClickAble = { photoId ->
-                            onNavigate(Screens.ImageDetailScreen(photoId))
-                        }
-                    )
-                }
+        if (lazyPagingItems != null && lazyPagingItems.itemCount != 0) {
+            items(
+                count = lazyPagingItems.itemCount,
+            ) { idx ->
+                ImageCard(
+                    photoInfo = lazyPagingItems[idx],
+                    loadQuality = state.loadQuality,
+                    userClickAble = { userName ->
+                        onNavigate(Screens.UserDetailScreen(userName))
+                    }, photoClickAble = { photoId ->
+                        onNavigate(Screens.ImageDetailScreen(photoId))
+                    }
+                )
             }
         }
     }
@@ -88,6 +99,7 @@ fun CollectionDetailScreen(
         is LoadState.Error -> {
             Toast.makeText(context, "An error occurred while loading...", Toast.LENGTH_SHORT).show()
         }
+
         else -> {}
     }
 }

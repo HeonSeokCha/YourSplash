@@ -48,7 +48,11 @@ fun CollectionInfoCard(
             AsyncImage(
                 modifier = Modifier
                     .size(50.dp)
-                    .clip(RoundedCornerShape(100)),
+                    .clip(RoundedCornerShape(100))
+                    .placeholder(
+                        visible = collectionInfo == null,
+                        highlight = PlaceholderHighlight.shimmer()
+                    ),
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(collectionInfo?.user?.photoProfile?.large)
                     .crossfade(true)
@@ -114,7 +118,11 @@ private fun CollectionCard(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(end = 4.dp)
-                    .clip(RoundedCornerShape(topStart = 10.dp, bottomStart = 10.dp)),
+                    .clip(RoundedCornerShape(topStart = 10.dp, bottomStart = 10.dp))
+                    .placeholder(
+                        visible = collectionInfo == null,
+                        highlight = PlaceholderHighlight.shimmer()
+                    ),
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(
                         Constants.getPhotoQualityUrl(
@@ -134,45 +142,31 @@ private fun CollectionCard(
             modifier = Modifier
                 .weight(4f)
         ) {
-            AsyncImage(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(125.dp)
-                    .padding(bottom = 2.dp)
-                    .clip(RoundedCornerShape(topEnd = 10.dp)),
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(
-                        Constants.getPhotoQualityUrl(
-                            collectionInfo?.previewPhotos?.get(1)?.urls,
-                            loadQuality
+            repeat(2) {
+                AsyncImage(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(125.dp)
+                        .padding(bottom = 2.dp)
+                        .clip(RoundedCornerShape(topEnd = 10.dp))
+                        .placeholder(
+                            visible = collectionInfo == null,
+                            highlight = PlaceholderHighlight.shimmer()
+                        ),
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(
+                            Constants.getPhotoQualityUrl(
+                                collectionInfo?.previewPhotos?.get(it + 1)?.urls,
+                                loadQuality
+                            )
                         )
-                    )
-                    .crossfade(true)
-                    .build(),
-                contentScale = ContentScale.Crop,
-                contentDescription = null,
-                placeholder = ColorPainter(Color.LightGray)
-            )
-
-            AsyncImage(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(125.dp)
-                    .padding(top = 2.dp)
-                    .clip(RoundedCornerShape(bottomEnd = 10.dp)),
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(
-                        Constants.getPhotoQualityUrl(
-                            collectionInfo?.previewPhotos?.get(2)?.urls,
-                            loadQuality
-                        )
-                    )
-                    .crossfade(true)
-                    .build(),
-                contentScale = ContentScale.Crop,
-                contentDescription = null,
-                placeholder = ColorPainter(Color.LightGray)
-            )
+                        .crossfade(true)
+                        .build(),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = null,
+                    placeholder = ColorPainter(Color.LightGray)
+                )
+            }
         }
     }
 }
