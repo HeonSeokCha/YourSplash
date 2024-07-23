@@ -33,31 +33,6 @@ fun ImageDetailScreen(
     state: PhotoDetailState,
     onNavigate: (Screens) -> Unit
 ) {
-
-    val context = LocalContext.current
-
-//    var downLoadQueueId: Long by remember { mutableLongStateOf(0L) }
-//    if (downLoadQueueId != 0L) {
-//        DownloadBroadCastReceiver(downLoadQueueId) {
-//            when (it) {
-//                DownLoadState.DOWNLOAD_FAILED -> {
-//                    Toast.makeText(context, "Photo Download UnSuccessful...", Toast.LENGTH_SHORT)
-//                        .show()
-//                    viewModel.setPhotoDownloadState(DownLoadState.DOWNLOAD_FAILED)
-//                }
-//                DownLoadState.DOWNLOAD_SUCCESS -> {
-//                    Toast.makeText(context, "Photo Download Successful...", Toast.LENGTH_SHORT)
-//                        .show()
-//                    viewModel.setPhotoDownloadState(DownLoadState.DOWNLOAD_SUCCESS)
-//                }
-//                DownLoadState.DOWNLOADING -> {
-//                    Toast.makeText(context, "Photo Download Starting...", Toast.LENGTH_SHORT).show()
-//                    viewModel.setPhotoDownloadState(DownLoadState.DOWNLOADING)
-//                }
-//            }
-//        }
-//    }
-
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(2),
     ) {
@@ -180,40 +155,4 @@ fun ImageDetailScreen(
             }
         }
     }
-
-    if (state.isLoading) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-        }
-    }
 }
-//
-//private fun downloadPhoto(
-//    context: Context,
-//    photoDetail: PhotoDetail?,
-//    downloadStart: (Long) -> Unit
-//) {
-//    val downloadUrl: String = photoDetail?.urls?.raw.toString()
-//    val fileName: String = "${photoDetail?.user?.userName}-${photoDetail?.id}.jpg"
-//    val saveDirPath: String = "/${context.getString(R.string.app_name)}/${fileName}"
-//
-//    val request = DownloadManager.Request(Uri.parse(downloadUrl))
-//        .setTitle("Download YourSplash Photo")
-//        .setDescription("Downloading YourSplash Photo")
-//        .setMimeType("image/*")
-//        .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-//        .setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, saveDirPath)
-//        .setRequiresCharging(false)
-//        .setAllowedOverMetered(true)
-//        .setAllowedOverRoaming(true)
-//
-//    val downloadManger: DownloadManager =
-//        context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-//
-//    downloadStart(downloadManger.enqueue(request))
-//
-//}

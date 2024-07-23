@@ -69,10 +69,11 @@ fun CollectionDetailScreen(
             }
         }
 
-        if (lazyPagingItems != null && lazyPagingItems.itemCount != 0) {
+        if (lazyPagingItems != null) {
             items(
                 count = lazyPagingItems.itemCount,
             ) { idx ->
+
                 ImageCard(
                     photoInfo = lazyPagingItems[idx],
                     loadQuality = state.loadQuality,
@@ -82,6 +83,51 @@ fun CollectionDetailScreen(
                         onNavigate(Screens.ImageDetailScreen(photoId))
                     }
                 )
+            }
+
+            when (lazyPagingItems.loadState.refresh) {
+                is LoadState.Loading -> {
+                    items(10) {
+                        ImageCard(
+                            photoInfo = null,
+                            userClickAble = {},
+                            photoClickAble = {}
+                        )
+                    }
+                }
+
+                is LoadState.Error -> {
+                    item {
+                        Text(
+                            text = (lazyPagingItems.loadState.refresh as LoadState.Error).error.message
+                                ?: "Unknown Error.."
+                        )
+                    }
+                }
+
+                else -> Unit
+            }
+
+            when (lazyPagingItems.loadState.append) {
+                is LoadState.Loading -> {
+                    items(10) {
+                        ImageCard(
+                            photoInfo = null,
+                            userClickAble = {},
+                            photoClickAble = {}
+                        )
+                    }
+                }
+
+                is LoadState.Error -> {
+                    item {
+                        Text(
+                            text = (lazyPagingItems.loadState.refresh as LoadState.Error).error.message
+                                ?: "Unknown Error.."
+                        )
+                    }
+                }
+                else -> Unit
             }
         }
     }

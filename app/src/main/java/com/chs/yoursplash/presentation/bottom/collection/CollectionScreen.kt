@@ -5,14 +5,17 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.chs.yoursplash.presentation.base.CollectionInfoCard
+import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.presentation.browse.BrowseActivity
 import com.chs.yoursplash.util.Constants
 
@@ -59,16 +62,51 @@ fun CollectionScreen(
                     }
                 )
             }
-        }
-    }
 
-    if (state.isLoading) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+            when (lazyPagingItems.loadState.refresh) {
+                is LoadState.Loading -> {
+                    items(10) {
+                        ImageCard(
+                            photoInfo = null,
+                            userClickAble = {},
+                            photoClickAble = {}
+                        )
+                    }
+                }
+
+                is LoadState.Error -> {
+                    item {
+                        Text(
+                            text = (lazyPagingItems.loadState.refresh as LoadState.Error).error.message
+                                ?: "Unknown Error.."
+                        )
+                    }
+                }
+
+                else -> Unit
+            }
+
+            when (lazyPagingItems.loadState.append) {
+                is LoadState.Loading -> {
+                    items(10) {
+                        ImageCard(
+                            photoInfo = null,
+                            userClickAble = {},
+                            photoClickAble = {}
+                        )
+                    }
+                }
+
+                is LoadState.Error -> {
+                    item {
+                        Text(
+                            text = (lazyPagingItems.loadState.refresh as LoadState.Error).error.message
+                                ?: "Unknown Error.."
+                        )
+                    }
+                }
+                else -> Unit
+            }
         }
     }
 }

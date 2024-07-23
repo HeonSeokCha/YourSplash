@@ -27,7 +27,7 @@ import com.chs.yoursplash.util.color
 @Composable
 fun ImageCard(
     photoInfo: Photo?,
-    loadQuality: String,
+    loadQuality: String = "Regular",
     userClickAble: (userName: String) -> Unit,
     photoClickAble: (photoId: String) -> Unit
 ) {

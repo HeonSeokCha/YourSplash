@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -34,7 +35,7 @@ fun HomeScreen(state: HomeState) {
         contentPadding = PaddingValues(vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(32.dp),
     ) {
-        if (lazyPagingItems != null && lazyPagingItems.itemCount != 0) {
+        if (lazyPagingItems != null) {
             items(
                 count = lazyPagingItems.itemCount,
                 key = lazyPagingItems.itemKey(key = { it.id }),
@@ -60,22 +61,53 @@ fun HomeScreen(state: HomeState) {
                     }
                 )
             }
-        }
-    }
 
-    when (lazyPagingItems?.loadState?.source?.refresh) {
-        is LoadState.Loading -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+
+            when (lazyPagingItems.loadState.refresh) {
+                is LoadState.Loading -> {
+                    items(10) {
+                        ImageCard(
+                            photoInfo = null,
+                            userClickAble = {},
+                            photoClickAble = {}
+                        )
+                    }
+                }
+
+                is LoadState.Error -> {
+                    item {
+                        Text(
+                            text = (lazyPagingItems.loadState.refresh as LoadState.Error).error.message
+                                ?: "Unknown Error.."
+                        )
+                    }
+                }
+
+                else -> Unit
+            }
+
+            when (lazyPagingItems.loadState.append) {
+                is LoadState.Loading -> {
+                    items(10) {
+                        ImageCard(
+                            photoInfo = null,
+                            userClickAble = {},
+                            photoClickAble = {}
+                        )
+                    }
+                }
+
+                is LoadState.Error -> {
+                    item {
+                        Text(
+                            text = (lazyPagingItems.loadState.refresh as LoadState.Error).error.message
+                                ?: "Unknown Error.."
+                        )
+                    }
+                }
+
+                else -> Unit
             }
         }
-        is LoadState.Error -> {
-            Toast.makeText(context, "An error occurred while loading...", Toast.LENGTH_SHORT).show()
-        }
-        else -> {}
     }
 }
