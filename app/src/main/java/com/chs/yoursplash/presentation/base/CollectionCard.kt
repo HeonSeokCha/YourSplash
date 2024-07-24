@@ -24,7 +24,7 @@ import com.chs.yoursplash.util.Constants
 @Composable
 fun CollectionInfoCard(
     collectionInfo: UnSplashCollection?,
-    loadQuality: String,
+    loadQuality: String = "Regular",
     userClickAble: (userName: String) -> Unit,
     collectionClickAble: (collectionId: String) -> Unit
 ) {

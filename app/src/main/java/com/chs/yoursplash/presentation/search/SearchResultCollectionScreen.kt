@@ -62,6 +62,11 @@ fun SearchResultCollectionScreen(
             when (pagingList.loadState.refresh) {
                 is LoadState.Loading -> {
                     items(10) {
+                        CollectionInfoCard(
+                            collectionInfo = null,
+                            userClickAble = {},
+                            collectionClickAble = {}
+                        )
                     }
                 }
 
@@ -79,6 +84,11 @@ fun SearchResultCollectionScreen(
             when (pagingList.loadState.append) {
                 is LoadState.Loading -> {
                     items(10) {
+                        CollectionInfoCard(
+                            collectionInfo = null,
+                            userClickAble = {},
+                            collectionClickAble = {}
+                        )
                     }
                 }
 

@@ -24,7 +24,7 @@ import com.chs.yoursplash.util.Constants
 @Composable
 fun UserCard(
     userInfo: User?,
-    loadQuality: String,
+    loadQuality: String = "Regular",
     userClickAble: (userName: String) -> Unit,
     photoClickAble: (photoId: String) -> Unit
 ) {

@@ -24,8 +24,11 @@ import com.chs.yoursplash.util.Constants
 
 
 @Composable
-fun HomeScreen(state: HomeState) {
-    val context = LocalContext.current
+fun HomeScreen(
+    state: HomeState,
+    onUserClick: (String) -> Unit,
+    onPhotoClick: (String) -> Unit
+) {
     val lazyPagingItems = state.pagingImageList?.collectAsLazyPagingItems()
 
     LazyColumn(
@@ -45,19 +48,9 @@ fun HomeScreen(state: HomeState) {
                     photoInfo = photo,
                     loadQuality = state.loadQuality,
                     userClickAble = { userName ->
-                        context.startActivity(
-                            Intent(context, BrowseActivity::class.java).apply {
-                                putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
-                                putExtra(Constants.TARGET_ID, userName)
-                            }
-                        )
+                        onUserClick(userName)
                     }, photoClickAble = { photoId ->
-                        context.startActivity(
-                            Intent(context, BrowseActivity::class.java).apply {
-                                putExtra(Constants.TARGET_TYPE, Constants.TARGET_PHOTO)
-                                putExtra(Constants.TARGET_ID, photoId)
-                            }
-                        )
+                        onPhotoClick(photoId)
                     }
                 )
             }

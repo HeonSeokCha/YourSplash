@@ -76,6 +76,11 @@ fun SearchResultPhotoScreen(
             when (pagingList.loadState.refresh) {
                 is LoadState.Loading -> {
                     items(10) {
+                        ImageCard(
+                            photoInfo = null,
+                            userClickAble = {},
+                            photoClickAble = {}
+                        )
                     }
                 }
 
@@ -93,6 +98,11 @@ fun SearchResultPhotoScreen(
             when (pagingList.loadState.append) {
                 is LoadState.Loading -> {
                     items(10) {
+                        ImageCard(
+                            photoInfo = null,
+                            userClickAble = {},
+                            photoClickAble = {}
+                        )
                     }
                 }
 

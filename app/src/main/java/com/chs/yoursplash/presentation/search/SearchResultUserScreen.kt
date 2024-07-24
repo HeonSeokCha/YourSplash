@@ -63,6 +63,11 @@ fun SearchResultUserScreen(
             when (pagingList.loadState.refresh) {
                 is LoadState.Loading -> {
                     items(10) {
+                        UserCard(
+                            userInfo = null,
+                            userClickAble = {},
+                            photoClickAble = {}
+                        )
                     }
                 }
 
@@ -80,6 +85,11 @@ fun SearchResultUserScreen(
             when (pagingList.loadState.append) {
                 is LoadState.Loading -> {
                     items(10) {
+                        UserCard(
+                            userInfo = null,
+                            userClickAble = {},
+                            photoClickAble = {}
+                        )
                     }
                 }
 

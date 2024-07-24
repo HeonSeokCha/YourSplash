@@ -22,7 +22,8 @@ import com.chs.yoursplash.util.Constants
 @Composable
 fun CollectionScreen(
     state: CollectionState,
-    onEvent: () -> Unit
+    onUserClick: (String) -> Unit,
+    onCollectClick: (String) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -46,19 +47,9 @@ fun CollectionScreen(
                     collectionInfo = collectionInfo,
                     loadQuality = state.loadQuality,
                     userClickAble = { userName ->
-                        context.startActivity(
-                            Intent(context, BrowseActivity::class.java).apply {
-                                putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
-                                putExtra(Constants.TARGET_ID, userName)
-                            }
-                        )
+                        onUserClick(userName)
                     }, collectionClickAble = { collectionId ->
-                        context.startActivity(
-                            Intent(context, BrowseActivity::class.java).apply {
-                                putExtra(Constants.TARGET_TYPE, Constants.TARGET_COLLECTION)
-                                putExtra(Constants.TARGET_ID, collectionId)
-                            }
-                        )
+                        onCollectClick(collectionId)
                     }
                 )
             }
