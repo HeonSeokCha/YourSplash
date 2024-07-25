@@ -28,8 +28,7 @@ import com.chs.yoursplash.util.color
 fun ImageCard(
     photoInfo: Photo?,
     loadQuality: String = "Regular",
-    userClickAble: (userName: String) -> Unit,
-    photoClickAble: (photoId: String) -> Unit
+    onClick: (Pair<String, String>) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -45,7 +44,7 @@ fun ImageCard(
                 )
                 .clickable {
                     if (photoInfo?.user?.userName != null) {
-                        userClickAble(photoInfo.user.userName)
+                        onClick(Constants.TARGET_USER to photoInfo.user.userName)
                     }
                 },
             verticalAlignment = Alignment.CenterVertically,
@@ -86,7 +85,7 @@ fun ImageCard(
                 )
                 .clickable {
                     if (photoInfo?.id != null) {
-                        photoClickAble(photoInfo.id)
+                        onClick(Constants.TARGET_PHOTO to photoInfo.id)
                     }
                 },
             model = ImageRequest.Builder(LocalContext.current)

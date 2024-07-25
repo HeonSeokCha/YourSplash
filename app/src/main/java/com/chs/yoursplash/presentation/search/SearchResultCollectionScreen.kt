@@ -51,22 +51,15 @@ fun SearchResultCollectionScreen(
                 CollectionInfoCard(
                     collectionInfo = item,
                     loadQuality = state.loadQuality,
-                    userClickAble = { userName ->
-                        clickable(Constants.TARGET_USER to userName)
-                    }, collectionClickAble = { collectId ->
-                        clickable(Constants.TARGET_COLLECTION to collectId)
-                    }
-                )
+                ) {
+                    clickable(it)
+                }
             }
 
             when (pagingList.loadState.refresh) {
                 is LoadState.Loading -> {
                     items(10) {
-                        CollectionInfoCard(
-                            collectionInfo = null,
-                            userClickAble = {},
-                            collectionClickAble = {}
-                        )
+                        CollectionInfoCard(collectionInfo = null)
                     }
                 }
 
@@ -84,11 +77,7 @@ fun SearchResultCollectionScreen(
             when (pagingList.loadState.append) {
                 is LoadState.Loading -> {
                     items(10) {
-                        CollectionInfoCard(
-                            collectionInfo = null,
-                            userClickAble = {},
-                            collectionClickAble = {}
-                        )
+                        CollectionInfoCard(collectionInfo = null)
                     }
                 }
 

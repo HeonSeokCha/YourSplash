@@ -1,32 +1,21 @@
 package com.chs.yoursplash.presentation.bottom.collection
 
-import android.content.Intent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.chs.yoursplash.presentation.base.CollectionInfoCard
-import com.chs.yoursplash.presentation.base.ImageCard
-import com.chs.yoursplash.presentation.browse.BrowseActivity
-import com.chs.yoursplash.util.Constants
 
 @Composable
 fun CollectionScreen(
     state: CollectionState,
-    onUserClick: (String) -> Unit,
-    onCollectClick: (String) -> Unit
+    onClick: (Pair<String, String>) -> Unit
 ) {
-    val context = LocalContext.current
-
     val lazyPagingItems = state.collectionList?.collectAsLazyPagingItems()
 
     LazyColumn(
@@ -37,7 +26,7 @@ fun CollectionScreen(
         verticalArrangement = Arrangement.spacedBy(32.dp),
     ) {
 
-        if (lazyPagingItems != null && lazyPagingItems.itemCount != 0) {
+        if (lazyPagingItems != null) {
             items(
                 count = lazyPagingItems.itemCount,
                 key = lazyPagingItems.itemKey { it.id }
@@ -45,23 +34,16 @@ fun CollectionScreen(
                 val collectionInfo = lazyPagingItems[idx]
                 CollectionInfoCard(
                     collectionInfo = collectionInfo,
-                    loadQuality = state.loadQuality,
-                    userClickAble = { userName ->
-                        onUserClick(userName)
-                    }, collectionClickAble = { collectionId ->
-                        onCollectClick(collectionId)
-                    }
-                )
+                    loadQuality = state.loadQuality
+                ) {
+                    onClick(it)
+                }
             }
 
             when (lazyPagingItems.loadState.refresh) {
                 is LoadState.Loading -> {
                     items(10) {
-                        ImageCard(
-                            photoInfo = null,
-                            userClickAble = {},
-                            photoClickAble = {}
-                        )
+                        CollectionInfoCard(collectionInfo = null)
                     }
                 }
 
@@ -80,11 +62,7 @@ fun CollectionScreen(
             when (lazyPagingItems.loadState.append) {
                 is LoadState.Loading -> {
                     items(10) {
-                        ImageCard(
-                            photoInfo = null,
-                            userClickAble = {},
-                            photoClickAble = {}
-                        )
+                        CollectionInfoCard(collectionInfo = null)
                     }
                 }
 

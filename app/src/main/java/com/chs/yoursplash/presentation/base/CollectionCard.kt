@@ -25,8 +25,7 @@ import com.chs.yoursplash.util.Constants
 fun CollectionInfoCard(
     collectionInfo: UnSplashCollection?,
     loadQuality: String = "Regular",
-    userClickAble: (userName: String) -> Unit,
-    collectionClickAble: (collectionId: String) -> Unit
+    onClick: (Pair<String, String>) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -41,7 +40,9 @@ fun CollectionInfoCard(
                     bottom = 8.dp
                 )
                 .clickable {
-                    userClickAble(collectionInfo?.user?.userName ?: "")
+                    if (collectionInfo != null) {
+                        onClick(Constants.TARGET_USER to collectionInfo.user.userName)
+                    }
                 },
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -59,7 +60,9 @@ fun CollectionInfoCard(
                     .build(),
                 contentDescription = null
             )
+
             Spacer(modifier = Modifier.width(16.dp))
+
             Text(
                 text = collectionInfo?.user?.name ?: "...",
                 fontSize = 16.sp,
@@ -73,7 +76,9 @@ fun CollectionInfoCard(
             collectionInfo = collectionInfo,
             loadQuality = loadQuality
         ) {
-            collectionClickAble(it)
+            if (collectionInfo != null) {
+                onClick(Constants.TARGET_COLLECTION to it)
+            }
         }
     }
 }
@@ -106,7 +111,9 @@ private fun CollectionCard(
             .fillMaxWidth()
             .height(250.dp)
             .clickable {
-                collectionClickAble(collectionInfo?.id ?: "")
+                if (collectionInfo != null) {
+                    collectionClickAble(collectionInfo.id)
+                }
             }
     ) {
         Column(

@@ -34,18 +34,14 @@ fun UserDetailCollectionScreen(
                     collectionInfo = collectionList[idx],
                     loadQuality = loadQuality
                 ) {
-                    onNavigate(Screens.CollectionDetailScreen(collectionList[idx]!!.id))
+                    onNavigate(Screens.CollectionDetailScreen(it))
                 }
             }
 
             when (collectionList.loadState.refresh) {
                 is LoadState.Loading -> {
                     items(10) {
-                        ImageCard(
-                            photoInfo = null,
-                            userClickAble = {},
-                            photoClickAble = {}
-                        )
+                        ImageCard(photoInfo = null)
                     }
                 }
 
@@ -64,11 +60,7 @@ fun UserDetailCollectionScreen(
             when (collectionList.loadState.append) {
                 is LoadState.Loading -> {
                     items(10) {
-                        ImageCard(
-                            photoInfo = null,
-                            userClickAble = {},
-                            photoClickAble = {}
-                        )
+                        ImageCard(photoInfo = null)
                     }
                 }
 
@@ -80,10 +72,8 @@ fun UserDetailCollectionScreen(
                         )
                     }
                 }
-
                 else -> Unit
             }
-
         }
     }
 }

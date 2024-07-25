@@ -46,7 +46,9 @@ fun UserDetailPhotoScreen(
                             end = 8.dp,
                             bottom = 16.dp
                         ).clickable {
-                            onNavigate(Screens.ImageDetailScreen(photoList[idx]!!.id))
+                            if (photoList[idx] != null) {
+                                onNavigate(Screens.ImageDetailScreen(photoList[idx]!!.id))
+                            }
                         },
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(Constants.getPhotoQualityUrl(photoList[idx]?.urls, loadQuality))
@@ -61,11 +63,7 @@ fun UserDetailPhotoScreen(
             when (photoList.loadState.refresh) {
                 is LoadState.Loading -> {
                     items(10) {
-                        ImageCard(
-                            photoInfo = null,
-                            userClickAble = {},
-                            photoClickAble = {}
-                        )
+                        ImageCard(photoInfo = null)
                     }
                 }
 
@@ -84,11 +82,7 @@ fun UserDetailPhotoScreen(
             when (photoList.loadState.append) {
                 is LoadState.Loading -> {
                     items(10) {
-                        ImageCard(
-                            photoInfo = null,
-                            userClickAble = {},
-                            photoClickAble = {}
-                        )
+                        ImageCard(photoInfo = null)
                     }
                 }
 
@@ -100,10 +94,8 @@ fun UserDetailPhotoScreen(
                         )
                     }
                 }
-
                 else -> Unit
             }
-
         }
     }
 }

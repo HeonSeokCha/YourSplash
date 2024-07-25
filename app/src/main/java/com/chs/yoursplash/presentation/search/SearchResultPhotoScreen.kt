@@ -65,22 +65,15 @@ fun SearchResultPhotoScreen(
                 ImageCard(
                     photoInfo = item,
                     loadQuality = state.loadQuality,
-                    userClickAble = { userName ->
-                        clickable(Constants.TARGET_USER to userName)
-                    }, photoClickAble = { photoId ->
-                        clickable(Constants.TARGET_PHOTO to photoId)
-                    }
-                )
+                ) {
+                    clickable(it)
+                }
             }
 
             when (pagingList.loadState.refresh) {
                 is LoadState.Loading -> {
                     items(10) {
-                        ImageCard(
-                            photoInfo = null,
-                            userClickAble = {},
-                            photoClickAble = {}
-                        )
+                        ImageCard(photoInfo = null)
                     }
                 }
 
@@ -98,11 +91,7 @@ fun SearchResultPhotoScreen(
             when (pagingList.loadState.append) {
                 is LoadState.Loading -> {
                     items(10) {
-                        ImageCard(
-                            photoInfo = null,
-                            userClickAble = {},
-                            photoClickAble = {}
-                        )
+                        ImageCard(photoInfo = null)
                     }
                 }
 

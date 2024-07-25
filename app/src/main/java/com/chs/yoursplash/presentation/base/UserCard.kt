@@ -81,10 +81,7 @@ fun UserCard(
                             modifier = Modifier
                                 .size(90.dp, 190.dp)
                                 .clip(RoundedCornerShape(15))
-                                .placeholder(
-                                    visible = userInfo == null,
-                                    highlight = PlaceholderHighlight.shimmer()
-                                ).clickable {
+                                .clickable {
                                     photoClickAble(userInfo.photos[idx].id)
                                 },
                             model = ImageRequest.Builder(LocalContext.current)
@@ -101,7 +98,6 @@ fun UserCard(
                         )
                     }
                 }
-
             }
         }
     }

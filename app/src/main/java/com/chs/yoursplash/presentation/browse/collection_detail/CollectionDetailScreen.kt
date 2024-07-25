@@ -31,7 +31,7 @@ import com.chs.yoursplash.util.Constants
 @Composable
 fun CollectionDetailScreen(
     state: CollectionDetailState,
-    onNavigate: (Screens) -> Unit
+    onClick: (Pair<String, String>) -> Unit
 ) {
 
     val context = LocalContext.current
@@ -76,23 +76,16 @@ fun CollectionDetailScreen(
 
                 ImageCard(
                     photoInfo = lazyPagingItems[idx],
-                    loadQuality = state.loadQuality,
-                    userClickAble = { userName ->
-                        onNavigate(Screens.UserDetailScreen(userName))
-                    }, photoClickAble = { photoId ->
-                        onNavigate(Screens.ImageDetailScreen(photoId))
-                    }
-                )
+                    loadQuality = state.loadQuality
+                ) {
+                    onClick(it)
+                }
             }
 
             when (lazyPagingItems.loadState.refresh) {
                 is LoadState.Loading -> {
                     items(10) {
-                        ImageCard(
-                            photoInfo = null,
-                            userClickAble = {},
-                            photoClickAble = {}
-                        )
+                        ImageCard(photoInfo = null)
                     }
                 }
 
@@ -111,11 +104,7 @@ fun CollectionDetailScreen(
             when (lazyPagingItems.loadState.append) {
                 is LoadState.Loading -> {
                     items(10) {
-                        ImageCard(
-                            photoInfo = null,
-                            userClickAble = {},
-                            photoClickAble = {}
-                        )
+                        ImageCard(photoInfo = null)
                     }
                 }
 

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ComposeNode
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -12,6 +13,7 @@ import androidx.paging.compose.itemKey
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.base.ImageCard
+import com.chs.yoursplash.util.Constants
 
 @Composable
 fun UserDetailLikeScreen(
@@ -32,31 +34,20 @@ fun UserDetailLikeScreen(
 
                 ImageCard(
                     photoInfo = photoList[idx],
-                    loadQuality = loadQuality,
-                    photoClickAble = {
-                        if (photoList[idx] != null) {
-                            onNavigate(
-                                Screens.ImageDetailScreen(photoList[idx]!!.id)
-                            )
-                        }
-                    }, userClickAble = {
-                        if (photoList[idx] != null) {
-                            onNavigate(
-                                Screens.UserDetailScreen(photoList[idx]!!.user.userName)
-                            )
-                        }
+                    loadQuality = loadQuality
+                ) {
+                    if (it.first == Constants.TARGET_PHOTO) {
+                        onNavigate(Screens.ImageDetailScreen(it.second))
+                    } else {
+                        onNavigate(Screens.UserDetailScreen(it.second))
                     }
-                )
+                }
             }
 
             when (photoList.loadState.refresh) {
                 is LoadState.Loading -> {
                     items(10) {
-                        ImageCard(
-                            photoInfo = null,
-                            userClickAble = {},
-                            photoClickAble = {}
-                        )
+                        ImageCard(photoInfo = null)
                     }
                 }
 
@@ -75,11 +66,7 @@ fun UserDetailLikeScreen(
             when (photoList.loadState.append) {
                 is LoadState.Loading -> {
                     items(10) {
-                        ImageCard(
-                            photoInfo = null,
-                            userClickAble = {},
-                            photoClickAble = {}
-                        )
+                        ImageCard(photoInfo = null)
                     }
                 }
 
@@ -91,10 +78,8 @@ fun UserDetailLikeScreen(
                         )
                     }
                 }
-
                 else -> Unit
             }
-
         }
     }
 }

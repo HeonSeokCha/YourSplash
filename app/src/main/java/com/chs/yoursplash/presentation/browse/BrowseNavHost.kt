@@ -80,7 +80,11 @@ fun BrowseNavHost(
             }
 
             CollectionDetailScreen(viewModel.state) {
-                navController.navigate(it)
+                if (it.first == Constants.TARGET_USER) {
+                    navController.navigate(Screens.UserDetailScreen(it.second))
+                } else {
+                    navController.navigate(Screens.CollectionDetailScreen(it.second))
+                }
             }
         }
 
@@ -105,14 +109,13 @@ fun BrowseNavHost(
                 navController.getBackStackEntry(arg)
             }
             val viewModel: PhotoTagListViewModel = hiltViewModel(parentEntry)
-            PhotoTagListScreen(
-                state = viewModel.state,
-                onNavigateUser = {
-                    navController.navigate(it)
-                }, onNavigatePhoto = {
-                    navController.navigate(it)
+            PhotoTagListScreen(state = viewModel.state) {
+                if (it.first == Constants.TARGET_USER) {
+                    navController.navigate(Screens.UserDetailScreen(it.second))
+                } else {
+                    navController.navigate(Screens.ImageDetailScreen(it.second))
                 }
-            )
+            }
         }
     }
 }

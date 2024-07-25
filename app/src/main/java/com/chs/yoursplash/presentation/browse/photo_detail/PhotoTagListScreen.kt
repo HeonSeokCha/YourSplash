@@ -22,8 +22,7 @@ import com.chs.yoursplash.presentation.base.ImageCard
 @Composable
 fun PhotoTagListScreen(
     state: PhotoTagListState,
-    onNavigateUser: (Screens.UserDetailScreen) -> Unit,
-    onNavigatePhoto: (Screens.ImageDetailScreen) -> Unit
+    onClick: (Pair<String, String>) -> Unit
 ) {
     val context = LocalContext.current
     val resultPagingItems = state.tagSearchResultList?.collectAsLazyPagingItems()
@@ -41,23 +40,16 @@ fun PhotoTagListScreen(
             ) { idx ->
                 ImageCard(
                     photoInfo = resultPagingItems[idx],
-                    loadQuality = state.loadQuality,
-                    userClickAble = { userName ->
-                        onNavigateUser(Screens.UserDetailScreen(userName))
-                    }, photoClickAble = { photoId ->
-                        onNavigatePhoto(Screens.ImageDetailScreen(photoId))
-                    }
-                )
+                    loadQuality = state.loadQuality
+                ) {
+                    onClick(it)
+                }
             }
 
             when (resultPagingItems.loadState.refresh) {
                 is LoadState.Loading -> {
                     items(10) {
-                        ImageCard(
-                            photoInfo = null,
-                            userClickAble = {},
-                            photoClickAble = {}
-                        )
+                        ImageCard(photoInfo = null)
                     }
                 }
 
@@ -76,11 +68,7 @@ fun PhotoTagListScreen(
             when (resultPagingItems.loadState.append) {
                 is LoadState.Loading -> {
                     items(10) {
-                        ImageCard(
-                            photoInfo = null,
-                            userClickAble = {},
-                            photoClickAble = {}
-                        )
+                        ImageCard(photoInfo = null)
                     }
                 }
 
