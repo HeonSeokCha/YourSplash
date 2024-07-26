@@ -1,8 +1,5 @@
 package com.chs.yoursplash.presentation.bottom
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Collections
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -10,60 +7,59 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.chs.yoursplash.presentation.main.MainScreens
-import com.chs.yoursplash.util.fromMainRoute
+import com.chs.yoursplash.presentation.main.BottomNavigation
 
 @Composable
-fun BottomBar(
-    navController: NavHostController
-) {
-    val items = listOf(
-        Triple(MainScreens.HomeScreen, Icons.Default.Home, "Home"),
-        Triple(MainScreens.CollectionScreen, Icons.Default.Collections, "Collections")
-    )
+fun BottomBar(navController: NavHostController) {
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.fromMainRoute()
+    val currentRoute = navBackStackEntry?.destination?.route
+        ?: BottomNavigation.HOME::class.qualifiedName.orEmpty()
 
-    if (currentDestination is MainScreens.HomeScreen ||
-        currentDestination is MainScreens.CollectionScreen
+    val currentRouteTrimmed by remember(currentRoute) {
+        derivedStateOf { currentRoute.substringBefore("?") }
+    }
+
+    NavigationBar(
+        containerColor = MaterialTheme.colorScheme.primary
     ) {
-        NavigationBar(
-            containerColor = MaterialTheme.colorScheme.primary
-        ) {
-
-            items.forEach { destination ->
-                NavigationBarItem(
-                    selected = items.any { it == currentDestination },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.White,
-                        selectedTextColor = Color.White,
-                        unselectedIconColor = Color.White.copy(0.4f),
-                        unselectedTextColor = Color.White.copy(0.4f),
-                        indicatorColor = MaterialTheme.colorScheme.primary
-                    ),
-                    onClick = {
-                        navController.navigate(destination.first) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    },
-                    icon = {
-                        Icon(
-                            destination.second,
-                            contentDescription = null
-                        )
-                    },
-                    label = { Text(text = destination.third) }
-                )
+        BottomNavigation.entries.forEachIndexed { idx, navItem ->
+            val isSelected by remember(currentRoute) {
+                derivedStateOf { currentRouteTrimmed == navItem.route::class.qualifiedName }
             }
+            NavigationBarItem(
+                selected = isSelected,
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = Color.White,
+                    selectedTextColor = Color.White,
+                    unselectedIconColor = Color.White.copy(0.4f),
+                    unselectedTextColor = Color.White.copy(0.4f),
+                    indicatorColor = MaterialTheme.colorScheme.primary
+                ),
+                onClick = {
+                    navController.navigate(navItem.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                icon = {
+                    Icon(
+                        navItem.icon,
+                        contentDescription = null
+                    )
+                },
+                label = { Text(text = navItem.label) }
+            )
         }
     }
 }

@@ -3,7 +3,6 @@ package com.chs.yoursplash.presentation.main
 import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -39,10 +38,7 @@ fun MainNavHost(
         startDestination = MainScreens.HomeScreen
     ) {
         composable<MainScreens.HomeScreen> {
-            val parentEntry = remember(it) {
-                navController.getBackStackEntry(MainScreens.HomeScreen)
-            }
-            val viewModel: HomeViewModel = hiltViewModel(parentEntry)
+            val viewModel: HomeViewModel = hiltViewModel()
             HomeScreen(
                 state = viewModel.state,
             ) { info ->
@@ -56,10 +52,7 @@ fun MainNavHost(
         }
 
         composable<MainScreens.CollectionScreen> {
-            val parentEntry = remember(it) {
-                navController.getBackStackEntry(MainScreens.CollectionScreen)
-            }
-            val viewmodel: CollectionViewModel = hiltViewModel(parentEntry)
+            val viewmodel: CollectionViewModel = hiltViewModel()
             CollectionScreen(state = viewmodel.state) {
                 context.startActivity(
                     Intent(context, BrowseActivity::class.java).apply {
@@ -71,11 +64,7 @@ fun MainNavHost(
         }
 
         composable<MainScreens.SearchScreen> {
-            val parentEntry = remember(it) {
-                navController.getBackStackEntry(MainScreens.SearchScreen)
-            }
-            val viewModel: SearchResultViewModel = hiltViewModel(parentEntry)
-
+            val viewModel: SearchResultViewModel = hiltViewModel()
             LaunchedEffect(searchQuery) {
                 snapshotFlow { searchQuery }
                     .distinctUntilChanged()
@@ -93,10 +82,7 @@ fun MainNavHost(
         }
 
         composable<MainScreens.SettingScreen> {
-            val parentEntry = remember(it) {
-                navController.getBackStackEntry(MainScreens.SettingScreen)
-            }
-            val viewModel: SettingViewModel = hiltViewModel(parentEntry)
+            val viewModel: SettingViewModel = hiltViewModel()
             SettingScreen(
                 state = viewModel.state,
                 onEvent = viewModel::onEvent
