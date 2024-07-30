@@ -14,11 +14,10 @@ lifecycle = "2.8.4"
 room = "2.6.1"
 paging = "3.3.1"
 coil = "2.7.0"
-hilt = "2.51.1"
 kotlin = "2.0.0"
-ksp = "2.0.0-1.0.22"
 kotlin-coroutine = "1.8.1"
 ktor = "2.3.12"
+compose-plugin = "1.6.0"
 
 [libraries]
 # AndroidX
@@ -37,11 +36,6 @@ androidX-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidX-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidX-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
 android-datastore-preference = "androidx.datastore:datastore-preferences:1.1.1"
-
-## Hilt
-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
-hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
-hilt-navigation-compose = "androidx.hilt:hilt-navigation-compose:1.2.0"
 
 ## Kotlin
 kotlin-coroutine-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlin-coroutine" }
@@ -82,8 +76,8 @@ compose = [
 android-application = { id = "com.android.application", version.ref = "androidStudioGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidStudioGradlePlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

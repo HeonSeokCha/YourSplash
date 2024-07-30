@@ -3,8 +3,6 @@ import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 plugins {
     kotlin("android")
     alias(libs.plugins.android.application)
-    alias(libs.plugins.hilt)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.compiler)
 }
@@ -76,11 +74,8 @@ android {
 }
 
 dependencies {
+    implementation(projects.shared)
     implementation(libs.bundles.compose)
-
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
-    implementation(libs.hilt.navigation.compose)
 
     implementation(libs.androidX.paging.compose)
     implementation(libs.kotlin.coroutine.android)
@@ -92,6 +87,5 @@ dependencies {
 
     implementation(libs.bundles.ktor)
     implementation(libs.androidX.room.ktx)
-    ksp(libs.androidX.room.compiler)
     implementation(libs.android.datastore.preference)
 }
