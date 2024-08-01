@@ -9,10 +9,10 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
-import com.chs.yoursplash.domain.model.Photo
+import domain.model.Photo
 import com.chs.yoursplash.presentation.Screens
 import presentation.base.ImageCard
-import com.chs.yoursplash.util.Constants
+import util.Constants
 
 @Composable
 fun UserDetailLikeScreen(

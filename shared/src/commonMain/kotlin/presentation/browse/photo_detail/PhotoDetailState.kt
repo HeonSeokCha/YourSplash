@@ -1,7 +1,7 @@
 package com.chs.yoursplash.presentation.browse.photo_detail
 
-import com.chs.yoursplash.domain.model.Photo
-import com.chs.yoursplash.domain.model.PhotoDetail
+import domain.model.Photo
+import domain.model.PhotoDetail
 import com.chs.yoursplash.util.PhotoSaveState
 
 data class PhotoDetailState(

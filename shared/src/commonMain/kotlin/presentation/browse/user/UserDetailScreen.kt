@@ -28,7 +28,7 @@ import com.chs.yoursplash.presentation.base.PlaceholderHighlight
 import com.chs.yoursplash.presentation.base.placeholder
 import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.presentation.ui.theme.Purple200
-import com.chs.yoursplash.util.Constants
+import util.Constants
 import kotlinx.coroutines.launch
 
 @Composable

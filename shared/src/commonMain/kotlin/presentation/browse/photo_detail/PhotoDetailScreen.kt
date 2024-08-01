@@ -1,6 +1,5 @@
 package com.chs.yoursplash.presentation.browse.photo_detail
 
-import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -27,6 +26,8 @@ import com.chs.yoursplash.presentation.base.PlaceholderHighlight
 import com.chs.yoursplash.presentation.base.placeholder
 import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.util.*
+import util.Constants
+import util.color
 
 @Composable
 fun ImageDetailScreen(

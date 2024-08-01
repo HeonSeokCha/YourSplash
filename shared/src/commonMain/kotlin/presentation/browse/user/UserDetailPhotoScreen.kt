@@ -16,10 +16,10 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.chs.yoursplash.domain.model.Photo
+import domain.model.Photo
 import com.chs.yoursplash.presentation.Screens
 import presentation.base.ImageCard
-import com.chs.yoursplash.util.Constants
+import util.Constants
 
 @Composable
 fun UserDetailPhotoScreen(

@@ -1,9 +1,9 @@
 package domain.repository
 
 import androidx.paging.PagingData
-import com.chs.yoursplash.domain.model.Photo
-import com.chs.yoursplash.domain.model.PhotoDetail
-import com.chs.yoursplash.domain.model.PhotoSaveInfo
+import domain.model.Photo
+import domain.model.PhotoDetail
+import domain.model.PhotoSaveInfo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.util.NetworkResult
 import kotlinx.coroutines.flow.Flow

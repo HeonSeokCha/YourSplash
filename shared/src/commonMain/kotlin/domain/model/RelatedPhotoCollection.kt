@@ -1,4 +1,6 @@
-package com.chs.yoursplash.domain.model
+package domain.model
+
+import com.chs.yoursplash.domain.model.UnSplashCollection
 
 data class RelatedPhotoCollection(
     val total: Int,

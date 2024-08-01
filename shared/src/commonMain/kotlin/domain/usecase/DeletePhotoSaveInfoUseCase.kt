@@ -1,6 +1,6 @@
 package com.chs.yoursplash.domain.usecase
 
-import com.chs.yoursplash.domain.model.PhotoSaveInfo
+import domain.model.PhotoSaveInfo
 import domain.repository.PhotoRepository
 import javax.inject.Inject
 

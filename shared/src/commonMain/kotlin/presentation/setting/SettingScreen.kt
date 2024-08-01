@@ -1,7 +1,6 @@
 package com.chs.yoursplash.presentation.setting
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -10,10 +9,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.chs.yoursplash.presentation.ui.theme.Purple500
-import com.chs.yoursplash.util.Constants
+import util.Constants
 
 @Composable
 fun SettingScreen(

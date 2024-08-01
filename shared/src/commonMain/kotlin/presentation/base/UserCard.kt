@@ -18,8 +18,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.chs.yoursplash.domain.model.User
-import com.chs.yoursplash.util.BlurHashDecoder
-import com.chs.yoursplash.util.Constants
+import util.Constants
 
 @Composable
 fun UserCard(
@@ -85,7 +84,8 @@ fun UserCard(
                                     photoClickAble(userInfo.photos[idx].id)
                                 },
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(Constants.getPhotoQualityUrl(
+                                .data(
+                                    Constants.getPhotoQualityUrl(
                                     userInfo.photos[idx].urls,
                                     loadQuality
                                 ))

@@ -22,9 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.chs.yoursplash.domain.model.PhotoDetail
+import domain.model.PhotoDetail
 import com.chs.yoursplash.domain.model.UnSplashTag
-import com.chs.yoursplash.util.color
+import util.color
 
 @Composable
 fun ImageDetailInfo(

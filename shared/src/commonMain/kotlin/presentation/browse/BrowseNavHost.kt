@@ -20,7 +20,7 @@ import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListScreen
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListViewModel
 import com.chs.yoursplash.presentation.browse.user.UserDetailScreen
 import com.chs.yoursplash.presentation.browse.user.UserDetailViewModel
-import com.chs.yoursplash.util.Constants
+import util.Constants
 
 @Composable
 fun BrowseNavHost(

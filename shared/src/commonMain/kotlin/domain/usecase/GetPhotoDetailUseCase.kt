@@ -1,6 +1,6 @@
 package com.chs.yoursplash.domain.usecase
 
-import com.chs.yoursplash.domain.model.PhotoDetail
+import domain.model.PhotoDetail
 import domain.repository.PhotoRepository
 import com.chs.yoursplash.util.NetworkResult
 import kotlinx.coroutines.flow.Flow

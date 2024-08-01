@@ -18,11 +18,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.chs.yoursplash.domain.model.Photo
+import domain.model.Photo
 import com.chs.yoursplash.presentation.base.PlaceholderHighlight
 import com.chs.yoursplash.presentation.base.placeholder
 import com.chs.yoursplash.presentation.base.shimmer
-import com.chs.yoursplash.util.Constants
+import util.Constants
 
 @Composable
 fun ImageCard(

@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import com.chs.yoursplash.presentation.browse.BrowseActivity
 import com.chs.yoursplash.presentation.ui.theme.Purple200
-import com.chs.yoursplash.util.Constants
+import util.Constants
 import kotlinx.coroutines.launch
 
 @Composable

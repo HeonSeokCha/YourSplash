@@ -1,7 +1,7 @@
 package com.chs.yoursplash.domain.usecase
 
 import androidx.paging.PagingData
-import com.chs.yoursplash.domain.model.Photo
+import domain.model.Photo
 import domain.repository.PhotoRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

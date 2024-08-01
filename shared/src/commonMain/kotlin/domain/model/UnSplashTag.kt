@@ -1,4 +1,4 @@
-package com.chs.yoursplash.domain.model
+package domain.model
 
 data class UnSplashTag(
     val type: String,

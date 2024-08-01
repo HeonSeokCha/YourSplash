@@ -1,7 +1,7 @@
 package com.chs.yoursplash.domain.repository
 
 import androidx.paging.PagingData
-import com.chs.yoursplash.domain.model.Photo
+import domain.model.Photo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.User
 import kotlinx.coroutines.flow.Flow

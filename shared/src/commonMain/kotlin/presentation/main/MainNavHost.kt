@@ -1,11 +1,9 @@
 package com.chs.yoursplash.presentation.main
 
-import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -13,13 +11,10 @@ import androidx.navigation.compose.composable
 import com.chs.yoursplash.presentation.bottom.collection.CollectionScreen
 import com.chs.yoursplash.presentation.bottom.collection.CollectionViewModel
 import com.chs.yoursplash.presentation.bottom.home.HomeScreen
-import com.chs.yoursplash.presentation.bottom.home.HomeViewModel
-import com.chs.yoursplash.presentation.browse.BrowseActivity
 import com.chs.yoursplash.presentation.search.SearchResultViewModel
 import com.chs.yoursplash.presentation.search.SearchScreen
 import com.chs.yoursplash.presentation.setting.SettingScreen
 import com.chs.yoursplash.presentation.setting.SettingViewModel
-import com.chs.yoursplash.util.Constants
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNot
 
@@ -30,7 +25,6 @@ fun MainNavHost(
     searchQuery: String,
     onBack: () -> Unit
 ) {
-    val context = LocalContext.current
 
     NavHost(
         modifier = modifier,
@@ -38,28 +32,27 @@ fun MainNavHost(
         startDestination = MainScreens.HomeScreen
     ) {
         composable<MainScreens.HomeScreen> {
-            val viewModel: HomeViewModel = hiltViewModel()
             HomeScreen(
                 state = viewModel.state,
             ) { info ->
-                context.startActivity(
-                    Intent(context, BrowseActivity::class.java).apply {
-                        putExtra(Constants.TARGET_TYPE, info.first)
-                        putExtra(Constants.TARGET_ID, info.second)
-                    }
-                )
+//                context.startActivity(
+//                    Intent(context, BrowseActivity::class.java).apply {
+//                        putExtra(Constants.TARGET_TYPE, info.first)
+//                        putExtra(Constants.TARGET_ID, info.second)
+//                    }
+//                )
             }
         }
 
         composable<MainScreens.CollectionScreen> {
             val viewmodel: CollectionViewModel = hiltViewModel()
             CollectionScreen(state = viewmodel.state) {
-                context.startActivity(
-                    Intent(context, BrowseActivity::class.java).apply {
-                        putExtra(Constants.TARGET_TYPE, it.first)
-                        putExtra(Constants.TARGET_ID, it.second)
-                    }
-                )
+//                context.startActivity(
+//                    Intent(context, BrowseActivity::class.java).apply {
+//                        putExtra(Constants.TARGET_TYPE, it.first)
+//                        putExtra(Constants.TARGET_ID, it.second)
+//                    }
+//                )
             }
         }
 

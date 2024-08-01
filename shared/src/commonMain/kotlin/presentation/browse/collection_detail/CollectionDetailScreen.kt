@@ -19,7 +19,7 @@ import presentation.base.ImageCard
 import com.chs.yoursplash.presentation.base.PlaceholderHighlight
 import com.chs.yoursplash.presentation.base.placeholder
 import com.chs.yoursplash.presentation.base.shimmer
-import com.chs.yoursplash.util.Constants
+import util.Constants
 
 @Composable
 fun CollectionDetailScreen(

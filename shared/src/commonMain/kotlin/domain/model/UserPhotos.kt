@@ -1,4 +1,6 @@
-package com.chs.yoursplash.domain.model
+package domain.model
+
+import domain.model.PhotoUrls
 
 data class UserPhotos(
     val id: String,

@@ -14,7 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.chs.yoursplash.presentation.Screens
-import com.chs.yoursplash.util.fromScreenRoute
+import util.fromScreenRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.chs.yoursplash.R
-import com.chs.yoursplash.util.fromMainRoute
+import util.fromMainRoute
 
 
 @OptIn(ExperimentalMaterial3Api::class)
