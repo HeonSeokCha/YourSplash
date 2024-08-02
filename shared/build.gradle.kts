@@ -38,6 +38,9 @@ kotlin {
             implementation(libs.androidX.compose.ui.tooling.preview)
             implementation(libs.androidX.activity.compose)
             implementation(libs.ktor.client.okhttp)
+
+            implementation(libs.koin.android)
+            implementation(libs.koin.androidx.compose)
         }
         commonMain.dependencies {
             implementation(compose.foundation)
@@ -52,7 +55,11 @@ kotlin {
             implementation(libs.bundles.ktor)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.kotlin.serialization)
+
+            api(libs.koin.core)
             implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.navigation.compose)
         }
     }
 }
@@ -94,5 +101,4 @@ android {
 }
 dependencies {
     implementation(libs.androidX.compose.material3)
-    implementation(libs.androidx.ui.graphics.android)
 }

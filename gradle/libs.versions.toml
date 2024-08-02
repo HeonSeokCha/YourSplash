@@ -19,8 +19,7 @@ coroutine = "1.8.1"
 ktor = "2.3.12"
 compose-plugin = "1.6.11"
 androidx-lifecycle = "2.8.0"
-uiGraphicsAndroid = "1.6.8"
-koin = "1.1.0"
+koin = "4.0.0-RC1"
 
 [libraries]
 # AndroidX
@@ -46,9 +45,12 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutine" }
 kotlin-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1"
 
-## Kotin
-#navigator-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager" }
-koin-compose = {module="io.insert-koin:koin-compose", version.ref = "koin"}
+## Koin
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
 
 ## Ktor
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
@@ -59,7 +61,6 @@ ktor-client-content-negotiation = {module = "io.ktor:ktor-client-content-negotia
 
 ## etc
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
-androidx-ui-graphics-android = { group = "androidx.compose.ui", name = "ui-graphics-android", version.ref = "uiGraphicsAndroid" }
 
 [bundles]
 ktor = [

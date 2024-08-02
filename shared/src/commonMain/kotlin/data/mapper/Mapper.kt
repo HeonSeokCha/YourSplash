@@ -12,6 +12,12 @@ import domain.model.PhotoSaveInfo
 import domain.model.PhotoUrls
 import domain.model.RelatedCollectionPreview
 import domain.model.RelatedPhotoCollection
+import domain.model.UnSplashCollection
+import domain.model.UnSplashTag
+import domain.model.User
+import domain.model.UserDetail
+import domain.model.UserPhotos
+import domain.model.UserProfileImage
 
 fun ResponsePhoto.toUnSplashImage(): Photo {
     return Photo(
@@ -159,21 +165,5 @@ fun ResponseCollection.toPhotoCollection(): UnSplashCollection {
         previewPhotos = previewPhotos?.map {
             it.toRelatedCollectionPreview()
         }
-    )
-}
-
-fun PhotoSaveInfo.toPhotoSaveEntity(): PhotoSaveEntity {
-    return PhotoSaveEntity(
-        photoId = this.id,
-        blurHash = this.blurHash,
-        photoUrl = this.url,
-    )
-}
-
-fun PhotoSaveEntity.toPhotoSaveInfo(): PhotoSaveInfo {
-    return PhotoSaveInfo(
-        id = this.photoId,
-        blurHash = this.blurHash,
-        url = this.photoUrl
     )
 }

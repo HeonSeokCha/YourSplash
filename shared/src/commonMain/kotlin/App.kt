@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import org.koin.compose.KoinApplication
+import org.koin.compose.KoinContext
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import presentation.YourSplashApp
@@ -32,13 +33,10 @@ fun App() {
     val colors by mutableStateOf(
         if (isSystemInDarkTheme()) darkColors else lightColors
     )
-    KoinApplication(application = {
-
-    }) {
-
-    }
 
     MaterialTheme(colorScheme = colors) {
-        YourSplashApp()
+        KoinContext {
+            YourSplashApp()
+        }
     }
 }

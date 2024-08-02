@@ -29,10 +29,10 @@ val provideHttpClientModule = module {
                 }
             }
 
-            install(Logging) {
-                logger = Logger.DEFAULT
-                level = LogLevel.ALL
-            }
+//            install(Logging) {
+//                logger = Logger.DEFAULT
+//                level = LogLevel.ALL
+//            }
 
             install(ContentNegotiation) {
                 Json {
