@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.search
+package presentation.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,7 +11,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
-import androidx.paging.compose.collectAsLazyPagingItems
+import app.cash.paging.compose.collectAsLazyPagingItems
 import presentation.base.CollectionInfoCard
 import io.ktor.websocket.Frame
 import kotlinx.coroutines.flow.distinctUntilChanged

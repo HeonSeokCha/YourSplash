@@ -1,8 +1,6 @@
-package com.chs.yoursplash.data.paging
+package data.paging
 
-import android.util.Log
-import androidx.paging.PagingSource
-import androidx.paging.PagingState
+import androidx.paging.PagingSource import androidx.paging.PagingState
 import data.api.UnSplashService
 import data.mapper.toUnSplashImage
 import com.chs.yoursplash.data.model.ResponsePhoto
@@ -32,7 +30,6 @@ class HomePhotosPaging(
                 nextKey = if (response.isNotEmpty()) page + 1 else null
             )
         } catch (e: Exception) {
-            Log.e("CHS_LOG",e.message.toString())
             LoadResult.Error(e)
         }
     }

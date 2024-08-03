@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.browse
+package presentation.browse
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

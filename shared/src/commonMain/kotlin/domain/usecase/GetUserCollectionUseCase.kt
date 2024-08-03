@@ -1,12 +1,11 @@
-package com.chs.yoursplash.domain.usecase
+package domain.usecase
 
 import androidx.paging.PagingData
-import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.repository.UserRepository
+import domain.model.UnSplashCollection
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
-class GetUserCollectionUseCase @Inject constructor(
+class GetUserCollectionUseCase(
     private val repository: UserRepository
 ) {
     operator fun invoke(userName: String): Flow<PagingData<UnSplashCollection>> {

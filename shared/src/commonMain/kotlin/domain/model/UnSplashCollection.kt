@@ -1,7 +1,5 @@
 package domain.model
 
-import domain.model.RelatedCollectionPreview
-
 data class UnSplashCollection(
     val id: String,
     val title: String,

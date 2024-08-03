@@ -1,11 +1,11 @@
-package com.chs.yoursplash.data.paging
+package data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import data.api.UnSplashService
 import data.mapper.toPhotoCollection
 import com.chs.yoursplash.data.model.ResponseSearchCollections
-import com.chs.yoursplash.domain.model.UnSplashCollection
+import domain.model.UnSplashCollection
 
 class SearchCollectionPaging(
     private val api: UnSplashService,

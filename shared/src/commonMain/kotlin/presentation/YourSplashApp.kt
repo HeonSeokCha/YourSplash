@@ -11,10 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.chs.yoursplash.presentation.bottom.BottomBar
-import com.chs.yoursplash.presentation.main.MainTopBar
-import com.chs.yoursplash.presentation.main.MainViewModel
+import presentation.main.MainTopBar
+import presentation.main.MainViewModel
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 import presentation.main.MainNavHost
 
 @Composable

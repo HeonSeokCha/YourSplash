@@ -1,11 +1,10 @@
 package util
 
-import android.graphics.Color.parseColor
 import androidx.compose.foundation.layout.*
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavBackStackEntry
 import com.chs.yoursplash.presentation.Screens
-import com.chs.yoursplash.presentation.main.MainScreens
+import presentation.main.MainScreens
 
 
 val String.color

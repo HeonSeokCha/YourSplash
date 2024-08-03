@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.setting
+package presentation.setting
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

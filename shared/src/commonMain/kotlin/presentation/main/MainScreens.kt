@@ -1,7 +1,6 @@
-package com.chs.yoursplash.presentation.main
+package presentation.main
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Collections
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.ui.graphics.vector.ImageVector
 import kotlinx.serialization.Serializable
@@ -24,5 +23,5 @@ enum class BottomNavigation(
     val route: MainScreens
 ){
     HOME("Home", Icons.Filled.Home, MainScreens.HomeScreen),
-    SEARCH("Collection", Icons.Filled.Collections, MainScreens.CollectionScreen),
+    SEARCH("Collection", Icons.Filled.Home, MainScreens.CollectionScreen),
 }

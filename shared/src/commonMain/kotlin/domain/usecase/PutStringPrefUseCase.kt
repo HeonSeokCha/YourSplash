@@ -1,9 +1,8 @@
-package com.chs.yoursplash.domain.usecase
+package domain.usecase
 
 import com.chs.yoursplash.domain.repository.SettingRepository
-import javax.inject.Inject
 
-class PutStringPrefUseCase @Inject constructor(
+class PutStringPrefUseCase(
     private val repository: SettingRepository
 ) {
     suspend operator fun invoke(

@@ -6,9 +6,9 @@ import androidx.paging.PagingData
 import data.api.UnSplashService
 import data.db.dao.SearchHistoryDao
 import com.chs.yoursplash.data.db.entity.SearchHistoryEntity
-import com.chs.yoursplash.data.paging.SearchCollectionPaging
-import com.chs.yoursplash.data.paging.SearchPhotoPaging
-import com.chs.yoursplash.data.paging.SearchUserPaging
+import data.paging.SearchCollectionPaging
+import data.paging.SearchPhotoPaging
+import data.paging.SearchUserPaging
 import domain.model.Photo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.User

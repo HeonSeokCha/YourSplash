@@ -1,21 +1,18 @@
-package com.chs.yoursplash.presentation.setting
+package presentation.setting
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.chs.yoursplash.domain.usecase.GetDownloadQualityUseCase
-import com.chs.yoursplash.domain.usecase.GetImageDetailQualityUseCase
-import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
-import com.chs.yoursplash.domain.usecase.PutStringPrefUseCase
+import domain.usecase.GetDownloadQualityUseCase
+import domain.usecase.GetImageDetailQualityUseCase
+import domain.usecase.GetLoadQualityUseCase
+import domain.usecase.PutStringPrefUseCase
 import util.Constants
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class SettingViewModel @Inject constructor(
+class SettingViewModel constructor(
     private val getDownloadQualityUseCase: GetDownloadQualityUseCase,
     private val getLoadQualityUseCase: GetLoadQualityUseCase,
     private val getImageDetailQualityUseCase: GetImageDetailQualityUseCase,

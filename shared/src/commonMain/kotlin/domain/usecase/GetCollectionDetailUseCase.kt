@@ -1,12 +1,11 @@
-package com.chs.yoursplash.domain.usecase
+package domain.usecase
 
-import com.chs.yoursplash.domain.model.UnSplashCollection
 import domain.repository.PhotoRepository
 import com.chs.yoursplash.util.NetworkResult
+import domain.model.UnSplashCollection
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
-class GetCollectionDetailUseCase @Inject constructor(
+class GetCollectionDetailUseCase(
     private val repository: PhotoRepository
 ) {
     suspend operator fun invoke(id: String): Flow<NetworkResult<UnSplashCollection>> {

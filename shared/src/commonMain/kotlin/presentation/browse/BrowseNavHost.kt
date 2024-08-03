@@ -1,36 +1,34 @@
 package presentation.browse
 
-import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.chs.yoursplash.presentation.Screens
-import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailScreen
+import presentation.browse.collection_detail.CollectionDetailScreen
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailViewModel
 import com.chs.yoursplash.presentation.browse.photo_detail.ImageDetailScreen
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailViewModel
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListScreen
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListViewModel
 import com.chs.yoursplash.presentation.browse.user.UserDetailScreen
-import com.chs.yoursplash.presentation.browse.user.UserDetailViewModel
+import org.koin.compose.viewmodel.koinNavViewModel
+import org.koin.compose.viewmodel.koinViewModel
+import presentation.browse.user.UserDetailViewModel
 import util.Constants
 
 @Composable
 fun BrowseNavHost(
     modifier: Modifier,
     navController: NavHostController,
-    intent: Intent?
+    type: String
 ) {
-    val context = LocalContext.current
     val startDestination: Screens =
-        when (intent?.getStringExtra(Constants.TARGET_TYPE)) {
+        when (type) {
             Constants.TARGET_PHOTO -> {
                 Screens.ImageDetailScreen(intent.getStringExtra(Constants.TARGET_ID)!!)
             }
@@ -58,8 +56,8 @@ fun BrowseNavHost(
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(arg)
             }
-            val viewModel: PhotoDetailViewModel = hiltViewModel(parentEntry)
-            LaunchedEffect(context, viewModel) {
+            val viewModel: PhotoDetailViewModel = koinViewModel<PhotoDetailViewModel>()
+            LaunchedEffect(viewModel) {
                 viewModel.getImageDetailInfo()
                 viewModel.getImageRelatedList()
             }
@@ -74,8 +72,8 @@ fun BrowseNavHost(
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(arg)
             }
-            val viewModel: CollectionDetailViewModel = hiltViewModel(parentEntry)
-            LaunchedEffect(context, viewModel) {
+            val viewModel: CollectionDetailViewModel = koinViewModel<CollectionDetailViewModel>()
+            LaunchedEffect(viewModel) {
                 viewModel.getCollectionDetailInfo()
             }
 
@@ -93,8 +91,8 @@ fun BrowseNavHost(
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(arg)
             }
-            val viewModel: UserDetailViewModel = hiltViewModel(parentEntry)
-            LaunchedEffect(context, viewModel) {
+            val viewModel: UserDetailViewModel = koinViewModel<UserDetailViewModel>()
+            LaunchedEffect(viewModel) {
                 viewModel.getUserDetailInfo()
             }
 
@@ -108,7 +106,7 @@ fun BrowseNavHost(
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(arg)
             }
-            val viewModel: PhotoTagListViewModel = hiltViewModel(parentEntry)
+            val viewModel: PhotoTagListViewModel = koinViewModel<PhotoTagListViewModel>()
             PhotoTagListScreen(state = viewModel.state) {
                 if (it.first == Constants.TARGET_USER) {
                     navController.navigate(Screens.UserDetailScreen(it.second))

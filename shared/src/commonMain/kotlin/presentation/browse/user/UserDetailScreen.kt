@@ -1,5 +1,6 @@
 package com.chs.yoursplash.presentation.browse.user
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -14,23 +15,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.paging.compose.collectAsLazyPagingItems
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import com.chs.yoursplash.domain.model.UserDetail
+import app.cash.paging.compose.collectAsLazyPagingItems
+import coil3.compose.AsyncImage
+import coil3.compose.LocalPlatformContext
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.base.PlaceholderHighlight
 import com.chs.yoursplash.presentation.base.placeholder
 import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.presentation.ui.theme.Purple200
+import domain.model.UserDetail
 import util.Constants
 import kotlinx.coroutines.launch
+import presentation.browse.user.UserDetailLikeScreen
+import presentation.browse.user.UserDetailState
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun UserDetailScreen(
     state: UserDetailState,
@@ -145,7 +150,7 @@ private fun UserDetailInfo(userInfo: UserDetail?) {
                     visible = userInfo == null,
                     highlight = PlaceholderHighlight.shimmer()
                 ),
-            model = ImageRequest.Builder(LocalContext.current)
+            model = ImageRequest.Builder(LocalPlatformContext.current)
                 .data(userInfo?.profileImage?.large)
                 .crossfade(true)
                 .build(),

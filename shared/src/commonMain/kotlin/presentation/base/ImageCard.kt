@@ -57,7 +57,7 @@ fun ImageCard(
                         visible = photoInfo == null,
                         highlight = PlaceholderHighlight.shimmer()
                     ),
-                model = ImageRequest.Builder(LocalContext.current)
+                model = ImageRequest.Builder(LocalPlatformContext.current)
                     .data(photoInfo?.user?.photoProfile?.large)
                     .crossfade(true)
                     .build(),
@@ -88,7 +88,7 @@ fun ImageCard(
                         onClick(Constants.TARGET_PHOTO to photoInfo.id)
                     }
                 },
-            model = ImageRequest.Builder(LocalContext.current)
+            model = ImageRequest.Builder(LocalPlatformContext.current)
                 .data(Constants.getPhotoQualityUrl(photoInfo?.urls, loadQuality))
                 .crossfade(true)
                 .build(),

@@ -10,6 +10,7 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.client.utils.EmptyContent.headers
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.URLProtocol
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
@@ -35,9 +36,11 @@ val provideHttpClientModule = module {
 //            }
 
             install(ContentNegotiation) {
-                Json {
-                    ignoreUnknownKeys = true
-                }
+                json(
+                    Json {
+                        ignoreUnknownKeys = true
+                    }
+                )
             }
 
             HttpResponseValidator {

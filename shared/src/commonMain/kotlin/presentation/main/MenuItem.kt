@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.main
+package presentation.main
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

@@ -1,7 +1,7 @@
-package com.chs.yoursplash.presentation.bottom.collection
+package presentation.bottom.collection
 
 import androidx.paging.PagingData
-import com.chs.yoursplash.domain.model.UnSplashCollection
+import domain.model.UnSplashCollection
 import kotlinx.coroutines.flow.Flow
 
 data class CollectionState(

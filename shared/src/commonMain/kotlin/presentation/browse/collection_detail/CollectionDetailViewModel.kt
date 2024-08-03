@@ -7,17 +7,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.chs.yoursplash.domain.usecase.GetCollectionDetailUseCase
-import com.chs.yoursplash.domain.usecase.GetCollectionPhotoUseCase
-import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
+import domain.usecase.GetCollectionDetailUseCase
+import domain.usecase.GetCollectionPhotoUseCase
+import domain.usecase.GetLoadQualityUseCase
 import util.Constants
 import com.chs.yoursplash.util.NetworkResult
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import presentation.browse.collection_detail.CollectionDetailState
 
-@HiltViewModel
-class CollectionDetailViewModel @Inject constructor(
+class CollectionDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val getCollectionDetailUseCase: GetCollectionDetailUseCase,
     private val getCollectionPhotoUseCase: GetCollectionPhotoUseCase,

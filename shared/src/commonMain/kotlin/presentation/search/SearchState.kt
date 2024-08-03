@@ -1,9 +1,9 @@
-package com.chs.yoursplash.presentation.search
+package presentation.search
 
 import androidx.paging.PagingData
 import domain.model.Photo
-import com.chs.yoursplash.domain.model.UnSplashCollection
-import com.chs.yoursplash.domain.model.User
+import domain.model.UnSplashCollection
+import domain.model.User
 import kotlinx.coroutines.flow.Flow
 
 data class SearchState(

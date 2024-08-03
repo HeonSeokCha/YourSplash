@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.browse.user
+package presentation.browse.user
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,15 +7,17 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.chs.yoursplash.domain.usecase.*
 import util.Constants
 import com.chs.yoursplash.util.NetworkResult
-import dagger.hilt.android.lifecycle.HiltViewModel
+import domain.usecase.GetLoadQualityUseCase
+import domain.usecase.GetUserCollectionUseCase
+import domain.usecase.GetUserDetailUseCase
+import domain.usecase.GetUserLikesUseCase
+import domain.usecase.GetUserPhotoUseCase
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import presentation.browse.user.UserDetailState
 
-@HiltViewModel
-class UserDetailViewModel @Inject constructor(
+class UserDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val getUserDetailUseCase: GetUserDetailUseCase,
     private val getUserPhotoUseCase: GetUserPhotoUseCase,

@@ -9,13 +9,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.itemKey
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import app.cash.paging.compose.LazyPagingItems
+import app.cash.paging.compose.itemKey
+import coil3.compose.AsyncImage
+import coil3.compose.LocalPlatformContext
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import domain.model.Photo
 import com.chs.yoursplash.presentation.Screens
 import presentation.base.ImageCard
@@ -47,7 +48,7 @@ fun UserDetailPhotoScreen(
                                 onNavigate(Screens.ImageDetailScreen(photoList[idx]!!.id))
                             }
                         },
-                    model = ImageRequest.Builder(LocalContext.current)
+                    model = ImageRequest.Builder(LocalPlatformContext.current)
                         .data(Constants.getPhotoQualityUrl(photoList[idx]?.urls, loadQuality))
                         .crossfade(true)
                         .build(),

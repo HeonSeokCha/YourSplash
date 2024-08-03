@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.bottom.home
+package presentation.bottom.home
 
 import androidx.paging.PagingData
 import domain.model.Photo

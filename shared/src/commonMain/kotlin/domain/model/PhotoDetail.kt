@@ -1,7 +1,5 @@
 package domain.model
 
-import com.chs.yoursplash.domain.model.UnSplashTag
-import com.chs.yoursplash.domain.model.User
 
 data class PhotoDetail(
     val id: String,

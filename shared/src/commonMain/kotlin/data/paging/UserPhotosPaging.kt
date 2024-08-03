@@ -1,4 +1,4 @@
-package com.chs.yoursplash.data.paging
+package data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState

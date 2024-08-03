@@ -1,9 +1,9 @@
-package com.chs.yoursplash.presentation.browse.user
+package presentation.browse.user
 
 import androidx.paging.PagingData
 import domain.model.Photo
-import com.chs.yoursplash.domain.model.UnSplashCollection
-import com.chs.yoursplash.domain.model.UserDetail
+import domain.model.UnSplashCollection
+import domain.model.UserDetail
 import kotlinx.coroutines.flow.Flow
 
 data class UserDetailState(

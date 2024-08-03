@@ -1,10 +1,9 @@
-package com.chs.yoursplash.domain.usecase
+package domain.usecase
 
 import domain.model.PhotoSaveInfo
 import domain.repository.PhotoRepository
-import javax.inject.Inject
 
-class InsertPhotoSaveInfoUseCase @Inject constructor(
+class InsertPhotoSaveInfoUseCase(
     private val repository: PhotoRepository
 ) {
     suspend operator fun invoke(photoSaveInfo: PhotoSaveInfo) {

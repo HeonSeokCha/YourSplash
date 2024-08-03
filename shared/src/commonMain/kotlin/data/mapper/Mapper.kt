@@ -1,14 +1,11 @@
 package data.mapper
 
-import com.chs.yoursplash.data.db.entity.PhotoSaveEntity
 import com.chs.yoursplash.data.model.*
-import com.chs.yoursplash.domain.model.*
 import domain.model.Exif
 import domain.model.Photo
 import domain.model.PhotoDetail
 import domain.model.PhotoLocation
 import domain.model.PhotoPosition
-import domain.model.PhotoSaveInfo
 import domain.model.PhotoUrls
 import domain.model.RelatedCollectionPreview
 import domain.model.RelatedPhotoCollection

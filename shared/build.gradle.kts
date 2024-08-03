@@ -1,4 +1,5 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -37,7 +38,7 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.androidX.compose.ui.tooling.preview)
             implementation(libs.androidX.activity.compose)
-            implementation(libs.ktor.client.okhttp)
+            implementation(libs.ktor.client.android)
 
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
@@ -47,6 +48,7 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(compose.components.resources)
 
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -55,11 +57,18 @@ kotlin {
             implementation(libs.bundles.ktor)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.kotlin.serialization)
+            implementation(libs.cashapp.paging.compose)
+            implementation(libs.cashapp.paging.common)
 
             api(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.navigation.compose)
+
+            implementation(libs.coil)
+            implementation(libs.coil.network.ktor)
+            implementation(libs.coil.compose.core)
+            implementation(libs.coil.compose)
         }
     }
 }

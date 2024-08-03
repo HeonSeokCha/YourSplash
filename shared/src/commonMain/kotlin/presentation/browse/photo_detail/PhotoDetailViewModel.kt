@@ -6,15 +6,18 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.chs.yoursplash.domain.usecase.*
 import util.Constants
 import com.chs.yoursplash.util.NetworkResult
-import dagger.hilt.android.lifecycle.HiltViewModel
+import domain.usecase.GetImageDetailQualityUseCase
+import domain.usecase.GetLoadQualityUseCase
+import domain.usecase.GetPhotoDetailUseCase
+import domain.usecase.GetPhotoRelatedListUseCase
+import domain.usecase.GetPhotoSaveInfoUseCase
+import domain.usecase.InsertPhotoSaveInfoUseCase
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import presentation.browse.photo_detail.PhotoDetailState
 
-@HiltViewModel
-class PhotoDetailViewModel @Inject constructor(
+class PhotoDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val getPhotoDetailUseCase: GetPhotoDetailUseCase,
     private val getPhotoRelatedListUseCase: GetPhotoRelatedListUseCase,

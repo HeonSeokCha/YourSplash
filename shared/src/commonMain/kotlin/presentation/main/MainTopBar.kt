@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.main
+package presentation.main
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -11,7 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.twotone.Search
@@ -32,13 +32,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.chs.yoursplash.R
 import util.fromMainRoute
 
 
@@ -56,7 +54,7 @@ fun MainTopBar(
             TopAppBar(
                 title = {
                     Text(
-                        text = stringResource(id = R.string.app_name),
+                        text = "",
                         fontSize = 20.sp,
                         color = Color.White,
                         fontWeight = FontWeight.Bold
@@ -185,7 +183,7 @@ fun SearchAppBar(
                 ) {
                     Icon(
                         modifier = Modifier.padding(end = 10.dp),
-                        imageVector = Icons.Default.History,
+                        imageVector = Icons.Default.Home,
                         contentDescription = null
                     )
                     Text(text = title)

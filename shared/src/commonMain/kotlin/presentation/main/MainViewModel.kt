@@ -1,23 +1,16 @@
-package com.chs.yoursplash.presentation.main
+package presentation.main
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.chs.yoursplash.domain.usecase.DeleteSearchHistoryUseCase
-import com.chs.yoursplash.domain.usecase.GetRecentSearchHistoryUseCase
-import com.chs.yoursplash.domain.usecase.InsertSearchHistoryUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import domain.usecase.DeleteSearchHistoryUseCase
+import domain.usecase.GetRecentSearchHistoryUseCase
+import domain.usecase.InsertSearchHistoryUseCase
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class MainViewModel @Inject constructor(
+class MainViewModel constructor(
     private val insertSearchHistoryUseCase: InsertSearchHistoryUseCase,
     private val deleteSearchHistoryUseCase: DeleteSearchHistoryUseCase,
     private val getRecentSearchHistoryUseCase: GetRecentSearchHistoryUseCase

@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.setting
+package presentation.setting
 
 data class SettingState(
     val loadQualityValue: String = "",

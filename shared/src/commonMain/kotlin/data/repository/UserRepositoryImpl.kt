@@ -6,9 +6,9 @@ import androidx.paging.PagingData
 import data.api.UnSplashService
 import data.mapper.toUserDetail
 import com.chs.yoursplash.data.model.ResponseUserDetail
-import com.chs.yoursplash.data.paging.UserCollectionsPaging
-import com.chs.yoursplash.data.paging.UserLikesPhotoPaging
-import com.chs.yoursplash.data.paging.UserPhotosPaging
+import data.paging.UserCollectionsPaging
+import data.paging.UserLikesPhotoPaging
+import data.paging.UserPhotosPaging
 import domain.model.Photo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.UserDetail

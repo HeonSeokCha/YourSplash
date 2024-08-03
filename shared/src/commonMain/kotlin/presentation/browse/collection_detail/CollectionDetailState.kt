@@ -1,8 +1,8 @@
-package com.chs.yoursplash.presentation.browse.collection_detail
+package presentation.browse.collection_detail
 
 import androidx.paging.PagingData
 import domain.model.Photo
-import com.chs.yoursplash.domain.model.UnSplashCollection
+import domain.model.UnSplashCollection
 import kotlinx.coroutines.flow.Flow
 
 data class CollectionDetailState(

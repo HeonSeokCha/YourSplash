@@ -11,17 +11,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import com.chs.yoursplash.domain.model.UnSplashCollection
+import coil3.PlatformContext
+import coil3.compose.AsyncImage
+import coil3.compose.LocalPlatformContext
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.chs.yoursplash.presentation.base.PlaceholderHighlight
 import com.chs.yoursplash.presentation.base.placeholder
 import com.chs.yoursplash.presentation.base.shimmer
+import domain.model.UnSplashCollection
 import util.Constants
 
 @Composable
@@ -57,7 +59,7 @@ fun CollectionInfoCard(
                         visible = collectionInfo == null,
                         highlight = PlaceholderHighlight.shimmer()
                     ),
-                model = ImageRequest.Builder(LocalContext.current)
+                model = ImageRequest.Builder(LocalPlatformContext.current)
                     .data(collectionInfo?.user?.photoProfile?.large)
                     .crossfade(true)
                     .build(),
@@ -133,7 +135,7 @@ private fun CollectionCard(
                         visible = collectionInfo == null,
                         highlight = PlaceholderHighlight.shimmer()
                     ),
-                model = ImageRequest.Builder(LocalContext.current)
+                model = ImageRequest.Builder(LocalPlatformContext.current)
                     .data(
                         Constants.getPhotoQualityUrl(
                             collectionInfo?.previewPhotos?.get(0)?.urls,
@@ -163,7 +165,7 @@ private fun CollectionCard(
                             visible = collectionInfo == null,
                             highlight = PlaceholderHighlight.shimmer()
                         ),
-                    model = ImageRequest.Builder(LocalContext.current)
+                    model = ImageRequest.Builder(LocalPlatformContext.current)
                         .data(
                             Constants.getPhotoQualityUrl(
                                 collectionInfo?.previewPhotos?.get(it + 1)?.urls,

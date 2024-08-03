@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.chs.yoursplash.presentation.main.BottomNavigation
+import presentation.main.BottomNavigation
 
 @Composable
 fun BottomBar(navController: NavHostController) {

@@ -7,15 +7,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
-import com.chs.yoursplash.domain.usecase.GetSearchResultPhotoUseCase
+import domain.usecase.GetLoadQualityUseCase
+import domain.usecase.GetSearchResultPhotoUseCase
 import util.Constants
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class PhotoTagListViewModel @Inject constructor(
+class PhotoTagListViewModel(
     savedStateHandle: SavedStateHandle,
     private val getSearchResultPhotoUseCase: GetSearchResultPhotoUseCase,
     private val loadQualityUseCase: GetLoadQualityUseCase

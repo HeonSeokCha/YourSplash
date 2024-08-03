@@ -1,6 +1,5 @@
 package util
 
-import com.chs.yoursplash.BuildConfig
 import domain.model.PhotoUrls
 
 object Constants {
@@ -21,7 +20,7 @@ object Constants {
     const val GET_SEARCH_USERS: String = "/search/users"
 
 
-    const val CLIENT_ID: String = BuildConfig.API_ACCESS_KEY
+    const val CLIENT_ID: String = ""
     const val PREFERENCE_NAME: String = "setting_preferences"
     const val PREFERENCE_KEY_LOAD_QUALITY: String = "load_quality"
     const val PREFERENCE_KEY_DOWNLOAD_QUALITY: String = "download_quality"

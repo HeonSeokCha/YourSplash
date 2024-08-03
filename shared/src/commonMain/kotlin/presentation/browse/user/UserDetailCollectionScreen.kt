@@ -7,10 +7,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.itemKey
-import com.chs.yoursplash.domain.model.UnSplashCollection
+import app.cash.paging.compose.LazyPagingItems
+import app.cash.paging.compose.itemKey
 import com.chs.yoursplash.presentation.Screens
+import domain.model.UnSplashCollection
 import presentation.base.CollectionSimpleCard
 import presentation.base.ImageCard
 

@@ -1,6 +1,5 @@
-package com.chs.yoursplash.presentation.search
+package presentation.search
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -138,7 +137,6 @@ fun SearchBottomSheet(
                 .fillMaxWidth()
                 .wrapContentHeight(),
             onClick = {
-                Log.e("SEARCHFILTER", "$selectOrder, $selectedColor, $selectOri")
                 onClick(
                     SearchFilter(
                         orderBy = selectOrder,

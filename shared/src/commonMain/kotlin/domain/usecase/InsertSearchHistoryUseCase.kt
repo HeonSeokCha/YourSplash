@@ -1,9 +1,8 @@
-package com.chs.yoursplash.domain.usecase
+package domain.usecase
 
 import com.chs.yoursplash.domain.repository.SearchRepository
-import javax.inject.Inject
 
-class InsertSearchHistoryUseCase @Inject constructor(
+class InsertSearchHistoryUseCase(
     private val repository: SearchRepository
 ) {
     suspend operator fun invoke(searchHistory: String) {

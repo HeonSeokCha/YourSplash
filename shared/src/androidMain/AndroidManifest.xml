@@ -27,9 +27,9 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".presentation.browse.BrowseActivity"
-            android:exported="false" />
+<!--        <activity-->
+<!--            android:name=".presentation.browse.BrowseActivity"-->
+<!--            android:exported="false" />-->
     </application>
 
 </manifest>
