@@ -1,10 +1,10 @@
-package com.chs.yoursplash.domain.repository
+package domain.repository
 
 import androidx.paging.PagingData
 import domain.model.Photo
-import com.chs.yoursplash.domain.model.UnSplashCollection
-import com.chs.yoursplash.domain.model.UserDetail
 import com.chs.yoursplash.util.NetworkResult
+import domain.model.UnSplashCollection
+import domain.model.UserDetail
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {

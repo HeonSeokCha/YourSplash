@@ -1,7 +1,7 @@
 package domain.usecase
 
 import androidx.paging.PagingData
-import com.chs.yoursplash.domain.repository.SearchRepository
+import domain.repository.SearchRepository
 import domain.model.UnSplashCollection
 import kotlinx.coroutines.flow.Flow
 

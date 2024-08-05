@@ -4,8 +4,8 @@ import androidx.paging.PagingData
 import domain.model.Photo
 import domain.model.PhotoDetail
 import domain.model.PhotoSaveInfo
-import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.util.NetworkResult
+import domain.model.UnSplashCollection
 import kotlinx.coroutines.flow.Flow
 
 interface PhotoRepository {

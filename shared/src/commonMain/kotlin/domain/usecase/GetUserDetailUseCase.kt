@@ -1,6 +1,6 @@
 package domain.usecase
 
-import com.chs.yoursplash.domain.repository.UserRepository
+import domain.repository.UserRepository
 import com.chs.yoursplash.util.NetworkResult
 import domain.model.UserDetail
 import kotlinx.coroutines.flow.Flow

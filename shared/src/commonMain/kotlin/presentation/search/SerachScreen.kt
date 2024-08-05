@@ -13,9 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
-import com.chs.yoursplash.presentation.browse.BrowseActivity
 import com.chs.yoursplash.presentation.ui.theme.Purple200
-import util.Constants
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)

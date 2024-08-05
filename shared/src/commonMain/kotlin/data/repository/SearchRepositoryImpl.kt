@@ -10,9 +10,9 @@ import data.paging.SearchCollectionPaging
 import data.paging.SearchPhotoPaging
 import data.paging.SearchUserPaging
 import domain.model.Photo
-import com.chs.yoursplash.domain.model.UnSplashCollection
-import com.chs.yoursplash.domain.model.User
-import com.chs.yoursplash.domain.repository.SearchRepository
+import domain.model.UnSplashCollection
+import domain.model.User
+import domain.repository.SearchRepository
 import kotlinx.coroutines.flow.Flow
 
 class SearchRepositoryImpl(

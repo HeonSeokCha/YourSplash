@@ -10,10 +10,10 @@ import data.paging.UserCollectionsPaging
 import data.paging.UserLikesPhotoPaging
 import data.paging.UserPhotosPaging
 import domain.model.Photo
-import com.chs.yoursplash.domain.model.UnSplashCollection
-import com.chs.yoursplash.domain.model.UserDetail
-import com.chs.yoursplash.domain.repository.UserRepository
+import domain.repository.UserRepository
 import com.chs.yoursplash.util.NetworkResult
+import domain.model.UnSplashCollection
+import domain.model.UserDetail
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

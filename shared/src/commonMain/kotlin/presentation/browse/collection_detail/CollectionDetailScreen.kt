@@ -14,9 +14,9 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import app.cash.paging.compose.collectAsLazyPagingItems
 import presentation.base.ImageCard
-import com.chs.yoursplash.presentation.base.PlaceholderHighlight
-import com.chs.yoursplash.presentation.base.placeholder
-import com.chs.yoursplash.presentation.base.shimmer
+import presentation.base.PlaceholderHighlight
+import presentation.base.placeholder
+import presentation.base.shimmer
 import util.Constants
 
 @Composable

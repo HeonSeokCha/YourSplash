@@ -25,9 +25,9 @@ import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.chs.yoursplash.presentation.Screens
-import com.chs.yoursplash.presentation.base.PlaceholderHighlight
-import com.chs.yoursplash.presentation.base.placeholder
-import com.chs.yoursplash.presentation.base.shimmer
+import presentation.base.PlaceholderHighlight
+import presentation.base.placeholder
+import presentation.base.shimmer
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import domain.model.UserDetail
 import util.Constants

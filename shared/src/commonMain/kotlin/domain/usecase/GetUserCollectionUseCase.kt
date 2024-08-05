@@ -1,7 +1,7 @@
 package domain.usecase
 
 import androidx.paging.PagingData
-import com.chs.yoursplash.domain.repository.UserRepository
+import domain.repository.UserRepository
 import domain.model.UnSplashCollection
 import kotlinx.coroutines.flow.Flow
 

@@ -15,14 +15,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.PlatformContext
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.chs.yoursplash.presentation.base.PlaceholderHighlight
-import com.chs.yoursplash.presentation.base.placeholder
-import com.chs.yoursplash.presentation.base.shimmer
 import domain.model.UnSplashCollection
 import util.Constants
 

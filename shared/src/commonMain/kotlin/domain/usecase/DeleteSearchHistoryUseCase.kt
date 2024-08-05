@@ -1,6 +1,6 @@
 package domain.usecase
 
-import com.chs.yoursplash.domain.repository.SearchRepository
+import domain.repository.SearchRepository
 
 class DeleteSearchHistoryUseCase(
     private val repository: SearchRepository

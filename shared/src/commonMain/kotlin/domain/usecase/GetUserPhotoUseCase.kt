@@ -2,7 +2,7 @@ package domain.usecase
 
 import androidx.paging.PagingData
 import domain.model.Photo
-import com.chs.yoursplash.domain.repository.UserRepository
+import domain.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 
 class GetUserPhotoUseCase(
