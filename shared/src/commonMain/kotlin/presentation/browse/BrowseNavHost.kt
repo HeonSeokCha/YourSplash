@@ -11,12 +11,11 @@ import androidx.navigation.toRoute
 import com.chs.yoursplash.presentation.Screens
 import presentation.browse.collection_detail.CollectionDetailScreen
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailViewModel
-import com.chs.yoursplash.presentation.browse.photo_detail.ImageDetailScreen
+import presentation.browse.photo_detail.ImageDetailScreen
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailViewModel
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListScreen
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListViewModel
 import com.chs.yoursplash.presentation.browse.user.UserDetailScreen
-import org.koin.compose.viewmodel.koinNavViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import presentation.browse.user.UserDetailViewModel
 import util.Constants
@@ -27,24 +26,24 @@ fun BrowseNavHost(
     navController: NavHostController,
     type: String
 ) {
-    val startDestination: Screens =
-        when (type) {
-            Constants.TARGET_PHOTO -> {
-                Screens.ImageDetailScreen(intent.getStringExtra(Constants.TARGET_ID)!!)
-            }
-
-            Constants.TARGET_COLLECTION -> {
-                Screens.CollectionDetailScreen(intent.getStringExtra(Constants.TARGET_ID)!!)
-            }
-
-            Constants.TARGET_USER -> {
-                Screens.UserDetailScreen(intent.getStringExtra(Constants.TARGET_ID)!!)
-            }
-
-            else -> {
-                Screens.ImageDetailScreen(intent?.getStringExtra(Constants.TARGET_ID)!!)
-            }
-        }
+    val startDestination: Screens = Screens.ImageDetailScreen("")
+//        when (type) {
+//            Constants.TARGET_PHOTO -> {
+//                Screens.ImageDetailScreen(intent.getStringExtra(Constants.TARGET_ID)!!)
+//            }
+//
+//            Constants.TARGET_COLLECTION -> {
+//                Screens.CollectionDetailScreen(intent.getStringExtra(Constants.TARGET_ID)!!)
+//            }
+//
+//            Constants.TARGET_USER -> {
+//                Screens.UserDetailScreen(intent.getStringExtra(Constants.TARGET_ID)!!)
+//            }
+//
+//            else -> {
+//                Screens.ImageDetailScreen(intent?.getStringExtra(Constants.TARGET_ID)!!)
+//            }
+//        }
 
     NavHost(
         modifier = modifier,

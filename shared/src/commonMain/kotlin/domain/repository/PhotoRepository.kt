@@ -23,10 +23,4 @@ interface PhotoRepository {
     fun getPagingCollectionPhotos(id: String): Flow<PagingData<Photo>>
 
     suspend fun getRelatedCollectionList(id: String): Flow<NetworkResult<List<UnSplashCollection>>>
-
-    suspend fun getPhotoSaveInfo(): List<PhotoSaveInfo>
-
-    suspend fun insertPhotoSaveInfo(photoSaveInfo: PhotoSaveInfo)
-
-    suspend fun deletePhotoSaveInfo(photoSaveInfo: PhotoSaveInfo)
 }

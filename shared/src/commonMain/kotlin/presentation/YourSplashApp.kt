@@ -10,7 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.chs.yoursplash.presentation.bottom.BottomBar
+import presentation.bottom.BottomBar
 import presentation.main.MainTopBar
 import presentation.main.MainViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -21,21 +21,21 @@ fun YourSplashApp() {
     val navController: NavHostController = rememberNavController()
 
     var searchQuery: String by remember { mutableStateOf("") }
-    val viewModel = koinViewModel<MainViewModel>()
-    val state = viewModel.state
+//    val viewModel = koinViewModel<MainViewModel>()
+//    val state = viewModel.state
     Scaffold(
         topBar = {
             MainTopBar(
                 navController = navController,
-                searchHistoryList = state.searchHistory,
+                searchHistoryList = listOf(),
                 onQueryChange = {
                     if (it.isNotEmpty()) {
-                        viewModel.insertSearchHistory(it)
+//                        viewModel.insertSearchHistory(it)
                     }
                     searchQuery = it
                 },
                 onDeleteSearchHistory = {
-                    viewModel.deleteSearchHistory(it)
+//                    viewModel.deleteSearchHistory(it)
                 }
             )
         },

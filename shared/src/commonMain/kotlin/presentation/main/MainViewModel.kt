@@ -10,7 +10,7 @@ import domain.usecase.GetRecentSearchHistoryUseCase
 import domain.usecase.InsertSearchHistoryUseCase
 import kotlinx.coroutines.launch
 
-class MainViewModel constructor(
+class MainViewModel(
     private val insertSearchHistoryUseCase: InsertSearchHistoryUseCase,
     private val deleteSearchHistoryUseCase: DeleteSearchHistoryUseCase,
     private val getRecentSearchHistoryUseCase: GetRecentSearchHistoryUseCase

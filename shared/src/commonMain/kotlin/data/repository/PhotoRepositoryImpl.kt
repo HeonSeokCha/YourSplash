@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.flow
 
 class PhotoRepositoryImpl (
     private val client: UnSplashService,
-    private val photoSaveInfoDao: PhotoSaveInfoDao,
 ) : PhotoRepository {
     override fun getPagingPhoto(): Flow<PagingData<Photo>> {
         return Pager(
@@ -119,23 +118,5 @@ class PhotoRepositoryImpl (
                 emit(NetworkResult.Error(e.message ?: "Unknown Error..."))
             }
         }
-    }
-
-    override suspend fun getPhotoSaveInfo(): List<PhotoSaveInfo> {
-        return photoSaveInfoDao.getSavePhotoList().map {
-            it.toPhotoSaveInfo()
-        }
-    }
-
-    override suspend fun insertPhotoSaveInfo(photoSaveInfo: PhotoSaveInfo) {
-        photoSaveInfoDao.insertEntity(
-            photoSaveInfo.toPhotoSaveEntity()
-        )
-    }
-
-    override suspend fun deletePhotoSaveInfo(photoSaveInfo: PhotoSaveInfo) {
-        photoSaveInfoDao.deleteEntity(
-            photoSaveInfo.toPhotoSaveEntity()
-        )
     }
 }

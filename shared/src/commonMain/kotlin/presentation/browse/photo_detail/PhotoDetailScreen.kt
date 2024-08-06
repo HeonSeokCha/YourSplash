@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.browse.photo_detail
+package presentation.browse.photo_detail
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -26,10 +26,7 @@ import com.chs.yoursplash.presentation.Screens
 import presentation.base.PlaceholderHighlight
 import presentation.base.placeholder
 import presentation.base.shimmer
-import com.chs.yoursplash.util.*
-import presentation.browse.photo_detail.PhotoDetailState
 import util.Constants
-import util.color
 
 @Composable
 fun ImageDetailScreen(
@@ -64,7 +61,7 @@ fun ImageDetailScreen(
                             ).crossfade(true)
                             .build(),
                         contentDescription = null,
-                        placeholder = Constants.getPlaceHolder(state.imageDetailInfo?.blurHash)
+                        placeholder = ColorPainter(Color.LightGray),
                     )
 
                     Row(
@@ -101,9 +98,7 @@ fun ImageDetailScreen(
                                     .data(state.imageDetailInfo?.user?.photoProfile?.large)
                                     .crossfade(true)
                                     .build(),
-                                placeholder = ColorPainter(
-                                    state.imageDetailInfo?.color?.color ?: Color.LightGray
-                                ),
+                                placeholder = ColorPainter(Color.LightGray),
                                 contentDescription = null
                             )
 
@@ -152,7 +147,7 @@ fun ImageDetailScreen(
                             .build(),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
-                        placeholder = Constants.getPlaceHolder(item.blurHash)
+                        placeholder = ColorPainter(Color.LightGray),
                     )
                 }
             }

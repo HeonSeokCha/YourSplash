@@ -8,6 +8,8 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -52,7 +54,7 @@ fun UserDetailPhotoScreen(
                         .data(Constants.getPhotoQualityUrl(photoList[idx]?.urls, loadQuality))
                         .crossfade(true)
                         .build(),
-                    placeholder = Constants.getPlaceHolder(photoList[idx]?.blurHash),
+                    placeholder = ColorPainter(Color.LightGray),
                     contentDescription = null,
                     contentScale = ContentScale.Crop
                 )

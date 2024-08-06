@@ -2,6 +2,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.painter.Painter
+import com.chs.shared.BuildKonfig
 import domain.model.PhotoUrls
 
 object Constants {
@@ -22,7 +23,7 @@ object Constants {
     const val GET_SEARCH_USERS: String = "/search/users"
 
 
-    const val CLIENT_ID: String = ""
+    val CLIENT_ID: String = BuildKonfig.API_ACCESS_KEY
     const val PREFERENCE_NAME: String = "setting_preferences"
     const val PREFERENCE_KEY_LOAD_QUALITY: String = "load_quality"
     const val PREFERENCE_KEY_DOWNLOAD_QUALITY: String = "download_quality"

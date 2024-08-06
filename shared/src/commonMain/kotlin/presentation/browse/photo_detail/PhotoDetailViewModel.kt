@@ -12,8 +12,6 @@ import domain.usecase.GetImageDetailQualityUseCase
 import domain.usecase.GetLoadQualityUseCase
 import domain.usecase.GetPhotoDetailUseCase
 import domain.usecase.GetPhotoRelatedListUseCase
-import domain.usecase.GetPhotoSaveInfoUseCase
-import domain.usecase.InsertPhotoSaveInfoUseCase
 import kotlinx.coroutines.launch
 import presentation.browse.photo_detail.PhotoDetailState
 
@@ -22,9 +20,7 @@ class PhotoDetailViewModel(
     private val getPhotoDetailUseCase: GetPhotoDetailUseCase,
     private val getPhotoRelatedListUseCase: GetPhotoRelatedListUseCase,
     private val loadQualityUseCase: GetLoadQualityUseCase,
-    private val imageDetailQualityUseCase: GetImageDetailQualityUseCase,
-    private val getPhotoSaveInfoUseCase: GetPhotoSaveInfoUseCase,
-    private val insertPhotoSaveInfoUseCase: InsertPhotoSaveInfoUseCase
+    private val imageDetailQualityUseCase: GetImageDetailQualityUseCase
 ) : ViewModel() {
 
     private val imageId: String = savedStateHandle[Constants.ARG_KEY_PHOTO_ID] ?: ""

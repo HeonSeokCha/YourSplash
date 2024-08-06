@@ -1,22 +1,27 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-import org.jetbrains.compose.ExperimentalComposeLibrary
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
+    alias(libs.plugins.konfig)
 }
 
 kotlin {
+    sourceSets.commonMain {
+        kotlin.srcDir("build/generated/ksp/metadata")
+    }
+
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "11"
+            }
         }
     }
 
@@ -39,9 +44,11 @@ kotlin {
             implementation(libs.androidX.compose.ui.tooling.preview)
             implementation(libs.androidX.activity.compose)
             implementation(libs.ktor.client.android)
+            implementation(libs.androidX.navigation.compose)
 
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
+            implementation(libs.room.runtime.android)
         }
         commonMain.dependencies {
             implementation(compose.foundation)
@@ -54,24 +61,38 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.navigation.compose)
             implementation(libs.kotlinx.coroutines.core)
+
             implementation(libs.bundles.ktor)
-            implementation(libs.ktor.client.content.negotiation)
+
             implementation(libs.kotlin.serialization)
+
             implementation(libs.cashapp.paging.compose)
             implementation(libs.cashapp.paging.common)
 
             api(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
-            implementation(libs.navigation.compose)
+            implementation(libs.bundles.koin)
 
-            implementation(libs.coil)
-            implementation(libs.coil.network.ktor)
-            implementation(libs.coil.compose.core)
-            implementation(libs.coil.compose)
+            implementation(libs.bundles.coil)
+
+            implementation(libs.bundles.room)
+
+            api(libs.datastore.preferences)
+            api(libs.datastore)
         }
     }
 }
+
+fun getApiKey(propertyKey: String): String {
+    return gradleLocalProperties(rootDir).getProperty(propertyKey)
+}
+
+buildkonfig {
+    packageName = "com.chs.shared"
+    defaultConfigs {
+        buildConfigField(STRING, "API_ACCESS_KEY", getApiKey("api.AccessKey"))
+    }
+}
+
 
 android {
     namespace = "com.chs.shared"
@@ -108,6 +129,19 @@ android {
 //        debugImplementation(libs.compose.ui.tooling)
     }
 }
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
 dependencies {
     implementation(libs.androidX.compose.material3)
+    // Room
+    add("kspCommonMainMetadata", libs.room.compiler)
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().configureEach {
+    if (name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
 }

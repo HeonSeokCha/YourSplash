@@ -92,7 +92,7 @@ fun ImageCard(
                 .crossfade(true)
                 .build(),
             contentScale = ContentScale.Crop,
-            placeholder = Constants.getPlaceHolder(photoInfo?.blurHash),
+            placeholder = ColorPainter(Color.LightGray),
             contentDescription = null,
         )
     }

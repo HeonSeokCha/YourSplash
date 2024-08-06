@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.browse.photo_detail
+package presentation.browse.photo_detail
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
@@ -24,7 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import domain.model.PhotoDetail
 import domain.model.UnSplashTag
-import util.color
 
 @Composable
 fun ImageDetailInfo(
@@ -152,11 +151,11 @@ private fun RelatedTags(
             }, label = {
                 Text(text = tag.title)
             }, colors = AssistChipDefaults.assistChipColors(
-                containerColor = color.color,
+                containerColor = Color.LightGray,
                 labelColor = Color.White
             ), border = AssistChipDefaults.assistChipBorder(
                 enabled = true,
-                borderColor = color.color,
+                borderColor = Color.LightGray,
             )
         )
     }

@@ -142,7 +142,7 @@ private fun CollectionCard(
                     .build(),
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
-                placeholder = Constants.getPlaceHolder(collectionInfo?.previewPhotos?.first()?.blurHash)
+                placeholder = ColorPainter(Color.LightGray)
             )
         }
 

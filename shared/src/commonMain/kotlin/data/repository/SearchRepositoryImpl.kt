@@ -5,7 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import data.api.UnSplashService
 import data.db.dao.SearchHistoryDao
-import com.chs.yoursplash.data.db.entity.SearchHistoryEntity
+import data.db.entity.SearchHistoryEntity
 import data.paging.SearchCollectionPaging
 import data.paging.SearchPhotoPaging
 import data.paging.SearchUserPaging

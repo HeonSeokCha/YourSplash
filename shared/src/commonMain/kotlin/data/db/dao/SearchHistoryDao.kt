@@ -2,8 +2,7 @@ package data.db.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import com.chs.yoursplash.data.db.entity.SearchHistoryEntity
-import data.db.dao.BaseDao
+import data.db.entity.SearchHistoryEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -1,5 +1,9 @@
 package util
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.painter.ColorPainter
+import androidx.compose.ui.graphics.painter.Painter
 import domain.model.PhotoUrls
 
 object Constants {

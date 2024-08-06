@@ -1,4 +1,4 @@
-package com.chs.yoursplash.data.db.entity
+package data.db.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -7,5 +7,5 @@ import androidx.room.PrimaryKey
 data class SearchHistoryEntity(
     @PrimaryKey
     val searchQuery: String,
-    val lastSearchTime: Long = System.currentTimeMillis()
+    val lastSearchTime: Long = 0
 )
