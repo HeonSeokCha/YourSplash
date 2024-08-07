@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import data.api.UnSplashService
+import data.db.YourSplashDatabase
 import data.db.dao.SearchHistoryDao
 import data.db.entity.SearchHistoryEntity
 import data.paging.SearchCollectionPaging
@@ -17,7 +18,7 @@ import kotlinx.coroutines.flow.Flow
 
 class SearchRepositoryImpl(
     private val client: UnSplashService,
-    private val searchHistoryDao: SearchHistoryDao
+    private val database: YourSplashDatabase
 ) : SearchRepository {
 
     override fun getSearchResultPhoto(
@@ -56,18 +57,18 @@ class SearchRepositoryImpl(
     }
 
     override suspend fun insertSearchHistory(query: String) {
-        searchHistoryDao.insertEntity(
+        database.searchHistoryDao.insertEntity(
             SearchHistoryEntity(searchQuery = query)
         )
     }
 
     override suspend fun deleteSearchHistory(query: String) {
-        searchHistoryDao.deleteEntity(
+        database.searchHistoryDao.deleteEntity(
             SearchHistoryEntity(searchQuery = query)
         )
     }
 
     override fun getRecentSearchHistory(): Flow<List<String>> {
-        return searchHistoryDao.getRecentList()
+        return database.searchHistoryDao.getRecentList()
     }
 }

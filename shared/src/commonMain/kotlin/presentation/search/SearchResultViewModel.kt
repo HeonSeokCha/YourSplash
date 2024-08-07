@@ -12,11 +12,11 @@ import domain.usecase.GetSearchResultPhotoUseCase
 import domain.usecase.GetSearchResultUserUseCase
 import kotlinx.coroutines.launch
 
-class SearchResultViewModel constructor(
+class SearchResultViewModel(
     private val searchResultPhotoUseCase: GetSearchResultPhotoUseCase,
     private val searchResultCollectionUseCase: GetSearchResultCollectionUseCase,
     private val searchResultUserUseCase: GetSearchResultUserUseCase,
-    private val getLoadQualityUseCase: GetLoadQualityUseCase
+//    private val getLoadQualityUseCase: GetLoadQualityUseCase
 ) : ViewModel() {
 
     var state: SearchState by mutableStateOf(SearchState())
@@ -27,9 +27,7 @@ class SearchResultViewModel constructor(
 
     private fun getImageLoadQuality() {
         viewModelScope.launch {
-            state = state.copy(
-                loadQuality = getLoadQualityUseCase()
-            )
+            state = state.copy()
         }
     }
 

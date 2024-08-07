@@ -21,21 +21,21 @@ fun YourSplashApp() {
     val navController: NavHostController = rememberNavController()
 
     var searchQuery: String by remember { mutableStateOf("") }
-//    val viewModel = koinViewModel<MainViewModel>()
-//    val state = viewModel.state
+    val viewModel = koinViewModel<MainViewModel>()
+    val state = viewModel.state
     Scaffold(
         topBar = {
             MainTopBar(
                 navController = navController,
-                searchHistoryList = listOf(),
+                searchHistoryList = state.searchHistory,
                 onQueryChange = {
                     if (it.isNotEmpty()) {
-//                        viewModel.insertSearchHistory(it)
+                        viewModel.insertSearchHistory(it)
                     }
                     searchQuery = it
                 },
                 onDeleteSearchHistory = {
-//                    viewModel.deleteSearchHistory(it)
+                    viewModel.deleteSearchHistory(it)
                 }
             )
         },
