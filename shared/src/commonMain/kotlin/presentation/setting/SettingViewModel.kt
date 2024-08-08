@@ -12,7 +12,7 @@ import domain.usecase.PutStringPrefUseCase
 import util.Constants
 import kotlinx.coroutines.launch
 
-class SettingViewModel constructor(
+class SettingViewModel(
     private val getDownloadQualityUseCase: GetDownloadQualityUseCase,
     private val getLoadQualityUseCase: GetLoadQualityUseCase,
     private val getImageDetailQualityUseCase: GetImageDetailQualityUseCase,

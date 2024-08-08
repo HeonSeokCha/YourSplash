@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val getHomePhotosUseCase: GetHomePhotosUseCase,
-//    private val loadQualityUseCase: GetLoadQualityUseCase
+    private val loadQualityUseCase: GetLoadQualityUseCase
 ) : ViewModel() {
 
     var state by mutableStateOf(HomeState())
@@ -22,7 +22,7 @@ class HomeViewModel(
         viewModelScope.launch {
             state = HomeState(
                 isLoading = false,
-//                loadQuality = loadQualityUseCase(),
+                loadQuality = loadQualityUseCase(),
                 pagingImageList = getHomePhotosUseCase().cachedIn(this)
             )
         }

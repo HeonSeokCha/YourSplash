@@ -14,7 +14,6 @@ class SettingRepositoryImpl(
     private val dataStore: DataStore<Preferences>
 ) : SettingRepository {
 
-
     override suspend fun putString(
         keyName: String,
         value: String

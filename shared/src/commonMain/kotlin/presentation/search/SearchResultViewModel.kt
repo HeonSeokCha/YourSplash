@@ -16,7 +16,7 @@ class SearchResultViewModel(
     private val searchResultPhotoUseCase: GetSearchResultPhotoUseCase,
     private val searchResultCollectionUseCase: GetSearchResultCollectionUseCase,
     private val searchResultUserUseCase: GetSearchResultUserUseCase,
-//    private val getLoadQualityUseCase: GetLoadQualityUseCase
+    private val getLoadQualityUseCase: GetLoadQualityUseCase
 ) : ViewModel() {
 
     var state: SearchState by mutableStateOf(SearchState())
@@ -27,7 +27,9 @@ class SearchResultViewModel(
 
     private fun getImageLoadQuality() {
         viewModelScope.launch {
-            state = state.copy()
+            state = state.copy(
+                loadQuality = getLoadQualityUseCase()
+            )
         }
     }
 

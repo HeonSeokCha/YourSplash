@@ -10,14 +10,17 @@ import domain.repository.PhotoRepository
 import domain.repository.SearchRepository
 import domain.repository.UserRepository
 import domain.usecase.DeleteSearchHistoryUseCase
+import domain.usecase.GetDownloadQualityUseCase
 import domain.usecase.GetHomeCollectionsUseCase
 import domain.usecase.GetHomePhotosUseCase
+import domain.usecase.GetImageDetailQualityUseCase
 import domain.usecase.GetLoadQualityUseCase
 import domain.usecase.GetRecentSearchHistoryUseCase
 import domain.usecase.GetSearchResultCollectionUseCase
 import domain.usecase.GetSearchResultPhotoUseCase
 import domain.usecase.GetSearchResultUserUseCase
 import domain.usecase.InsertSearchHistoryUseCase
+import domain.usecase.PutStringPrefUseCase
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -29,6 +32,7 @@ import presentation.bottom.collection.CollectionViewModel
 import presentation.bottom.home.HomeViewModel
 import presentation.main.MainViewModel
 import presentation.search.SearchResultViewModel
+import presentation.setting.SettingViewModel
 
 expect fun platformModule(): Module
 
@@ -48,6 +52,7 @@ val viewModelModule = module {
     viewModelOf(::HomeViewModel)
     viewModelOf(::CollectionViewModel)
     viewModelOf(::SearchResultViewModel)
+    viewModelOf(::SettingViewModel)
 }
 
 val useCaseModule = module {
@@ -63,6 +68,10 @@ val useCaseModule = module {
     singleOf(::DeleteSearchHistoryUseCase)
     singleOf(::InsertSearchHistoryUseCase)
     singleOf(::GetRecentSearchHistoryUseCase)
+    singleOf(::GetDownloadQualityUseCase)
+    singleOf(::GetLoadQualityUseCase)
+    singleOf(::GetImageDetailQualityUseCase)
+    singleOf(::PutStringPrefUseCase)
 }
 
 fun initKoin(config: KoinAppDeclaration? = null) {

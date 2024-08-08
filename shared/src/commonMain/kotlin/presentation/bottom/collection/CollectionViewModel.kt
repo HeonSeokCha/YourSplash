@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class CollectionViewModel(
     private val getHomeCollectionsUseCase: GetHomeCollectionsUseCase,
-//    private val loadQualityUseCase: GetLoadQualityUseCase
+    private val loadQualityUseCase: GetLoadQualityUseCase
 ) : ViewModel() {
 
     var state by mutableStateOf(CollectionState())
@@ -22,7 +22,7 @@ class CollectionViewModel(
         viewModelScope.launch {
             state = CollectionState(
                 isLoading = false,
-//                loadQuality = loadQualityUseCase(),
+                loadQuality = loadQualityUseCase(),
                 collectionList = getHomeCollectionsUseCase().cachedIn(this)
             )
         }
