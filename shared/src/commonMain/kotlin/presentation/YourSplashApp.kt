@@ -15,9 +15,12 @@ import presentation.main.MainTopBar
 import presentation.main.MainViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import presentation.main.MainNavHost
+import util.Navigator
 
 @Composable
-fun YourSplashApp() {
+fun YourSplashApp(
+    navigator: Navigator
+) {
     val navController: NavHostController = rememberNavController()
 
     var searchQuery: String by remember { mutableStateOf("") }
@@ -47,7 +50,8 @@ fun YourSplashApp() {
             modifier = Modifier.padding(it),
             navController = navController,
             searchQuery = searchQuery,
-            onBack = { searchQuery = "" }
+            onBack = { searchQuery = "" },
+            navigator = navigator
         )
     }
 }

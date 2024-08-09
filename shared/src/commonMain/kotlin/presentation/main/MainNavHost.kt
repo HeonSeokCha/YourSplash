@@ -18,12 +18,14 @@ import presentation.setting.SettingViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNot
 import org.koin.compose.viewmodel.koinViewModel
+import util.Navigator
 
 @Composable
 fun MainNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     searchQuery: String,
+    navigator: Navigator,
     onBack: () -> Unit
 ) {
 
@@ -37,24 +39,20 @@ fun MainNavHost(
             HomeScreen(
                 state = viewModel.state,
             ) { info ->
-//                context.startActivity(
-//                    Intent(context, BrowseActivity::class.java).apply {
-//                        putExtra(Constants.TARGET_TYPE, info.first)
-//                        putExtra(Constants.TARGET_ID, info.second)
-//                    }
-//                )
+                navigator.navigateToSecondActivity(
+                    type = info.first,
+                    id = info.second
+                )
             }
         }
 
         composable<MainScreens.CollectionScreen> {
             val viewModel = koinViewModel<CollectionViewModel>()
             CollectionScreen(state = viewModel.state) {
-//                context.startActivity(
-//                    Intent(context, BrowseActivity::class.java).apply {
-//                        putExtra(Constants.TARGET_TYPE, it.first)
-//                        putExtra(Constants.TARGET_ID, it.second)
-//                    }
-//                )
+                navigator.navigateToSecondActivity(
+                    type = it.first,
+                    id = it.second
+                )
             }
         }
 
@@ -73,7 +71,12 @@ fun MainNavHost(
                 state = viewModel.state,
                 modalClick = { },
                 onBack = onBack
-            )
+            ) {
+                navigator.navigateToSecondActivity(
+                    type = it.first,
+                    id = it.second
+                )
+            }
         }
 
         composable<MainScreens.SettingScreen> {

@@ -17,6 +17,7 @@ import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListScreen
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListViewModel
 import com.chs.yoursplash.presentation.browse.user.UserDetailScreen
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.viewmodel.factory.KoinViewModelFactory
 import presentation.browse.user.UserDetailViewModel
 import util.Constants
 
@@ -24,26 +25,26 @@ import util.Constants
 fun BrowseNavHost(
     modifier: Modifier,
     navController: NavHostController,
-    type: String
+    type: String,
+    id: String
 ) {
-    val startDestination: Screens = Screens.ImageDetailScreen("")
-//        when (type) {
-//            Constants.TARGET_PHOTO -> {
-//                Screens.ImageDetailScreen(intent.getStringExtra(Constants.TARGET_ID)!!)
-//            }
-//
-//            Constants.TARGET_COLLECTION -> {
-//                Screens.CollectionDetailScreen(intent.getStringExtra(Constants.TARGET_ID)!!)
-//            }
-//
-//            Constants.TARGET_USER -> {
-//                Screens.UserDetailScreen(intent.getStringExtra(Constants.TARGET_ID)!!)
-//            }
-//
-//            else -> {
-//                Screens.ImageDetailScreen(intent?.getStringExtra(Constants.TARGET_ID)!!)
-//            }
-//        }
+    val startDestination: Screens = when (type) {
+        Constants.TARGET_PHOTO -> {
+            Screens.ImageDetailScreen(id)
+        }
+
+        Constants.TARGET_COLLECTION -> {
+            Screens.CollectionDetailScreen(id)
+        }
+
+        Constants.TARGET_USER -> {
+            Screens.UserDetailScreen(id)
+        }
+
+        else -> {
+            Screens.ImageDetailScreen(id)
+        }
+    }
 
     NavHost(
         modifier = modifier,
@@ -55,7 +56,9 @@ fun BrowseNavHost(
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(arg)
             }
-            val viewModel: PhotoDetailViewModel = koinViewModel<PhotoDetailViewModel>()
+            val viewModel: PhotoDetailViewModel = koinViewModel<PhotoDetailViewModel>(
+                viewModelStoreOwner = parentEntry
+            )
             LaunchedEffect(viewModel) {
                 viewModel.getImageDetailInfo()
                 viewModel.getImageRelatedList()
@@ -71,7 +74,9 @@ fun BrowseNavHost(
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(arg)
             }
-            val viewModel: CollectionDetailViewModel = koinViewModel<CollectionDetailViewModel>()
+            val viewModel: CollectionDetailViewModel = koinViewModel<CollectionDetailViewModel>(
+                viewModelStoreOwner = parentEntry
+            )
             LaunchedEffect(viewModel) {
                 viewModel.getCollectionDetailInfo()
             }
@@ -90,7 +95,9 @@ fun BrowseNavHost(
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(arg)
             }
-            val viewModel: UserDetailViewModel = koinViewModel<UserDetailViewModel>()
+            val viewModel: UserDetailViewModel = koinViewModel<UserDetailViewModel>(
+                viewModelStoreOwner = parentEntry
+            )
             LaunchedEffect(viewModel) {
                 viewModel.getUserDetailInfo()
             }
@@ -105,7 +112,9 @@ fun BrowseNavHost(
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(arg)
             }
-            val viewModel: PhotoTagListViewModel = koinViewModel<PhotoTagListViewModel>()
+            val viewModel: PhotoTagListViewModel = koinViewModel<PhotoTagListViewModel>(
+                viewModelStoreOwner = parentEntry
+            )
             PhotoTagListScreen(state = viewModel.state) {
                 if (it.first == Constants.TARGET_USER) {
                     navController.navigate(Screens.UserDetailScreen(it.second))

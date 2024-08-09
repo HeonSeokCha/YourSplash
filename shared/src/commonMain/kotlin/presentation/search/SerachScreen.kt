@@ -22,6 +22,7 @@ fun SearchScreen(
     state: SearchState,
     modalClick: () -> Unit,
     onBack: () -> Unit,
+    onNavigate: (Pair<String, String>) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val tabList = remember { listOf("PHOTOS", "COLLECTIONS", "USERS") }
@@ -75,16 +76,19 @@ fun SearchScreen(
                         state = state,
                         modalClick = { modalClick() }
                     ) {
+                        onNavigate(it)
                     }
                 }
 
                 1 -> {
                     SearchResultCollectionScreen(state = state) {
+                        onNavigate(it)
                     }
                 }
 
                 2 -> {
                     SearchResultUserScreen(state = state) {
+                        onNavigate(it)
                     }
                 }
             }
