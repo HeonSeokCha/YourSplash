@@ -1,17 +1,5 @@
 package di
 
-import com.chs.yoursplash.domain.repository.SettingRepository
-import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailViewModel
-import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailViewModel
-import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListViewModel
-import data.api.UnSplashService
-import data.repository.PhotoRepositoryImpl
-import data.repository.SearchRepositoryImpl
-import data.repository.SettingRepositoryImpl
-import data.repository.UserRepositoryImpl
-import domain.repository.PhotoRepository
-import domain.repository.SearchRepository
-import domain.repository.UserRepository
 import domain.usecase.DeleteSearchHistoryUseCase
 import domain.usecase.GetCollectionDetailUseCase
 import domain.usecase.GetCollectionPhotoUseCase
@@ -35,41 +23,10 @@ import domain.usecase.PutStringPrefUseCase
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
-import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.KoinAppDeclaration
-import org.koin.dsl.bind
 import org.koin.dsl.module
-import presentation.bottom.collection.CollectionViewModel
-import presentation.bottom.home.HomeViewModel
-import presentation.browse.user.UserDetailViewModel
-import presentation.main.MainViewModel
-import presentation.search.SearchResultViewModel
-import presentation.setting.SettingViewModel
 
 expect fun platformModule(): Module
-
-val sourceModule = module {
-    singleOf(::UnSplashService)
-}
-
-val repositoryModule = module {
-    singleOf(::PhotoRepositoryImpl).bind<PhotoRepository>()
-    singleOf(::SearchRepositoryImpl).bind<SearchRepository>()
-    singleOf(::SettingRepositoryImpl).bind<SettingRepository>()
-    singleOf(::UserRepositoryImpl).bind<UserRepository>()
-}
-
-val viewModelModule = module {
-    viewModelOf(::MainViewModel)
-    viewModelOf(::HomeViewModel)
-    viewModelOf(::CollectionViewModel)
-    viewModelOf(::SearchResultViewModel)
-    viewModelOf(::SettingViewModel)
-    viewModelOf(::CollectionDetailViewModel)
-    viewModelOf(::PhotoDetailViewModel)
-    viewModelOf(::PhotoTagListViewModel)
-    viewModelOf(::UserDetailViewModel)
-}
 
 val useCaseModule = module {
     singleOf(::GetHomePhotosUseCase)

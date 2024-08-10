@@ -1,11 +1,13 @@
 import androidx.compose.ui.window.ComposeUIViewController
-import di.initKoin
+import platform.UIKit.UIApplication
 import presentation.browse.BrowseApp
+import util.IosNavigator
 
 fun BrowseViewController(
     info: Pair<String, String>
-) = ComposeUIViewController(
-    configure = {
-        initKoin()
-    }
-) { BrowseApp(info) }
+) = ComposeUIViewController {
+    val navigator = IosNavigator()
+    val window = UIApplication.sharedApplication.keyWindow()
+    navigator.bind(window?.rootViewController()!!)
+    BrowseApp(info, navigator)
+}

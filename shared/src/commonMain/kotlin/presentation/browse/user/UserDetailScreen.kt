@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.browse.user
+package presentation.browse.user
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
@@ -25,6 +25,7 @@ import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.chs.yoursplash.presentation.Screens
+import com.chs.yoursplash.presentation.browse.user.UserDetailPhotoScreen
 import presentation.base.PlaceholderHighlight
 import presentation.base.placeholder
 import presentation.base.shimmer
@@ -32,8 +33,6 @@ import com.chs.yoursplash.presentation.ui.theme.Purple200
 import domain.model.UserDetail
 import util.Constants
 import kotlinx.coroutines.launch
-import presentation.browse.user.UserDetailLikeScreen
-import presentation.browse.user.UserDetailState
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

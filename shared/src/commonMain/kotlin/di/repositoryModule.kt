@@ -1,11 +1,20 @@
 package di
 
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.chs.yoursplash.domain.repository.SettingRepository
 import data.repository.PhotoRepositoryImpl
+import data.repository.SearchRepositoryImpl
+import data.repository.SettingRepositoryImpl
+import data.repository.UserRepositoryImpl
 import domain.repository.PhotoRepository
-import org.koin.core.module.dsl.viewModel
+import domain.repository.SearchRepository
+import domain.repository.UserRepository
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
-import presentation.bottom.collection.CollectionViewModel
-import presentation.bottom.home.HomeViewModel
-import presentation.main.MainViewModel
 
+val repositoryModule = module {
+    singleOf(::PhotoRepositoryImpl).bind<PhotoRepository>()
+    singleOf(::SearchRepositoryImpl).bind<SearchRepository>()
+    singleOf(::SettingRepositoryImpl).bind<SettingRepository>()
+    singleOf(::UserRepositoryImpl).bind<UserRepository>()
+}

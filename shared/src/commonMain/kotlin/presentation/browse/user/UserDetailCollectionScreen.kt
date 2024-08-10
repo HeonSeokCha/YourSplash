@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.browse.user
+package presentation.browse.user
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn

@@ -15,9 +15,8 @@ import presentation.browse.photo_detail.ImageDetailScreen
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailViewModel
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListScreen
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListViewModel
-import com.chs.yoursplash.presentation.browse.user.UserDetailScreen
+import presentation.browse.user.UserDetailScreen
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.viewmodel.factory.KoinViewModelFactory
 import presentation.browse.user.UserDetailViewModel
 import util.Constants
 

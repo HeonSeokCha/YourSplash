@@ -1,7 +1,9 @@
 package util
 
 import BrowseViewController
+import androidx.compose.ui.interop.UIKitViewController
 import platform.UIKit.UIViewController
+import platform.UIKit.modalInPresentation
 
 actual interface Navigator {
     actual fun navigateToSecondActivity(type: String, id: String)
@@ -20,6 +22,7 @@ class IosNavigator : Navigator {
         id: String
     ) {
         val secondViewController = BrowseViewController(type to id)
+
         rootViewController?.presentViewController(
             secondViewController,
             animated = true,
@@ -28,6 +31,6 @@ class IosNavigator : Navigator {
     }
 
     override fun finish() {
-        rootViewController
+        rootViewController?.dismissViewControllerAnimated(true) {}
     }
 }

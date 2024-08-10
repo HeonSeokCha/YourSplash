@@ -1,5 +1,6 @@
 package di
 
+import data.api.UnSplashService
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpResponseValidator
@@ -11,7 +12,12 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
+
+val sourceModule = module {
+    singleOf(::UnSplashService)
+}
 
 val provideHttpClientModule = module {
     single {

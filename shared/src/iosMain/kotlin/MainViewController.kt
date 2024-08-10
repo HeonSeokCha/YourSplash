@@ -10,7 +10,7 @@ fun MainViewController() = ComposeUIViewController(
     }
 ) {
     val navigator = IosNavigator()
-    val window = UIApplication.sharedApplication.windows().first() as UIWindow?
+    val window = UIApplication.sharedApplication.keyWindow()
     navigator.bind(window?.rootViewController()!!)
     App(navigator)
  }
