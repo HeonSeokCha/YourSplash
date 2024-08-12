@@ -1,9 +1,8 @@
-package db
+package data.db
 
 import android.content.Context
 import androidx.room.Room
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import data.db.YourSplashDatabase
 import kotlinx.coroutines.Dispatchers
 
 fun getDatabaseBuilder(context: Context): YourSplashDatabase {

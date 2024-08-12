@@ -1,8 +1,4 @@
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.BitmapPainter
-import androidx.compose.ui.graphics.painter.ColorPainter
-import androidx.compose.ui.graphics.painter.Painter
-import com.chs.shared.BuildKonfig
+import com.chs.yoursplash.BuildKonfig
 import domain.model.PhotoUrls
 
 object Constants {

@@ -87,7 +87,7 @@ fun getApiKey(propertyKey: String): String {
 }
 
 buildkonfig {
-    packageName = "com.chs.shared"
+    packageName = "com.chs.yoursplash"
     defaultConfigs {
         buildConfigField(STRING, "API_ACCESS_KEY", getApiKey("api.AccessKey"))
     }
@@ -95,14 +95,14 @@ buildkonfig {
 
 
 android {
-    namespace = "com.chs.shared"
+    namespace = "com.chs.yoursplash"
     compileSdk = libs.versions.compileSdkVersion.get().toInt()
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
     defaultConfig {
-        applicationId = "com.chs.shared"
+        applicationId = "com.chs.yoursplash"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1

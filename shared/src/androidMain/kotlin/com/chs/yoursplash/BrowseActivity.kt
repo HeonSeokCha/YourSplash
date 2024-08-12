@@ -1,4 +1,4 @@
-package com.chs.shared
+package com.chs.yoursplash
 
 import android.os.Bundle
 import android.widget.Toast
@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import presentation.browse.BrowseApp
 import util.AndroidNavigator
 import util.Constants
-import util.Navigator
 
 class BrowseActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

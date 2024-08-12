@@ -27,39 +27,42 @@ fun BottomBar(navController: NavHostController) {
         derivedStateOf { currentRoute.substringBefore("?") }
     }
 
-    NavigationBar(
-        containerColor = MaterialTheme.colorScheme.primary
-    ) {
-        BottomNavigation.entries.forEachIndexed { idx, navItem ->
-            val isSelected by remember(currentRoute) {
-                derivedStateOf { currentRouteTrimmed == navItem.route::class.qualifiedName }
-            }
-            NavigationBarItem(
-                selected = isSelected,
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color.White,
-                    selectedTextColor = Color.White,
-                    unselectedIconColor = Color.White.copy(0.4f),
-                    unselectedTextColor = Color.White.copy(0.4f),
-                    indicatorColor = MaterialTheme.colorScheme.primary
-                ),
-                onClick = {
-                    navController.navigate(navItem.route) {
+
+    if (BottomNavigation.entries.any { it.route::class.qualifiedName == currentRoute }) {
+        NavigationBar(
+            containerColor = MaterialTheme.colorScheme.primary
+        ) {
+            BottomNavigation.entries.forEachIndexed { idx, navItem ->
+                val isSelected by remember(currentRoute) {
+                    derivedStateOf { currentRouteTrimmed == navItem.route::class.qualifiedName }
+                }
+                NavigationBarItem(
+                    selected = isSelected,
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = Color.White,
+                        selectedTextColor = Color.White,
+                        unselectedIconColor = Color.White.copy(0.4f),
+                        unselectedTextColor = Color.White.copy(0.4f),
+                        indicatorColor = MaterialTheme.colorScheme.primary
+                    ),
+                    onClick = {
+                        navController.navigate(navItem.route) {
 //                        popUpTo(navController.graph.findStartDestination().id) {
 //                            saveState = true
 //                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                },
-                icon = {
-                    Icon(
-                        navItem.icon,
-                        contentDescription = null
-                    )
-                },
-                label = { Text(text = navItem.label) }
-            )
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                    icon = {
+                        Icon(
+                            navItem.icon,
+                            contentDescription = null
+                        )
+                    },
+                    label = { Text(text = navItem.label) }
+                )
+            }
         }
     }
 }

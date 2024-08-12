@@ -1,4 +1,4 @@
-package com.chs.shared
+package com.chs.yoursplash
 
 import android.app.Application
 import di.initKoin

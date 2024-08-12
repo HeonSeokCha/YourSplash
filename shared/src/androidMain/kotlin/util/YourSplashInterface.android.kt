@@ -3,8 +3,7 @@ package util
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import androidx.core.os.bundleOf
-import com.chs.shared.BrowseActivity
+import com.chs.yoursplash.BrowseActivity
 
 actual interface Navigator {
     actual fun navigateToSecondActivity(type: String, id: String)

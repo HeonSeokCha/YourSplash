@@ -79,8 +79,7 @@ datastore-preferences = { module = "androidx.datastore:datastore-preferences", v
 ktor = [
     "ktor-client-core",
     "ktor-client-content-negotiation",
-    "ktor-serialization",
-
+    "ktor-serialization"
 ]
 
 coil = [
