@@ -1,19 +1,25 @@
 package presentation.main
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.twotone.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -22,6 +28,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -37,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import presentation.ui.theme.Red200
 import util.fromMainRoute
 
 
@@ -54,7 +62,7 @@ fun MainTopBar(
             TopAppBar(
                 title = {
                     Text(
-                        text = "",
+                        text = "Your Splash",
                         fontSize = 20.sp,
                         color = Color.White,
                         fontWeight = FontWeight.Bold
@@ -97,11 +105,11 @@ fun MainTopBar(
                     IconButton(onClick = {
                         navController.navigateUp()
                     }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = null)
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White
+                    containerColor = MaterialTheme.colorScheme.primary
                 )
             )
         }
@@ -134,9 +142,20 @@ fun SearchAppBar(
     var isShowDialog by remember { mutableStateOf(false) }
 
     SearchBar(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 8.dp),
+        modifier = if (isSearchActive) {
+            Modifier
+                .animateContentSize(spring(stiffness = Spring.StiffnessHigh))
+        } else {
+            Modifier
+                .fillMaxWidth()
+                .padding(
+                    start = 12.dp,
+                    top = 2.dp,
+                    end = 12.dp,
+                    bottom = 12.dp
+                )
+                .animateContentSize(spring(stiffness = Spring.StiffnessHigh))
+        },
         query = text,
         onQueryChange = { text = it },
         onSearch = {
@@ -146,21 +165,43 @@ fun SearchAppBar(
         active = isSearchActive,
         onActiveChange = { isSearchActive = it },
         placeholder = { Text("Search here...") },
-        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-        trailingIcon = {
-            IconButton(onClick = {
-                if (text.isNotEmpty()) {
-                    text = ""
-                } else {
-                    isSearchActive = false
+        leadingIcon = {
+            if (isSearchActive) {
+                IconButton(
+                    onClick = { isSearchActive = false }
+                ) {
+                    Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
                 }
-            }) {
-                Icon(
-                    Icons.Default.Close,
-                    contentDescription = null
-                )
+            } else {
+                Icon(Icons.Rounded.Search, contentDescription = null)
             }
-        }
+        },
+        trailingIcon = {
+            if (isSearchActive && text.isNotEmpty()) {
+                IconButton(onClick = {
+                    if (text.isNotEmpty()) {
+                        text = ""
+                    } else {
+                        isSearchActive = false
+                    }
+                }) {
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = null
+                    )
+                }
+            } else {
+                null
+            }
+        },
+        tonalElevation = 0.dp,
+        windowInsets = if (isSearchActive) {
+            SearchBarDefaults.windowInsets
+        } else {
+            WindowInsets(0.dp)
+        }, colors = SearchBarDefaults.colors(
+            containerColor = Red200
+        )
     ) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp)

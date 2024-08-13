@@ -13,7 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
-import com.chs.yoursplash.presentation.ui.theme.Purple200
+import presentation.ui.theme.Purple200
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)

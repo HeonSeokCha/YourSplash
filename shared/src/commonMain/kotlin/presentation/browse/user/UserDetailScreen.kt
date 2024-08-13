@@ -29,7 +29,7 @@ import com.chs.yoursplash.presentation.browse.user.UserDetailPhotoScreen
 import presentation.base.PlaceholderHighlight
 import presentation.base.placeholder
 import presentation.base.shimmer
-import com.chs.yoursplash.presentation.ui.theme.Purple200
+import presentation.ui.theme.Purple200
 import domain.model.UserDetail
 import util.Constants
 import kotlinx.coroutines.launch
