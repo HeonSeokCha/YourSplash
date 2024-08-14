@@ -122,7 +122,7 @@ fun MainTopBar(
                 searchHistoryList = searchHistoryList,
                 onDeleteSearchHistory = {
                     onDeleteSearchHistory(it)
-                }
+                }, onBack = { navController.navigateUp() }
             )
         }
 
@@ -135,7 +135,8 @@ fun MainTopBar(
 fun SearchAppBar(
     onSearch: (String) -> Unit,
     searchHistoryList: List<String>,
-    onDeleteSearchHistory: (String) -> Unit
+    onDeleteSearchHistory: (String) -> Unit,
+    onBack: () -> Unit
 ) {
     var text by remember { mutableStateOf("") }
     var isSearchActive by remember { mutableStateOf(false) }
@@ -166,14 +167,15 @@ fun SearchAppBar(
         onActiveChange = { isSearchActive = it },
         placeholder = { Text("Search here...") },
         leadingIcon = {
-            if (isSearchActive) {
-                IconButton(
-                    onClick = { isSearchActive = false }
-                ) {
-                    Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
+            IconButton(
+                onClick = {
+                    if (!isSearchActive) {
+                        onBack()
+                    }
+                    isSearchActive = false
                 }
-            } else {
-                Icon(Icons.Rounded.Search, contentDescription = null)
+            ) {
+                Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
             }
         },
         trailingIcon = {
