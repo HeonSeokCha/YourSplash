@@ -1,7 +1,9 @@
 package presentation.main
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 import kotlinx.serialization.Serializable
 
@@ -23,5 +25,5 @@ enum class BottomNavigation(
     val route: MainScreens
 ){
     HOME("Home", Icons.Filled.Home, MainScreens.HomeScreen),
-    SEARCH("Collection", Icons.Filled.Home, MainScreens.CollectionScreen),
+    SEARCH("Collection", Icons.AutoMirrored.Default.List, MainScreens.CollectionScreen),
 }

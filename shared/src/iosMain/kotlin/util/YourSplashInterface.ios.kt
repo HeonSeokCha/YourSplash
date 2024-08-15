@@ -1,9 +1,13 @@
 package util
 
 import BrowseViewController
+import MainViewController
 import androidx.compose.ui.interop.UIKitViewController
+import platform.UIKit.UIApplication
+import platform.UIKit.UINavigationController
 import platform.UIKit.UIViewController
 import platform.UIKit.modalInPresentation
+import platform.UIKit.navigationController
 
 actual interface Navigator {
     actual fun navigateToSecondActivity(type: String, id: String)
@@ -21,7 +25,11 @@ class IosNavigator : Navigator {
         type: String,
         id: String
     ) {
-        val secondViewController = BrowseViewController(type to id)
+
+        val secondViewController = BrowseViewController(
+            controller = rootViewController!!,
+            info = type to id
+        )
 
         rootViewController?.presentViewController(
             secondViewController,
