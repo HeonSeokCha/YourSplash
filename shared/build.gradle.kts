@@ -56,7 +56,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(compose.components.resources)
-
+            implementation(libs.jetbrain.compose.material3.icon)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.navigation.compose)
@@ -69,7 +69,7 @@ kotlin {
             implementation(libs.cashapp.paging.compose)
             implementation(libs.cashapp.paging.common)
 
-            api(libs.koin.core)
+            implementation(libs.koin.core)
             implementation(libs.bundles.koin)
 
             implementation(libs.bundles.coil)
@@ -125,9 +125,11 @@ android {
     buildFeatures {
         compose = true
     }
-    dependencies {
-//        debugImplementation(libs.compose.ui.tooling)
-    }
+}
+
+ksp {
+    arg("room.schemaLocation", "${projectDir}/schemas")
+    arg("KOIN_CONFIG_CHECK", "true")
 }
 
 room {
@@ -135,9 +137,14 @@ room {
 }
 
 dependencies {
-    implementation(libs.androidX.compose.material3)
-    // Room
-    add("kspCommonMainMetadata", libs.room.compiler)
+    listOf(
+        "kspAndroid",
+        "kspIosSimulatorArm64",
+        "kspIosX64",
+        "kspIosArm64"
+    ).forEach {
+        add(it, libs.room.compiler)
+    }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().configureEach {

@@ -31,6 +31,7 @@ class IosNavigator : Navigator {
             info = type to id
         )
 
+
         rootViewController?.presentViewController(
             secondViewController,
             animated = true,
