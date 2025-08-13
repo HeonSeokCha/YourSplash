@@ -8,30 +8,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import org.koin.compose.KoinContext
-import util.Navigator
 
 @Composable
 fun BrowseApp(
     info: Pair<String, String>,
-    navigator: Navigator
+    onBack: () -> Unit
 ) {
     val navController: NavHostController = rememberNavController()
     Scaffold(
-        topBar = { ImageDetailTopBar(
-            navController = navController,
-            navigator = navigator
-        ) }
-    ) {
-        KoinContext {
-            BrowseNavHost(
-                modifier = Modifier
-                    .padding(it)
-                    .fillMaxSize(),
+        topBar = {
+            ImageDetailTopBar(
                 navController = navController,
-                type = info.first,
-                id = info.second
+                onBack = onBack
             )
         }
+    ) {
+        BrowseNavHost(
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize(),
+            navController = navController,
+            type = info.first,
+            id = info.second
+        )
     }
 }

@@ -18,17 +18,15 @@ import presentation.setting.SettingViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNot
 import org.koin.compose.viewmodel.koinViewModel
-import util.Navigator
 
 @Composable
 fun MainNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     searchQuery: String,
-    navigator: Navigator,
+    onNavigate: (Pair<String, String>) -> Unit,
     onBack: () -> Unit
 ) {
-
     NavHost(
         modifier = modifier,
         navController = navController,
@@ -39,20 +37,14 @@ fun MainNavHost(
             HomeScreen(
                 state = viewModel.state,
             ) { info ->
-                navigator.navigateToSecondActivity(
-                    type = info.first,
-                    id = info.second
-                )
+                onNavigate(info)
             }
         }
 
         composable<MainScreens.CollectionScreen> {
             val viewModel = koinViewModel<CollectionViewModel>()
             CollectionScreen(state = viewModel.state) {
-                navigator.navigateToSecondActivity(
-                    type = it.first,
-                    id = it.second
-                )
+                onNavigate(it)
             }
         }
 
@@ -72,10 +64,7 @@ fun MainNavHost(
                 modalClick = { },
                 onBack = onBack
             ) {
-                navigator.navigateToSecondActivity(
-                    type = it.first,
-                    id = it.second
-                )
+                onNavigate(it)
             }
         }
 

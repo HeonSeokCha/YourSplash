@@ -83,7 +83,7 @@ kotlin {
 }
 
 fun getApiKey(propertyKey: String): String {
-    return gradleLocalProperties(rootDir).getProperty(propertyKey)
+    return gradleLocalProperties(rootDir, providers).getProperty(propertyKey)
 }
 
 buildkonfig {
@@ -145,6 +145,12 @@ dependencies {
     ).forEach {
         add(it, libs.room.compiler)
     }
+}
+
+compose.resources {
+    publicResClass = false
+    packageOfResClass = "com.chs.youranimelist.res"
+    generateResClass = auto
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().configureEach {

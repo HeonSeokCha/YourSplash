@@ -1,7 +1,7 @@
 package di
 
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailViewModel
-import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailViewModel
+import presentation.browse.photo_detail.PhotoDetailViewModel
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module

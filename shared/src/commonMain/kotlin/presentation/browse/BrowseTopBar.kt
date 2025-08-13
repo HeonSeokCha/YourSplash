@@ -9,16 +9,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import coil3.compose.LocalPlatformContext
 import com.chs.yoursplash.presentation.Screens
-import util.Navigator
 import util.fromScreenRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImageDetailTopBar(
-    navigator: Navigator,
-    navController: NavHostController
+    navController: NavHostController,
+    onBack: () -> Unit
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
@@ -27,15 +25,15 @@ fun ImageDetailTopBar(
         title = { },
         navigationIcon = {
             if (currentDestination is Screens.PhotoTagResultScreen) {
-                IconButton(onClick = {
-                    navController.navigateUp()
-                }) {
+                IconButton(
+                    onClick = {
+                        navController.navigateUp()
+                    }
+                ) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                 }
             } else {
-                IconButton(onClick = {
-                    navigator.finish()
-                }) {
+                IconButton(onClick = onBack) {
                     Icon(Icons.Filled.Close, contentDescription = null)
                 }
             }

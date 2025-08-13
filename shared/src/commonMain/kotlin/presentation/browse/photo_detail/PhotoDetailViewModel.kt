@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.browse.photo_detail
+package presentation.browse.photo_detail
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,7 +13,6 @@ import domain.usecase.GetLoadQualityUseCase
 import domain.usecase.GetPhotoDetailUseCase
 import domain.usecase.GetPhotoRelatedListUseCase
 import kotlinx.coroutines.launch
-import presentation.browse.photo_detail.PhotoDetailState
 
 class PhotoDetailViewModel(
     savedStateHandle: SavedStateHandle,

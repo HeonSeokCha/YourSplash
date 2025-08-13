@@ -12,7 +12,7 @@ import com.chs.yoursplash.presentation.Screens
 import presentation.browse.collection_detail.CollectionDetailScreen
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailViewModel
 import presentation.browse.photo_detail.ImageDetailScreen
-import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailViewModel
+import presentation.browse.photo_detail.PhotoDetailViewModel
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListScreen
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListViewModel
 import presentation.browse.user.UserDetailScreen

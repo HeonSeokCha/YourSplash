@@ -1,14 +1,26 @@
 import androidx.compose.ui.window.ComposeUIViewController
-import di.initKoin
 import platform.UIKit.UIApplication
-import platform.UIKit.UIWindow
-import util.IosNavigator
+import platform.UIKit.UINavigationController
+import presentation.YourSplashApp
 
 fun MainViewController() = ComposeUIViewController(
     configure = {
-        initKoin()
+        enforceStrictPlistSanityCheck = false
     }
 ) {
-    val navigator = IosNavigator()
-    App(navigator)
+
+    val window = UIApplication.sharedApplication.keyWindow()
+    val rootViewController = window?.rootViewController() as? UINavigationController
+
+    YourSplashApp {
+        val secondViewController = BrowseViewController(
+            controller = rootViewController!!,
+            info = it
+        )
+
+        rootViewController.pushViewController(
+            viewController = secondViewController,
+            animated = true
+        )
+    }
  }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import shared
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        InitKoinKt.doInitKoin()
+        KoinModuleKt.doInitKoin()
         window = UIWindow(frame: UIScreen.main.bounds)
         if let window = window {
             let uiController = UINavigationController(rootViewController: MainViewControllerKt.MainViewController())

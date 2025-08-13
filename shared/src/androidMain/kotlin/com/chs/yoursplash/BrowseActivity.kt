@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import presentation.browse.BrowseApp
-import util.AndroidNavigator
 import util.Constants
 
 class BrowseActivity : ComponentActivity() {
@@ -21,7 +20,9 @@ class BrowseActivity : ComponentActivity() {
             BrowseApp(
                 info = intent.getStringExtra(Constants.TARGET_TYPE)!! to
                         intent.getStringExtra(Constants.TARGET_ID)!!,
-                navigator = AndroidNavigator(this)
+                onBack = {
+                    finish()
+                }
             )
         }
     }

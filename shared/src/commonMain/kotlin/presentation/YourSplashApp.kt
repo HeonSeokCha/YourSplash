@@ -10,48 +10,48 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
 import presentation.bottom.BottomBar
 import presentation.main.MainTopBar
 import presentation.main.MainViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import presentation.main.MainNavHost
-import util.Navigator
 
 @Composable
-fun YourSplashApp(
-    navigator: Navigator
-) {
+fun YourSplashApp(onNavigate: (Pair<String, String>) -> Unit) {
     val navController: NavHostController = rememberNavController()
-
     var searchQuery: String by remember { mutableStateOf("") }
     val viewModel = koinViewModel<MainViewModel>()
     val state = viewModel.state
-    Scaffold(
-        topBar = {
-            MainTopBar(
-                navController = navController,
-                searchHistoryList = state.searchHistory,
-                onQueryChange = {
-                    if (it.isNotEmpty()) {
-                        viewModel.insertSearchHistory(it)
+    YourSplashTheme {
+        Scaffold(
+            topBar = {
+                MainTopBar(
+                    navController = navController,
+                    searchHistoryList = state.searchHistory,
+                    onQueryChange = {
+                        if (it.isNotEmpty()) {
+                            viewModel.insertSearchHistory(it)
+                        }
+                        searchQuery = it
+                    },
+                    onDeleteSearchHistory = {
+                        viewModel.deleteSearchHistory(it)
                     }
-                    searchQuery = it
-                },
-                onDeleteSearchHistory = {
-                    viewModel.deleteSearchHistory(it)
-                }
+                )
+            },
+            bottomBar = {
+                BottomBar(navController = navController)
+            },
+        ) {
+            MainNavHost(
+                modifier = Modifier.padding(it),
+                navController = navController,
+                searchQuery = searchQuery,
+                onBack = { searchQuery = "" },
+                onNavigate = onNavigate
             )
-        },
-        bottomBar = {
-            BottomBar(navController = navController)
-        },
-    ) {
-        MainNavHost(
-            modifier = Modifier.padding(it),
-            navController = navController,
-            searchQuery = searchQuery,
-            onBack = { searchQuery = "" },
-            navigator = navigator
-        )
+        }
     }
+
 }
