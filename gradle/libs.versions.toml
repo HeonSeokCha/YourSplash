@@ -17,6 +17,7 @@ ktor = "3.2.3"
 compose-plugin = "1.9.0-beta01"
 androidx-lifecycle = "2.9.1"
 koin = "4.1.0"
+#android-paging = "3.4.0-alpha02"
 cashapp-paging = "3.3.0-alpha02-0.5.1"
 coil = "3.3.0"
 sqlite = "2.5.2"
@@ -34,6 +35,8 @@ jetbrain-compose-material3-icon = "org.jetbrains.compose.material:material-icons
 
 cashapp-paging-common = { module = "app.cash.paging:paging-common", version.ref = "cashapp-paging" }
 cashapp-paging-compose = { module = "app.cash.paging:paging-compose-common", version.ref = "cashapp-paging" }
+#android-paging-common = { module = "androidx.paging:paging-common", version.ref = "android-paging" }
+#android-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "android-paging" }
 
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-compose-core = { module = "io.coil-kt.coil3:coil-compose-core", version.ref = "coil" }

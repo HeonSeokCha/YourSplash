@@ -7,10 +7,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.chs.yoursplash.presentation.Screens
-import util.fromScreenRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -20,11 +20,11 @@ fun ImageDetailTopBar(
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-    val currentDestination = navBackStackEntry?.fromScreenRoute()
+    val currentDestination = navBackStackEntry?.destination
     TopAppBar(
         title = { },
         navigationIcon = {
-            if (currentDestination is Screens.PhotoTagResultScreen) {
+            if (currentDestination?.hasRoute(Screens.PhotoTagResultScreen::class) == true) {
                 IconButton(
                     onClick = {
                         navController.navigateUp()

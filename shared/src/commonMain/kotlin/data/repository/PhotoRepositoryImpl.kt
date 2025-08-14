@@ -15,7 +15,6 @@ import data.paging.HomeCollectionPaging
 import data.paging.HomePhotosPaging
 import domain.model.Photo
 import domain.model.PhotoDetail
-import domain.model.PhotoSaveInfo
 import com.chs.yoursplash.util.NetworkResult
 import domain.model.UnSplashCollection
 import domain.repository.PhotoRepository

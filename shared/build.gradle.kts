@@ -56,6 +56,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(compose.components.resources)
+
             implementation(libs.jetbrain.compose.material3.icon)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -76,8 +77,8 @@ kotlin {
 
             implementation(libs.bundles.room)
 
-            api(libs.datastore.preferences)
-            api(libs.datastore)
+            implementation(libs.datastore.preferences)
+            implementation(libs.datastore)
         }
     }
 }

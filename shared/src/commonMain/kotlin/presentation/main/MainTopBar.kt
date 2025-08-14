@@ -14,12 +14,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.twotone.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -42,11 +39,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import presentation.ui.theme.Red200
-import util.fromMainRoute
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,8 +53,12 @@ fun MainTopBar(
     onDeleteSearchHistory: (String) -> Unit
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    when (navBackStackEntry?.fromMainRoute()) {
-        is MainScreens.HomeScreen, MainScreens.CollectionScreen -> {
+    val currentDest = navBackStackEntry?.destination
+
+    when {
+        currentDest?.hasRoute(MainScreens.HomeScreen::class) == true
+                || currentDest?.hasRoute(MainScreens.CollectionScreen::class) == true -> {
+
             TopAppBar(
                 title = {
                     Text(
@@ -94,7 +94,7 @@ fun MainTopBar(
             )
         }
 
-        is MainScreens.SettingScreen -> {
+        currentDest?.hasRoute(MainScreens.SettingScreen::class) == true -> {
             TopAppBar(
                 title = {
                     Text(
@@ -114,7 +114,7 @@ fun MainTopBar(
             )
         }
 
-        is MainScreens.SearchScreen -> {
+        else -> {
             SearchAppBar(
                 onSearch = {
                     onQueryChange(it)
@@ -125,8 +125,6 @@ fun MainTopBar(
                 }, onBack = { navController.navigateUp() }
             )
         }
-
-        null -> Unit
     }
 }
 
@@ -209,20 +207,21 @@ fun SearchAppBar(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(searchHistoryList) { title ->
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(all = 14.dp)
-                    .combinedClickable(
-                        onClick = {
-                            text = title
-                            isSearchActive = false
-                            onSearch(title)
-                        },
-                        onLongClick = {
-                            text = title
-                            isShowDialog = true
-                        }
-                    )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(all = 14.dp)
+                        .combinedClickable(
+                            onClick = {
+                                text = title
+                                isSearchActive = false
+                                onSearch(title)
+                            },
+                            onLongClick = {
+                                text = title
+                                isShowDialog = true
+                            }
+                        )
                 ) {
                     Icon(
                         modifier = Modifier.padding(end = 10.dp),
@@ -260,4 +259,3 @@ fun SearchAppBar(
         }
     }
 }
-
