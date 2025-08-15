@@ -4,8 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import presentation.YourSplashApp
-import util.Constants
+import com.chs.yoursplash.presentation.YourSplashApp
+import com.chs.yoursplash.util.Constants
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

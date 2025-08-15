@@ -1,0 +1,62 @@
+package com.chs.yoursplash.presentation.search
+
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
+import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
+import com.chs.yoursplash.domain.usecase.GetSearchResultCollectionUseCase
+import com.chs.yoursplash.domain.usecase.GetSearchResultPhotoUseCase
+import com.chs.yoursplash.domain.usecase.GetSearchResultUserUseCase
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+class SearchResultViewModel(
+    private val searchResultPhotoUseCase: GetSearchResultPhotoUseCase,
+    private val searchResultCollectionUseCase: GetSearchResultCollectionUseCase,
+    private val searchResultUserUseCase: GetSearchResultUserUseCase,
+    private val getLoadQualityUseCase: GetLoadQualityUseCase
+) : ViewModel() {
+
+    private val _state = MutableStateFlow(SearchState())
+    val state = _state
+        .onStart {
+            getImageLoadQuality()
+        }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000L),
+            SearchState()
+        )
+
+    private fun getImageLoadQuality() {
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    loadQuality = getLoadQualityUseCase()
+                )
+            }
+        }
+    }
+
+    fun searchResult(query: String) {
+        _state.update {
+            it.copy(
+                searchPhotoList = searchResultPhotoUseCase(
+                    query = query,
+                    orderBy = it.orderBy,
+                    color = it.color,
+                    orientation = it.orientation
+                ).cachedIn(viewModelScope),
+                searchCollectionList = searchResultCollectionUseCase(query).cachedIn(viewModelScope),
+                searchUserList = searchResultUserUseCase(query).cachedIn(viewModelScope)
+            )
+        }
+    }
+}
