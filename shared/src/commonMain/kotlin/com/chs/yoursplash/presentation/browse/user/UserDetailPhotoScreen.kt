@@ -22,6 +22,7 @@ import coil3.request.crossfade
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.base.ImageCard
+import com.chs.yoursplash.presentation.base.ShimmerImage
 import com.chs.yoursplash.util.Constants
 
 @Composable
@@ -39,7 +40,7 @@ fun UserDetailPhotoScreen(
                 count = photoList.itemCount,
                 key = photoList.itemKey { it.id }
             ) { idx ->
-                AsyncImage(
+                ShimmerImage(
                     modifier = Modifier
                         .padding(
                             start = 8.dp,
@@ -50,13 +51,7 @@ fun UserDetailPhotoScreen(
                                 onNavigate(Screens.ImageDetailScreen(photoList[idx]!!.id))
                             }
                         },
-                    model = ImageRequest.Builder(LocalPlatformContext.current)
-                        .data(Constants.getPhotoQualityUrl(photoList[idx]?.urls, loadQuality))
-                        .crossfade(true)
-                        .build(),
-                    placeholder = ColorPainter(Color.LightGray),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop
+                    url = Constants.getPhotoQualityUrl(photoList[idx]?.urls, loadQuality)
                 )
             }
 

@@ -22,9 +22,5 @@ data class ResponseUserDetail(
     @SerialName("total_likes")
     val totalLikes: Int,
     @SerialName("total_photos")
-    val totalPhotos: Int,
-//    @SerialName("tags")
-//    val tags: ResponseUserDetailTags,
-    @SerialName("followers_count")
-    val followersCount: Int
+    val totalPhotos: Int
 )

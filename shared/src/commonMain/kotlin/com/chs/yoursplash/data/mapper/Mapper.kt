@@ -68,9 +68,7 @@ fun ResponseUserDetail.toUserDetail(): UserDetail {
         profileImage = profileImage.toUnsplashUserProfileImage(),
         totalCollections = totalCollection,
         totalLikes = totalLikes,
-        totalPhotos = totalPhotos,
-//        tags = tags.custom.map { it.toUnSplashTag() },
-        followersCount = followersCount
+        totalPhotos = totalPhotos
     )
 }
 
@@ -157,7 +155,6 @@ fun ResponseCollection.toPhotoCollection(): UnSplashCollection {
         id = id,
         title = title,
         totalPhotos = totalPhotos,
-        unSplashTags = tags.map { it.toUnSplashTag() },
         user = user.toUnSplashUser(),
         previewPhotos = previewPhotos?.map {
             it.toRelatedCollectionPreview()

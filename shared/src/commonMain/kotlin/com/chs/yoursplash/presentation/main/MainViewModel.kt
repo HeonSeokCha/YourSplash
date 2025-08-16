@@ -36,7 +36,7 @@ class MainViewModel(
         .stateIn(
             viewModelScope,
             SharingStarted.Eagerly,
-            MainState()
+            _state.value
         )
 
     fun updateSearchQuery(query: String) {

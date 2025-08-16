@@ -23,8 +23,7 @@ import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.chs.yoursplash.presentation.Screens
-import com.chs.yoursplash.presentation.base.PlaceholderHighlight
-import com.chs.yoursplash.presentation.base.placeholder
+import com.chs.yoursplash.presentation.base.ShimmerImage
 import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.util.Constants
 
@@ -43,25 +42,14 @@ fun ImageDetailScreen(
         } else {
             item(span = StaggeredGridItemSpan.FullLine) {
                 Column {
-                    AsyncImage(
+                    ShimmerImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(300.dp)
-                            .placeholder(
-                                visible = state.imageDetailInfo == null,
-                                highlight = PlaceholderHighlight.Companion.shimmer()
-                            ),
-                        contentScale = ContentScale.Crop,
-                        model = ImageRequest.Builder(LocalPlatformContext.current)
-                            .data(
-                                Constants.getPhotoQualityUrl(
-                                    state.imageDetailInfo?.urls,
-                                    state.wallpaperQuality
-                                )
-                            ).crossfade(true)
-                            .build(),
-                        contentDescription = null,
-                        placeholder = ColorPainter(Color.LightGray),
+                            .height(300.dp),
+                        url = Constants.getPhotoQualityUrl(
+                            state.imageDetailInfo?.urls,
+                            state.wallpaperQuality
+                        )
                     )
 
                     Row(
@@ -86,20 +74,11 @@ fun ImageDetailScreen(
                                 },
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            AsyncImage(
+                            ShimmerImage(
                                 modifier = Modifier
                                     .size(40.dp)
-                                    .clip(RoundedCornerShape(100))
-                                    .placeholder(
-                                        visible = state.imageDetailInfo == null,
-                                        highlight = PlaceholderHighlight.Companion.shimmer()
-                                    ),
-                                model = ImageRequest.Builder(LocalPlatformContext.current)
-                                    .data(state.imageDetailInfo?.user?.photoProfile?.large)
-                                    .crossfade(true)
-                                    .build(),
-                                placeholder = ColorPainter(Color.LightGray),
-                                contentDescription = null
+                                    .clip(RoundedCornerShape(100)),
+                                url = state.imageDetailInfo?.user?.photoProfile?.large
                             )
 
                             Spacer(modifier = Modifier.width(16.dp))
@@ -131,23 +110,15 @@ fun ImageDetailScreen(
                     key = { state.imageRelatedList[it].id }
                 ) { idx ->
                     val item = state.imageRelatedList[idx]
-                    AsyncImage(
+                    ShimmerImage(
                         modifier = Modifier
                             .padding(
                                 start = 8.dp,
                                 end = 16.dp,
                                 bottom = 16.dp
                             )
-                            .clickable {
-                                onNavigate(Screens.ImageDetailScreen(item.id))
-                            },
-                        model = ImageRequest.Builder(LocalPlatformContext.current)
-                            .data(Constants.getPhotoQualityUrl(item.urls, state.loadQuality))
-                            .crossfade(true)
-                            .build(),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        placeholder = ColorPainter(Color.LightGray),
+                            .clickable { onNavigate(Screens.ImageDetailScreen(item.id)) },
+                        url = Constants.getPhotoQualityUrl(item.urls, state.loadQuality)
                     )
                 }
             }

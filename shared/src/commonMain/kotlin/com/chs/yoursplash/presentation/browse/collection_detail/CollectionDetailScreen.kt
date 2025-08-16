@@ -14,8 +14,6 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import app.cash.paging.compose.collectAsLazyPagingItems
 import com.chs.yoursplash.presentation.base.ImageCard
-import com.chs.yoursplash.presentation.base.PlaceholderHighlight
-import com.chs.yoursplash.presentation.base.placeholder
 import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.util.Constants
 
@@ -41,10 +39,7 @@ fun CollectionDetailScreen(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .placeholder(
-                            visible = state.collectionDetailInfo == null,
-                            highlight = PlaceholderHighlight.Companion.shimmer()
-                        ),
+                        .shimmer(visible = state.collectionDetailInfo == null),
                     text = if (state.collectionDetailInfo == null) {
                         Constants.TEXT_PREVIEW
                     } else {

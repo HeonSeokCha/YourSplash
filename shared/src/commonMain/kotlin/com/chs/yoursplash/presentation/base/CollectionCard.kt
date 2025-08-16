@@ -47,19 +47,11 @@ fun CollectionInfoCard(
                 },
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            AsyncImage(
+            ShimmerImage(
                 modifier = Modifier
                     .size(50.dp)
-                    .clip(RoundedCornerShape(100))
-                    .placeholder(
-                        visible = collectionInfo == null,
-                        highlight = PlaceholderHighlight.shimmer()
-                    ),
-                model = ImageRequest.Builder(LocalPlatformContext.current)
-                    .data(collectionInfo?.user?.photoProfile?.large)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = null
+                    .clip(RoundedCornerShape(100)),
+                url = collectionInfo?.user?.photoProfile?.large
             )
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -122,27 +114,15 @@ private fun CollectionCard(
                 .fillMaxWidth()
                 .weight(6f)
         ) {
-            AsyncImage(
+            ShimmerImage(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(end = 4.dp)
-                    .clip(RoundedCornerShape(topStart = 10.dp, bottomStart = 10.dp))
-                    .placeholder(
-                        visible = collectionInfo == null,
-                        highlight = PlaceholderHighlight.shimmer()
-                    ),
-                model = ImageRequest.Builder(LocalPlatformContext.current)
-                    .data(
-                        Constants.getPhotoQualityUrl(
-                            collectionInfo?.previewPhotos?.get(0)?.urls,
-                            loadQuality
-                        )
-                    )
-                    .crossfade(true)
-                    .build(),
-                contentScale = ContentScale.Crop,
-                contentDescription = null,
-                placeholder = ColorPainter(Color.LightGray)
+                    .clip(RoundedCornerShape(topStart = 10.dp, bottomStart = 10.dp)),
+                url = Constants.getPhotoQualityUrl(
+                    collectionInfo?.previewPhotos?.get(0)?.urls,
+                    loadQuality
+                )
             )
         }
 
@@ -151,28 +131,16 @@ private fun CollectionCard(
                 .weight(4f)
         ) {
             repeat(2) {
-                AsyncImage(
+                ShimmerImage(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(125.dp)
                         .padding(bottom = 2.dp)
-                        .clip(RoundedCornerShape(topEnd = 10.dp))
-                        .placeholder(
-                            visible = collectionInfo == null,
-                            highlight = PlaceholderHighlight.shimmer()
-                        ),
-                    model = ImageRequest.Builder(LocalPlatformContext.current)
-                        .data(
-                            Constants.getPhotoQualityUrl(
-                                collectionInfo?.previewPhotos?.get(it + 1)?.urls,
-                                loadQuality
-                            )
-                        )
-                        .crossfade(true)
-                        .build(),
-                    contentScale = ContentScale.Crop,
-                    contentDescription = null,
-                    placeholder = ColorPainter(Color.LightGray)
+                        .clip(RoundedCornerShape(topEnd = 10.dp)),
+                    url = Constants.getPhotoQualityUrl(
+                        collectionInfo?.previewPhotos?.get(it + 1)?.urls,
+                        loadQuality
+                    )
                 )
             }
         }

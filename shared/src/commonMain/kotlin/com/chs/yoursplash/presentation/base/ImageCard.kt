@@ -47,22 +47,15 @@ fun ImageCard(
                 },
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            AsyncImage(
+            ShimmerImage(
                 modifier = Modifier
                     .size(50.dp)
-                    .clip(RoundedCornerShape(100))
-                    .placeholder(
-                        visible = photoInfo == null,
-                        highlight = PlaceholderHighlight.shimmer()
-                    ),
-                model = ImageRequest.Builder(LocalPlatformContext.current)
-                    .data(photoInfo?.user?.photoProfile?.large)
-                    .crossfade(true)
-                    .build(),
-                placeholder = ColorPainter(Color.Gray),
-                contentDescription = null
+                    .clip(RoundedCornerShape(100)),
+                url = photoInfo?.user?.photoProfile?.large
             )
+
             Spacer(modifier = Modifier.width(16.dp))
+
             Text(
                 text = photoInfo?.user?.name ?: "...",
                 fontSize = 16.sp,
@@ -72,27 +65,17 @@ fun ImageCard(
             )
         }
 
-        AsyncImage(
+        ShimmerImage(
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(max = 400.dp)
+                .height(300.dp)
                 .clip(RoundedCornerShape(10.dp))
-                .placeholder(
-                    visible = photoInfo == null,
-                    highlight = PlaceholderHighlight.shimmer()
-                )
                 .clickable {
-                    if (photoInfo?.id != null) {
-                        onClick(Constants.TARGET_PHOTO to photoInfo.id)
-                    }
+                    if (photoInfo?.id == null) return@clickable
+
+                    onClick(Constants.TARGET_PHOTO to photoInfo.id)
                 },
-            model = ImageRequest.Builder(LocalPlatformContext.current)
-                .data(Constants.getPhotoQualityUrl(photoInfo?.urls, loadQuality))
-                .crossfade(true)
-                .build(),
-            contentScale = ContentScale.Crop,
-            placeholder = ColorPainter(Color.LightGray),
-            contentDescription = null,
+            url = Constants.getPhotoQualityUrl(photoInfo?.urls, loadQuality)
         )
     }
 }

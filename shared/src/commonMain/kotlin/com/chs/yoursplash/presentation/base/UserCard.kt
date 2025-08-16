@@ -31,7 +31,7 @@ fun UserCard(
     photoClickAble: (photoId: String) -> Unit
 ) {
 
-    Row (
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
@@ -39,19 +39,11 @@ fun UserCard(
                 userClickAble(userInfo?.userName ?: "")
             },
     ) {
-        AsyncImage(
+        ShimmerImage(
             modifier = Modifier
                 .size(50.dp)
-                .clip(RoundedCornerShape(100))
-                .placeholder(
-                    visible = userInfo == null,
-                    highlight = PlaceholderHighlight.shimmer()
-                ),
-            model = ImageRequest.Builder(LocalPlatformContext.current)
-                .data(userInfo?.photoProfile?.large)
-                .crossfade(true)
-                .build(),
-            contentDescription = null
+                .clip(RoundedCornerShape(100)),
+            url = userInfo?.photoProfile?.large
         )
 
         Column {
@@ -79,25 +71,17 @@ fun UserCard(
                         count = userInfo.photos.size,
                         key = { userInfo.photos[it].id }
                     ) { idx ->
-                        AsyncImage(
+                        ShimmerImage(
                             modifier = Modifier
                                 .size(90.dp, 190.dp)
                                 .clip(RoundedCornerShape(15))
                                 .clickable {
                                     photoClickAble(userInfo.photos[idx].id)
                                 },
-                            model = ImageRequest.Builder(LocalPlatformContext.current)
-                                .data(
-                                    Constants.getPhotoQualityUrl(
-                                    userInfo.photos[idx].urls,
-                                    loadQuality
-                                ))
-                                .crossfade(true)
-                                .build(),
-
-                            contentScale = ContentScale.Crop,
-                            contentDescription = null,
-                            placeholder = ColorPainter(Color.LightGray)
+                            url = Constants.getPhotoQualityUrl(
+                                userInfo.photos[idx].urls,
+                                loadQuality
+                            )
                         )
                     }
                 }

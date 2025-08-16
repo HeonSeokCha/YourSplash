@@ -26,8 +26,7 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.chs.yoursplash.domain.model.UserDetail
 import com.chs.yoursplash.presentation.Screens
-import com.chs.yoursplash.presentation.base.PlaceholderHighlight
-import com.chs.yoursplash.presentation.base.placeholder
+import com.chs.yoursplash.presentation.base.ShimmerImage
 import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import com.chs.yoursplash.util.Constants
@@ -140,20 +139,13 @@ private fun UserDetailInfo(userInfo: UserDetail?) {
             ),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        AsyncImage(
+        ShimmerImage(
             modifier = Modifier
                 .size(100.dp, 100.dp)
-                .clip(RoundedCornerShape(100))
-                .placeholder(
-                    visible = userInfo == null,
-                    highlight = PlaceholderHighlight.Companion.shimmer()
-                ),
-            model = ImageRequest.Builder(LocalPlatformContext.current)
-                .data(userInfo?.profileImage?.large)
-                .crossfade(true)
-                .build(),
-            contentDescription = null,
+                .clip(RoundedCornerShape(100)),
+            url = userInfo?.profileImage?.large
         )
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -161,10 +153,7 @@ private fun UserDetailInfo(userInfo: UserDetail?) {
         ) {
             Text(
                 modifier = Modifier
-                    .placeholder(
-                        visible = userInfo == null,
-                        highlight = PlaceholderHighlight.Companion.shimmer()
-                    ),
+                    .shimmer(visible = userInfo == null),
                 text = userInfo?.name ?: Constants.TEXT_PREVIEW,
                 fontWeight = FontWeight.ExtraBold,
                 fontSize = 18.sp,
