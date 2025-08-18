@@ -4,7 +4,10 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
@@ -26,13 +29,14 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.chs.yoursplash.domain.model.UserDetail
 import com.chs.yoursplash.presentation.Screens
+import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
 import com.chs.yoursplash.presentation.base.ShimmerImage
 import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import com.chs.yoursplash.util.Constants
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun UserDetailScreen(
     state: UserDetailState,
@@ -40,88 +44,75 @@ fun UserDetailScreen(
 ) {
     val pagerState = rememberPagerState { state.userTabLabList.size }
     val coroutineScope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
+    CollapsingToolbarScaffold(
+        scrollState = scrollState,
+        isShowTopBar = true,
+        header = {
+            if (state.isError) {
+                Text(text = state.errorMessage ?: "UnknownError")
+            } else {
+                UserDetailInfo(userInfo = state.userDetailInfo)
+            }
+        },
+        stickyHeader = {
+            SecondaryTabRow(pagerState.currentPage) {
+                state.userTabLabList.forEachIndexed { index, title ->
+                    Tab(
+                        text = {
+                            Text(
+                                text = title,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                fontSize = 12.sp,
+                            )
+                        }, selected = pagerState.currentPage == index,
+                        onClick = {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(index)
+                            }
+                        },
+                        selectedContentColor = Purple200,
+                        unselectedContentColor = Color.Gray
+                    )
+                }
+            }
+        },
+        onCloseClick = { }
     ) {
-        if (state.isError) {
-            Text(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally),
-                text = state.errorMessage ?: "UnknownError"
-            )
-        } else {
-            UserDetailInfo(userInfo = state.userDetailInfo)
-
-            if (state.userTabLabList.isNotEmpty()) {
-                TabRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    selectedTabIndex = pagerState.currentPage,
-                    containerColor = Color.White,
-                    indicator = { tabPositions ->
-                        SecondaryIndicator(
-                            modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
-                            color = Purple200
-                        )
-                    }
-                ) {
-                    state.userTabLabList.forEachIndexed { index, title ->
-                        Tab(
-                            text = {
-                                Text(
-                                    text = title,
-                                    maxLines = 1,
-                                    color = Purple200,
-                                    overflow = TextOverflow.Ellipsis,
-                                    fontSize = 13.sp
-                                )
-                            },
-                            selected = pagerState.currentPage == index,
-                            onClick = {
-                                coroutineScope.launch {
-                                    pagerState.animateScrollToPage(index)
-                                }
-                            },
-                        )
+        HorizontalPager(
+            state = pagerState,
+            userScrollEnabled = false,
+        ) { pager ->
+            when (pager) {
+                0 -> {
+                    UserDetailPhotoScreen(
+                        state.userDetailPhotoList?.collectAsLazyPagingItems(),
+                        state.loadQuality
+                    ) {
+                        onNavigate(it)
                     }
                 }
 
-                HorizontalPager(
-                    state = pagerState,
-                    userScrollEnabled = false,
-                ) { pager ->
-                    when (pager) {
-                        0 -> {
-                            UserDetailPhotoScreen(
-                                state.userDetailPhotoList?.collectAsLazyPagingItems(),
-                                state.loadQuality
-                            ) {
-                                onNavigate(it)
-                            }
-                        }
+                1 -> {
+                    UserDetailLikeScreen(
+                        state.userDetailLikeList?.collectAsLazyPagingItems(),
+                        state.loadQuality
+                    ) {
+                        onNavigate(it)
+                    }
+                }
 
-                        1 -> {
-                            UserDetailLikeScreen(
-                                state.userDetailLikeList?.collectAsLazyPagingItems(),
-                                state.loadQuality
-                            ) {
-                                onNavigate(it)
-                            }
-                        }
-
-                        2 -> {
-                            UserDetailCollectionScreen(
-                                state.userDetailCollection?.collectAsLazyPagingItems(),
-                                state.loadQuality
-                            ) {
-                                onNavigate(it)
-                            }
-                        }
+                2 -> {
+                    UserDetailCollectionScreen(
+                        state.userDetailCollection?.collectAsLazyPagingItems(),
+                        state.loadQuality
+                    ) {
+                        onNavigate(it)
                     }
                 }
             }
-
         }
     }
 }

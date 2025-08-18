@@ -22,7 +22,7 @@ enum class BottomNavigation(
     val label: String,
     val icon: ImageVector,
     val route: MainScreens
-){
+) {
     HOME("Home", Icons.Filled.Home, MainScreens.HomeScreen),
     SEARCH("Collection", Icons.AutoMirrored.Default.List, MainScreens.CollectionScreen),
 }

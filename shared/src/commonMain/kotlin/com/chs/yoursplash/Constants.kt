@@ -21,25 +21,7 @@ object Constants {
 
 
     val CLIENT_ID: String = BuildKonfig.API_ACCESS_KEY
-    const val PREFERENCE_NAME: String = "setting_preferences"
-    const val PREFERENCE_KEY_LOAD_QUALITY: String = "load_quality"
-    const val PREFERENCE_KEY_DOWNLOAD_QUALITY: String = "download_quality"
-    const val PREFERENCE_KEY_WALLPAPER_QUALITY: String = "wallpaper_quality"
     const val PAGING_SIZE: Int = 3
-    const val TARGET_ID: String = "target_id"
-    const val TARGET_TYPE: String = "target_type"
-    const val TARGET_PHOTO: String = "target_photo"
-    const val TARGET_COLLECTION: String = "target_collection"
-    const val TARGET_USER: String = "target_user"
-    const val SEARCH_PHOTO: String = "search_photo"
-    const val SEARCH_COLLECTION: String = "search_collection"
-    const val SEARCH_USER: String = "search_user"
-
-    const val ARG_KEY_PHOTO_ID: String = "photoId"
-    const val ARG_KEY_COLLECTION_ID: String = "collectionId"
-    const val ARG_KEY_USER_NAME: String = "userName"
-    const val ARG_KEY_TAG_NAME: String = "tagName"
-    const val TEXT_PREVIEW: String = "This is Title."
 
     val SORT_BY_LIST = listOf(
         Pair("RELEVANCE", "relevant"),

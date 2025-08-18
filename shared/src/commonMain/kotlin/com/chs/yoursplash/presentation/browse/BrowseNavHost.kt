@@ -25,7 +25,8 @@ fun BrowseNavHost(
     modifier: Modifier,
     navController: NavHostController,
     type: String,
-    id: String
+    id: String,
+    onBack: () -> Unit
 ) {
     val startDestination: Screens = when (type) {
         Constants.TARGET_PHOTO -> {

@@ -54,43 +54,6 @@ fun UserDetailPhotoScreen(
                     url = Constants.getPhotoQualityUrl(photoList[idx]?.urls, loadQuality)
                 )
             }
-
-            when (photoList.loadState.refresh) {
-                is LoadState.Loading -> {
-                    items(10) {
-                        ImageCard(photoInfo = null)
-                    }
-                }
-
-                is LoadState.Error -> {
-                    item {
-                        Text(
-                            text = (photoList.loadState.refresh as LoadState.Error).error.message
-                                ?: "Unknown Error.."
-                        )
-                    }
-                }
-
-                else -> Unit
-            }
-
-            when (photoList.loadState.append) {
-                is LoadState.Loading -> {
-                    items(10) {
-                        ImageCard(photoInfo = null)
-                    }
-                }
-
-                is LoadState.Error -> {
-                    item {
-                        Text(
-                            text = (photoList.loadState.refresh as LoadState.Error).error.message
-                                ?: "Unknown Error.."
-                        )
-                    }
-                }
-                else -> Unit
-            }
         }
     }
 }
