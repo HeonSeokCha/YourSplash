@@ -32,6 +32,7 @@ import com.chs.yoursplash.util.Constants
 @Composable
 fun ImageDetailScreen(
     state: PhotoDetailState,
+    onClose: () -> Unit,
     onNavigate: (Screens) -> Unit
 ) {
     val scrollState = rememberScrollState()
@@ -95,7 +96,7 @@ fun ImageDetailScreen(
             }
         },
         isShowTopBar = false,
-        onCloseClick = { }
+        onCloseClick = onClose
     ) {
         LazyVerticalStaggeredGrid(
             modifier = Modifier

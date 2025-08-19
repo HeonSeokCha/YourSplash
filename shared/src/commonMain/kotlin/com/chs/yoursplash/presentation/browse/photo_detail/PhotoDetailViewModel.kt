@@ -1,8 +1,5 @@
 package com.chs.yoursplash.presentation.browse.photo_detail
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,6 +9,11 @@ import com.chs.yoursplash.domain.usecase.GetPhotoDetailUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoRelatedListUseCase
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.NetworkResult
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PhotoDetailViewModel(
@@ -24,72 +26,84 @@ class PhotoDetailViewModel(
 
     private val imageId: String = savedStateHandle[Constants.ARG_KEY_PHOTO_ID] ?: ""
 
-    var state by mutableStateOf(PhotoDetailState())
-        private set
-
-    init {
-        viewModelScope.launch {
-            state = state.copy(
-                wallpaperQuality = imageDetailQualityUseCase(),
-                loadQuality = loadQualityUseCase()
-            )
+    private var _state = MutableStateFlow(PhotoDetailState())
+    val state = _state
+        .onStart {
+            viewModelScope.launch {
+                _state.update {
+                    it.copy(
+                        wallpaperQuality = imageDetailQualityUseCase(),
+                        loadQuality = loadQualityUseCase()
+                    )
+                }
+            }
+            getImageDetailInfo()
+            getImageRelatedList()
         }
-    }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000L),
+            _state.value
+        )
 
-    fun getImageDetailInfo() {
+    private fun getImageDetailInfo() {
         viewModelScope.launch {
             getPhotoDetailUseCase(imageId).collect { result ->
-                state = when (result) {
-                    is NetworkResult.Loading -> {
-                        state.copy(
-                            isLoading = true,
-                            isError = false
-                        )
-                    }
+                _state.update {
+                    when (result) {
+                        is NetworkResult.Loading -> {
+                            it.copy(
+                                isLoading = true,
+                                isError = false
+                            )
+                        }
 
-                    is NetworkResult.Success -> {
-                        state.copy(
-                            isLoading = false,
-                            imageDetailInfo = result.data
-                        )
-                    }
+                        is NetworkResult.Success -> {
+                            it.copy(
+                                isLoading = false,
+                                imageDetailInfo = result.data
+                            )
+                        }
 
-                    is NetworkResult.Error -> {
-                        state.copy(
-                            isLoading = false,
-                            isError = true,
-                            errorMessage = result.message
-                        )
+                        is NetworkResult.Error -> {
+                            it.copy(
+                                isLoading = false,
+                                isError = true,
+                                errorMessage = result.message
+                            )
+                        }
                     }
                 }
             }
         }
     }
 
-    fun getImageRelatedList() {
+    private fun getImageRelatedList() {
         viewModelScope.launch {
             getPhotoRelatedListUseCase(imageId).collect { result ->
-                state = when (result) {
-                    is NetworkResult.Loading -> {
-                        state.copy(
-                            isLoading = true,
-                            isError = false
-                        )
-                    }
+                _state.update {
+                    when (result) {
+                        is NetworkResult.Loading -> {
+                            it.copy(
+                                isLoading = true,
+                                isError = false
+                            )
+                        }
 
-                    is NetworkResult.Success -> {
-                        state.copy(
-                            isLoading = false,
-                            imageRelatedList = result.data ?: emptyList()
-                        )
-                    }
+                        is NetworkResult.Success -> {
+                            it.copy(
+                                isLoading = false,
+                                imageRelatedList = result.data ?: emptyList()
+                            )
+                        }
 
-                    is NetworkResult.Error -> {
-                        state.copy(
-                            isLoading = false,
-                            isError = true,
-                            errorMessage = result.message
-                        )
+                        is NetworkResult.Error -> {
+                            it.copy(
+                                isLoading = false,
+                                isError = true,
+                                errorMessage = result.message
+                            )
+                        }
                     }
                 }
             }

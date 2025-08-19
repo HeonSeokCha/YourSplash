@@ -2,6 +2,7 @@ package com.chs.yoursplash.presentation.browse.collection_detail
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,6 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import app.cash.paging.compose.collectAsLazyPagingItems
+import com.chs.yoursplash.presentation.Screens
+import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
 import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.util.Constants
@@ -20,104 +23,52 @@ import com.chs.yoursplash.util.Constants
 @Composable
 fun CollectionDetailScreen(
     state: CollectionDetailState,
+    onClose: () -> Unit,
     onClick: (Pair<String, String>) -> Unit
 ) {
     val lazyPagingItems = state.collectionPhotos?.collectAsLazyPagingItems()
+    val scrollState = rememberScrollState()
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize(),
-        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(32.dp),
-    ) {
-        if (state.isError) {
-            item {
+    CollapsingToolbarScaffold(
+        scrollState = scrollState,
+        header = {
+            if (state.isError) {
                 Text(state.errorMessage ?: "UnknownError")
-            }
-        } else {
-            item {
+            } else {
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
                         .shimmer(visible = state.collectionDetailInfo == null),
                     text = if (state.collectionDetailInfo == null) {
                         Constants.TEXT_PREVIEW
-                    } else {
-                        "${state.collectionDetailInfo.totalPhotos} Photos ● " +
-                                "Create by ${state.collectionDetailInfo.user.name}"
+                    } else { "${state.collectionDetailInfo.totalPhotos} Photos ● " + "Create by ${state.collectionDetailInfo.user.name}"
                     },
                     textAlign = TextAlign.Center,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold
                 )
             }
-        }
+        },
+        isShowTopBar = true,
+        onCloseClick = onClose
+    ) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(32.dp),
+        ) {
+            if (lazyPagingItems != null) {
+                items(count = lazyPagingItems.itemCount) { idx ->
 
-        if (lazyPagingItems != null) {
-            items(
-                count = lazyPagingItems.itemCount,
-            ) { idx ->
-
-                ImageCard(
-                    photoInfo = lazyPagingItems[idx],
-                    loadQuality = state.loadQuality
-                ) {
-                    onClick(it)
-                }
-            }
-
-            when (lazyPagingItems.loadState.refresh) {
-                is LoadState.Loading -> {
-                    items(10) {
-                        ImageCard(photoInfo = null)
+                    ImageCard(
+                        photoInfo = lazyPagingItems[idx],
+                        loadQuality = state.loadQuality
+                    ) {
+                        onClick(it)
                     }
                 }
-
-                is LoadState.Error -> {
-                    item {
-                        Text(
-                            text = (lazyPagingItems.loadState.refresh as LoadState.Error).error.message
-                                ?: "Unknown Error.."
-                        )
-                    }
-                }
-
-                else -> Unit
-            }
-
-            when (lazyPagingItems.loadState.append) {
-                is LoadState.Loading -> {
-                    items(10) {
-                        ImageCard(photoInfo = null)
-                    }
-                }
-
-                is LoadState.Error -> {
-                    item {
-                        Text(
-                            text = (lazyPagingItems.loadState.refresh as LoadState.Error).error.message
-                                ?: "Unknown Error.."
-                        )
-                    }
-                }
-                else -> Unit
             }
         }
-    }
-
-    when (lazyPagingItems?.loadState?.source?.refresh) {
-        is LoadState.Loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator()
-            }
-        }
-
-        is LoadState.Error -> {
-        }
-
-        else -> {}
     }
 }

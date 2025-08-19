@@ -1,8 +1,5 @@
 package com.chs.yoursplash.presentation.browse.collection_detail
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,6 +9,11 @@ import com.chs.yoursplash.domain.usecase.GetCollectionPhotoUseCase
 import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.NetworkResult
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CollectionDetailViewModel(
@@ -23,42 +25,50 @@ class CollectionDetailViewModel(
 
     private val collectionId: String = savedStateHandle[Constants.ARG_KEY_COLLECTION_ID] ?: ""
 
-    var state by mutableStateOf(CollectionDetailState())
-        private set
+    private val _state = MutableStateFlow(CollectionDetailState())
+    val state = _state
+        .onStart {
+            viewModelScope.launch {
+                _state.update {
+                    it.copy(
+                        loadQuality = getLoadQualityUseCase(),
+                        collectionPhotos = getCollectionPhotoUseCase(collectionId).cachedIn(this)
+                    )
+                }
+            }
+            getCollectionDetailInfo()
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000L),
+            _state.value
+        )
 
-    init {
-        viewModelScope.launch {
-            state = CollectionDetailState(
-                loadQuality = getLoadQualityUseCase(),
-                collectionPhotos = getCollectionPhotoUseCase(collectionId).cachedIn(this)
-            )
-        }
-    }
-
-    fun getCollectionDetailInfo() {
+    private fun getCollectionDetailInfo() {
         viewModelScope.launch {
             getCollectionDetailUseCase(collectionId).collect { result ->
-                state = when (result) {
-                    is NetworkResult.Loading -> {
-                        state.copy(
-                            isLoading = true,
-                            isError = false
-                        )
-                    }
+                _state.update {
+                    when (result) {
+                        is NetworkResult.Loading -> {
+                            it.copy(
+                                isLoading = true,
+                                isError = false
+                            )
+                        }
 
-                    is NetworkResult.Success -> {
-                        state.copy(
-                            isLoading = false,
-                            collectionDetailInfo = result.data
-                        )
-                    }
+                        is NetworkResult.Success -> {
+                            it.copy(
+                                isLoading = false,
+                                collectionDetailInfo = result.data
+                            )
+                        }
 
-                    is NetworkResult.Error -> {
-                        state.copy(
-                            isLoading = false,
-                            isError = true,
-                            errorMessage = result.message
-                        )
+                        is NetworkResult.Error -> {
+                            it.copy(
+                                isLoading = false,
+                                isError = true,
+                                errorMessage = result.message
+                            )
+                        }
                     }
                 }
             }

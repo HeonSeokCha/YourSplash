@@ -36,10 +36,7 @@ fun UserDetailPhotoScreen(
         columns = StaggeredGridCells.Fixed(2),
     ) {
         if (photoList != null) {
-            items(
-                count = photoList.itemCount,
-                key = photoList.itemKey { it.id }
-            ) { idx ->
+            items(count = photoList.itemCount) { idx ->
                 ShimmerImage(
                     modifier = Modifier
                         .padding(

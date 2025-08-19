@@ -40,6 +40,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun UserDetailScreen(
     state: UserDetailState,
+    onClose: () -> Unit,
     onNavigate: (Screens) -> Unit
 ) {
     val pagerState = rememberPagerState { state.userTabLabList.size }
@@ -79,7 +80,7 @@ fun UserDetailScreen(
                 }
             }
         },
-        onCloseClick = { }
+        onCloseClick = onClose
     ) {
         HorizontalPager(
             state = pagerState,

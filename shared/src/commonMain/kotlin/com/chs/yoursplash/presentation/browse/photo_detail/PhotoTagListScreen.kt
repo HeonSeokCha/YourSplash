@@ -18,6 +18,7 @@ import com.chs.yoursplash.presentation.base.ImageCard
 @Composable
 fun PhotoTagListScreen(
     state: PhotoTagListState,
+    onClose: () -> Unit,
     onClick: (Pair<String, String>) -> Unit
 ) {
     val resultPagingItems = state.tagSearchResultList?.collectAsLazyPagingItems()
@@ -27,7 +28,7 @@ fun PhotoTagListScreen(
         scrollState = scrollState,
         isShowTopBar = true,
         header = { },
-        onCloseClick = { }
+        onCloseClick = onClose
     ) {
         LazyColumn(
             modifier = Modifier

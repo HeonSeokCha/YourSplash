@@ -2,8 +2,10 @@ package com.chs.yoursplash.presentation.browse
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -59,12 +61,12 @@ fun BrowseNavHost(
             val viewModel: PhotoDetailViewModel = koinViewModel<PhotoDetailViewModel>(
                 viewModelStoreOwner = parentEntry
             )
-            LaunchedEffect(viewModel) {
-                viewModel.getImageDetailInfo()
-                viewModel.getImageRelatedList()
-            }
+            val state by viewModel.state.collectAsStateWithLifecycle()
 
-            ImageDetailScreen(viewModel.state) {
+            ImageDetailScreen(
+                state = state,
+                onClose = onBack
+            ) {
                 navController.navigate(it)
             }
         }
@@ -77,11 +79,12 @@ fun BrowseNavHost(
             val viewModel: CollectionDetailViewModel = koinViewModel<CollectionDetailViewModel>(
                 viewModelStoreOwner = parentEntry
             )
-            LaunchedEffect(viewModel) {
-                viewModel.getCollectionDetailInfo()
-            }
+            val state by viewModel.state.collectAsStateWithLifecycle()
 
-            CollectionDetailScreen(viewModel.state) {
+            CollectionDetailScreen(
+                state = state,
+                onClose = onBack
+            ) {
                 if (it.first == Constants.TARGET_USER) {
                     navController.navigate(Screens.UserDetailScreen(it.second))
                 } else {
@@ -98,11 +101,12 @@ fun BrowseNavHost(
             val viewModel: UserDetailViewModel = koinViewModel<UserDetailViewModel>(
                 viewModelStoreOwner = parentEntry
             )
-            LaunchedEffect(viewModel) {
-                viewModel.getUserDetailInfo()
-            }
+            val state by viewModel.state.collectAsStateWithLifecycle()
 
-            UserDetailScreen(viewModel.state) {
+            UserDetailScreen(
+                state = state,
+                onClose = onBack
+            ) {
                 navController.navigate(it)
             }
         }
@@ -115,7 +119,10 @@ fun BrowseNavHost(
             val viewModel: PhotoTagListViewModel = koinViewModel<PhotoTagListViewModel>(
                 viewModelStoreOwner = parentEntry
             )
-            PhotoTagListScreen(state = viewModel.state) {
+            PhotoTagListScreen(
+                state = viewModel.state,
+                onClose = onBack
+            ) {
                 if (it.first == Constants.TARGET_USER) {
                     navController.navigate(Screens.UserDetailScreen(it.second))
                 } else {
