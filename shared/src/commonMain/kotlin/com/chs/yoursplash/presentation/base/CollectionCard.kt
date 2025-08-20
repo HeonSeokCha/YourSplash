@@ -65,11 +65,11 @@ fun CollectionInfoCard(
             )
         }
 
-        CollectionCard(
-            collectionInfo = collectionInfo,
-            loadQuality = loadQuality
-        ) {
-            if (collectionInfo != null) {
+        if (collectionInfo != null) {
+            CollectionCard(
+                collectionInfo = collectionInfo,
+                loadQuality = loadQuality
+            ) {
                 onClick(Constants.TARGET_COLLECTION to it)
             }
         }
@@ -87,15 +87,17 @@ fun CollectionSimpleCard(
             .fillMaxWidth()
             .wrapContentHeight()
     ) {
-        CollectionCard(collectionInfo = collectionInfo, loadQuality = loadQuality) {
-            collectionClickAble(it)
+        if (collectionInfo != null) {
+            CollectionCard(collectionInfo = collectionInfo, loadQuality = loadQuality) {
+                collectionClickAble(it)
+            }
         }
     }
 }
 
 @Composable
 private fun CollectionCard(
-    collectionInfo: UnSplashCollection?,
+    collectionInfo: UnSplashCollection,
     loadQuality: String,
     collectionClickAble: (String) -> Unit
 ) {
@@ -104,45 +106,35 @@ private fun CollectionCard(
             .fillMaxWidth()
             .height(250.dp)
             .clickable {
-                if (collectionInfo != null) {
-                    collectionClickAble(collectionInfo.id)
-                }
+                collectionClickAble(collectionInfo.id)
             }
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(6f)
-        ) {
-            ShimmerImage(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(end = 4.dp)
-                    .clip(RoundedCornerShape(topStart = 10.dp, bottomStart = 10.dp)),
-                url = Constants.getPhotoQualityUrl(
-                    collectionInfo?.previewPhotos?.get(0)?.urls,
-                    loadQuality
-                )
-            )
-        }
 
-        Column(
+        ShimmerImage(
             modifier = Modifier
-                .weight(4f)
-        ) {
-            repeat(2) {
-                ShimmerImage(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(125.dp)
-                        .padding(bottom = 2.dp)
-                        .clip(RoundedCornerShape(topEnd = 10.dp)),
-                    url = Constants.getPhotoQualityUrl(
-                        collectionInfo?.previewPhotos?.get(it + 1)?.urls,
-                        loadQuality
-                    )
-                )
-            }
-        }
+                .fillMaxSize()
+                .padding(end = 4.dp)
+                .clip(RoundedCornerShape(topStart = 10.dp, bottomStart = 10.dp)),
+            url = Constants.getPhotoQualityUrl(
+                collectionInfo.previewPhotos?.get(0)?.urls,
+                loadQuality
+            )
+        )
+
+//        Column(
+//            modifier = Modifier
+//        ) {
+//            ShimmerImage(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(125.dp)
+//                    .padding(bottom = 2.dp)
+//                    .clip(RoundedCornerShape(topEnd = 10.dp)),
+//                url = Constants.getPhotoQualityUrl(
+//                    collectionInfo?.previewPhotos?.get(0)?.urls,
+//                    loadQuality
+//                )
+//            )
+//        }
     }
 }

@@ -2,6 +2,9 @@ package com.chs.yoursplash.presentation.browse.photo_detail
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
@@ -37,6 +40,7 @@ fun ImageDetailScreen(
 ) {
     val scrollState = rememberScrollState()
     val lazyVerticalStaggeredState = rememberLazyStaggeredGridState()
+
     CollapsingToolbarScaffold(
         scrollState = scrollState,
         header = {
@@ -93,11 +97,20 @@ fun ImageDetailScreen(
                 }
 
                 HorizontalDivider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
+
+                if (state.imageDetailInfo != null) {
+                    ImageDetailInfo(state.imageDetailInfo) { selectTag ->
+                        onNavigate(
+                            Screens.PhotoTagResultScreen(selectTag)
+                        )
+                    }
+                }
             }
         },
         isShowTopBar = false,
         onCloseClick = onClose
     ) {
+
         LazyVerticalStaggeredGrid(
             modifier = Modifier
                 .fillMaxSize(),
@@ -107,38 +120,18 @@ fun ImageDetailScreen(
             verticalItemSpacing = 4.dp,
             contentPadding = PaddingValues(horizontal = 4.dp, vertical = 8.dp)
         ) {
-            if (state.isError) {
-                item(span = StaggeredGridItemSpan.FullLine) {
-                    Text(state.errorMessage ?: "UnknownError")
-                }
-            } else {
-                item(span = StaggeredGridItemSpan.FullLine) {
-                    if (state.imageDetailInfo != null) {
-                        ImageDetailInfo(state.imageDetailInfo) { selectTag ->
-                            onNavigate(
-                                Screens.PhotoTagResultScreen(selectTag)
-                            )
-                        }
-                    }
-                }
-
-                if (state.imageRelatedList.isNotEmpty()) {
-                    items(
-                        count = state.imageRelatedList.size,
-                        key = { state.imageRelatedList[it].id }
-                    ) { idx ->
-                        val item = state.imageRelatedList[idx]
-                        ShimmerImage(
-                            modifier = Modifier
-                                .padding(
-                                    start = 8.dp,
-                                    end = 16.dp,
-                                    bottom = 16.dp
-                                )
-                                .clickable { onNavigate(Screens.ImageDetailScreen(item.id)) },
-                            url = Constants.getPhotoQualityUrl(item.urls, state.loadQuality)
-                        )
-                    }
+            if (state.imageRelatedList.isNotEmpty()) {
+                items(
+                    count = state.imageRelatedList.size,
+                ) { idx ->
+                    val item = state.imageRelatedList[idx]
+                    ShimmerImage(
+                        modifier = Modifier
+                            .width(130.dp)
+                            .height(280.dp)
+                            .clickable { onNavigate(Screens.ImageDetailScreen(item.id)) },
+                        url = Constants.getPhotoQualityUrl(item.urls, state.loadQuality)
+                    )
                 }
             }
         }
