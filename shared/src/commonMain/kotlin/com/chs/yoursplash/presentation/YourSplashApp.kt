@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.bottom.BottomBar
 import com.chs.yoursplash.presentation.main.MainNavHost
 import com.chs.yoursplash.presentation.main.MainTopBar
@@ -16,7 +17,7 @@ import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun YourSplashApp(onNavigate: (Pair<String, String>) -> Unit) {
+fun YourSplashApp(onBrowseInfo: (BrowseInfo) -> Unit) {
     val navController: NavHostController = rememberNavController()
     val viewModel = koinViewModel<MainViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -47,7 +48,7 @@ fun YourSplashApp(onNavigate: (Pair<String, String>) -> Unit) {
                 navController = navController,
                 searchQuery = state.searchQuery,
                 onBack = { viewModel.updateSearchQuery("") },
-                onNavigate = onNavigate
+                onBrowse = onBrowseInfo
             )
         }
     }

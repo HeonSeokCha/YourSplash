@@ -33,14 +33,10 @@ fun UserDetailLikeScreen(
 
                 ImageCard(
                     photoInfo = photoList[idx],
-                    loadQuality = loadQuality
-                ) {
-                    if (it.first == Constants.TARGET_PHOTO) {
-                        onNavigate(Screens.ImageDetailScreen(it.second))
-                    } else {
-                        onNavigate(Screens.UserDetailScreen(it.second))
-                    }
-                }
+                    loadQuality = loadQuality,
+                    onPhotoClick = {},
+                    onUserClick = {}
+                )
             }
 
             when (photoList.loadState.refresh) {

@@ -8,17 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.ColorPainter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
-import coil3.compose.LocalPlatformContext
-import coil3.request.ImageRequest
-import coil3.request.crossfade
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.util.Constants
 
@@ -26,7 +19,8 @@ import com.chs.yoursplash.util.Constants
 fun ImageCard(
     photoInfo: Photo?,
     loadQuality: String = "Regular",
-    onClick: (Pair<String, String>) -> Unit = {}
+    onPhotoClick: (String) -> Unit = {},
+    onUserClick: (String) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -42,7 +36,7 @@ fun ImageCard(
                 )
                 .clickable {
                     if (photoInfo?.user?.userName != null) {
-                        onClick(Constants.TARGET_USER to photoInfo.user.userName)
+                        onUserClick(photoInfo.user.userName)
                     }
                 },
             verticalAlignment = Alignment.CenterVertically,
@@ -72,8 +66,7 @@ fun ImageCard(
                 .clip(RoundedCornerShape(10.dp))
                 .clickable {
                     if (photoInfo?.id == null) return@clickable
-
-                    onClick(Constants.TARGET_PHOTO to photoInfo.id)
+                    onPhotoClick(photoInfo.id)
                 },
             url = Constants.getPhotoQualityUrl(photoInfo?.urls, loadQuality)
         )

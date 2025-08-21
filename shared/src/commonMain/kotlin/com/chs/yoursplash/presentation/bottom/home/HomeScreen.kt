@@ -4,17 +4,39 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import app.cash.paging.compose.collectAsLazyPagingItems
 import app.cash.paging.compose.itemKey
+import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.base.ImageCard
 
 @Composable
+fun HomeScreenRoot(
+    viewModel: HomeViewModel,
+    onBrowse: (BrowseInfo) -> Unit
+) {
+   val state by viewModel.state.collectAsStateWithLifecycle()
+
+    HomeScreen(
+        state = state,
+        onEvent = { event ->
+            when (event) {
+                is HomEvent.BrowseUserDetail -> onBrowse(BrowseInfo.User(event.name))
+
+                is HomEvent.BrowsePhotoDetail -> onBrowse(BrowseInfo.Photo(event.id))
+            }
+        }
+    )
+}
+
+@Composable
 fun HomeScreen(
-    state: HomeState,
-    onClick: (Pair<String, String>) -> Unit
+    state: HomeEvent,
+    onEvent: (HomEvent) -> Unit
 ) {
     val lazyPagingItems = state.pagingImageList?.collectAsLazyPagingItems()
 
@@ -34,9 +56,13 @@ fun HomeScreen(
                 ImageCard(
                     photoInfo = photo,
                     loadQuality = state.loadQuality,
-                ) {
-                    onClick(it)
-                }
+                    onPhotoClick = {
+                        onEvent(HomEvent.BrowsePhotoDetail(it))
+                    },
+                    onUserClick = {
+                        onEvent(HomEvent.BrowseUserDetail(it))
+                    }
+                )
             }
 
 

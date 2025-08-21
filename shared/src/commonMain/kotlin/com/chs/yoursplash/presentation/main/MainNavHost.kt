@@ -9,9 +9,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.bottom.collection.CollectionScreen
+import com.chs.yoursplash.presentation.bottom.collection.CollectionScreenRoot
 import com.chs.yoursplash.presentation.bottom.collection.CollectionViewModel
 import com.chs.yoursplash.presentation.bottom.home.HomeScreen
+import com.chs.yoursplash.presentation.bottom.home.HomeScreenRoot
 import com.chs.yoursplash.presentation.bottom.home.HomeViewModel
 import com.chs.yoursplash.presentation.search.SearchResultViewModel
 import com.chs.yoursplash.presentation.search.SearchScreen
@@ -26,7 +29,7 @@ fun MainNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     searchQuery: String,
-    onNavigate: (Pair<String, String>) -> Unit,
+    onBrowse: (BrowseInfo) -> Unit,
     onBack: () -> Unit
 ) {
     NavHost(
@@ -36,20 +39,18 @@ fun MainNavHost(
     ) {
         composable<MainScreens.HomeScreen> {
             val viewModel = koinViewModel<HomeViewModel>()
-            val state by viewModel.state.collectAsStateWithLifecycle()
-            HomeScreen(
-                state = state,
-            ) { info ->
-                onNavigate(info)
-            }
+            HomeScreenRoot(
+                viewModel = viewModel,
+                onBrowse = onBrowse
+            )
         }
 
         composable<MainScreens.CollectionScreen> {
             val viewModel = koinViewModel<CollectionViewModel>()
-            val state by viewModel.state.collectAsStateWithLifecycle()
-            CollectionScreen(state = state) {
-                onNavigate(it)
-            }
+            CollectionScreenRoot(
+                viewModel = viewModel,
+                onBrowse = onBrowse
+            )
         }
 
         composable<MainScreens.SearchScreen> {
@@ -66,11 +67,9 @@ fun MainNavHost(
 
             SearchScreen(
                 state = state,
-                modalClick = { },
-                onBack = onBack
-            ) {
-                onNavigate(it)
-            }
+                onBack = onBack,
+                onBrowse = onBrowse
+            )
         }
 
         composable<MainScreens.SettingScreen> {

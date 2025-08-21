@@ -4,17 +4,36 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import app.cash.paging.compose.collectAsLazyPagingItems
 import app.cash.paging.compose.itemKey
+import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.base.CollectionInfoCard
+
+
+@Composable
+fun CollectionScreenRoot(
+    viewModel: CollectionViewModel,
+    onBrowse: (BrowseInfo) -> Unit
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    CollectionScreen(state) { event ->
+        when (event) {
+            is CollectionEvent.BrowseCollectionDetail -> onBrowse(BrowseInfo.Collection(event.id))
+            is CollectionEvent.BrowseUserDetail -> onBrowse(BrowseInfo.User(event.name))
+        }
+    }
+}
 
 @Composable
 fun CollectionScreen(
     state: CollectionState,
-    onClick: (Pair<String, String>) -> Unit
+    onEvent: (CollectionEvent) -> Unit
 ) {
     val lazyPagingItems = state.collectionList?.collectAsLazyPagingItems()
 
@@ -34,10 +53,10 @@ fun CollectionScreen(
                 val collectionInfo = lazyPagingItems[idx]
                 CollectionInfoCard(
                     collectionInfo = collectionInfo,
-                    loadQuality = state.loadQuality
-                ) {
-                    onClick(it)
-                }
+                    loadQuality = state.loadQuality,
+                    onCollection = { onEvent(CollectionEvent.BrowseCollectionDetail(it)) },
+                    onUser = { onEvent(CollectionEvent.BrowseUserDetail(it)) }
+                )
             }
 
             when (lazyPagingItems.loadState.refresh) {
@@ -74,6 +93,7 @@ fun CollectionScreen(
                         )
                     }
                 }
+
                 else -> Unit
             }
         }

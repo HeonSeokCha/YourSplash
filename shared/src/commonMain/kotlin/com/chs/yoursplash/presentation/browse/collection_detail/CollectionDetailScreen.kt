@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import app.cash.paging.compose.collectAsLazyPagingItems
+import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
 import com.chs.yoursplash.presentation.base.ImageCard
@@ -24,7 +25,7 @@ import com.chs.yoursplash.util.Constants
 fun CollectionDetailScreen(
     state: CollectionDetailState,
     onClose: () -> Unit,
-    onClick: (Pair<String, String>) -> Unit
+    onBrowse: (BrowseInfo) -> Unit
 ) {
     val lazyPagingItems = state.collectionPhotos?.collectAsLazyPagingItems()
     val scrollState = rememberScrollState()
@@ -63,10 +64,10 @@ fun CollectionDetailScreen(
 
                     ImageCard(
                         photoInfo = lazyPagingItems[idx],
-                        loadQuality = state.loadQuality
-                    ) {
-                        onClick(it)
-                    }
+                        loadQuality = state.loadQuality,
+                        onPhotoClick = {},
+                        onUserClick = {}
+                    )
                 }
             }
         }

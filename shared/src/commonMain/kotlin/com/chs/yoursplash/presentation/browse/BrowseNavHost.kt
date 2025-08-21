@@ -83,14 +83,9 @@ fun BrowseNavHost(
 
             CollectionDetailScreen(
                 state = state,
-                onClose = onBack
-            ) {
-                if (it.first == Constants.TARGET_USER) {
-                    navController.navigate(Screens.UserDetailScreen(it.second))
-                } else {
-                    navController.navigate(Screens.CollectionDetailScreen(it.second))
-                }
-            }
+                onClose = onBack,
+                onBrowse = { }
+            )
         }
 
         composable<Screens.UserDetailScreen> {

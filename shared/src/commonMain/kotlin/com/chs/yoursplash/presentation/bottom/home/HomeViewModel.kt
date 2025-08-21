@@ -16,7 +16,7 @@ class HomeViewModel(
     private val loadQualityUseCase: GetLoadQualityUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(HomeState())
+    private val _state = MutableStateFlow(HomeEvent())
     val state = _state
         .onStart {
             _state.update {
@@ -30,6 +30,6 @@ class HomeViewModel(
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000L),
-            HomeState()
+            HomeEvent()
         )
 }

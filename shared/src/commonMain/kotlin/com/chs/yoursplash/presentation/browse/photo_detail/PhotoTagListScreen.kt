@@ -43,10 +43,10 @@ fun PhotoTagListScreen(
                 ) { idx ->
                     ImageCard(
                         photoInfo = resultPagingItems[idx],
-                        loadQuality = state.loadQuality
-                    ) {
-                        onClick(it)
-                    }
+                        loadQuality = state.loadQuality,
+                        onPhotoClick = {},
+                        onUserClick = {}
+                    )
                 }
 
                 when (resultPagingItems.loadState.refresh) {

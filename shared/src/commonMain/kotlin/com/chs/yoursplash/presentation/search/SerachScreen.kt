@@ -13,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import kotlinx.coroutines.launch
 
@@ -20,9 +21,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun SearchScreen(
     state: SearchState,
-    modalClick: () -> Unit,
+    onBrowse: (BrowseInfo) -> Unit,
     onBack: () -> Unit,
-    onNavigate: (Pair<String, String>) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val tabList = remember { listOf("PHOTOS", "COLLECTIONS", "USERS") }
@@ -74,22 +74,23 @@ fun SearchScreen(
                 0 -> {
                     SearchResultPhotoScreen(
                         state = state,
-                        modalClick = { modalClick() }
-                    ) {
-                        onNavigate(it)
-                    }
+                        modalClick = { },
+                        onBrowse = onBrowse
+                    )
                 }
 
                 1 -> {
-                    SearchResultCollectionScreen(state = state) {
-                        onNavigate(it)
-                    }
+                    SearchResultCollectionScreen(
+                        state = state,
+                        onBrowse = onBrowse
+                    )
                 }
 
                 2 -> {
-                    SearchResultUserScreen(state = state) {
-                        onNavigate(it)
-                    }
+                    SearchResultUserScreen(
+                        state = state,
+                        onBrowse = onBrowse
+                    )
                 }
             }
         }

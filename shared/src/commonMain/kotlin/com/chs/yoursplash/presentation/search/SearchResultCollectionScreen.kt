@@ -12,7 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import app.cash.paging.compose.collectAsLazyPagingItems
+import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.base.CollectionInfoCard
+import com.chs.yoursplash.presentation.browse.BrowseApp
 import io.ktor.websocket.Frame
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNot
@@ -20,7 +22,7 @@ import kotlinx.coroutines.flow.filterNot
 @Composable
 fun SearchResultCollectionScreen(
     state: SearchState,
-    clickable: (Pair<String, String>) -> Unit
+    onBrowse: (BrowseInfo) -> Unit
 ) {
     val pagingList = state.searchCollectionList?.collectAsLazyPagingItems()
     val scrollState = rememberLazyListState()
@@ -50,9 +52,9 @@ fun SearchResultCollectionScreen(
                 CollectionInfoCard(
                     collectionInfo = item,
                     loadQuality = state.loadQuality,
-                ) {
-                    clickable(it)
-                }
+                    onCollection = { onBrowse(BrowseInfo.Collection(it)) },
+                    onUser = { onBrowse(BrowseInfo.User(it)) }
+                )
             }
 
             when (pagingList.loadState.refresh) {
