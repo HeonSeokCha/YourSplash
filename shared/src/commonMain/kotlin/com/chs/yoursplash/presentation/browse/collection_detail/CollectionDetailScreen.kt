@@ -25,7 +25,7 @@ import com.chs.yoursplash.util.Constants
 fun CollectionDetailScreen(
     state: CollectionDetailState,
     onClose: () -> Unit,
-    onBrowse: (BrowseInfo) -> Unit
+    onNavigate: (Screens) -> Unit
 ) {
     val lazyPagingItems = state.collectionPhotos?.collectAsLazyPagingItems()
     val scrollState = rememberScrollState()
@@ -65,8 +65,8 @@ fun CollectionDetailScreen(
                     ImageCard(
                         photoInfo = lazyPagingItems[idx],
                         loadQuality = state.loadQuality,
-                        onPhotoClick = {},
-                        onUserClick = {}
+                        onPhotoClick = { onNavigate(Screens.ImageDetailScreen(it)) },
+                        onUserClick = { onNavigate(Screens.UserDetailScreen(it)) }
                     )
                 }
             }

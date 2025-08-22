@@ -1,6 +1,6 @@
 package com.chs.yoursplash.di
 
-import com.chs.yoursplash.Constants
+import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.data.api.UnSplashService
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.ClientRequestException

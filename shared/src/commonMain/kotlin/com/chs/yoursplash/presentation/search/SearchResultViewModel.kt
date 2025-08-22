@@ -1,8 +1,5 @@
 package com.chs.yoursplash.presentation.search
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -10,9 +7,11 @@ import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetSearchResultCollectionUseCase
 import com.chs.yoursplash.domain.usecase.GetSearchResultPhotoUseCase
 import com.chs.yoursplash.domain.usecase.GetSearchResultUserUseCase
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -45,14 +44,32 @@ class SearchResultViewModel(
         }
     }
 
+    private val _event: Channel<SearchEvent> = Channel()
+    val event = _event.receiveAsFlow()
+
+    fun changeEvent(event: SearchEvent) {
+        when (event) {
+            is SearchEvent.OnChangeSearchQuery -> {
+                _state.update { it.copy(searchQuery = event.query) }
+            }
+            SearchEvent.OnError -> {
+
+            }
+            is SearchEvent.TabIndex -> {
+
+            }
+            else -> Unit
+        }
+    }
+
     fun searchResult(query: String) {
         _state.update {
             it.copy(
                 searchPhotoList = searchResultPhotoUseCase(
                     query = query,
-                    orderBy = it.orderBy,
-                    color = it.color,
-                    orientation = it.orientation
+                    orderBy = it.searchFilter.orderBy,
+                    color = it.searchFilter.color,
+                    orientation = it.searchFilter.orientation
                 ).cachedIn(viewModelScope),
                 searchCollectionList = searchResultCollectionUseCase(query).cachedIn(viewModelScope),
                 searchUserList = searchResultUserUseCase(query).cachedIn(viewModelScope)

@@ -2,7 +2,7 @@ package com.chs.yoursplash.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.chs.yoursplash.Constants
+import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.data.api.UnSplashService
 import com.chs.yoursplash.data.mapper.toPhotoCollection
 import com.chs.yoursplash.data.model.ResponseCollection

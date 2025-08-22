@@ -12,6 +12,8 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import app.cash.paging.compose.collectAsLazyPagingItems
 import app.cash.paging.compose.itemKey
+import com.chs.yoursplash.domain.model.BrowseInfo
+import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
 import com.chs.yoursplash.presentation.base.ImageCard
 
@@ -19,7 +21,7 @@ import com.chs.yoursplash.presentation.base.ImageCard
 fun PhotoTagListScreen(
     state: PhotoTagListState,
     onClose: () -> Unit,
-    onClick: (Pair<String, String>) -> Unit
+    onNavigate: (Screens) -> Unit,
 ) {
     val resultPagingItems = state.tagSearchResultList?.collectAsLazyPagingItems()
     val scrollState = rememberScrollState()
@@ -44,8 +46,8 @@ fun PhotoTagListScreen(
                     ImageCard(
                         photoInfo = resultPagingItems[idx],
                         loadQuality = state.loadQuality,
-                        onPhotoClick = {},
-                        onUserClick = {}
+                        onPhotoClick = { onNavigate(Screens.ImageDetailScreen(it)) },
+                        onUserClick = { onNavigate(Screens.UserDetailScreen(it)) }
                     )
                 }
 

@@ -15,7 +15,6 @@ import androidx.paging.LoadState
 import app.cash.paging.compose.collectAsLazyPagingItems
 import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.base.UserCard
-import com.chs.yoursplash.util.Constants
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNot
 

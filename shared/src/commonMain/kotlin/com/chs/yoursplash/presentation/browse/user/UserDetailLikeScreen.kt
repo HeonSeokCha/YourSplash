@@ -12,7 +12,6 @@ import app.cash.paging.compose.itemKey
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.base.ImageCard
-import com.chs.yoursplash.util.Constants
 
 @Composable
 fun UserDetailLikeScreen(

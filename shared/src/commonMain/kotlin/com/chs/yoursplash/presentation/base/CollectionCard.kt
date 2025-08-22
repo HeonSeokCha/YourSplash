@@ -121,21 +121,5 @@ private fun CollectionCard(
                 loadQuality
             )
         )
-
-//        Column(
-//            modifier = Modifier
-//        ) {
-//            ShimmerImage(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(125.dp)
-//                    .padding(bottom = 2.dp)
-//                    .clip(RoundedCornerShape(topEnd = 10.dp)),
-//                url = Constants.getPhotoQualityUrl(
-//                    collectionInfo?.previewPhotos?.get(0)?.urls,
-//                    loadQuality
-//                )
-//            )
-//        }
     }
 }

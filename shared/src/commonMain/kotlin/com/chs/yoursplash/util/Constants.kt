@@ -1,5 +1,6 @@
 package com.chs.yoursplash.util
 
+import com.chs.yoursplash.BuildKonfig
 import com.chs.yoursplash.domain.model.PhotoUrls
 
 object Constants {
@@ -15,17 +16,15 @@ object Constants {
     val GET_USER_PHOTOS: ((String) -> String) = { "/users/$it/photos" }
     val GET_USER_LIKES: ((String) -> String) = { "/users/$it/likes" }
     val GET_USER_COLLECTIONS: ((String) -> String) = { "/users/$it/collections" }
+    val CLIENT_ID: String = BuildKonfig.API_ACCESS_KEY
+    const val PAGING_SIZE: Int = 3
     const val GET_SEARCH_PHOTOS: String = "/search/photos"
     const val GET_SEARCH_COLLECTIONS: String = "/search/collections"
     const val GET_SEARCH_USERS: String = "/search/users"
-
-
-    const val CLIENT_ID: String = ""
     const val PREFERENCE_NAME: String = "setting_preferences"
     const val PREFERENCE_KEY_LOAD_QUALITY: String = "load_quality"
     const val PREFERENCE_KEY_DOWNLOAD_QUALITY: String = "download_quality"
     const val PREFERENCE_KEY_WALLPAPER_QUALITY: String = "wallpaper_quality"
-    const val PAGING_SIZE: Int = 3
     const val TARGET_ID: String = "target_id"
     const val TARGET_TYPE: String = "target_type"
     const val TARGET_PHOTO: String = "target_photo"
@@ -34,17 +33,11 @@ object Constants {
     const val SEARCH_PHOTO: String = "search_photo"
     const val SEARCH_COLLECTION: String = "search_collection"
     const val SEARCH_USER: String = "search_user"
-
     const val ARG_KEY_PHOTO_ID: String = "photoId"
     const val ARG_KEY_COLLECTION_ID: String = "collectionId"
     const val ARG_KEY_USER_NAME: String = "userName"
     const val ARG_KEY_TAG_NAME: String = "tagName"
     const val TEXT_PREVIEW: String = "This is Title."
-
-    val SORT_BY_LIST = listOf(
-        Pair("RELEVANCE", "relevant"),
-        Pair("LATEST", "latest")
-    )
 
     val SEARCH_COLOR_LIST = listOf(
         Pair("Any", null),
@@ -58,6 +51,11 @@ object Constants {
         Pair("Magenta", "magenta"),
         Pair("Green", "green"),
         Pair("Teal", "teal")
+    )
+
+    val SORT_BY_LIST = listOf(
+        Pair("RELEVANCE", "relevant"),
+        Pair("LATEST", "latest")
     )
 
     val SEARCH_ORI_LIST = listOf(

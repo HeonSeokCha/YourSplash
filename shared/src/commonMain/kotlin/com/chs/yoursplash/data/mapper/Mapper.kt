@@ -2,6 +2,7 @@ package com.chs.yoursplash.data.mapper
 
 import com.chs.yoursplash.data.model.*
 import com.chs.yoursplash.domain.model.Exif
+import com.chs.yoursplash.domain.model.LoadQuality
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.PhotoDetail
 import com.chs.yoursplash.domain.model.PhotoLocation
@@ -29,6 +30,13 @@ fun ResponsePhoto.toUnSplashImage(): Photo {
 }
 
 fun ResponsePhotoUrls.toUnSplashImageUrls(): PhotoUrls {
+//    when (quality) {
+//        LoadQuality.Raw -> this.raw
+//        LoadQuality.Full -> this.full
+//        LoadQuality.Regular -> this.regular
+//        LoadQuality.Small -> this.small
+//        LoadQuality.Thumb -> this.thumb
+//    }
     return PhotoUrls(
         raw = raw,
         full = full,
