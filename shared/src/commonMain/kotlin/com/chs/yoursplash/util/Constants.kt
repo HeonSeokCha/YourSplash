@@ -73,32 +73,4 @@ object Constants {
         "Thumb"
     )
 
-    fun getPhotoQualityUrl(
-        urlInfo: PhotoUrls?,
-        quality: String
-    ): String? {
-        return when (quality) {
-            "Raw" -> {
-                urlInfo?.raw
-            }
-
-            "Full" -> {
-                urlInfo?.full
-            }
-
-            "Regular" -> {
-                urlInfo?.regular
-            }
-
-            "Small" -> {
-                urlInfo?.small
-            }
-
-            "Thumb" -> {
-                urlInfo?.thumb
-            }
-
-            else -> null
-        }
-    }
 }

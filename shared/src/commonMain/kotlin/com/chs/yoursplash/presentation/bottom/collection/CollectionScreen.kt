@@ -53,7 +53,6 @@ fun CollectionScreen(
                 val collectionInfo = lazyPagingItems[idx]
                 CollectionInfoCard(
                     collectionInfo = collectionInfo,
-                    loadQuality = state.loadQuality,
                     onCollection = { onEvent(CollectionEvent.BrowseCollectionDetail(it)) },
                     onUser = { onEvent(CollectionEvent.BrowseUserDetail(it)) }
                 )

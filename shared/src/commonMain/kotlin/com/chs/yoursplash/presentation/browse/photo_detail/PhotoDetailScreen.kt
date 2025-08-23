@@ -49,10 +49,7 @@ fun ImageDetailScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(300.dp),
-                    url = Constants.getPhotoQualityUrl(
-                        state.imageDetailInfo?.urls,
-                        state.wallpaperQuality
-                    )
+                    url = state.imageDetailInfo?.urls
                 )
 
                 Row(
@@ -130,7 +127,7 @@ fun ImageDetailScreen(
                             .width(130.dp)
                             .height(280.dp)
                             .clickable { onNavigate(Screens.ImageDetailScreen(item.id)) },
-                        url = Constants.getPhotoQualityUrl(item.urls, state.loadQuality)
+                        url = item.urls
                     )
                 }
             }

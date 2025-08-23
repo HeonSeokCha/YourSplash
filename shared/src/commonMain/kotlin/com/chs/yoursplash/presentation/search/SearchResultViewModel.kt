@@ -20,29 +20,18 @@ class SearchResultViewModel(
     private val searchResultPhotoUseCase: GetSearchResultPhotoUseCase,
     private val searchResultCollectionUseCase: GetSearchResultCollectionUseCase,
     private val searchResultUserUseCase: GetSearchResultUserUseCase,
-    private val getLoadQualityUseCase: GetLoadQualityUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SearchState())
     val state = _state
         .onStart {
-            getImageLoadQuality()
+//            getImageLoadQuality()
         }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000L),
             SearchState()
         )
-
-    private fun getImageLoadQuality() {
-        viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    loadQuality = getLoadQualityUseCase()
-                )
-            }
-        }
-    }
 
     private val _event: Channel<SearchEvent> = Channel()
     val event = _event.receiveAsFlow()

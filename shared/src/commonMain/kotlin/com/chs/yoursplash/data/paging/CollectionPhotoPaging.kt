@@ -6,11 +6,13 @@ import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.data.api.UnSplashService
 import com.chs.yoursplash.data.mapper.toUnSplashImage
 import com.chs.yoursplash.data.model.ResponsePhoto
+import com.chs.yoursplash.domain.model.LoadQuality
 import com.chs.yoursplash.domain.model.Photo
 
 class CollectionPhotoPaging(
     private val api: UnSplashService,
-    private val collectionId: String
+    private val collectionId: String,
+    private val loadQuality: LoadQuality
 ): PagingSource<Int, Photo>() {
 
     override fun getRefreshKey(state: PagingState<Int, Photo>): Int? {

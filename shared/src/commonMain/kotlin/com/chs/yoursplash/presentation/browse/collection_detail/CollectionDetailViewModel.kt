@@ -20,7 +20,6 @@ class CollectionDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val getCollectionDetailUseCase: GetCollectionDetailUseCase,
     private val getCollectionPhotoUseCase: GetCollectionPhotoUseCase,
-    private val getLoadQualityUseCase: GetLoadQualityUseCase
 ) : ViewModel() {
 
     private val collectionId: String = savedStateHandle[Constants.ARG_KEY_COLLECTION_ID] ?: ""
@@ -31,7 +30,6 @@ class CollectionDetailViewModel(
             viewModelScope.launch {
                 _state.update {
                     it.copy(
-                        loadQuality = getLoadQualityUseCase(),
                         collectionPhotos = getCollectionPhotoUseCase(collectionId).cachedIn(this)
                     )
                 }

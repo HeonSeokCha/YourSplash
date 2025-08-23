@@ -64,7 +64,6 @@ fun CollectionDetailScreen(
 
                     ImageCard(
                         photoInfo = lazyPagingItems[idx],
-                        loadQuality = state.loadQuality,
                         onPhotoClick = { onNavigate(Screens.ImageDetailScreen(it)) },
                         onUserClick = { onNavigate(Screens.UserDetailScreen(it)) }
                     )

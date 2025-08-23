@@ -45,7 +45,6 @@ fun PhotoTagListScreen(
                 ) { idx ->
                     ImageCard(
                         photoInfo = resultPagingItems[idx],
-                        loadQuality = state.loadQuality,
                         onPhotoClick = { onNavigate(Screens.ImageDetailScreen(it)) },
                         onUserClick = { onNavigate(Screens.UserDetailScreen(it)) }
                     )

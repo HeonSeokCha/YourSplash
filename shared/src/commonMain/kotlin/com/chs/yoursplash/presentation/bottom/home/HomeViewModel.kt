@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.update
 
 class HomeViewModel(
     private val getHomePhotosUseCase: GetHomePhotosUseCase,
-    private val loadQualityUseCase: GetLoadQualityUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeEvent())
@@ -22,7 +21,6 @@ class HomeViewModel(
             _state.update {
                 it.copy(
                     isLoading = false,
-                    loadQuality = loadQualityUseCase(),
                     pagingImageList = getHomePhotosUseCase().cachedIn(viewModelScope)
                 )
             }

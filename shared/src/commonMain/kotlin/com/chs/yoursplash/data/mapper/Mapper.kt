@@ -17,52 +17,45 @@ import com.chs.yoursplash.domain.model.UserDetail
 import com.chs.yoursplash.domain.model.UserPhotos
 import com.chs.yoursplash.domain.model.UserProfileImage
 
-fun ResponsePhoto.toUnSplashImage(): Photo {
+fun ResponsePhoto.toUnSplashImage(quality: LoadQuality): Photo {
     return Photo(
         id = id,
         color = color,
         blurHash = blurHash,
         width = width,
         height = height,
-        urls = urls.toUnSplashImageUrls(),
-        user = user.toUnSplashUser()
+        urls = urls.toUnSplashImageUrls(quality: LoadQuality),
+        user = user.toUnSplashUser(quality: LoadQuality)
     )
 }
 
-fun ResponsePhotoUrls.toUnSplashImageUrls(): PhotoUrls {
-//    when (quality) {
-//        LoadQuality.Raw -> this.raw
-//        LoadQuality.Full -> this.full
-//        LoadQuality.Regular -> this.regular
-//        LoadQuality.Small -> this.small
-//        LoadQuality.Thumb -> this.thumb
-//    }
-    return PhotoUrls(
-        raw = raw,
-        full = full,
-        regular = regular,
-        small = small,
-        thumb = thumb
-    )
+fun ResponsePhotoUrls.toUnSplashImageUrls(quality: LoadQuality): String {
+    return when (quality) {
+        LoadQuality.Raw -> this.raw
+        LoadQuality.Full -> this.full
+        LoadQuality.Regular -> this.regular
+        LoadQuality.Small -> this.small
+        LoadQuality.Thumb -> this.thumb
+    }
 }
 
-fun ResponseUser.toUnSplashUser(): User {
+fun ResponseUser.toUnSplashUser(quality: LoadQuality): User {
     return User(
         id = id,
         userName = userName,
         name = name,
         photoProfile = photoProfile.toUnsplashUserProfileImage(),
         photos = photos.map {
-            it.toUserPhotos()
+            it.toUserPhotos(quality)
         }
     )
 }
 
-fun ResponseUserPhotos.toUserPhotos(): UserPhotos {
+fun ResponseUserPhotos.toUserPhotos(quality: LoadQuality): UserPhotos {
     return UserPhotos(
         id = id,
         blurHash = blurHash,
-        urls = urls.toUnSplashImageUrls()
+        urls = urls.toUnSplashImageUrls(quality)
     )
 }
 
@@ -117,7 +110,7 @@ fun ResponsePhotoPosition.toUnSplashPosition(): PhotoPosition {
     )
 }
 
-fun ResponsePhotoDetail.toUnSplashImageDetail(): PhotoDetail {
+fun ResponsePhotoDetail.toUnSplashImageDetail(quality: LoadQuality): PhotoDetail {
     return PhotoDetail(
         id = id,
         width = width,
@@ -125,9 +118,9 @@ fun ResponsePhotoDetail.toUnSplashImageDetail(): PhotoDetail {
         color = color,
         blurHash = blurHash,
         likes = likes,
-        urls = urls.toUnSplashImageUrls(),
+        urls = urls.toUnSplashImageUrls(quality),
         description = description,
-        user = user.toUnSplashUser(),
+        user = user.toUnSplashUser(quality),
         exif = exif.toUnSplashExif(),
         location = location.toUnSplashLocation(),
         tags = tags.map { it.toUnSplashTag() },
@@ -143,29 +136,29 @@ fun ResponseUnSplashTag.toUnSplashTag(): UnSplashTag {
     )
 }
 
-fun ResponseRelatedPhotoCollection.toRelatedPhotoCollection(): RelatedPhotoCollection {
-    return RelatedPhotoCollection(
-        total = total,
-        result = results.map { it.toPhotoCollection() }
-    )
-}
+//fun ResponseRelatedPhotoCollection.toRelatedPhotoCollection(): RelatedPhotoCollection {
+//    return RelatedPhotoCollection(
+//        total = total,
+//        result = results.map { it.toPhotoCollection(quality) }
+//    )
+//}
 
-fun ResponseRelatedCollectionPreview.toRelatedCollectionPreview(): RelatedCollectionPreview {
+fun ResponseRelatedCollectionPreview.toRelatedCollectionPreview(quality: LoadQuality): RelatedCollectionPreview {
     return RelatedCollectionPreview(
         id = id,
-        urls = urls.toUnSplashImageUrls(),
+        urls = urls.toUnSplashImageUrls(quality),
         blurHash = blurHash
     )
 }
 
-fun ResponseCollection.toPhotoCollection(): UnSplashCollection {
+fun ResponseCollection.toPhotoCollection(quality: LoadQuality): UnSplashCollection {
     return UnSplashCollection(
         id = id,
         title = title,
         totalPhotos = totalPhotos,
-        user = user.toUnSplashUser(),
+        user = user.toUnSplashUser(quality),
         previewPhotos = previewPhotos?.map {
-            it.toRelatedCollectionPreview()
+            it.toRelatedCollectionPreview(quality)
         }
     )
 }

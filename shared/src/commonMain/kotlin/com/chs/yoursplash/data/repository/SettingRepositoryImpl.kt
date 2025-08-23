@@ -6,7 +6,9 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.chs.yoursplash.domain.repository.SettingRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
@@ -22,6 +24,16 @@ class SettingRepositoryImpl(
             preference[stringPreferencesKey(keyName)] = value
         }
     }
+
+    override suspend fun getFlowableString(
+        keyName: String,
+        defaultValue: String
+    ): Flow<String> = dataStore.data
+        .catch { e ->
+            emit(emptyPreferences())
+        }.map { preferences ->
+            preferences[stringPreferencesKey(keyName)] ?: defaultValue
+        }.distinctUntilChanged()
 
     override suspend fun getString(
         keyName: String,

@@ -25,7 +25,6 @@ import com.chs.yoursplash.util.Constants
 @Composable
 fun CollectionInfoCard(
     collectionInfo: UnSplashCollection?,
-    loadQuality: String = "Regular",
     onCollection: (String) -> Unit = {},
     onUser: (String) -> Unit = {}
 ) {
@@ -69,7 +68,6 @@ fun CollectionInfoCard(
         if (collectionInfo != null) {
             CollectionCard(
                 collectionInfo = collectionInfo,
-                loadQuality = loadQuality
             ) {
                 onCollection(it)
             }
@@ -80,7 +78,6 @@ fun CollectionInfoCard(
 @Composable
 fun CollectionSimpleCard(
     collectionInfo: UnSplashCollection?,
-    loadQuality: String,
     collectionClickAble: (collectionId: String) -> Unit
 ) {
     Column(
@@ -89,7 +86,7 @@ fun CollectionSimpleCard(
             .wrapContentHeight()
     ) {
         if (collectionInfo != null) {
-            CollectionCard(collectionInfo = collectionInfo, loadQuality = loadQuality) {
+            CollectionCard(collectionInfo = collectionInfo) {
                 collectionClickAble(it)
             }
         }
@@ -99,7 +96,6 @@ fun CollectionSimpleCard(
 @Composable
 private fun CollectionCard(
     collectionInfo: UnSplashCollection,
-    loadQuality: String,
     collectionClickAble: (String) -> Unit
 ) {
     Row(
@@ -116,10 +112,7 @@ private fun CollectionCard(
                 .fillMaxSize()
                 .padding(end = 4.dp)
                 .clip(RoundedCornerShape(topStart = 10.dp, bottomStart = 10.dp)),
-            url = Constants.getPhotoQualityUrl(
-                collectionInfo.previewPhotos?.get(0)?.urls,
-                loadQuality
-            )
+            url = collectionInfo.previewPhotos?.get(0)?.urls
         )
     }
 }

@@ -20,8 +20,7 @@ class PhotoDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val getPhotoDetailUseCase: GetPhotoDetailUseCase,
     private val getPhotoRelatedListUseCase: GetPhotoRelatedListUseCase,
-    private val loadQualityUseCase: GetLoadQualityUseCase,
-    private val imageDetailQualityUseCase: GetImageDetailQualityUseCase
+
 ) : ViewModel() {
 
     private val imageId: String = savedStateHandle[Constants.ARG_KEY_PHOTO_ID] ?: ""
@@ -29,14 +28,6 @@ class PhotoDetailViewModel(
     private var _state = MutableStateFlow(PhotoDetailState())
     val state = _state
         .onStart {
-            viewModelScope.launch {
-                _state.update {
-                    it.copy(
-                        wallpaperQuality = imageDetailQualityUseCase(),
-                        loadQuality = loadQualityUseCase()
-                    )
-                }
-            }
             getImageDetailInfo()
             getImageRelatedList()
         }

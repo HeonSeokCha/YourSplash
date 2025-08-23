@@ -89,8 +89,7 @@ fun UserDetailScreen(
             when (pager) {
                 0 -> {
                     UserDetailPhotoScreen(
-                        state.userDetailPhotoList?.collectAsLazyPagingItems(),
-                        state.loadQuality
+                        state.userDetailPhotoList?.collectAsLazyPagingItems()
                     ) {
                         onNavigate(it)
                     }
@@ -99,7 +98,6 @@ fun UserDetailScreen(
                 1 -> {
                     UserDetailLikeScreen(
                         state.userDetailLikeList?.collectAsLazyPagingItems(),
-                        state.loadQuality
                     ) {
                         onNavigate(it)
                     }
@@ -108,7 +106,6 @@ fun UserDetailScreen(
                 2 -> {
                     UserDetailCollectionScreen(
                         state.userDetailCollection?.collectAsLazyPagingItems(),
-                        state.loadQuality
                     ) {
                         onNavigate(it)
                     }

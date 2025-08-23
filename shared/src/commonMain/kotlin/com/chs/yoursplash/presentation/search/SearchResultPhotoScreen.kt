@@ -63,7 +63,6 @@ fun SearchResultPhotoScreen(
                 val item = pagingList[idx]
                 ImageCard(
                     photoInfo = item,
-                    loadQuality = state.loadQuality,
                     onPhotoClick = { onBrowse(BrowseInfo.Photo(it)) },
                     onUserClick = {  onBrowse(BrowseInfo.User(it))  }
                 )

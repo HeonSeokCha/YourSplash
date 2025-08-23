@@ -7,8 +7,10 @@ import com.chs.yoursplash.domain.usecase.GetImageDetailQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.domain.usecase.PutStringPrefUseCase
 import com.chs.yoursplash.util.Constants
+import io.ktor.util.Hash.combine
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -24,13 +26,23 @@ class SettingViewModel(
     private val _state = MutableStateFlow(SettingState())
     val state = _state
         .onStart {
-            _state.update {
-                it.copy(
-                    downLoadQualityValue = getDownloadQualityUseCase(),
-                    loadQualityValue = getLoadQualityUseCase(),
-                    wallpaperQualityValue = getImageDetailQualityUseCase()
-                )
-            }
+            combine(
+                getDownloadQualityUseCase(),
+                getLoadQualityUseCase(),
+                getImageDetailQualityUseCase()
+            ) { list ->
+                _state.update {
+                    it.copy(
+                        downLoadQualityValue = list[0],
+                        loadQualityValue = list[1],
+                        wallpaperQualityValue = list[2]
+                    )
+                }
+            }.stateIn(
+                viewModelScope,
+                SharingStarted.Eagerly,
+                SettingState()
+            )
         }
         .stateIn(
             viewModelScope,
@@ -55,22 +67,6 @@ class SettingViewModel(
     ) {
         viewModelScope.launch {
             putStringPrefUseCase(key, value)
-            _state.update {
-                when (key) {
-                    Constants.PREFERENCE_KEY_LOAD_QUALITY -> {
-                        it.copy(loadQualityValue = value)
-                    }
-
-                    Constants.PREFERENCE_KEY_DOWNLOAD_QUALITY -> {
-                        it.copy(downLoadQualityValue = value)
-                    }
-
-                    Constants.PREFERENCE_KEY_WALLPAPER_QUALITY -> {
-                        it.copy(wallpaperQualityValue = value)
-                    }
-                    else -> it
-                }
-            }
         }
     }
 }

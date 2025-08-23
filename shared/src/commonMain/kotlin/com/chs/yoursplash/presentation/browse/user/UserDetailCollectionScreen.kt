@@ -17,7 +17,6 @@ import com.chs.yoursplash.presentation.base.ImageCard
 @Composable
 fun UserDetailCollectionScreen(
     collectionList: LazyPagingItems<UnSplashCollection>?,
-    loadQuality: String,
     onNavigate: (Screens) -> Unit
 ) {
     LazyColumn(
@@ -30,10 +29,7 @@ fun UserDetailCollectionScreen(
                 count = collectionList.itemCount,
                 key = collectionList.itemKey { it.id }
             ) { idx ->
-                CollectionSimpleCard(
-                    collectionInfo = collectionList[idx],
-                    loadQuality = loadQuality
-                ) {
+                CollectionSimpleCard(collectionInfo = collectionList[idx]) {
                     onNavigate(Screens.CollectionDetailScreen(it))
                 }
             }

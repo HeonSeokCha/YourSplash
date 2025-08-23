@@ -19,7 +19,6 @@ import com.chs.yoursplash.util.Constants
 @Composable
 fun UserDetailPhotoScreen(
     photoList: LazyPagingItems<Photo>?,
-    loadQuality: String,
     onNavigate: (Screens) -> Unit
 ) {
     LazyVerticalStaggeredGrid(
@@ -41,7 +40,7 @@ fun UserDetailPhotoScreen(
                                 onNavigate(Screens.ImageDetailScreen(photoList[idx]!!.id))
                             }
                         },
-                    url = Constants.getPhotoQualityUrl(photoList[idx]?.urls, loadQuality)
+                    url = photoList[idx]?.urls
                 )
             }
         }

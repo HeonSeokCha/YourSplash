@@ -55,7 +55,6 @@ fun HomeScreen(
                 val photo = lazyPagingItems[idx]
                 ImageCard(
                     photoInfo = photo,
-                    loadQuality = state.loadQuality,
                     onPhotoClick = {
                         onEvent(HomEvent.BrowsePhotoDetail(it))
                     },

@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.chs.yoursplash.domain.model.LoadQuality
 import com.chs.yoursplash.presentation.ui.theme.Purple500
 import com.chs.yoursplash.util.Constants
 
@@ -38,7 +39,7 @@ fun SettingScreen(
         Spacer(modifier = Modifier.height(16.dp))
         SettingItem(
             title = "Load Quality",
-            subTitle = state.loadQualityValue,
+            subTitle = state.loadQualityValue.name,
         ) { title, sub ->
             selectButtonTitle = title
             selectButtonInfo = Constants.PREFERENCE_KEY_LOAD_QUALITY to sub
@@ -47,7 +48,7 @@ fun SettingScreen(
 
         SettingItem(
             title = "Download Quality",
-            subTitle = state.downLoadQualityValue,
+            subTitle = state.downLoadQualityValue.name,
         ) { title, sub ->
             selectButtonTitle = title
             selectButtonInfo = Constants.PREFERENCE_KEY_DOWNLOAD_QUALITY to sub
@@ -56,7 +57,7 @@ fun SettingScreen(
 
         SettingItem(
             title = "Wallpaper Quality",
-            subTitle = state.wallpaperQualityValue,
+            subTitle = state.wallpaperQualityValue.name,
         ) { title, sub ->
             selectButtonTitle = title
             selectButtonInfo = Constants.PREFERENCE_KEY_WALLPAPER_QUALITY to sub
@@ -92,7 +93,7 @@ fun SettingScreen(
                     )
                 }, text = {
                     Column {
-                        Constants.QUALITY_LIST.forEach {
+                        LoadQuality.entries.forEach {
                             val isSelected = it == selectButtonInfo.second
                             val color = RadioButtonDefaults.colors(
                                 selectedColor = Purple500,

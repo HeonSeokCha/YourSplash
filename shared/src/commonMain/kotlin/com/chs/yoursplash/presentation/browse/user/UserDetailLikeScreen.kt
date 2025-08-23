@@ -16,7 +16,6 @@ import com.chs.yoursplash.presentation.base.ImageCard
 @Composable
 fun UserDetailLikeScreen(
     photoList: LazyPagingItems<Photo>?,
-    loadQuality: String,
     onNavigate: (Screens) -> Unit
 ) {
     LazyColumn(
@@ -32,7 +31,6 @@ fun UserDetailLikeScreen(
 
                 ImageCard(
                     photoInfo = photoList[idx],
-                    loadQuality = loadQuality,
                     onPhotoClick = {},
                     onUserClick = {}
                 )

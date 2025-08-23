@@ -18,7 +18,6 @@ import com.chs.yoursplash.util.Constants
 @Composable
 fun ImageCard(
     photoInfo: Photo?,
-    loadQuality: String = "Regular",
     onPhotoClick: (String) -> Unit = {},
     onUserClick: (String) -> Unit = {}
 ) {
@@ -68,7 +67,7 @@ fun ImageCard(
                     if (photoInfo?.id == null) return@clickable
                     onPhotoClick(photoInfo.id)
                 },
-            url = Constants.getPhotoQualityUrl(photoInfo?.urls, loadQuality)
+            url = photoInfo?.urls
         )
     }
 }

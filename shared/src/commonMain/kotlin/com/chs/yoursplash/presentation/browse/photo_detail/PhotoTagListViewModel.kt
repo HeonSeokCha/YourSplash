@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 class PhotoTagListViewModel(
     savedStateHandle: SavedStateHandle,
     private val getSearchResultPhotoUseCase: GetSearchResultPhotoUseCase,
-    private val loadQualityUseCase: GetLoadQualityUseCase
 ) : ViewModel() {
 
     private val tagName: String = savedStateHandle[Constants.ARG_KEY_TAG_NAME] ?: ""
@@ -27,7 +26,6 @@ class PhotoTagListViewModel(
         viewModelScope.launch {
             state = PhotoTagListState(
                 isLoading = false,
-                loadQuality = loadQualityUseCase(),
                 tagSearchResultList = getSearchResultPhotoUseCase(
                     query = tagName,
                     orderBy = "relevant",

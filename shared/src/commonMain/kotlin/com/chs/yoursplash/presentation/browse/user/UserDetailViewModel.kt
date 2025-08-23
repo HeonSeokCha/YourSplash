@@ -24,7 +24,6 @@ class UserDetailViewModel(
     private val getUserPhotoUseCase: GetUserPhotoUseCase,
     private val getUserLikesUseCase: GetUserLikesUseCase,
     private val getUserCollectionUseCase: GetUserCollectionUseCase,
-    private val getLoadQualityUseCase: GetLoadQualityUseCase
 ) : ViewModel() {
 
     private val userName: String = savedStateHandle[Constants.ARG_KEY_USER_NAME] ?: ""
@@ -33,7 +32,6 @@ class UserDetailViewModel(
         .onStart {
             _state.update {
                 it.copy(
-                    loadQuality = getLoadQualityUseCase(),
                     userDetailPhotoList = getUserPhotoUseCase(userName).cachedIn(viewModelScope),
                     userDetailCollection = getUserCollectionUseCase(userName).cachedIn(viewModelScope),
                     userDetailLikeList = getUserLikesUseCase(userName).cachedIn(viewModelScope)

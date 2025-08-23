@@ -51,7 +51,6 @@ fun SearchResultCollectionScreen(
                 val item = pagingList[idx]
                 CollectionInfoCard(
                     collectionInfo = item,
-                    loadQuality = state.loadQuality,
                     onCollection = { onBrowse(BrowseInfo.Collection(it)) },
                     onUser = { onBrowse(BrowseInfo.User(it)) }
                 )

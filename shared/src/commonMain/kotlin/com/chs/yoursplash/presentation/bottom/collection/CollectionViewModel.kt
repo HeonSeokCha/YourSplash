@@ -12,8 +12,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
 class CollectionViewModel(
-    private val getHomeCollectionsUseCase: GetHomeCollectionsUseCase,
-    private val loadQualityUseCase: GetLoadQualityUseCase
+    private val getHomeCollectionsUseCase: GetHomeCollectionsUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(CollectionState())
@@ -21,7 +20,6 @@ class CollectionViewModel(
         _state.update {
             it.copy(
                 isLoading = false,
-                loadQuality = loadQualityUseCase(),
                 collectionList = getHomeCollectionsUseCase().cachedIn(viewModelScope)
             )
         }

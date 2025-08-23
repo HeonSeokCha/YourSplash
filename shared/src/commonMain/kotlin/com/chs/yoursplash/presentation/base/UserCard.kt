@@ -71,10 +71,7 @@ fun UserCard(
                                 .clickable {
                                     photoClickAble(userInfo.photos[idx].id)
                                 },
-                            url = Constants.getPhotoQualityUrl(
-                                userInfo.photos[idx].urls,
-                                loadQuality
-                            )
+                            url = userInfo.photos[idx].urls
                         )
                     }
                 }
