@@ -39,7 +39,7 @@ class SearchResultViewModel(
     fun changeEvent(event: SearchEvent) {
         when (event) {
             is SearchEvent.OnChangeSearchQuery -> {
-                _state.update { it.copy(searchQuery = event.query) }
+                _state.update { it.copy() }
             }
             SearchEvent.OnError -> {
 

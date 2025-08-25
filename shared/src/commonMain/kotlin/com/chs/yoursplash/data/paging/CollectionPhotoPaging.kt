@@ -28,7 +28,7 @@ class CollectionPhotoPaging(
             val response = api.requestUnsplash<List<ResponsePhoto>>(
                 url = Constants.GET_COLLECTION_PHOTOS(collectionId),
                 params = hashMapOf("page" to page.toString())
-            ).map { it.toUnSplashImage() }
+            ).map { it.toUnSplashImage(loadQuality) }
 
             LoadResult.Page(
                 data = response,

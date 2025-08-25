@@ -11,6 +11,7 @@ import com.chs.yoursplash.data.paging.SearchCollectionPaging
 import com.chs.yoursplash.data.paging.SearchPhotoPaging
 import com.chs.yoursplash.data.paging.SearchUserPaging
 import com.chs.yoursplash.domain.model.Photo
+import com.chs.yoursplash.domain.model.SearchFilter
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.User
 import com.chs.yoursplash.domain.repository.SearchRepository
@@ -22,20 +23,14 @@ class SearchRepositoryImpl(
 ) : SearchRepository {
 
     override fun getSearchResultPhoto(
-        query: String,
-        orderBy: String,
-        color: String?,
-        orientation: String?
+        searchFilter: SearchFilter
     ): Flow<PagingData<Photo>> {
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
             SearchPhotoPaging(
                 api = client,
-                query = query,
-                orderBy = orderBy,
-                color = color,
-                orientation = orientation
+                searchFilter = searchFilter,
             )
         }.flow
     }

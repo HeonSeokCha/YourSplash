@@ -24,7 +24,6 @@ import kotlinx.coroutines.flow.flow
 
 class PhotoRepositoryImpl (
     private val client: UnSplashService,
-    private val
 ) : PhotoRepository {
     override fun getPagingPhoto(): Flow<PagingData<Photo>> {
         return Pager(

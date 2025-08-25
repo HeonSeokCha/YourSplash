@@ -6,11 +6,13 @@ import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.data.api.UnSplashService
 import com.chs.yoursplash.data.mapper.toUnSplashUser
 import com.chs.yoursplash.data.model.ResponseSearchUsers
+import com.chs.yoursplash.domain.model.LoadQuality
 import com.chs.yoursplash.domain.model.User
 
 class SearchUserPaging(
     private val api: UnSplashService,
-    private val query: String
+    private val query: String,
+    private val loadQuality: LoadQuality
 ): PagingSource<Int, User>() {
     override fun getRefreshKey(state: PagingState<Int, User>): Int? {
         return state.anchorPosition?.let { position ->
@@ -29,7 +31,7 @@ class SearchUserPaging(
                     "page" to page.toString()
                 )
             ).result.map {
-                it.toUnSplashUser()
+                it.toUnSplashUser(loadQuality)
             }
             LoadResult.Page(
                 data = response,

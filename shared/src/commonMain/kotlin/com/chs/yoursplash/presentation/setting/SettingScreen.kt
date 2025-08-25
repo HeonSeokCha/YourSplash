@@ -18,10 +18,6 @@ fun SettingScreen(
     state: SettingState,
     onEvent: (SettingEvent) -> Unit
 ) {
-    var openDialog by remember { mutableStateOf(false) }
-    var selectButtonInfo by remember { mutableStateOf("" to "") }
-    var selectButtonTitle by remember { mutableStateOf("") }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -40,53 +36,36 @@ fun SettingScreen(
         SettingItem(
             title = "Load Quality",
             subTitle = state.loadQualityValue.name,
-        ) { title, sub ->
-            selectButtonTitle = title
-            selectButtonInfo = Constants.PREFERENCE_KEY_LOAD_QUALITY to sub
-            openDialog = true
-        }
+            clickAble = { onEvent(SettingEvent.ClickLoad) }
+        )
 
         SettingItem(
             title = "Download Quality",
             subTitle = state.downLoadQualityValue.name,
-        ) { title, sub ->
-            selectButtonTitle = title
-            selectButtonInfo = Constants.PREFERENCE_KEY_DOWNLOAD_QUALITY to sub
-            openDialog = true
-        }
+            clickAble = { onEvent(SettingEvent.ClickDownload) }
+        )
 
         SettingItem(
             title = "Wallpaper Quality",
             subTitle = state.wallpaperQualityValue.name,
-        ) { title, sub ->
-            selectButtonTitle = title
-            selectButtonInfo = Constants.PREFERENCE_KEY_WALLPAPER_QUALITY to sub
-            openDialog = true
-        }
+            clickAble = { onEvent(SettingEvent.ClickWallpaper) }
+        )
 
-        if (openDialog) {
+        if (state.showDialog) {
             AlertDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight(),
-                onDismissRequest = { openDialog = false },
+                onDismissRequest = { onEvent(SettingEvent.CloseDialog) },
                 confirmButton = {
                     Button(
-                        onClick = {
-                            onEvent(
-                                SettingEvent.PutSettingValue(
-                                    key = selectButtonInfo.first,
-                                    value = selectButtonInfo.second
-                                )
-                            )
-                            openDialog = false
-                        }
+                        onClick = { onEvent(SettingEvent.ClickSave) }
                     ) {
                         Text(text = "APPLY")
                     }
                 },title = {
                     Text(
-                        text = selectButtonTitle,
+                        text = state.selectSettingTitle,
                         fontSize = 18.sp,
                         color = Color.Black,
                         fontWeight = FontWeight.Bold
@@ -94,7 +73,7 @@ fun SettingScreen(
                 }, text = {
                     Column {
                         LoadQuality.entries.forEach {
-                            val isSelected = it == selectButtonInfo.second
+                            val isSelected = it == state.selectValue
                             val color = RadioButtonDefaults.colors(
                                 selectedColor = Purple500,
                                 unselectedColor = Color.LightGray
@@ -106,11 +85,12 @@ fun SettingScreen(
                                     colors = color,
                                     selected = isSelected,
                                     onClick = {
-                                        selectButtonInfo = selectButtonInfo.copy(second = it)
+                                        onEvent(SettingEvent.SelectValue(it))
                                     }
                                 )
+
                                 Text(
-                                    text = it,
+                                    text = it.name,
                                     fontSize = 16.sp,
                                     color = Color.Black
                                 )

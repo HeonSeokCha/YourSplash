@@ -5,10 +5,12 @@ import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.data.api.UnSplashService
 import com.chs.yoursplash.data.mapper.toUnSplashImage
 import com.chs.yoursplash.data.model.ResponsePhoto
+import com.chs.yoursplash.domain.model.LoadQuality
 import com.chs.yoursplash.domain.model.Photo
 
 class HomePhotosPaging(
-    private val api: UnSplashService
+    private val api: UnSplashService,
+    private val loadQuality: LoadQuality
 ) : PagingSource<Int, Photo>() {
     override fun getRefreshKey(state: PagingState<Int, Photo>): Int? {
         return state.anchorPosition?.let { position ->
@@ -23,7 +25,7 @@ class HomePhotosPaging(
             val response = api.requestUnsplash<List<ResponsePhoto>>(
                 url = Constants.GET_PHOTOS,
                 params = hashMapOf("page" to page.toString())
-            ).map { it.toUnSplashImage() }
+            ).map { it.toUnSplashImage(loadQuality) }
 
             LoadResult.Page(
                 data = response,

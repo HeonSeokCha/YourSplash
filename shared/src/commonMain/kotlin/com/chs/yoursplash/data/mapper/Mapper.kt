@@ -24,8 +24,8 @@ fun ResponsePhoto.toUnSplashImage(quality: LoadQuality): Photo {
         blurHash = blurHash,
         width = width,
         height = height,
-        urls = urls.toUnSplashImageUrls(quality: LoadQuality),
-        user = user.toUnSplashUser(quality: LoadQuality)
+        urls = urls.toUnSplashImageUrls(quality),
+        user = user.toUnSplashUser(quality)
     )
 }
 

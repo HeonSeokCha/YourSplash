@@ -6,14 +6,14 @@ import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.data.api.UnSplashService
 import com.chs.yoursplash.data.mapper.toUnSplashImage
 import com.chs.yoursplash.data.model.ResponseSearchPhotos
+import com.chs.yoursplash.domain.model.LoadQuality
 import com.chs.yoursplash.domain.model.Photo
+import com.chs.yoursplash.domain.model.SearchFilter
 
 class SearchPhotoPaging(
     private val api: UnSplashService,
-    private val query: String,
-    private val orderBy: String,
-    private val color: String?,
-    private val orientation: String?
+    private val searchFilter: SearchFilter,
+    private val loadQuality: LoadQuality
 ): PagingSource<Int, Photo>() {
     override fun getRefreshKey(state: PagingState<Int, Photo>): Int? {
         return state.anchorPosition?.let { position ->
@@ -28,15 +28,15 @@ class SearchPhotoPaging(
             val response = api.requestUnsplash<ResponseSearchPhotos>(
                 url = Constants.GET_SEARCH_PHOTOS,
                 params = hashMapOf(
-                    "query" to query,
+                    "query" to searchFilter.query!!,
                     "page" to page.toString(),
-                    "order_by" to orderBy,
+                    "order_by" to searchFilter.orderBy,
                 ).apply {
-                    if (color != null) this["color"] = color
-                    if (orientation != null) this["orientation"] = orientation
+                    if (searchFilter.color != null) this["color"] = searchFilter.color
+                    if (searchFilter.orientation != null) this["orientation"] = searchFilter.orientation
                 }
             ).result.map {
-                it.toUnSplashImage()
+                it.toUnSplashImage(loadQuality)
             }
 
             LoadResult.Page(

@@ -13,21 +13,21 @@ import androidx.compose.ui.unit.sp
 fun SettingItem(
     title: String,
     subTitle: String,
-    clickAble: (String, String) -> Unit
+    clickAble: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 32.dp)
-            .clickable {
-                clickAble(title, subTitle)
-            }
+            .clickable { clickAble() }
     ) {
         Text(
             text = title,
             fontSize = 22.sp
         )
+
         Spacer(modifier = Modifier.height(4.dp))
+
         Text(
             text = subTitle,
             fontSize = 18.sp,

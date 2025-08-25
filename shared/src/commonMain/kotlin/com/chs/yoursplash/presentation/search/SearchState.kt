@@ -8,9 +8,8 @@ import com.chs.yoursplash.domain.model.User
 import kotlinx.coroutines.flow.Flow
 
 data class SearchState(
-    val searchQuery: String? = null,
+    val searchFilter: SearchFilter = SearchFilter(),
     val searchPhotoList: Flow<PagingData<Photo>>? = null,
     val searchCollectionList: Flow<PagingData<UnSplashCollection>>? = null,
-    val searchUserList: Flow<PagingData<User>>? = null,
-    val searchFilter: SearchFilter = SearchFilter()
+    val searchUserList: Flow<PagingData<User>>? = null
 )

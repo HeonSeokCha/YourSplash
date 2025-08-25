@@ -40,15 +40,13 @@ fun SearchResultPhotoScreen(
     val pagingList = state.searchPhotoList?.collectAsLazyPagingItems()
     val scrollState = rememberLazyListState()
 
-    LaunchedEffect(state.searchQuery) {
-        if (state.searchQuery != null) {
-            snapshotFlow { state.searchQuery }
-                .distinctUntilChanged()
-                .filterNot { it.isNotEmpty() }
-                .collect {
-                    scrollState.scrollToItem(0)
-                }
-        }
+    LaunchedEffect(state.searchFilter.query) {
+        snapshotFlow { state.searchFilter.query }
+            .distinctUntilChanged()
+            .filterNot { it.isNotEmpty() }
+            .collect {
+                scrollState.scrollToItem(0)
+            }
     }
 
     LazyColumn(
@@ -64,7 +62,7 @@ fun SearchResultPhotoScreen(
                 ImageCard(
                     photoInfo = item,
                     onPhotoClick = { onBrowse(BrowseInfo.Photo(it)) },
-                    onUserClick = {  onBrowse(BrowseInfo.User(it))  }
+                    onUserClick = { onBrowse(BrowseInfo.User(it)) }
                 )
             }
 
