@@ -2,6 +2,7 @@ package com.chs.yoursplash.di
 
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.data.api.UnSplashService
+import com.chs.yoursplash.data.repository.DataStorePrefManager
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpResponseValidator
@@ -18,6 +19,7 @@ import org.koin.dsl.module
 
 val sourceModule = module {
     singleOf(::UnSplashService)
+    singleOf(::DataStorePrefManager)
 }
 
 val provideHttpClientModule = module {
