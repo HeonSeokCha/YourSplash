@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 class GetSearchResultUserUseCase(
     private val repository: SearchRepository
 ) {
-    operator fun invoke(query: String): Flow<PagingData<User>> {
+    suspend operator fun invoke(query: String): Flow<PagingData<User>> {
         return repository.getSearchResultUser(query)
     }
 }

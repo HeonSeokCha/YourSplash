@@ -9,9 +9,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface PhotoRepository {
 
-    fun getPagingPhoto(): Flow<PagingData<Photo>>
+    suspend fun getPagingPhoto(): Flow<PagingData<Photo>>
 
-    fun getPagingCollection(): Flow<PagingData<UnSplashCollection>>
+    suspend fun getPagingCollection(): Flow<PagingData<UnSplashCollection>>
 
     suspend fun getPhotoDetailInfo(id: String): Flow<NetworkResult<PhotoDetail>>
 
@@ -19,7 +19,7 @@ interface PhotoRepository {
 
     suspend fun getCollectionDetailInfo(id: String): Flow<NetworkResult<UnSplashCollection>>
 
-    fun getPagingCollectionPhotos(id: String): Flow<PagingData<Photo>>
+    suspend fun getPagingCollectionPhotos(id: String): Flow<PagingData<Photo>>
 
     suspend fun getRelatedCollectionList(id: String): Flow<NetworkResult<List<UnSplashCollection>>>
 }

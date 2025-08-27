@@ -11,9 +11,9 @@ interface UserRepository {
 
     suspend fun getUserDetail(userName: String): Flow<NetworkResult<UserDetail>>
 
-    fun getUserDetailPhotos(userName: String): Flow<PagingData<Photo>>
+    suspend fun getUserDetailPhotos(userName: String): Flow<PagingData<Photo>>
 
-    fun getUserDetailLikePhotos(userName: String): Flow<PagingData<Photo>>
+    suspend fun getUserDetailLikePhotos(userName: String): Flow<PagingData<Photo>>
 
-    fun getUserDetailCollections(userName: String): Flow<PagingData<UnSplashCollection>>
+    suspend fun getUserDetailCollections(userName: String): Flow<PagingData<UnSplashCollection>>
 }

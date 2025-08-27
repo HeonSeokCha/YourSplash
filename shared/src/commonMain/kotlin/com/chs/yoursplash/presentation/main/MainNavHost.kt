@@ -61,7 +61,7 @@ fun MainNavHost(
                     .distinctUntilChanged()
                     .filterNot { it.isEmpty() }
                     .collect {
-                        viewModel.searchResult(it)
+                        viewModel.searchResult()
                     }
             }
 

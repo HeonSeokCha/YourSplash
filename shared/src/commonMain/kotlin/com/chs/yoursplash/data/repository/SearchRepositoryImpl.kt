@@ -10,44 +10,59 @@ import com.chs.yoursplash.data.db.entity.SearchHistoryEntity
 import com.chs.yoursplash.data.paging.SearchCollectionPaging
 import com.chs.yoursplash.data.paging.SearchPhotoPaging
 import com.chs.yoursplash.data.paging.SearchUserPaging
+import com.chs.yoursplash.domain.model.LoadQuality
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.SearchFilter
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.User
 import com.chs.yoursplash.domain.repository.SearchRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 
 class SearchRepositoryImpl(
     private val client: UnSplashService,
-    private val database: YourSplashDatabase
+    private val database: YourSplashDatabase,
+    private val dataStore: DataStorePrefManager
 ) : SearchRepository {
 
-    override fun getSearchResultPhoto(
+    override suspend fun getSearchResultPhoto(
         searchFilter: SearchFilter
     ): Flow<PagingData<Photo>> {
+        val loadQuality = getLoadQuality()
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
             SearchPhotoPaging(
                 api = client,
                 searchFilter = searchFilter,
+                loadQuality = loadQuality
             )
         }.flow
     }
 
-    override fun getSearchResultCollection(query: String): Flow<PagingData<UnSplashCollection>> {
+    override suspend fun getSearchResultCollection(query: String): Flow<PagingData<UnSplashCollection>> {
+        val loadQuality = getLoadQuality()
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
-            SearchCollectionPaging(client, query)
+            SearchCollectionPaging(
+                api = client,
+                query = query,
+                loadQuality = loadQuality
+            )
         }.flow
     }
 
-    override fun getSearchResultUser(query: String): Flow<PagingData<User>> {
+    override suspend fun getSearchResultUser(query: String): Flow<PagingData<User>> {
+        val loadQuality = getLoadQuality()
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
-            SearchUserPaging(client, query)
+            SearchUserPaging(
+                api = client,
+                query = query,
+                loadQuality = loadQuality
+            )
         }.flow
     }
 
@@ -65,5 +80,16 @@ class SearchRepositoryImpl(
 
     override fun getRecentSearchHistory(): Flow<List<String>> {
         return database.searchHistoryDao.getRecentList()
+    }
+
+    private suspend fun getLoadQuality(): LoadQuality {
+        return dataStore.getData(
+            keyName = Constants.PREFERENCE_KEY_LOAD_QUALITY,
+            defaultValue = LoadQuality.Regular.name
+        )
+            .first()
+            .run {
+                LoadQuality.valueOf(this)
+            }
     }
 }

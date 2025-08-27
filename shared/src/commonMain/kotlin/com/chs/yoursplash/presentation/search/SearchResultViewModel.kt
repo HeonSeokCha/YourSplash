@@ -51,18 +51,15 @@ class SearchResultViewModel(
         }
     }
 
-    fun searchResult(query: String) {
-        _state.update {
-            it.copy(
-                searchPhotoList = searchResultPhotoUseCase(
-                    query = query,
-                    orderBy = it.searchFilter.orderBy,
-                    color = it.searchFilter.color,
-                    orientation = it.searchFilter.orientation
-                ).cachedIn(viewModelScope),
-                searchCollectionList = searchResultCollectionUseCase(query).cachedIn(viewModelScope),
-                searchUserList = searchResultUserUseCase(query).cachedIn(viewModelScope)
-            )
+    fun searchResult() {
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    searchPhotoList = searchResultPhotoUseCase(it.searchFilter).cachedIn(viewModelScope),
+                    searchCollectionList = searchResultCollectionUseCase(it.searchFilter.query).cachedIn(viewModelScope),
+                    searchUserList = searchResultUserUseCase(it.searchFilter.query).cachedIn(viewModelScope)
+                )
+            }
         }
     }
 }

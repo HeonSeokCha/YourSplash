@@ -27,6 +27,7 @@ class PhotoTagListViewModel(
             state = PhotoTagListState(
                 isLoading = false,
                 tagSearchResultList = getSearchResultPhotoUseCase(
+                    searchFilter = ,
                     query = tagName,
                     orderBy = "relevant",
                     color = null,

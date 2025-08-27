@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 class GetUserPhotoUseCase(
     private val repository: UserRepository
 ) {
-    operator fun invoke(userName: String): Flow<PagingData<Photo>> {
+    suspend operator fun invoke(userName: String): Flow<PagingData<Photo>> {
         return repository.getUserDetailPhotos(userName)
     }
 }

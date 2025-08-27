@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 class GetSearchResultCollectionUseCase(
     private val repository: SearchRepository
 ) {
-    operator fun invoke(query: String): Flow<PagingData<UnSplashCollection>> {
+    suspend operator fun invoke(query: String): Flow<PagingData<UnSplashCollection>> {
         return repository.getSearchResultCollection(query)
     }
 }

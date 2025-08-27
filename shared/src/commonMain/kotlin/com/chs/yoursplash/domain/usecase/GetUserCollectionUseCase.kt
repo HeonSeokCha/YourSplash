@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 class GetUserCollectionUseCase(
     private val repository: UserRepository
 ) {
-    operator fun invoke(userName: String): Flow<PagingData<UnSplashCollection>> {
+    suspend operator fun invoke(userName: String): Flow<PagingData<UnSplashCollection>> {
         return repository.getUserDetailCollections(userName)
     }
 }

@@ -14,30 +14,41 @@ import com.chs.yoursplash.data.model.ResponseRelatedPhoto
 import com.chs.yoursplash.data.paging.CollectionPhotoPaging
 import com.chs.yoursplash.data.paging.HomeCollectionPaging
 import com.chs.yoursplash.data.paging.HomePhotosPaging
+import com.chs.yoursplash.domain.model.LoadQuality
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.PhotoDetail
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.repository.PhotoRepository
 import com.chs.yoursplash.util.NetworkResult
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
 class PhotoRepositoryImpl (
     private val client: UnSplashService,
+    private val dataStore: DataStorePrefManager
 ) : PhotoRepository {
-    override fun getPagingPhoto(): Flow<PagingData<Photo>> {
+    override suspend fun getPagingPhoto(): Flow<PagingData<Photo>> {
+        val loadQuality = getLoadQuality()
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
-            HomePhotosPaging(client)
+            HomePhotosPaging(
+                api = client,
+                loadQuality = loadQuality
+            )
         }.flow
     }
 
-    override fun getPagingCollection(): Flow<PagingData<UnSplashCollection>> {
+    override suspend fun getPagingCollection(): Flow<PagingData<UnSplashCollection>> {
+        val loadQuality = getLoadQuality()
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
-            HomeCollectionPaging(client)
+            HomeCollectionPaging(
+                api = client,
+                loadQuality = loadQuality
+            )
         }.flow
     }
 
@@ -49,7 +60,7 @@ class PhotoRepositoryImpl (
                     NetworkResult.Success(
                         client.requestUnsplash<ResponsePhotoDetail>(
                             Constants.GET_PHOTO_DETAIL(id)
-                        ).toUnSplashImageDetail()
+                        ).toUnSplashImageDetail(getLoadQuality())
                     )
                 )
             } catch (e: Exception) {
@@ -66,7 +77,7 @@ class PhotoRepositoryImpl (
                     NetworkResult.Success(
                         client.requestUnsplash<ResponseRelatedPhoto>(
                             Constants.GET_PHOTO_RELATED(id)
-                        ).results.map { it.toUnSplashImage() }
+                        ).results.map { it.toUnSplashImage(getLoadQuality()) }
                     )
                 )
             } catch (e: Exception) {
@@ -84,7 +95,7 @@ class PhotoRepositoryImpl (
                     NetworkResult.Success(
                         client.requestUnsplash<ResponseCollection>(
                             Constants.GET_COLLECTION_DETAILED(id)
-                        ).toPhotoCollection()
+                        ).toPhotoCollection(getLoadQuality())
                     )
                 )
             } catch (e: Exception) {
@@ -93,11 +104,16 @@ class PhotoRepositoryImpl (
         }
     }
 
-    override fun getPagingCollectionPhotos(id: String): Flow<PagingData<Photo>> {
+    override suspend fun getPagingCollectionPhotos(id: String): Flow<PagingData<Photo>> {
+        val loadQuality = getLoadQuality()
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
-            CollectionPhotoPaging(client, id)
+            CollectionPhotoPaging(
+                api = client,
+                collectionId = id,
+                loadQuality = loadQuality
+            )
         }.flow
     }
 
@@ -110,7 +126,7 @@ class PhotoRepositoryImpl (
                         client.requestUnsplash<List<ResponseCollection>>(
                             Constants.GET_COLLECTION_RELATED(id)
                         ).map {
-                            it.toPhotoCollection()
+                            it.toPhotoCollection(getLoadQuality())
                         }
                     )
                 )
@@ -118,5 +134,16 @@ class PhotoRepositoryImpl (
                 emit(NetworkResult.Error(e.message ?: "Unknown Error..."))
             }
         }
+    }
+
+    private suspend fun getLoadQuality(): LoadQuality {
+        return dataStore.getData(
+            keyName = Constants.PREFERENCE_KEY_LOAD_QUALITY,
+            defaultValue = LoadQuality.Regular.name
+        )
+            .first()
+            .run {
+                LoadQuality.valueOf(this)
+            }
     }
 }
