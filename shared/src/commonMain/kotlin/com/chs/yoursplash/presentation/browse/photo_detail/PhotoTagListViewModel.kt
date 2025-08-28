@@ -7,6 +7,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.chs.yoursplash.domain.model.SearchFilter
+import com.chs.yoursplash.domain.model.SortType
 import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetSearchResultPhotoUseCase
 import com.chs.yoursplash.util.Constants
@@ -27,11 +29,10 @@ class PhotoTagListViewModel(
             state = PhotoTagListState(
                 isLoading = false,
                 tagSearchResultList = getSearchResultPhotoUseCase(
-                    searchFilter = ,
-                    query = tagName,
-                    orderBy = "relevant",
-                    color = null,
-                    orientation = null
+                    searchFilter = SearchFilter(
+                        query = tagName,
+                        orderBy = SortType.Relevance
+                    ),
                 ).cachedIn(viewModelScope)
             )
         }

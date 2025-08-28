@@ -53,14 +53,35 @@ class SettingViewModel(
     fun onEvent(event: SettingEvent) {
         when (event) {
             SettingEvent.ClickDownload -> {
-                _state.update { it.copy(selectSettingTitle = Constants.PREFERENCE_KEY_DOWNLOAD_QUALITY) }
+                _state.update {
+                    it.copy(
+                        selectSettingTitle = Constants.PREFERENCE_KEY_DOWNLOAD_QUALITY,
+                        selectValue = it.downLoadQualityValue,
+                        showDialog = true
+                    )
+                }
             }
+
             SettingEvent.ClickWallpaper -> {
-                _state.update { it.copy(selectSettingTitle = Constants.PREFERENCE_KEY_WALLPAPER_QUALITY) }
+                _state.update {
+                    it.copy(
+                        selectSettingTitle = Constants.PREFERENCE_KEY_WALLPAPER_QUALITY,
+                        selectValue = it.wallpaperQualityValue,
+                        showDialog = true
+                    )
+                }
             }
+
             SettingEvent.ClickLoad -> {
-                _state.update { it.copy(selectSettingTitle = Constants.PREFERENCE_KEY_LOAD_QUALITY) }
+                _state.update {
+                    it.copy(
+                        selectSettingTitle = Constants.PREFERENCE_KEY_LOAD_QUALITY,
+                        selectValue = it.loadQualityValue,
+                        showDialog = true
+                    )
+                }
             }
+
             SettingEvent.ClickSave -> {
                 putSettingValue(_state.value.selectSettingTitle, _state.value.selectValue.name)
                 _state.update { it.copy(showDialog = false) }
