@@ -9,7 +9,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface SearchRepository {
 
-    suspend fun getSearchResultPhoto(searchFilter: SearchFilter): Flow<PagingData<Photo>>
+    suspend fun getSearchResultPhoto(
+        query: String,
+        searchFilter: SearchFilter
+): Flow<PagingData<Photo>>
 
     suspend fun getSearchResultCollection(query: String): Flow<PagingData<UnSplashCollection>>
 

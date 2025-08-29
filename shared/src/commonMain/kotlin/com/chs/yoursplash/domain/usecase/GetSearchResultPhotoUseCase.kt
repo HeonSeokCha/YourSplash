@@ -9,7 +9,10 @@ import kotlinx.coroutines.flow.Flow
 class GetSearchResultPhotoUseCase(
     private val repository: SearchRepository
 ) {
-    suspend operator fun invoke(searchFilter: SearchFilter): Flow<PagingData<Photo>> {
-        return repository.getSearchResultPhoto(searchFilter)
+    suspend operator fun invoke(
+        query: String,
+        searchFilter: SearchFilter
+    ): Flow<PagingData<Photo>> {
+        return repository.getSearchResultPhoto(query = query, searchFilter = searchFilter)
     }
 }

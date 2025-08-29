@@ -10,18 +10,17 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.chs.yoursplash.domain.model.BrowseInfo
-import com.chs.yoursplash.presentation.bottom.collection.CollectionScreen
 import com.chs.yoursplash.presentation.bottom.collection.CollectionScreenRoot
 import com.chs.yoursplash.presentation.bottom.collection.CollectionViewModel
-import com.chs.yoursplash.presentation.bottom.home.HomeScreen
 import com.chs.yoursplash.presentation.bottom.home.HomeScreenRoot
 import com.chs.yoursplash.presentation.bottom.home.HomeViewModel
+import com.chs.yoursplash.presentation.search.SearchEvent
 import com.chs.yoursplash.presentation.search.SearchResultViewModel
-import com.chs.yoursplash.presentation.search.SearchScreen
+import com.chs.yoursplash.presentation.search.SearchScreenRoot
 import com.chs.yoursplash.presentation.setting.SettingScreen
 import com.chs.yoursplash.presentation.setting.SettingViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNot
+import kotlinx.coroutines.flow.filter
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -55,19 +54,18 @@ fun MainNavHost(
 
         composable<MainScreens.SearchScreen> {
             val viewModel = koinViewModel<SearchResultViewModel>()
-            val state by viewModel.state.collectAsStateWithLifecycle()
             LaunchedEffect(searchQuery) {
                 snapshotFlow { searchQuery }
                     .distinctUntilChanged()
-                    .filterNot { it.isEmpty() }
+                    .filter { it.isNotEmpty() }
                     .collect {
-                        viewModel.searchResult()
+                        viewModel.changeEvent(SearchEvent.OnChangeSearchQuery(it))
                     }
             }
 
-            SearchScreen(
-                state = state,
-                onBack = onBack,
+            SearchScreenRoot(
+                viewModel = viewModel,
+                onBack= onBack,
                 onBrowse = onBrowse
             )
         }

@@ -29,10 +29,8 @@ class PhotoTagListViewModel(
             state = PhotoTagListState(
                 isLoading = false,
                 tagSearchResultList = getSearchResultPhotoUseCase(
-                    searchFilter = SearchFilter(
-                        query = tagName,
-                        orderBy = SortType.Relevance
-                    ),
+                    query = tagName,
+                    searchFilter = SearchFilter(),
                 ).cachedIn(viewModelScope)
             )
         }

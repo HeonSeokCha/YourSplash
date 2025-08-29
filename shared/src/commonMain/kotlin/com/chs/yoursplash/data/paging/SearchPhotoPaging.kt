@@ -13,6 +13,7 @@ import com.chs.yoursplash.domain.model.SearchFilter
 
 class SearchPhotoPaging(
     private val api: UnSplashService,
+    private val query: String,
     private val searchFilter: SearchFilter,
     private val loadQuality: LoadQuality
 ): PagingSource<Int, Photo>() {
@@ -29,7 +30,7 @@ class SearchPhotoPaging(
             val response = api.requestUnsplash<ResponseSearchPhotos>(
                 url = Constants.GET_SEARCH_PHOTOS,
                 params = hashMapOf(
-                    "query" to searchFilter.query,
+                    "query" to query,
                     "page" to page.toString(),
                     "order_by" to searchFilter.orderBy.rawValue,
                 ).apply {

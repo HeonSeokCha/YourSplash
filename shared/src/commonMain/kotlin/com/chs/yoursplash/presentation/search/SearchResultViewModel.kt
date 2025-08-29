@@ -24,40 +24,39 @@ class SearchResultViewModel(
 
     private val _state = MutableStateFlow(SearchState())
     val state = _state
-        .onStart {
-//            getImageLoadQuality()
-        }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000L),
             SearchState()
         )
 
-    private val _event: Channel<SearchEvent> = Channel()
-    val event = _event.receiveAsFlow()
+//    private val _event: Channel<SearchEvent> = Channel()
+//    val event = _event.receiveAsFlow()
 
     fun changeEvent(event: SearchEvent) {
         when (event) {
             is SearchEvent.OnChangeSearchQuery -> {
-                _state.update { it.copy() }
-            }
-            SearchEvent.OnError -> {
-
+                searchResult(event.query)
             }
             is SearchEvent.TabIndex -> {
-
+                _state.update {
+                    it.copy(selectIdx = event.idx)
+                }
             }
             else -> Unit
         }
     }
 
-    fun searchResult() {
+    private fun searchResult(query: String) {
         viewModelScope.launch {
             _state.update {
                 it.copy(
-                    searchPhotoList = searchResultPhotoUseCase(it.searchFilter).cachedIn(viewModelScope),
-                    searchCollectionList = searchResultCollectionUseCase(it.searchFilter.query).cachedIn(viewModelScope),
-                    searchUserList = searchResultUserUseCase(it.searchFilter.query).cachedIn(viewModelScope)
+                    searchPhotoList = searchResultPhotoUseCase(
+                        query = query,
+                        searchFilter = it.searchFilter
+                    ).cachedIn(viewModelScope),
+                    searchCollectionList = searchResultCollectionUseCase(query).cachedIn(viewModelScope),
+                    searchUserList = searchResultUserUseCase(query).cachedIn(viewModelScope)
                 )
             }
         }

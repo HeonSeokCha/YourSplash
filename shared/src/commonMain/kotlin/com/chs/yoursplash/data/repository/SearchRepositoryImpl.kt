@@ -26,6 +26,7 @@ class SearchRepositoryImpl(
 ) : SearchRepository {
 
     override suspend fun getSearchResultPhoto(
+        query: String,
         searchFilter: SearchFilter
     ): Flow<PagingData<Photo>> {
         val loadQuality = getLoadQuality()
@@ -34,6 +35,7 @@ class SearchRepositoryImpl(
         ) {
             SearchPhotoPaging(
                 api = client,
+                query = query,
                 searchFilter = searchFilter,
                 loadQuality = loadQuality
             )

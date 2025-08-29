@@ -13,24 +13,50 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import kotlinx.coroutines.launch
 
+@Composable
+fun SearchScreenRoot(
+    viewModel: SearchResultViewModel,
+    onBrowse: (BrowseInfo) -> Unit,
+    onBack: () -> Unit
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    SearchScreen(state) { event ->
+        when (event) {
+            is SearchEvent.BrowseScreen -> onBrowse(event.info)
+            SearchEvent.OnBack -> onBack()
+            else -> viewModel.changeEvent(event)
+        }
+    }
+}
+
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SearchScreen(
+private fun SearchScreen(
     state: SearchState,
-    onBrowse: (BrowseInfo) -> Unit,
-    onBack: () -> Unit,
+    onEvent: (SearchEvent) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val tabList = remember { listOf("PHOTOS", "COLLECTIONS", "USERS") }
-    val pagerState = rememberPagerState(initialPage = 0) { tabList.size }
+    val pagerState = rememberPagerState(initialPage = 0) { state.tabList.size }
+
+    LaunchedEffect(state.selectIdx) {
+        pagerState.animateScrollToPage(state.selectIdx)
+    }
+
+    LaunchedEffect(pagerState.currentPage) {
+
+        onEvent(SearchEvent.TabIndex(pagerState.currentPage))
+    }
 
     DisposableEffect(Unit) {
         onDispose {
-            onBack()
+            onEvent(SearchEvent.OnBack)
         }
     }
 
@@ -48,7 +74,7 @@ fun SearchScreen(
                 )
             }
         ) {
-            tabList.forEachIndexed { index, title ->
+            state.tabList.forEachIndexed { index, title ->
                 Tab(
                     text = {
                         Text(
@@ -75,21 +101,21 @@ fun SearchScreen(
                     SearchResultPhotoScreen(
                         state = state,
                         modalClick = { },
-                        onBrowse = onBrowse
+                        onBrowse = { onEvent(SearchEvent.BrowseScreen(it)) }
                     )
                 }
 
                 1 -> {
                     SearchResultCollectionScreen(
                         state = state,
-                        onBrowse = onBrowse
+                        onBrowse = { onEvent(SearchEvent.BrowseScreen(it)) }
                     )
                 }
 
                 2 -> {
                     SearchResultUserScreen(
                         state = state,
-                        onBrowse = onBrowse
+                        onBrowse = { onEvent(SearchEvent.BrowseScreen(it)) }
                     )
                 }
             }

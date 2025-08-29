@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -17,6 +18,7 @@ import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.base.UserCard
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNot
+import kotlinx.coroutines.launch
 
 @Composable
 fun SearchResultUserScreen(
@@ -25,15 +27,7 @@ fun SearchResultUserScreen(
 ) {
     val pagingList = state.searchUserList?.collectAsLazyPagingItems()
     val scrollState = rememberLazyListState()
-
-    LaunchedEffect(state.searchFilter.query) {
-        snapshotFlow { state.searchFilter.query }
-            .distinctUntilChanged()
-            .filterNot { it.isNotEmpty() }
-            .collect {
-                scrollState.scrollToItem(0)
-            }
-    }
+    val coroutineScope = rememberCoroutineScope()
 
     LazyColumn(
         modifier = Modifier
@@ -58,6 +52,9 @@ fun SearchResultUserScreen(
 
             when (pagingList.loadState.refresh) {
                 is LoadState.Loading -> {
+                    coroutineScope.launch {
+                        scrollState.scrollToItem(0)
+                    }
                     items(10) {
                         UserCard(
                             userInfo = null,

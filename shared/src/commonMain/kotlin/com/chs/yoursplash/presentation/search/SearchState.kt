@@ -11,5 +11,7 @@ data class SearchState(
     val searchFilter: SearchFilter = SearchFilter(),
     val searchPhotoList: Flow<PagingData<Photo>>? = null,
     val searchCollectionList: Flow<PagingData<UnSplashCollection>>? = null,
-    val searchUserList: Flow<PagingData<User>>? = null
+    val searchUserList: Flow<PagingData<User>>? = null,
+    val tabList: List<String> = listOf("PHOTOS", "COLLECTIONS", "USERS"),
+    val selectIdx: Int = 0,
 )

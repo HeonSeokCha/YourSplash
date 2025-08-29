@@ -20,6 +20,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
@@ -30,6 +31,7 @@ import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.base.ImageCard
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNot
+import kotlinx.coroutines.launch
 
 @Composable
 fun SearchResultPhotoScreen(
@@ -39,15 +41,7 @@ fun SearchResultPhotoScreen(
 ) {
     val pagingList = state.searchPhotoList?.collectAsLazyPagingItems()
     val scrollState = rememberLazyListState()
-
-    LaunchedEffect(state.searchFilter.query) {
-        snapshotFlow { state.searchFilter.query }
-            .distinctUntilChanged()
-            .filterNot { it.isNotEmpty() }
-            .collect {
-                scrollState.scrollToItem(0)
-            }
-    }
+    val coroutineScope = rememberCoroutineScope()
 
     LazyColumn(
         modifier = Modifier
@@ -68,6 +62,9 @@ fun SearchResultPhotoScreen(
 
             when (pagingList.loadState.refresh) {
                 is LoadState.Loading -> {
+                    coroutineScope.launch {
+                        scrollState.scrollToItem(0)
+                    }
                     items(10) {
                         ImageCard(photoInfo = null)
                     }
