@@ -61,7 +61,7 @@ fun ImageCard(
         ShimmerImage(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(300.dp)
+                .height(250.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .clickable {
                     if (photoInfo?.id == null) return@clickable

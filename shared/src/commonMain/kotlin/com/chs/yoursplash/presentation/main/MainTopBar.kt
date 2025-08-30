@@ -53,9 +53,6 @@ fun MainTopBar(
     onQueryChange: (String) -> Unit,
     onDeleteSearchHistory: (String) -> Unit
 ) {
-    LaunchedEffect(searchHistoryList) {
-        println(searchHistoryList.toString())
-    }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDest = navBackStackEntry?.destination
 

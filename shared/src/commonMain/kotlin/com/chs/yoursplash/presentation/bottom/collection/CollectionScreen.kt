@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -13,6 +14,8 @@ import app.cash.paging.compose.collectAsLazyPagingItems
 import app.cash.paging.compose.itemKey
 import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.base.CollectionInfoCard
+import com.chs.yoursplash.presentation.base.ItemPullToRefreshBox
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -26,6 +29,7 @@ fun CollectionScreenRoot(
         when (event) {
             is CollectionEvent.BrowseCollectionDetail -> onBrowse(BrowseInfo.Collection(event.id))
             is CollectionEvent.BrowseUserDetail -> onBrowse(BrowseInfo.User(event.name))
+            else -> viewModel.changeEvent(event)
         }
     }
 }
@@ -36,64 +40,73 @@ fun CollectionScreen(
     onEvent: (CollectionEvent) -> Unit
 ) {
     val lazyPagingItems = state.collectionList?.collectAsLazyPagingItems()
+    val coroutineScope = rememberCoroutineScope()
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp),
-        contentPadding = PaddingValues(vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(32.dp),
+    ItemPullToRefreshBox(
+        isRefreshing = state.isRefresh,
+        onRefresh = {
+            coroutineScope.launch {
+                onEvent(CollectionEvent.OnRefresh)
+            }
+        }
     ) {
-
-        if (lazyPagingItems != null) {
-            items(
-                count = lazyPagingItems.itemCount,
-                key = lazyPagingItems.itemKey { it.id }
-            ) { idx ->
-                val collectionInfo = lazyPagingItems[idx]
-                CollectionInfoCard(
-                    collectionInfo = collectionInfo,
-                    onCollection = { onEvent(CollectionEvent.BrowseCollectionDetail(it)) },
-                    onUser = { onEvent(CollectionEvent.BrowseUserDetail(it)) }
-                )
-            }
-
-            when (lazyPagingItems.loadState.refresh) {
-                is LoadState.Loading -> {
-                    items(10) {
-                        CollectionInfoCard(collectionInfo = null)
-                    }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp),
+            contentPadding = PaddingValues(vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(32.dp),
+        ) {
+            if (lazyPagingItems != null) {
+                items(
+                    count = lazyPagingItems.itemCount,
+                    key = lazyPagingItems.itemKey { it.id }
+                ) { idx ->
+                    val collectionInfo = lazyPagingItems[idx]
+                    CollectionInfoCard(
+                        collectionInfo = collectionInfo,
+                        onCollection = { onEvent(CollectionEvent.BrowseCollectionDetail(it)) },
+                        onUser = { onEvent(CollectionEvent.BrowseUserDetail(it)) }
+                    )
                 }
 
-                is LoadState.Error -> {
-                    item {
-                        Text(
-                            text = (lazyPagingItems.loadState.refresh as LoadState.Error).error.message
-                                ?: "Unknown Error.."
-                        )
+                when (lazyPagingItems.loadState.refresh) {
+                    is LoadState.Loading -> {
+                        items(10) {
+                            CollectionInfoCard(collectionInfo = null)
+                        }
                     }
+
+                    is LoadState.Error -> {
+                        item {
+                            Text(
+                                text = (lazyPagingItems.loadState.refresh as LoadState.Error).error.message
+                                    ?: "Unknown Error.."
+                            )
+                        }
+                    }
+
+                    else -> Unit
                 }
 
-                else -> Unit
-            }
-
-            when (lazyPagingItems.loadState.append) {
-                is LoadState.Loading -> {
-                    items(10) {
-                        CollectionInfoCard(collectionInfo = null)
+                when (lazyPagingItems.loadState.append) {
+                    is LoadState.Loading -> {
+                        items(10) {
+                            CollectionInfoCard(collectionInfo = null)
+                        }
                     }
-                }
 
-                is LoadState.Error -> {
-                    item {
-                        Text(
-                            text = (lazyPagingItems.loadState.refresh as LoadState.Error).error.message
-                                ?: "Unknown Error.."
-                        )
+                    is LoadState.Error -> {
+                        item {
+                            Text(
+                                text = (lazyPagingItems.loadState.refresh as LoadState.Error).error.message
+                                    ?: "Unknown Error.."
+                            )
+                        }
                     }
-                }
 
-                else -> Unit
+                    else -> Unit
+                }
             }
         }
     }

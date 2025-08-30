@@ -109,9 +109,10 @@ private fun CollectionCard(
 
         ShimmerImage(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .height(250.dp)
                 .padding(end = 4.dp)
-                .clip(RoundedCornerShape(topStart = 10.dp, bottomStart = 10.dp)),
+                .clip(RoundedCornerShape(10.dp)),
             url = collectionInfo.previewPhotos?.get(0)?.urls
         )
     }

@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 data class CollectionState(
     val collectionList: Flow<PagingData<UnSplashCollection>>? = null,
     val isLoading: Boolean = true,
+    val isRefresh: Boolean = false,
     val isError: Boolean = false,
     val errorMessage: String? = null
 )
