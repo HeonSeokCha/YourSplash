@@ -1,7 +1,9 @@
 package com.chs.yoursplash.util
 
 import com.chs.yoursplash.BuildKonfig
+import com.chs.yoursplash.domain.model.Orientations
 import com.chs.yoursplash.domain.model.PhotoUrls
+import com.chs.yoursplash.domain.model.SortType
 
 object Constants {
     const val UNSPLAH_BASE_URL: String = "api.unsplash.com"
@@ -53,24 +55,7 @@ object Constants {
         Pair("Teal", "teal")
     )
 
-    val SORT_BY_LIST = listOf(
-        Pair("RELEVANCE", "relevant"),
-        Pair("LATEST", "latest")
-    )
+    val SORT_BY_LIST = SortType.entries.map { it.name to it.rawValue }
 
-    val SEARCH_ORI_LIST = listOf(
-        Pair("Any", null),
-        Pair("Landscape", "landscape"),
-        Pair("Portrait", "portrait"),
-        Pair("Squarish", "squarish"),
-    )
-
-    val QUALITY_LIST: List<String> = listOf(
-        "Raw",
-        "Full",
-        "Regular",
-        "Small",
-        "Thumb"
-    )
-
+    val SEARCH_ORI_LIST = Orientations.entries.map { it.name to it.rawValue }
 }

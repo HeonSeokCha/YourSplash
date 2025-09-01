@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 
 class SearchResultViewModel(
@@ -36,12 +37,24 @@ class SearchResultViewModel(
     fun changeEvent(event: SearchEvent) {
         when (event) {
             is SearchEvent.OnChangeSearchQuery -> {
+                _state.update { it.copy(query = event.query) }
                 searchResult(event.query)
             }
             is SearchEvent.TabIndex -> {
                 _state.update {
                     it.copy(selectIdx = event.idx)
                 }
+            }
+
+            SearchEvent.OnChangeShowModal -> {
+                _state.update {
+                    it.copy(isShowModal = !it.isShowModal)
+                }
+            }
+
+            is SearchEvent.OnChangeSearchFilter -> {
+                val currentState = _state.updateAndGet { it.copy(searchFilter = event.filter) }
+                searchResult(currentState.query)
             }
             else -> Unit
         }

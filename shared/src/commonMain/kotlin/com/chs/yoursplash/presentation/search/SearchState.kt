@@ -8,10 +8,12 @@ import com.chs.yoursplash.domain.model.User
 import kotlinx.coroutines.flow.Flow
 
 data class SearchState(
+    val query: String = "",
     val searchFilter: SearchFilter = SearchFilter(),
     val searchPhotoList: Flow<PagingData<Photo>>? = null,
     val searchCollectionList: Flow<PagingData<UnSplashCollection>>? = null,
     val searchUserList: Flow<PagingData<User>>? = null,
     val tabList: List<String> = listOf("PHOTOS", "COLLECTIONS", "USERS"),
     val selectIdx: Int = 0,
+    val isShowModal: Boolean = false
 )

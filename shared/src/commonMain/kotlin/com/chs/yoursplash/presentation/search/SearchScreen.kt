@@ -1,9 +1,16 @@
 package com.chs.yoursplash.presentation.search
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
@@ -15,6 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.chs.yoursplash.domain.model.BrowseInfo
+import com.chs.yoursplash.domain.model.SearchFilter
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import kotlinx.coroutines.launch
 
@@ -50,7 +58,6 @@ private fun SearchScreen(
     }
 
     LaunchedEffect(pagerState.currentPage) {
-
         onEvent(SearchEvent.TabIndex(pagerState.currentPage))
     }
 
@@ -60,65 +67,92 @@ private fun SearchScreen(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        TabRow(
-            modifier = Modifier.fillMaxWidth(),
-            selectedTabIndex = pagerState.currentPage,
-            indicator = { tabPositions ->
-                SecondaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
-                    color = Purple200
-                )
+    Scaffold(
+        floatingActionButton = {
+            AnimatedVisibility(
+                visible = state.selectIdx == 0
+            ) {
+                FloatingActionButton(
+                    onClick = { onEvent(SearchEvent.OnChangeShowModal) }
+                ) {
+                    Icon(Icons.Filled.Search, contentDescription = "")
+                }
             }
+        }
+    ) { contentPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
         ) {
-            state.tabList.forEachIndexed { index, title ->
-                Tab(
-                    text = {
-                        Text(
-                            text = title,
-                            maxLines = 1,
-                            color = Purple200,
-                            overflow = TextOverflow.Ellipsis,
-                            fontSize = 12.sp
+            TabRow(
+                modifier = Modifier.fillMaxWidth(),
+                selectedTabIndex = pagerState.currentPage,
+                indicator = { tabPositions ->
+                    SecondaryIndicator(
+                        modifier = Modifier.tabIndicatorOffset(tabPositions[pagerState.currentPage]),
+                        color = Purple200
+                    )
+                }
+            ) {
+                state.tabList.forEachIndexed { index, title ->
+                    Tab(
+                        text = {
+                            Text(
+                                text = title,
+                                maxLines = 1,
+                                color = Purple200,
+                                overflow = TextOverflow.Ellipsis,
+                                fontSize = 12.sp
+                            )
+                        },
+                        selected = pagerState.currentPage == index,
+                        onClick = {
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(index)
+                            }
+                        },
+                    )
+                }
+            }
+
+            HorizontalPager(state = pagerState) { page ->
+                when (page) {
+                    0 -> {
+                        SearchResultPhotoScreen(
+                            state = state,
+                            modalClick = { },
+                            onBrowse = { onEvent(SearchEvent.BrowseScreen(it)) }
                         )
-                    },
-                    selected = pagerState.currentPage == index,
-                    onClick = {
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(index)
-                        }
-                    },
-                )
+                    }
+
+                    1 -> {
+                        SearchResultCollectionScreen(
+                            state = state,
+                            onBrowse = { onEvent(SearchEvent.BrowseScreen(it)) }
+                        )
+                    }
+
+                    2 -> {
+                        SearchResultUserScreen(
+                            state = state,
+                            onBrowse = { onEvent(SearchEvent.BrowseScreen(it)) }
+                        )
+                    }
+                }
             }
         }
 
-        HorizontalPager(state = pagerState) { page ->
-            when (page) {
-                0 -> {
-                    SearchResultPhotoScreen(
-                        state = state,
-                        modalClick = { },
-                        onBrowse = { onEvent(SearchEvent.BrowseScreen(it)) }
-                    )
-                }
 
-                1 -> {
-                    SearchResultCollectionScreen(
-                        state = state,
-                        onBrowse = { onEvent(SearchEvent.BrowseScreen(it)) }
-                    )
+        if (state.isShowModal) {
+            SearchBottomSheet(
+                searchFilter = state.searchFilter,
+                onClick = {
+                    onEvent(SearchEvent.OnChangeSearchFilter(it))
+                },
+                onDismiss = {
+                    onEvent(SearchEvent.OnChangeShowModal)
                 }
-
-                2 -> {
-                    SearchResultUserScreen(
-                        state = state,
-                        onBrowse = { onEvent(SearchEvent.BrowseScreen(it)) }
-                    )
-                }
-            }
+            )
         }
     }
 }
