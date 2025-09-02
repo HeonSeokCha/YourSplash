@@ -28,8 +28,8 @@ class PhotoRepositoryImpl (
     private val client: UnSplashService,
     private val dataStore: DataStorePrefManager
 ) : PhotoRepository {
-    override suspend fun getPagingPhoto(): Flow<PagingData<Photo>> {
-        val loadQuality = getLoadQuality()
+    override fun getPagingPhoto(loadQuality: LoadQuality): Flow<PagingData<Photo>> {
+
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {

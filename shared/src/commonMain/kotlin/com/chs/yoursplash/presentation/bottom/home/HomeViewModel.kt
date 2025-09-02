@@ -2,11 +2,20 @@ package com.chs.yoursplash.presentation.bottom.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.usecase.GetHomePhotosUseCase
+import com.chs.yoursplash.presentation.ErrorState
+import com.chs.yoursplash.presentation.LoadingState
+import com.chs.yoursplash.presentation.bottom.home.HomeEffect.*
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -14,6 +23,9 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     private val getHomePhotosUseCase: GetHomePhotosUseCase,
 ) : ViewModel() {
+
+    val pagingDataFlow: Flow<PagingData<Photo>> = getHomePhotosUseCase()
+        .cachedIn(viewModelScope)
 
     private val _state = MutableStateFlow(HomeState())
     val state = _state
@@ -23,30 +35,59 @@ class HomeViewModel(
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000L),
-            HomeState()
+            _state.value
         )
 
-    fun changeEvent(event: HomeEvent) {
-        when (event) {
-            HomeEvent.OnRefresh -> {
-                _state.update {
-                    it.copy(isRefresh = true)
-                }
-                getPhoto()
+    private val _effect = Channel<HomeEffect>(Channel.BUFFERED)
+    val effect = _effect.receiveAsFlow()
+
+    fun handleIntent(intent: HomeIntent) {
+        when (intent) {
+            HomeIntent.Loading -> updateState { it.copy(loadingState = LoadingState.Loading) }
+
+            is HomeIntent.ClickPhoto -> {
+                _effect.trySend(NavigatePhotoDetail(intent.id))
             }
-            else -> Unit
+
+            is HomeIntent.ClickUser -> {
+                _effect.trySend(NavigateUserDetail(intent.name))
+            }
+
+            HomeIntent.LoadComplete -> {
+                updateState {
+                    it.copy(
+                        isRefresh = false,
+                        loadingState = LoadingState.Success
+                    )
+                }
+            }
+
+            HomeIntent.RefreshData -> {
+                updateState {
+                    it.copy(
+                        isRefresh = true,
+                        loadingState = LoadingState.Loading
+                    )
+                }
+            }
+
+            is HomeIntent.OnError -> {
+            }
         }
     }
 
     private fun getPhoto() {
-        viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    isRefresh = false,
-                    isLoading = false,
-                    pagingImageList = getHomePhotosUseCase().cachedIn(viewModelScope)
-                )
-            }
+        if (_state.value.loadingState !is LoadingState.Initial) return
+
+        updateState {
+            it.copy(
+                loadingState = LoadingState.Loading,
+                pagingImageList = getHomePhotosUseCase().cachedIn(viewModelScope)
+            )
         }
+    }
+
+    private fun updateState(reducer: (HomeState) -> HomeState) {
+        _state.value = reducer(_state.value)
     }
 }

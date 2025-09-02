@@ -1,6 +1,7 @@
 package com.chs.yoursplash.domain.repository
 
 import androidx.paging.PagingData
+import com.chs.yoursplash.domain.model.LoadQuality
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.PhotoDetail
 import com.chs.yoursplash.util.NetworkResult
@@ -9,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface PhotoRepository {
 
-    suspend fun getPagingPhoto(): Flow<PagingData<Photo>>
+    fun getPagingPhoto(loadQuality: LoadQuality): Flow<PagingData<Photo>>
 
     suspend fun getPagingCollection(): Flow<PagingData<UnSplashCollection>>
 
