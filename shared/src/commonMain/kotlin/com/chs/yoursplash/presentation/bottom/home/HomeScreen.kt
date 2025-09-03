@@ -1,26 +1,20 @@
 package com.chs.yoursplash.presentation.bottom.home
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
-import app.cash.paging.compose.LazyPagingItems
-import app.cash.paging.compose.collectAsLazyPagingItems
-import app.cash.paging.compose.itemKey
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.presentation.base.ItemPullToRefreshBox
-import com.chs.yoursplash.presentation.bottom.collection.CollectionEvent
-import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreenRoot(
@@ -83,7 +77,6 @@ fun HomeScreen(
         ) {
             items(
                 count = pagingItems.itemCount,
-                key = pagingItems.itemKey(key = { it.id }),
             ) { idx ->
                 val photo = pagingItems[idx]
                 ImageCard(

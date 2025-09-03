@@ -12,7 +12,7 @@ interface PhotoRepository {
 
     fun getPagingPhoto(loadQuality: LoadQuality): Flow<PagingData<Photo>>
 
-    suspend fun getPagingCollection(): Flow<PagingData<UnSplashCollection>>
+    fun getPagingCollection(loadQuality: LoadQuality): Flow<PagingData<UnSplashCollection>>
 
     suspend fun getPhotoDetailInfo(id: String): Flow<NetworkResult<PhotoDetail>>
 

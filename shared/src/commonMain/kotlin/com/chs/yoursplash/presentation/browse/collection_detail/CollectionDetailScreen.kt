@@ -12,9 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.paging.LoadState
-import app.cash.paging.compose.collectAsLazyPagingItems
-import com.chs.yoursplash.domain.model.BrowseInfo
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
 import com.chs.yoursplash.presentation.base.ImageCard

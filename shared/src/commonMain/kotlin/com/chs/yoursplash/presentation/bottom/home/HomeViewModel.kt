@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val getHomePhotosUseCase: GetHomePhotosUseCase,
+    getHomePhotosUseCase: GetHomePhotosUseCase,
 ) : ViewModel() {
 
     val pagingDataFlow: Flow<PagingData<Photo>> = getHomePhotosUseCase()
@@ -29,9 +29,6 @@ class HomeViewModel(
 
     private val _state = MutableStateFlow(HomeState())
     val state = _state
-        .onStart {
-            getPhoto()
-        }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000L),
@@ -73,17 +70,6 @@ class HomeViewModel(
 
             is HomeIntent.OnError -> {
             }
-        }
-    }
-
-    private fun getPhoto() {
-        if (_state.value.loadingState !is LoadingState.Initial) return
-
-        updateState {
-            it.copy(
-                loadingState = LoadingState.Loading,
-                pagingImageList = getHomePhotosUseCase().cachedIn(viewModelScope)
-            )
         }
     }
 

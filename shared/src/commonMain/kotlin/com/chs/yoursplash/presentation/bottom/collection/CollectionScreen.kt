@@ -2,17 +2,19 @@ package com.chs.yoursplash.presentation.bottom.collection
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
-import app.cash.paging.compose.collectAsLazyPagingItems
-import app.cash.paging.compose.itemKey
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.chs.yoursplash.domain.model.BrowseInfo
+import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.presentation.base.CollectionInfoCard
 import com.chs.yoursplash.presentation.base.ItemPullToRefreshBox
 import kotlinx.coroutines.launch
@@ -24,29 +26,53 @@ fun CollectionScreenRoot(
     onBrowse: (BrowseInfo) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val pagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
 
-    CollectionScreen(state) { event ->
-        when (event) {
-            is CollectionEvent.BrowseCollectionDetail -> onBrowse(BrowseInfo.Collection(event.id))
-            is CollectionEvent.BrowseUserDetail -> onBrowse(BrowseInfo.User(event.name))
-            else -> viewModel.changeEvent(event)
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                is CollectionEffect.NavigateCollectionDetail-> onBrowse(BrowseInfo.Photo(effect.id))
+                is CollectionEffect.NavigateUserDetail -> onBrowse(BrowseInfo.User(effect.name))
+                is CollectionEffect.ShowToast -> Unit
+            }
         }
     }
+
+    LaunchedEffect(pagingItems.loadState.refresh) {
+        when (pagingItems.loadState.refresh) {
+            is LoadState.Loading -> viewModel.handleIntent(CollectionIntent.Loading)
+
+            is LoadState.Error -> {
+                (pagingItems.loadState.refresh as LoadState.Error).error.run {
+                    viewModel.handleIntent(CollectionIntent.OnError(this.message))
+                }
+            }
+
+            is LoadState.NotLoading -> viewModel.handleIntent(CollectionIntent.LoadComplete)
+        }
+    }
+
+    CollectionScreen(
+        state = state,
+        pagingItems = pagingItems,
+        onIntent = viewModel::handleIntent
+    )
 }
 
 @Composable
 fun CollectionScreen(
     state: CollectionState,
-    onEvent: (CollectionEvent) -> Unit
+    pagingItems: LazyPagingItems<UnSplashCollection>,
+    onIntent: (CollectionIntent) -> Unit
 ) {
-    val lazyPagingItems = state.collectionList?.collectAsLazyPagingItems()
     val coroutineScope = rememberCoroutineScope()
 
     ItemPullToRefreshBox(
         isRefreshing = state.isRefresh,
         onRefresh = {
             coroutineScope.launch {
-                onEvent(CollectionEvent.OnRefresh)
+                onIntent(CollectionIntent.RefreshData)
+                pagingItems.refresh()
             }
         }
     ) {
@@ -57,56 +83,16 @@ fun CollectionScreen(
             contentPadding = PaddingValues(vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(32.dp),
         ) {
-            if (lazyPagingItems != null) {
-                items(
-                    count = lazyPagingItems.itemCount,
-                    key = lazyPagingItems.itemKey { it.id }
-                ) { idx ->
-                    val collectionInfo = lazyPagingItems[idx]
-                    CollectionInfoCard(
-                        collectionInfo = collectionInfo,
-                        onCollection = { onEvent(CollectionEvent.BrowseCollectionDetail(it)) },
-                        onUser = { onEvent(CollectionEvent.BrowseUserDetail(it)) }
-                    )
-                }
-
-                when (lazyPagingItems.loadState.refresh) {
-                    is LoadState.Loading -> {
-                        items(10) {
-                            CollectionInfoCard(collectionInfo = null)
-                        }
-                    }
-
-                    is LoadState.Error -> {
-                        item {
-                            Text(
-                                text = (lazyPagingItems.loadState.refresh as LoadState.Error).error.message
-                                    ?: "Unknown Error.."
-                            )
-                        }
-                    }
-
-                    else -> Unit
-                }
-
-                when (lazyPagingItems.loadState.append) {
-                    is LoadState.Loading -> {
-                        items(10) {
-                            CollectionInfoCard(collectionInfo = null)
-                        }
-                    }
-
-                    is LoadState.Error -> {
-                        item {
-                            Text(
-                                text = (lazyPagingItems.loadState.refresh as LoadState.Error).error.message
-                                    ?: "Unknown Error.."
-                            )
-                        }
-                    }
-
-                    else -> Unit
-                }
+            items(
+                count = pagingItems.itemCount,
+                key = pagingItems.itemKey { it.id }
+            ) { idx ->
+                val collectionInfo = pagingItems[idx]
+                CollectionInfoCard(
+                    collectionInfo = collectionInfo,
+                    onCollection = { onIntent(CollectionIntent.ClickCollection(it)) },
+                    onUser = { onIntent(CollectionIntent.ClickUser(it)) }
+                )
             }
         }
     }

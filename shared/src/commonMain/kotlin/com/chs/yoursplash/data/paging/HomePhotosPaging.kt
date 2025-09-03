@@ -29,7 +29,7 @@ class HomePhotosPaging(
 
             LoadResult.Page(
                 data = response,
-                prevKey = null,
+                prevKey = if (page == 1) null else page - 1,
                 nextKey = if (response.isNotEmpty()) page + 1 else null
             )
         } catch (e: Exception) {

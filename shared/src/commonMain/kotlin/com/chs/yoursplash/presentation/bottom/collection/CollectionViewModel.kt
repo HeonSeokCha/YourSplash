@@ -1,54 +1,73 @@
 package com.chs.yoursplash.presentation.bottom.collection
 
+import androidx.compose.ui.semantics.CollectionInfo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.usecase.GetHomeCollectionsUseCase
-import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
-import io.ktor.events.Events
-import kotlinx.coroutines.delay
+import com.chs.yoursplash.presentation.LoadingState
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class CollectionViewModel(
-    private val getHomeCollectionsUseCase: GetHomeCollectionsUseCase
+    getHomeCollectionsUseCase: GetHomeCollectionsUseCase
 ) : ViewModel() {
 
+    val pagingDataFlow: Flow<PagingData<UnSplashCollection>> = getHomeCollectionsUseCase()
+        .cachedIn(viewModelScope)
+
     private val _state = MutableStateFlow(CollectionState())
-    val state = _state.onStart {
-        getCollection()
-    }.stateIn(
+    val state = _state.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000L),
         _state.value
     )
 
-    fun changeEvent(events: CollectionEvent) {
-        when (events) {
-            CollectionEvent.OnRefresh -> {
-                if (!_state.value.isRefresh) {
-                    getCollection()
-                }
-                _state.update { it.copy(isRefresh = !it.isRefresh) }
+    private val _effect = Channel<CollectionEffect>(Channel.BUFFERED)
+    val effect = _effect.receiveAsFlow()
+
+    fun handleIntent(intent: CollectionIntent) {
+        when (intent) {
+            CollectionIntent.Loading -> updateState { it.copy(loadingState = LoadingState.Loading) }
+
+            is CollectionIntent.ClickCollection -> {
+                _effect.trySend(CollectionEffect.NavigateCollectionDetail(intent.id))
             }
 
-            else -> Unit
+            is CollectionIntent.ClickUser -> {
+                _effect.trySend(CollectionEffect.NavigateUserDetail(intent.name))
+            }
+
+            CollectionIntent.LoadComplete -> {
+                updateState {
+                    it.copy(
+                        isRefresh = false,
+                        loadingState = LoadingState.Success
+                    )
+                }
+            }
+
+            CollectionIntent.RefreshData -> {
+                updateState {
+                    it.copy(
+                        isRefresh = true,
+                        loadingState = LoadingState.Loading
+                    )
+                }
+            }
+
+            is CollectionIntent.OnError -> {
+            }
         }
     }
 
-    private fun getCollection() {
-        viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    isRefresh = false,
-                    isLoading = false,
-                    collectionList = getHomeCollectionsUseCase().cachedIn(viewModelScope)
-                )
-            }
-        }
+    private fun updateState(reducer: (CollectionState) -> CollectionState) {
+        _state.value = reducer(_state.value)
     }
 }

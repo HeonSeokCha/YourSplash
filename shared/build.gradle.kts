@@ -67,8 +67,8 @@ kotlin {
 
             implementation(libs.kotlin.serialization)
 
-            implementation(libs.cashapp.paging.compose)
-            implementation(libs.cashapp.paging.common)
+            implementation(libs.android.paging.compose)
+            implementation(libs.android.paging.common)
 
             implementation(libs.koin.core)
             implementation(libs.bundles.koin)
