@@ -16,9 +16,9 @@ class CollectionPhotoPaging(
 ): PagingSource<Int, Photo>() {
 
     override fun getRefreshKey(state: PagingState<Int, Photo>): Int? {
-        return state.anchorPosition?.let { position ->
-            val page = state.closestPageToPosition(position)
-            page?.prevKey?.minus(1) ?: page?.nextKey?.plus(1)
+        return state.anchorPosition?.let { anchorPosition ->
+            val anchorPage = state.closestPageToPosition(anchorPosition)
+            anchorPage?.prevKey ?: anchorPage?.nextKey
         }
     }
 

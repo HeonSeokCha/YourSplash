@@ -94,6 +94,12 @@ buildkonfig {
     }
 }
 
+compose.resources {
+    publicResClass = false
+    packageOfResClass = "com.chs.yoursplash.res"
+    generateResClass = auto
+}
+
 
 android {
     namespace = "com.chs.yoursplash"

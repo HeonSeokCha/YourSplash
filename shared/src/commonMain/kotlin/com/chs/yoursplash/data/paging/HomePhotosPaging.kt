@@ -12,12 +12,7 @@ class HomePhotosPaging(
     private val api: UnSplashService,
     private val loadQuality: LoadQuality
 ) : PagingSource<Int, Photo>() {
-    override fun getRefreshKey(state: PagingState<Int, Photo>): Int? {
-        return state.anchorPosition?.let { position ->
-            val page = state.closestPageToPosition(position)
-            page?.prevKey?.minus(1) ?: page?.nextKey?.plus(1)
-        }
-    }
+    override fun getRefreshKey(state: PagingState<Int, Photo>): Int? = null
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Photo> {
         return try {
