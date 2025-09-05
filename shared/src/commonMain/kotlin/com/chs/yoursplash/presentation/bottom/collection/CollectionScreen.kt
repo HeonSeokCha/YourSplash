@@ -39,7 +39,7 @@ fun CollectionScreenRoot(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is CollectionEffect.NavigateCollectionDetail -> onBrowse(BrowseInfo.Photo(effect.id))
+                is CollectionEffect.NavigateCollectionDetail -> onBrowse(BrowseInfo.Collection(effect.id))
                 is CollectionEffect.NavigateUserDetail -> onBrowse(BrowseInfo.User(effect.name))
                 is CollectionEffect.ShowToast -> Unit
             }

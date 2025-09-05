@@ -12,8 +12,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.chs.youranimelist.res.Res
+import com.chs.youranimelist.res.lorem_ipsum
+import com.chs.youranimelist.res.text_no_photos
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.util.Constants
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ImageCard(
@@ -43,14 +47,16 @@ fun ImageCard(
             ShimmerImage(
                 modifier = Modifier
                     .size(50.dp)
-                    .clip(RoundedCornerShape(100)),
+                    .clip(RoundedCornerShape(100))
+                    .shimmer(photoInfo == null),
                 url = photoInfo?.user?.photoProfile?.large
             )
 
             Spacer(modifier = Modifier.width(16.dp))
 
             Text(
-                text = photoInfo?.user?.name ?: "...",
+                modifier = Modifier.shimmer(photoInfo == null),
+                text = photoInfo?.user?.name ?: stringResource(Res.string.lorem_ipsum),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 overflow = TextOverflow.Ellipsis,
@@ -63,6 +69,7 @@ fun ImageCard(
                 .fillMaxWidth()
                 .height(250.dp)
                 .clip(RoundedCornerShape(10.dp))
+                .shimmer(photoInfo == null)
                 .clickable {
                     if (photoInfo?.id == null) return@clickable
                     onPhotoClick(photoInfo.id)

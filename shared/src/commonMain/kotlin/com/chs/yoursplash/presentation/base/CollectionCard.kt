@@ -19,8 +19,11 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.chs.youranimelist.res.Res
+import com.chs.youranimelist.res.lorem_ipsum
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.util.Constants
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun CollectionInfoCard(
@@ -50,14 +53,16 @@ fun CollectionInfoCard(
             ShimmerImage(
                 modifier = Modifier
                     .size(50.dp)
-                    .clip(RoundedCornerShape(100)),
+                    .clip(RoundedCornerShape(100))
+                    .shimmer(visible = collectionInfo == null),
                 url = collectionInfo?.user?.photoProfile?.large
             )
 
             Spacer(modifier = Modifier.width(16.dp))
 
             Text(
-                text = collectionInfo?.user?.name ?: "...",
+                modifier = Modifier.shimmer(collectionInfo == null),
+                text = collectionInfo?.user?.name ?: stringResource(Res.string.lorem_ipsum),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 overflow = TextOverflow.Ellipsis,
@@ -65,12 +70,8 @@ fun CollectionInfoCard(
             )
         }
 
-        if (collectionInfo != null) {
-            CollectionCard(
-                collectionInfo = collectionInfo,
-            ) {
-                onCollection(it)
-            }
+        CollectionCard(collectionInfo = collectionInfo) {
+            onCollection(it)
         }
     }
 }
@@ -85,35 +86,28 @@ fun CollectionSimpleCard(
             .fillMaxWidth()
             .wrapContentHeight()
     ) {
-        if (collectionInfo != null) {
-            CollectionCard(collectionInfo = collectionInfo) {
-                collectionClickAble(it)
-            }
+        CollectionCard(collectionInfo = collectionInfo) {
+            collectionClickAble(it)
         }
     }
 }
 
 @Composable
 private fun CollectionCard(
-    collectionInfo: UnSplashCollection,
+    collectionInfo: UnSplashCollection?,
     collectionClickAble: (String) -> Unit
 ) {
-    Row(
+    ShimmerImage(
         modifier = Modifier
             .fillMaxWidth()
             .height(250.dp)
+            .padding(end = 4.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .shimmer(visible = collectionInfo == null)
             .clickable {
+                if (collectionInfo == null) return@clickable
                 collectionClickAble(collectionInfo.id)
-            }
-    ) {
-
-        ShimmerImage(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(250.dp)
-                .padding(end = 4.dp)
-                .clip(RoundedCornerShape(10.dp)),
-            url = collectionInfo.previewPhotos?.get(0)?.urls
-        )
-    }
+            },
+        url = collectionInfo?.previewPhotos?.get(0)?.urls
+    )
 }

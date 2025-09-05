@@ -23,9 +23,9 @@ fun Modifier.shimmer(
     if (!visible) return this
 
     val shimmerColors = listOf(
-        Color.LightGray.copy(alpha = 0.3f),
+        Color.Gray.copy(alpha = 0.3f),
         Color.White.copy(alpha = 0.6f),
-        Color.LightGray.copy(alpha = 0.3f)
+        Color.Gray.copy(alpha = 0.3f)
     )
 
     val transition = rememberInfiniteTransition(label = "Shimmer")
