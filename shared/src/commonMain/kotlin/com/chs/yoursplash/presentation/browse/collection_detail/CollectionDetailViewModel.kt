@@ -9,6 +9,7 @@ import com.chs.yoursplash.domain.usecase.GetCollectionPhotoUseCase
 import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.NetworkResult
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
@@ -23,6 +24,7 @@ class CollectionDetailViewModel(
 ) : ViewModel() {
 
     private val collectionId: String = savedStateHandle[Constants.ARG_KEY_COLLECTION_ID] ?: ""
+    private var collectionDetailJob: Job? = null
 
     private val _state = MutableStateFlow(CollectionDetailState())
     val state = _state
@@ -42,7 +44,8 @@ class CollectionDetailViewModel(
         )
 
     private fun getCollectionDetailInfo() {
-        viewModelScope.launch {
+        collectionDetailJob?.cancel()
+        collectionDetailJob = viewModelScope.launch {
             getCollectionDetailUseCase(collectionId).collect { result ->
                 _state.update {
                     when (result) {
@@ -71,5 +74,10 @@ class CollectionDetailViewModel(
                 }
             }
         }
+    }
+
+    override fun onCleared() {
+        collectionDetailJob?.cancel()
+        super.onCleared()
     }
 }

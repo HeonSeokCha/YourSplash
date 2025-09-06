@@ -22,14 +22,13 @@ import kotlinx.coroutines.flow.first
 class SearchRepositoryImpl(
     private val client: UnSplashService,
     private val database: YourSplashDatabase,
-    private val dataStore: DataStorePrefManager
 ) : SearchRepository {
 
-    override suspend fun getSearchResultPhoto(
+    override fun getSearchResultPhoto(
         query: String,
-        searchFilter: SearchFilter
+        searchFilter: SearchFilter,
+        loadQuality: LoadQuality
     ): Flow<PagingData<Photo>> {
-        val loadQuality = getLoadQuality()
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
@@ -42,8 +41,10 @@ class SearchRepositoryImpl(
         }.flow
     }
 
-    override suspend fun getSearchResultCollection(query: String): Flow<PagingData<UnSplashCollection>> {
-        val loadQuality = getLoadQuality()
+    override fun getSearchResultCollection(
+        query: String,
+        loadQuality: LoadQuality
+    ): Flow<PagingData<UnSplashCollection>> {
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
@@ -55,8 +56,10 @@ class SearchRepositoryImpl(
         }.flow
     }
 
-    override suspend fun getSearchResultUser(query: String): Flow<PagingData<User>> {
-        val loadQuality = getLoadQuality()
+    override fun getSearchResultUser(
+        query: String,
+        loadQuality: LoadQuality
+    ): Flow<PagingData<User>> {
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
@@ -82,16 +85,5 @@ class SearchRepositoryImpl(
 
     override fun getRecentSearchHistory(): Flow<List<String>> {
         return database.searchHistoryDao.getRecentList()
-    }
-
-    private suspend fun getLoadQuality(): LoadQuality {
-        return dataStore.getData(
-            keyName = Constants.PREFERENCE_KEY_LOAD_QUALITY,
-            defaultValue = LoadQuality.Regular.name
-        )
-            .first()
-            .run {
-                LoadQuality.valueOf(this)
-            }
     }
 }

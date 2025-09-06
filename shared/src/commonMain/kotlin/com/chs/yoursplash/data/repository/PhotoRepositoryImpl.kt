@@ -50,7 +50,7 @@ class PhotoRepositoryImpl (
         }.flow
     }
 
-    override suspend fun getPhotoDetailInfo(id: String): Flow<NetworkResult<PhotoDetail>> {
+    override fun getPhotoDetailInfo(id: String): Flow<NetworkResult<PhotoDetail>> {
         return flow {
             emit(NetworkResult.Loading())
             try {
@@ -67,7 +67,7 @@ class PhotoRepositoryImpl (
         }
     }
 
-    override suspend fun getRelatedPhotoList(id: String): Flow<NetworkResult<List<Photo>>> {
+    override fun getRelatedPhotoList(id: String): Flow<NetworkResult<List<Photo>>> {
         return flow {
             emit(NetworkResult.Loading())
             try {
@@ -85,7 +85,7 @@ class PhotoRepositoryImpl (
         }
     }
 
-    override suspend fun getCollectionDetailInfo(id: String): Flow<NetworkResult<UnSplashCollection>> {
+    override fun getCollectionDetailInfo(id: String): Flow<NetworkResult<UnSplashCollection>> {
         return flow {
             emit(NetworkResult.Loading())
             try {
@@ -102,8 +102,10 @@ class PhotoRepositoryImpl (
         }
     }
 
-    override suspend fun getPagingCollectionPhotos(id: String): Flow<PagingData<Photo>> {
-        val loadQuality = getLoadQuality()
+    override fun getPagingCollectionPhotos(
+        id: String,
+        loadQuality: LoadQuality
+    ): Flow<PagingData<Photo>> {
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
@@ -115,7 +117,7 @@ class PhotoRepositoryImpl (
         }.flow
     }
 
-    override suspend fun getRelatedCollectionList(id: String): Flow<NetworkResult<List<UnSplashCollection>>> {
+    override fun getRelatedCollectionList(id: String): Flow<NetworkResult<List<UnSplashCollection>>> {
         return flow {
             emit(NetworkResult.Loading())
             try {

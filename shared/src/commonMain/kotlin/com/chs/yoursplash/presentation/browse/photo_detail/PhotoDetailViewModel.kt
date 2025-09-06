@@ -9,6 +9,7 @@ import com.chs.yoursplash.domain.usecase.GetPhotoDetailUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoRelatedListUseCase
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.NetworkResult
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
@@ -24,7 +25,8 @@ class PhotoDetailViewModel(
 ) : ViewModel() {
 
     private val imageId: String = savedStateHandle[Constants.ARG_KEY_PHOTO_ID] ?: ""
-
+    private var imageDetailJob: Job? = null
+    private var relatedListJob: Job? = null
     private var _state = MutableStateFlow(PhotoDetailState())
     val state = _state
         .onStart {
@@ -38,7 +40,8 @@ class PhotoDetailViewModel(
         )
 
     private fun getImageDetailInfo() {
-        viewModelScope.launch {
+        imageDetailJob?.cancel()
+        imageDetailJob = viewModelScope.launch {
             getPhotoDetailUseCase(imageId).collect { result ->
                 _state.update {
                     when (result) {
@@ -70,7 +73,8 @@ class PhotoDetailViewModel(
     }
 
     private fun getImageRelatedList() {
-        viewModelScope.launch {
+        relatedListJob?.cancel()
+        relatedListJob = viewModelScope.launch {
             getPhotoRelatedListUseCase(imageId).collect { result ->
                 _state.update {
                     when (result) {
@@ -99,5 +103,11 @@ class PhotoDetailViewModel(
                 }
             }
         }
+    }
+
+    override fun onCleared() {
+        imageDetailJob?.cancel()
+        relatedListJob?.cancel()
+        super.onCleared()
     }
 }

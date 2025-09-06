@@ -7,6 +7,7 @@ import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetSearchResultCollectionUseCase
 import com.chs.yoursplash.domain.usecase.GetSearchResultPhotoUseCase
 import com.chs.yoursplash.domain.usecase.GetSearchResultUserUseCase
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -30,6 +31,7 @@ class SearchResultViewModel(
             SharingStarted.WhileSubscribed(5000L),
             SearchState()
         )
+    private var searchJob: Job? = null
 
 //    private val _event: Channel<SearchEvent> = Channel()
 //    val event = _event.receiveAsFlow()
@@ -61,7 +63,8 @@ class SearchResultViewModel(
     }
 
     private fun searchResult(query: String) {
-        viewModelScope.launch {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
             _state.update {
                 it.copy(
                     searchPhotoList = searchResultPhotoUseCase(
@@ -73,5 +76,10 @@ class SearchResultViewModel(
                 )
             }
         }
+    }
+
+    override fun onCleared() {
+        searchJob?.cancel()
+        super.onCleared()
     }
 }

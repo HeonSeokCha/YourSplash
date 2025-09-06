@@ -14,13 +14,16 @@ interface PhotoRepository {
 
     fun getPagingCollection(loadQuality: LoadQuality): Flow<PagingData<UnSplashCollection>>
 
-    suspend fun getPhotoDetailInfo(id: String): Flow<NetworkResult<PhotoDetail>>
+    fun getPhotoDetailInfo(id: String): Flow<NetworkResult<PhotoDetail>>
 
-    suspend fun getRelatedPhotoList(id: String): Flow<NetworkResult<List<Photo>>>
+    fun getRelatedPhotoList(id: String): Flow<NetworkResult<List<Photo>>>
 
-    suspend fun getCollectionDetailInfo(id: String): Flow<NetworkResult<UnSplashCollection>>
+    fun getCollectionDetailInfo(id: String): Flow<NetworkResult<UnSplashCollection>>
 
-    suspend fun getPagingCollectionPhotos(id: String): Flow<PagingData<Photo>>
+    fun getPagingCollectionPhotos(
+        id: String,
+        loadQuality: LoadQuality
+    ): Flow<PagingData<Photo>>
 
-    suspend fun getRelatedCollectionList(id: String): Flow<NetworkResult<List<UnSplashCollection>>>
+    fun getRelatedCollectionList(id: String): Flow<NetworkResult<List<UnSplashCollection>>>
 }

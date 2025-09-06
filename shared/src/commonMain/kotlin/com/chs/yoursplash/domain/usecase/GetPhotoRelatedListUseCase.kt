@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 class GetPhotoRelatedListUseCase(
     private val repository: PhotoRepository
 ) {
-    suspend operator fun invoke(id: String): Flow<NetworkResult<List<Photo>>> {
+    operator fun invoke(id: String): Flow<NetworkResult<List<Photo>>> {
         return repository.getRelatedPhotoList(id)
     }
 }
