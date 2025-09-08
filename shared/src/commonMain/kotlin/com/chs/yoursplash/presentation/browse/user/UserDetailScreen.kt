@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.chs.yoursplash.domain.model.UserDetail
 import com.chs.yoursplash.presentation.Screens
@@ -31,6 +32,22 @@ import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import com.chs.yoursplash.util.Constants
 import kotlinx.coroutines.launch
+
+@Composable
+fun UserDetailScreenRoot(
+    viewModel: UserDetailViewModel,
+    onClose: () -> Unit,
+    onNavigate: (Screens) -> Unit
+) {
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    UserDetailScreen(
+        state = state,
+        onClose = onClose,
+        onNavigate = onNavigate
+    )
+}
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable

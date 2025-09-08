@@ -1,38 +1,30 @@
 package com.chs.yoursplash.presentation.browse.photo_detail
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.SearchFilter
-import com.chs.yoursplash.domain.model.SortType
-import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetSearchResultPhotoUseCase
 import com.chs.yoursplash.util.Constants
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class PhotoTagListViewModel(
     savedStateHandle: SavedStateHandle,
-    private val getSearchResultPhotoUseCase: GetSearchResultPhotoUseCase,
+    getSearchResultPhotoUseCase: GetSearchResultPhotoUseCase,
 ) : ViewModel() {
 
     private val tagName: String = savedStateHandle[Constants.ARG_KEY_TAG_NAME] ?: ""
+    val pagingItems: Flow<PagingData<Photo>> = getSearchResultPhotoUseCase(
+        query = tagName,
+        searchFilter = SearchFilter()
+    )
+        .cachedIn(viewModelScope)
 
-    var state by mutableStateOf(PhotoTagListState())
-        private set
-
-    init {
-        viewModelScope.launch {
-            state = PhotoTagListState(
-                isLoading = false,
-                tagSearchResultList = getSearchResultPhotoUseCase(
-                    query = tagName,
-                    searchFilter = SearchFilter(),
-                ).cachedIn(viewModelScope)
-            )
-        }
-    }
+    private val _state = MutableStateFlow(PhotoTagListState())
+    val state = _state.asStateFlow()
 }

@@ -13,11 +13,16 @@ class HomeCollectionPaging(
     private val api: UnSplashService,
     private val loadQuality: LoadQuality
 ) : PagingSource<Int, UnSplashCollection>() {
-    override fun getRefreshKey(state: PagingState<Int, UnSplashCollection>): Int? = null
+    override fun getRefreshKey(state: PagingState<Int, UnSplashCollection>): Int? {
+        return state.anchorPosition?.let { anchorPosition ->
+            val anchorPage = state.closestPageToPosition(anchorPosition)
+            anchorPage?.prevKey ?: anchorPage?.nextKey
+        }
+    }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, UnSplashCollection> {
         return try {
-            val page = params.key ?: 1
+            val page = params.key ?: 0
             val response: List<UnSplashCollection> = api.requestUnsplash<List<ResponseCollection>>(
                 url = Constants.GET_COLLECTION,
                 params = hashMapOf("page" to page.toString())
@@ -25,10 +30,11 @@ class HomeCollectionPaging(
 
             LoadResult.Page(
                 data = response,
-                prevKey = if (page == 1) null else page - 1,
+                prevKey = if (page == 0) null else page - 1,
                 nextKey = if (response.isNotEmpty()) page + 1 else null
             )
         } catch (e: Exception) {
+            println(e.message.toString())
             LoadResult.Error(e)
         }
     }

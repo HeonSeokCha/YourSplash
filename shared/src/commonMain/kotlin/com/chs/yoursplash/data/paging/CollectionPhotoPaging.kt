@@ -24,7 +24,7 @@ class CollectionPhotoPaging(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Photo> {
         return try {
-            val page = params.key ?: 1
+            val page = params.key ?: 0
             val response = api.requestUnsplash<List<ResponsePhoto>>(
                 url = Constants.GET_COLLECTION_PHOTOS(collectionId),
                 params = hashMapOf("page" to page.toString())
@@ -32,7 +32,7 @@ class CollectionPhotoPaging(
 
             LoadResult.Page(
                 data = response,
-                prevKey = null,
+                prevKey = if (page == 0) null else page - 1,
                 nextKey = if(response.isNotEmpty()) page + 1 else null
             )
         } catch (e: Exception) {

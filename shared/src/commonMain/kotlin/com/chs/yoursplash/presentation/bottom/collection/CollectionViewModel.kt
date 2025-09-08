@@ -45,12 +45,12 @@ class CollectionViewModel(
             }
 
             CollectionIntent.LoadComplete -> {
-//                updateState {
-//                    it.copy(
-//                        isRefresh = false,
-//                        loadingState = LoadingState.Success
-//                    )
-//                }
+                updateState {
+                    it.copy(
+                        isRefresh = false,
+                        loadingState = LoadingState.Success
+                    )
+                }
             }
 
             CollectionIntent.RefreshData -> {

@@ -3,13 +3,16 @@ package com.chs.yoursplash.presentation.browse.collection_detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.usecase.GetCollectionDetailUseCase
 import com.chs.yoursplash.domain.usecase.GetCollectionPhotoUseCase
 import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.NetworkResult
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
@@ -20,22 +23,17 @@ import kotlinx.coroutines.launch
 class CollectionDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val getCollectionDetailUseCase: GetCollectionDetailUseCase,
-    private val getCollectionPhotoUseCase: GetCollectionPhotoUseCase,
+    getCollectionPhotoUseCase: GetCollectionPhotoUseCase,
 ) : ViewModel() {
 
     private val collectionId: String = savedStateHandle[Constants.ARG_KEY_COLLECTION_ID] ?: ""
     private var collectionDetailJob: Job? = null
+    private val pagingItems: Flow<PagingData<Photo>> =
+        getCollectionPhotoUseCase(id = collectionId).cachedIn(viewModelScope)
 
     private val _state = MutableStateFlow(CollectionDetailState())
     val state = _state
         .onStart {
-            viewModelScope.launch {
-                _state.update {
-                    it.copy(
-                        collectionPhotos = getCollectionPhotoUseCase(collectionId).cachedIn(this)
-                    )
-                }
-            }
             getCollectionDetailInfo()
         }.stateIn(
             viewModelScope,

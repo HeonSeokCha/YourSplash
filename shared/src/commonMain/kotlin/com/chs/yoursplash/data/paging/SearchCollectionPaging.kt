@@ -15,15 +15,15 @@ class SearchCollectionPaging(
     private val loadQuality: LoadQuality
 ): PagingSource<Int, UnSplashCollection>() {
     override fun getRefreshKey(state: PagingState<Int, UnSplashCollection>): Int? {
-        return state.anchorPosition?.let { position ->
-            val page = state.closestPageToPosition(position)
-            page?.prevKey?.minus(1) ?: page?.nextKey?.plus(1)
+        return state.anchorPosition?.let { anchorPosition ->
+            val anchorPage = state.closestPageToPosition(anchorPosition)
+            anchorPage?.prevKey ?: anchorPage?.nextKey
         }
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, UnSplashCollection> {
         return try {
-            val page = params.key ?: 1
+            val page = params.key ?: 0
             val response = api.requestUnsplash<ResponseSearchCollections>(
                 url = Constants.GET_SEARCH_COLLECTIONS,
                 params = hashMapOf(
@@ -36,7 +36,7 @@ class SearchCollectionPaging(
 
             LoadResult.Page(
                 data = response,
-                prevKey = null,
+                prevKey = if (page == 0) null else page - 1,
                 nextKey = if(response.isNotEmpty()) page + 1 else null
             )
         } catch (e: Exception) {

@@ -16,8 +16,10 @@ import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetail
 import com.chs.yoursplash.presentation.browse.photo_detail.ImageDetailScreen
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailViewModel
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListScreen
+import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListScreenRoot
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListViewModel
 import com.chs.yoursplash.presentation.browse.user.UserDetailScreen
+import com.chs.yoursplash.presentation.browse.user.UserDetailScreenRoot
 import com.chs.yoursplash.presentation.browse.user.UserDetailViewModel
 import com.chs.yoursplash.util.Constants
 import org.koin.compose.viewmodel.koinViewModel
@@ -97,14 +99,12 @@ fun BrowseNavHost(
             val viewModel: UserDetailViewModel = koinViewModel<UserDetailViewModel>(
                 viewModelStoreOwner = parentEntry
             )
-            val state by viewModel.state.collectAsStateWithLifecycle()
 
-            UserDetailScreen(
-                state = state,
-                onClose = onBack
-            ) {
-                navController.navigate(it)
-            }
+            UserDetailScreenRoot(
+                viewModel = viewModel,
+                onClose = onBack,
+                onNavigate = { navController.navigate(it) }
+            )
         }
 
         composable<Screens.PhotoTagResultScreen> {
@@ -115,12 +115,12 @@ fun BrowseNavHost(
             val viewModel: PhotoTagListViewModel = koinViewModel<PhotoTagListViewModel>(
                 viewModelStoreOwner = parentEntry
             )
-            PhotoTagListScreen(
-                state = viewModel.state,
-                onClose = onBack
-            ) {
-                navController.navigate(it)
-            }
+
+            PhotoTagListScreenRoot(
+                viewModel = viewModel,
+                onClose = onBack,
+                onNavigate = { navController.navigate(it) }
+            )
         }
     }
 }

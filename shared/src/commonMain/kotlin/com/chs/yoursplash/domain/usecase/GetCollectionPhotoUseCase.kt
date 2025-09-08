@@ -4,11 +4,20 @@ import androidx.paging.PagingData
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.repository.PhotoRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 
 class GetCollectionPhotoUseCase(
-    private val repository: PhotoRepository
+    private val repository: PhotoRepository,
+    private val getLoadQualityUseCase: GetLoadQualityUseCase
 ) {
-    suspend operator fun invoke(id: String): Flow<PagingData<Photo>> {
-        return repository.getPagingCollectionPhotos(id)
+    operator fun invoke(id: String): Flow<PagingData<Photo>> = flow {
+        emit(getLoadQualityUseCase().first())
+    }.flatMapLatest {
+        repository.getPagingCollectionPhotos(
+            loadQuality = it,
+            id = id
+        )
     }
 }
