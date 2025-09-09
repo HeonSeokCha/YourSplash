@@ -7,7 +7,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -22,7 +21,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.chs.yoursplash.domain.model.BrowseInfo
-import com.chs.yoursplash.domain.model.SearchFilter
+import com.chs.yoursplash.presentation.bottom.home.HomeEffect
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import kotlinx.coroutines.launch
 
@@ -34,12 +33,20 @@ fun SearchScreenRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    SearchScreen(state) { event ->
-        when (event) {
-            is SearchEvent.BrowseScreen -> onBrowse(event.info)
-            SearchEvent.OnBack -> onBack()
-            else -> viewModel.changeEvent(event)
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                SearchEffect.NavigateBack -> onBack()
+                is SearchEffect.NavigateCollectionDetail -> onBrowse(BrowseInfo.Collection(effect.id))
+                is SearchEffect.NavigatePhotoDetail -> onBrowse(BrowseInfo.Photo(effect.id))
+                is SearchEffect.NavigateUserDetail -> onBrowse(BrowseInfo.User(effect.name))
+                is SearchEffect.ShowToast -> TODO()
+            }
         }
+    }
+
+    SearchScreen(state) { event ->
+
     }
 }
 
@@ -48,7 +55,7 @@ fun SearchScreenRoot(
 @Composable
 private fun SearchScreen(
     state: SearchState,
-    onEvent: (SearchEvent) -> Unit
+    onIntent: (SearchIntent) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val pagerState = rememberPagerState(initialPage = 0) { state.tabList.size }
@@ -58,12 +65,12 @@ private fun SearchScreen(
     }
 
     LaunchedEffect(pagerState.currentPage) {
-        onEvent(SearchEvent.TabIndex(pagerState.currentPage))
+        onIntent(SearchIntent.OnChangeTabIndex(pagerState.currentPage))
     }
 
     DisposableEffect(Unit) {
         onDispose {
-            onEvent(SearchEvent.OnBack)
+            onIntent(SearchIntent.OnBack)
         }
     }
 
@@ -73,7 +80,7 @@ private fun SearchScreen(
                 visible = state.selectIdx == 0
             ) {
                 FloatingActionButton(
-                    onClick = { onEvent(SearchEvent.OnChangeShowModal) }
+                    onClick = { onIntent(SearchIntent.ChangeShowModal) }
                 ) {
                     Icon(Icons.Filled.Search, contentDescription = "")
                 }
@@ -121,21 +128,21 @@ private fun SearchScreen(
                         SearchResultPhotoScreen(
                             state = state,
                             modalClick = { },
-                            onBrowse = { onEvent(SearchEvent.BrowseScreen(it)) }
+                            onBrowse = { onIntent(SearchIntent.Photo.ClickPhoto(it)) }
                         )
                     }
 
                     1 -> {
                         SearchResultCollectionScreen(
                             state = state,
-                            onBrowse = { onEvent(SearchEvent.BrowseScreen(it)) }
+                            onBrowse = { onIntent(SearchIntent.(it)) }
                         )
                     }
 
                     2 -> {
                         SearchResultUserScreen(
                             state = state,
-                            onBrowse = { onEvent(SearchEvent.BrowseScreen(it)) }
+                            onBrowse = { onIntent(SearchIntent.BrowseScreen(it)) }
                         )
                     }
                 }
@@ -143,14 +150,18 @@ private fun SearchScreen(
         }
 
 
-        if (state.isShowModal) {
+        if (state.showModal) {
             SearchBottomSheet(
                 searchFilter = state.searchFilter,
+                expanded = state.expandColorFilter,
                 onClick = {
-                    onEvent(SearchEvent.OnChangeSearchFilter(it))
+                    onIntent(SearchIntent.OnChangeSearchFilter(it))
+                },
+                onChangeExpanded = {
+
                 },
                 onDismiss = {
-                    onEvent(SearchEvent.OnChangeShowModal)
+                    onIntent(SearchIntent.OnChangeShowModal)
                 }
             )
         }

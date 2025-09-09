@@ -14,7 +14,7 @@ import com.chs.yoursplash.presentation.bottom.collection.CollectionScreenRoot
 import com.chs.yoursplash.presentation.bottom.collection.CollectionViewModel
 import com.chs.yoursplash.presentation.bottom.home.HomeScreenRoot
 import com.chs.yoursplash.presentation.bottom.home.HomeViewModel
-import com.chs.yoursplash.presentation.search.SearchEvent
+import com.chs.yoursplash.presentation.search.SearchIntent
 import com.chs.yoursplash.presentation.search.SearchResultViewModel
 import com.chs.yoursplash.presentation.search.SearchScreenRoot
 import com.chs.yoursplash.presentation.setting.SettingScreen
@@ -59,7 +59,7 @@ fun MainNavHost(
                     .distinctUntilChanged()
                     .filter { it.isNotEmpty() }
                     .collect {
-                        viewModel.changeEvent(SearchEvent.OnChangeSearchQuery(it))
+                        viewModel.changeEvent(SearchIntent.OnChangeSearchQuery(it))
                     }
             }
 

@@ -2,7 +2,6 @@ package com.chs.yoursplash.presentation.search
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,22 +14,20 @@ import com.chs.yoursplash.domain.model.SearchFilter
 import com.chs.yoursplash.domain.model.SortType
 import com.chs.yoursplash.util.Constants
 import kotlinx.coroutines.launch
-import kotlin.collections.indexOf
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBottomSheet(
     searchFilter: SearchFilter,
+    expanded: Boolean,
     onClick: (SearchFilter) -> Unit,
+    onChangeExpanded: (Boolean) -> Unit,
     onDismiss: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
-    var expanded by remember { mutableStateOf(false) }
-    var selectOrder by remember { mutableStateOf(searchFilter.orderBy) }
-    var selectedColor by remember { mutableStateOf(searchFilter.color) }
-    var selectOri by remember { mutableStateOf(searchFilter.orientation) }
+    var selectFilterValue by remember { mutableStateOf(searchFilter)}
 
     ModalBottomSheet(
         sheetState = sheetState,
@@ -46,9 +43,11 @@ fun SearchBottomSheet(
                 text = "Sort By",
                 fontWeight = FontWeight.Bold
             )
+
             Spacer(Modifier.height(8.dp))
+
             TabRow(
-                selectedTabIndex = SortType.entries.indexOf(selectOrder),
+                selectedTabIndex = SortType.entries.indexOf(selectFilterValue.orderBy),
                 containerColor = Color.LightGray
             ) {
                 Constants.SORT_BY_LIST.forEach { info ->
@@ -56,7 +55,9 @@ fun SearchBottomSheet(
                         modifier = Modifier
                             .clickable(
                                 onClick = {
-                                    selectOrder = SortType.entries.find { it.name == info.first }!!
+                                    selectFilterValue = selectFilterValue.copy(
+                                        orderBy = SortType.entries.find { it.name == info.first }!!
+                                    )
                                 }
                             )
                             .padding(16.dp),
@@ -67,23 +68,26 @@ fun SearchBottomSheet(
                     }
                 }
             }
+
             Spacer(Modifier.height(12.dp))
 
             Text(
                 text = "Color",
                 fontWeight = FontWeight.Bold
             )
+
             Spacer(Modifier.height(8.dp))
+
             ExposedDropdownMenuBox(
                 modifier = Modifier
                     .fillMaxWidth(),
                 expanded = expanded,
-                onExpandedChange = { expanded = !expanded }
+                onExpandedChange = { onChangeExpanded(!expanded) }
             ) {
                 TextField(
                     modifier = Modifier.fillMaxWidth(),
                     readOnly = true,
-                    value = Constants.SEARCH_COLOR_LIST.find { it.second == selectedColor }!!.first,
+                    value = Constants.SEARCH_COLOR_LIST.find { it.second == selectFilterValue.color }!!.first,
                     onValueChange = { },
                     label = { Text("Categories") },
                     trailingIcon = {
@@ -93,17 +97,16 @@ fun SearchBottomSheet(
                     },
                     colors = ExposedDropdownMenuDefaults.textFieldColors()
                 )
+
                 ExposedDropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = {
-                        expanded = false
-                    }
+                    onDismissRequest = { onChangeExpanded(false) }
                 ) {
                     Constants.SEARCH_COLOR_LIST.forEach { selectionOption ->
                         DropdownMenuItem(
                             onClick = {
-                                selectedColor = selectionOption.second
-                                expanded = false
+                                selectFilterValue = selectFilterValue.copy(color = selectionOption.second)
+                                onChangeExpanded(false)
                             }, text = {
 
                                 Text(text = selectionOption.first)
@@ -112,22 +115,27 @@ fun SearchBottomSheet(
                     }
                 }
             }
+
             Spacer(Modifier.height(12.dp))
 
             Text(
                 text = "Orientation",
                 fontWeight = FontWeight.Bold
             )
+
             Spacer(Modifier.height(8.dp))
+
             TabRow(
-                selectedTabIndex = Orientations.entries.indexOf(selectOri),
+                selectedTabIndex = Orientations.entries.indexOf(searchFilter.orientation),
                 containerColor = Color.LightGray
             ) {
                 Constants.SEARCH_ORI_LIST.forEach { info ->
                     Row(
                         modifier = Modifier
                             .clickable(onClick = {
-                                selectOri = Orientations.entries.find { it.name == info.first }!!
+                                selectFilterValue = selectFilterValue.copy(
+                                    orientation = Orientations.entries.find { it.name == info.first }!!
+                                )
                             })
                             .padding(16.dp),
                         horizontalArrangement = Arrangement.Center,
@@ -140,6 +148,7 @@ fun SearchBottomSheet(
                     }
                 }
             }
+
             Spacer(Modifier.height(8.dp))
 
             Button(
@@ -147,13 +156,7 @@ fun SearchBottomSheet(
                     .fillMaxWidth()
                     .wrapContentHeight(),
                 onClick = {
-                    onClick(
-                        SearchFilter(
-                            orderBy = selectOrder,
-                            color = selectedColor,
-                            orientation = selectOri
-                        )
-                    )
+                    onClick(selectFilterValue)
                     coroutineScope.launch {
                         sheetState.hide()
                     }.invokeOnCompletion {
