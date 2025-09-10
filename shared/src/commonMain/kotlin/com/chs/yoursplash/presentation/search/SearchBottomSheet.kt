@@ -14,6 +14,8 @@ import com.chs.yoursplash.domain.model.SearchFilter
 import com.chs.yoursplash.domain.model.SortType
 import com.chs.yoursplash.util.Constants
 import kotlinx.coroutines.launch
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,20 +84,24 @@ fun SearchBottomSheet(
                 modifier = Modifier
                     .fillMaxWidth(),
                 expanded = expanded,
-                onExpandedChange = { onChangeExpanded(!expanded) }
+                onExpandedChange = {
+                    onChangeExpanded(expanded)
+                }
             ) {
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    readOnly = true,
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
                     value = Constants.SEARCH_COLOR_LIST.find { it.second == selectFilterValue.color }!!.first,
-                    onValueChange = { },
-                    label = { Text("Categories") },
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(
-                            expanded = expanded
-                        )
-                    },
-                    colors = ExposedDropdownMenuDefaults.textFieldColors()
+                    onValueChange = {},
+                    readOnly = true,
+                    singleLine = true,
+                    label = { Text("Color") },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    colors = OutlinedTextFieldDefaults.colors(
+                        unfocusedPlaceholderColor = Color.White,
+                        focusedPlaceholderColor = Color.White
+                    )
                 )
 
                 ExposedDropdownMenu(
@@ -108,7 +114,6 @@ fun SearchBottomSheet(
                                 selectFilterValue = selectFilterValue.copy(color = selectionOption.second)
                                 onChangeExpanded(false)
                             }, text = {
-
                                 Text(text = selectionOption.first)
                             }
                         )

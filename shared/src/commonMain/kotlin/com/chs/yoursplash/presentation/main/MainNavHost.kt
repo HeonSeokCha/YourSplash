@@ -59,7 +59,7 @@ fun MainNavHost(
                     .distinctUntilChanged()
                     .filter { it.isNotEmpty() }
                     .collect {
-                        viewModel.changeEvent(SearchIntent.OnChangeSearchQuery(it))
+                        viewModel.changeEvent(SearchIntent.ChangeSearchQuery(it))
                     }
             }
 

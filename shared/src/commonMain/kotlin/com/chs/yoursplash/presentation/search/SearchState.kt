@@ -9,7 +9,6 @@ import com.chs.yoursplash.presentation.LoadingState
 import kotlinx.coroutines.flow.Flow
 
 data class SearchState(
-    val query: String = "",
     val searchFilter: SearchFilter = SearchFilter(),
     val photoLoadingState: LoadingState = LoadingState.Initial,
     val searchPhotoList: Flow<PagingData<Photo>>? = null,

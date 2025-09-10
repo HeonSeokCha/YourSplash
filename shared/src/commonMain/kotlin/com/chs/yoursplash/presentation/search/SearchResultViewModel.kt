@@ -7,6 +7,7 @@ import com.chs.yoursplash.domain.usecase.GetSearchResultCollectionUseCase
 import com.chs.yoursplash.domain.usecase.GetSearchResultPhotoUseCase
 import com.chs.yoursplash.domain.usecase.GetSearchResultUserUseCase
 import com.chs.yoursplash.presentation.LoadingState
+import com.chs.yoursplash.presentation.search.SearchEffect.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,34 +38,30 @@ class SearchResultViewModel(
 
     fun changeEvent(intent: SearchIntent) {
         when (intent) {
-            SearchIntent.ChangeExpandColorFilter -> TODO()
+            SearchIntent.ChangeExpandColorFilter -> {
+                _state.update { it.copy(expandColorFilter = !it.expandColorFilter) }
+            }
             is SearchIntent.ChangeSearchFilter -> {
                 _state.update { it.copy(searchFilter = intent.filter) }
             }
 
-            is SearchIntent.ChangeSearchQuery -> _state.update { it.copy(query = intent.query) }
+            is SearchIntent.ClickBrowseInfo -> {
+                _effect.trySend(NavigateBrowse(intent.info))
+            }
+
+            is SearchIntent.ChangeSearchQuery -> searchResult(intent.query)
             is SearchIntent.ChangeShowModal -> _state.update { it.copy(showModal = !it.showModal) }
             is SearchIntent.ChangeTabIndex -> _state.update { it.copy(selectIdx = intent.idx) }
             SearchIntent.ClickBack -> _effect.trySend(SearchEffect.NavigateBack)
 
-            is SearchIntent.Collection.ClickCollection -> {
-                _effect.trySend(SearchEffect.NavigateCollectionDetail(intent.id))
-            }
             SearchIntent.Collection.Loading -> _state.update { it.copy(collectionLoadingState = LoadingState.Loading) }
             SearchIntent.Collection.LoadComplete -> _state.update { it.copy(collectionLoadingState = LoadingState.Success) }
             is SearchIntent.Collection.OnError -> _state.update { it.copy(collectionErrorMessage = intent.message) }
 
-
-            is SearchIntent.Photo.ClickPhoto -> {
-                _effect.trySend(SearchEffect.NavigatePhotoDetail(intent.id))
-            }
             SearchIntent.Photo.Loading -> _state.update { it.copy(photoLoadingState = LoadingState.Loading) }
             SearchIntent.Photo.LoadComplete -> _state.update { it.copy(photoLoadingState = LoadingState.Success) }
             is SearchIntent.Photo.OnError -> _state.update { it.copy(photoErrorMessage = intent.message) }
 
-            is SearchIntent.User.ClickUser -> {
-                _effect.trySend(SearchEffect.NavigateUserDetail(intent.userName))
-            }
             SearchIntent.User.Loading -> _state.update { it.copy(userLoadingState = LoadingState.Loading) }
             SearchIntent.User.LoadComplete -> _state.update { it.copy(userLoadingState = LoadingState.Success) }
             is SearchIntent.User.OnError -> _state.update { it.copy(userErrorMessage = intent.message) }

@@ -37,17 +37,15 @@ fun SearchScreenRoot(
         viewModel.effect.collect { effect ->
             when (effect) {
                 SearchEffect.NavigateBack -> onBack()
-                is SearchEffect.NavigateCollectionDetail -> onBrowse(BrowseInfo.Collection(effect.id))
-                is SearchEffect.NavigatePhotoDetail -> onBrowse(BrowseInfo.Photo(effect.id))
-                is SearchEffect.NavigateUserDetail -> onBrowse(BrowseInfo.User(effect.name))
-                is SearchEffect.ShowToast -> TODO()
+                is SearchEffect.NavigateBrowse -> onBrowse(effect.info)
             }
         }
     }
 
-    SearchScreen(state) { event ->
-
-    }
+    SearchScreen(
+        state = state,
+        onIntent = viewModel::changeEvent
+    )
 }
 
 
@@ -65,20 +63,16 @@ private fun SearchScreen(
     }
 
     LaunchedEffect(pagerState.currentPage) {
-        onIntent(SearchIntent.OnChangeTabIndex(pagerState.currentPage))
+        onIntent(SearchIntent.ChangeTabIndex(pagerState.currentPage))
     }
 
     DisposableEffect(Unit) {
-        onDispose {
-            onIntent(SearchIntent.OnBack)
-        }
+        onDispose { onIntent(SearchIntent.ClickBack) }
     }
 
     Scaffold(
         floatingActionButton = {
-            AnimatedVisibility(
-                visible = state.selectIdx == 0
-            ) {
+            AnimatedVisibility(visible = state.selectIdx == 0) {
                 FloatingActionButton(
                     onClick = { onIntent(SearchIntent.ChangeShowModal) }
                 ) {
@@ -127,42 +121,34 @@ private fun SearchScreen(
                     0 -> {
                         SearchResultPhotoScreen(
                             state = state,
-                            modalClick = { },
-                            onBrowse = { onIntent(SearchIntent.Photo.ClickPhoto(it)) }
+                            onBrowse = { onIntent(SearchIntent.ClickBrowseInfo(it)) }
                         )
                     }
 
                     1 -> {
                         SearchResultCollectionScreen(
                             state = state,
-                            onBrowse = { onIntent(SearchIntent.(it)) }
+                            onBrowse = { onIntent(SearchIntent.ClickBrowseInfo(it)) }
                         )
                     }
 
                     2 -> {
                         SearchResultUserScreen(
                             state = state,
-                            onBrowse = { onIntent(SearchIntent.BrowseScreen(it)) }
+                            onBrowse = { onIntent(SearchIntent.ClickBrowseInfo(it)) }
                         )
                     }
                 }
             }
         }
 
-
         if (state.showModal) {
             SearchBottomSheet(
                 searchFilter = state.searchFilter,
                 expanded = state.expandColorFilter,
-                onClick = {
-                    onIntent(SearchIntent.OnChangeSearchFilter(it))
-                },
-                onChangeExpanded = {
-
-                },
-                onDismiss = {
-                    onIntent(SearchIntent.OnChangeShowModal)
-                }
+                onClick = { onIntent(SearchIntent.ChangeSearchFilter(it)) },
+                onChangeExpanded = { onIntent(SearchIntent.ChangeExpandColorFilter) },
+                onDismiss = { onIntent(SearchIntent.ChangeShowModal) }
             )
         }
     }
