@@ -10,38 +10,40 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.base.ShimmerImage
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun UserDetailPhotoScreen(
-    photoList: LazyPagingItems<Photo>?,
+    photoList: Flow<PagingData<Photo>>,
     onNavigate: (Screens) -> Unit
 ) {
+    val pagingItems = photoList.collectAsLazyPagingItems()
     LazyVerticalStaggeredGrid(
         modifier = Modifier.fillMaxSize(),
         columns = StaggeredGridCells.Fixed(2),
     ) {
-        if (photoList != null) {
-            items(count = photoList.itemCount) { idx ->
-                ShimmerImage(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(300.dp)
-                        .padding(
-                            start = 8.dp,
-                            end = 8.dp,
-                            bottom = 16.dp
-                        ).clickable {
-                            if (photoList[idx] != null) {
-                                onNavigate(Screens.ImageDetailScreen(photoList[idx]!!.id))
-                            }
-                        },
-                    url = photoList[idx]?.urls
-                )
-            }
+        items(count = pagingItems.itemCount) { idx ->
+            ShimmerImage(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+                    .padding(
+                        start = 8.dp,
+                        end = 8.dp,
+                        bottom = 16.dp
+                    ).clickable {
+                        if (pagingItems[idx] != null) {
+                            onNavigate(Screens.ImageDetailScreen(pagingItems[idx]!!.id))
+                        }
+                    },
+                url = pagingItems[idx]?.urls
+            )
         }
     }
 }

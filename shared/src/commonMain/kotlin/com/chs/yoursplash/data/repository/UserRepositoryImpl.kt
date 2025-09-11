@@ -42,8 +42,10 @@ class UserRepositoryImpl (
         }
     }
 
-    override suspend fun getUserDetailPhotos(userName: String): Flow<PagingData<Photo>> {
-        val loadQuality = getLoadQuality()
+    override fun getUserDetailPhotos(
+        userName: String,
+        loadQuality: LoadQuality
+    ): Flow<PagingData<Photo>> {
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
@@ -55,8 +57,10 @@ class UserRepositoryImpl (
         }.flow
     }
 
-    override suspend fun getUserDetailLikePhotos(userName: String): Flow<PagingData<Photo>> {
-        val loadQuality = getLoadQuality()
+    override fun getUserDetailLikePhotos(
+        userName: String,
+        loadQuality: LoadQuality
+    ): Flow<PagingData<Photo>> {
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
@@ -68,8 +72,10 @@ class UserRepositoryImpl (
         }.flow
     }
 
-    override suspend fun getUserDetailCollections(userName: String): Flow<PagingData<UnSplashCollection>> {
-        val loadQuality = getLoadQuality()
+    override fun getUserDetailCollections(
+        userName: String,
+        loadQuality: LoadQuality
+    ): Flow<PagingData<UnSplashCollection>> {
         return Pager(
             PagingConfig(pageSize = Constants.PAGING_SIZE)
         ) {
@@ -79,16 +85,5 @@ class UserRepositoryImpl (
                 loadQuality = loadQuality
             )
         }.flow
-    }
-
-    private suspend fun getLoadQuality(): LoadQuality {
-        return dataStore.getData(
-            keyName = Constants.PREFERENCE_KEY_LOAD_QUALITY,
-            defaultValue = LoadQuality.Regular.name
-        )
-            .first()
-            .run {
-                LoadQuality.valueOf(this)
-            }
     }
 }

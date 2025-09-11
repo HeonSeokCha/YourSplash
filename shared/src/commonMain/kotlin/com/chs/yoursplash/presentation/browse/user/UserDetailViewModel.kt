@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import com.chs.yoursplash.domain.model.UserDetail
 import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetUserCollectionUseCase
 import com.chs.yoursplash.domain.usecase.GetUserDetailUseCase
@@ -21,22 +22,15 @@ import kotlinx.coroutines.launch
 class UserDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val getUserDetailUseCase: GetUserDetailUseCase,
-    private val getUserPhotoUseCase: GetUserPhotoUseCase,
-    private val getUserLikesUseCase: GetUserLikesUseCase,
-    private val getUserCollectionUseCase: GetUserCollectionUseCase,
+    getUserPhotoUseCase: GetUserPhotoUseCase,
+    getUserLikesUseCase: GetUserLikesUseCase,
+    getUserCollectionUseCase: GetUserCollectionUseCase,
 ) : ViewModel() {
 
     private val userName: String = savedStateHandle[Constants.ARG_KEY_USER_NAME] ?: ""
     private val _state = MutableStateFlow(UserDetailState())
     val state = _state
         .onStart {
-            _state.update {
-                it.copy(
-                    userDetailPhotoList = getUserPhotoUseCase(userName).cachedIn(viewModelScope),
-                    userDetailCollection = getUserCollectionUseCase(userName).cachedIn(viewModelScope),
-                    userDetailLikeList = getUserLikesUseCase(userName).cachedIn(viewModelScope)
-                )
-            }
             getUserDetailInfo()
         }
         .stateIn(
@@ -44,6 +38,10 @@ class UserDetailViewModel(
             SharingStarted.WhileSubscribed(5000L),
             _state.value
         )
+
+    val photoPaging = getUserPhotoUseCase(userName).cachedIn(viewModelScope)
+    val likePaging = getUserLikesUseCase(userName).cachedIn(viewModelScope)
+    val collectPaging = getUserCollectionUseCase(userName).cachedIn(viewModelScope)
 
     private fun getUserDetailInfo() {
         viewModelScope.launch {
@@ -58,6 +56,10 @@ class UserDetailViewModel(
                         }
 
                         is NetworkResult.Success -> {
+                            if (result.data != null) {
+                                initTabInfo(result.data)
+                            }
+
                             it.copy(
                                 isLoading = false,
                                 userDetailInfo = result.data
@@ -74,6 +76,24 @@ class UserDetailViewModel(
                     }
                 }
             }
+        }
+    }
+
+    private fun initTabInfo(info: UserDetail) {
+        _state.update {
+            it.copy(
+                userTabLabList = it.userTabLabList.toMutableList().apply {
+                    if (info.totalPhotos == 0) {
+                        this.remove("PHOTOS")
+                    }
+                    if (info.totalLikes == 0) {
+                        this.remove("LIKES")
+                    }
+                    if (info.totalCollections == 0) {
+                        this.remove("COLLECT")
+                    }
+                }
+            )
         }
     }
 }

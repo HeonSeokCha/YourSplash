@@ -23,14 +23,19 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.chs.yoursplash.domain.model.Photo
+import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.UserDetail
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
 import com.chs.yoursplash.presentation.base.ShimmerImage
 import com.chs.yoursplash.presentation.base.shimmer
+import com.chs.yoursplash.presentation.toCommaFormat
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import com.chs.yoursplash.util.Constants
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @Composable
@@ -39,11 +44,16 @@ fun UserDetailScreenRoot(
     onClose: () -> Unit,
     onNavigate: (Screens) -> Unit
 ) {
-
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val photoPaging = viewModel.photoPaging
+    val likePaging = viewModel.likePaging
+    val collectPaging = viewModel.collectPaging
 
     UserDetailScreen(
         state = state,
+        photoPaging = photoPaging,
+        likePaging = likePaging,
+        collectPaging = collectPaging,
         onClose = onClose,
         onNavigate = onNavigate
     )
@@ -53,6 +63,9 @@ fun UserDetailScreenRoot(
 @Composable
 fun UserDetailScreen(
     state: UserDetailState,
+    photoPaging: Flow<PagingData<Photo>>,
+    likePaging: Flow<PagingData<Photo>>,
+    collectPaging: Flow<PagingData<UnSplashCollection>>,
     onClose: () -> Unit,
     onNavigate: (Screens) -> Unit
 ) {
@@ -95,31 +108,22 @@ fun UserDetailScreen(
         },
         onCloseClick = onClose
     ) {
-        HorizontalPager(
-            state = pagerState,
-            userScrollEnabled = false,
-        ) { pager ->
+        HorizontalPager(state = pagerState) { pager ->
             when (pager) {
                 0 -> {
-                    UserDetailPhotoScreen(
-                        state.userDetailPhotoList?.collectAsLazyPagingItems()
-                    ) {
+                    UserDetailPhotoScreen(photoPaging) {
                         onNavigate(it)
                     }
                 }
 
                 1 -> {
-                    UserDetailLikeScreen(
-                        state.userDetailLikeList?.collectAsLazyPagingItems(),
-                    ) {
+                    UserDetailLikeScreen(likePaging) {
                         onNavigate(it)
                     }
                 }
 
                 2 -> {
-                    UserDetailCollectionScreen(
-                        state.userDetailCollection?.collectAsLazyPagingItems(),
-                    ) {
+                    UserDetailCollectionScreen(collectPaging) {
                         onNavigate(it)
                     }
                 }
@@ -173,17 +177,17 @@ private fun UserDetailInfo(userInfo: UserDetail?) {
             ) {
                 UserDetailInfoItem(
                     title = "Photos",
-                    text = userInfo?.totalPhotos?.toString() ?: "0"
+                    value = userInfo?.totalPhotos
                 )
 
                 UserDetailInfoItem(
                     title = "Likes",
-                    text = userInfo?.totalLikes?.toString() ?: "0"
+                    value = userInfo?.totalLikes
                 )
 
                 UserDetailInfoItem(
                     title = "Collections",
-                    text = userInfo?.totalCollections?.toString() ?: "0"
+                    value = userInfo?.totalCollections
                 )
             }
         }
@@ -191,7 +195,7 @@ private fun UserDetailInfo(userInfo: UserDetail?) {
 }
 
 @Composable
-fun UserDetailInfoItem(title: String, text: String) {
+fun UserDetailInfoItem(title: String, value: Int?) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = title,
@@ -199,8 +203,11 @@ fun UserDetailInfoItem(title: String, text: String) {
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
+
         Text(
-            text = text,
+            modifier = Modifier
+                .shimmer(value == null),
+            text = (value ?: 99999).toCommaFormat(),
             fontWeight = FontWeight.Bold,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis

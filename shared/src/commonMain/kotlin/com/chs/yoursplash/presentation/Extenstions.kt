@@ -24,3 +24,6 @@ fun ResponsePhotoUrls.toCurrentUrls(value: LoadQuality): String {
         LoadQuality.Thumb -> this.thumb
     }
 }
+
+fun Int.toCommaFormat(): String = this.toString().reversed().chunked(3).joinToString(",")
+    .reversed()
