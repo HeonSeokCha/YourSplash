@@ -9,9 +9,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -25,11 +22,15 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.chs.youranimelist.res.Res
+import com.chs.youranimelist.res.text_no_items
+import com.chs.youranimelist.res.text_no_photos
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.UserDetail
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
+import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ShimmerImage
 import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.presentation.toCommaFormat
@@ -37,6 +38,7 @@ import com.chs.yoursplash.presentation.ui.theme.Purple200
 import com.chs.yoursplash.util.Constants
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun UserDetailScreenRoot(
@@ -108,23 +110,30 @@ fun UserDetailScreen(
         },
         onCloseClick = onClose
     ) {
-        HorizontalPager(state = pagerState) { pager ->
-            when (pager) {
-                0 -> {
-                    UserDetailPhotoScreen(photoPaging) {
-                        onNavigate(it)
+        if (state.userTabLabList.isEmpty()) {
+            ItemEmpty(
+                modifier = Modifier.fillMaxSize(),
+                text = stringResource(Res.string.text_no_items)
+            )
+        } else {
+            HorizontalPager(state = pagerState) { pager ->
+                when (pager) {
+                    0 -> {
+                        UserDetailPhotoScreen(photoPaging) {
+                            onNavigate(it)
+                        }
                     }
-                }
 
-                1 -> {
-                    UserDetailLikeScreen(likePaging) {
-                        onNavigate(it)
+                    1 -> {
+                        UserDetailLikeScreen(likePaging) {
+                            onNavigate(it)
+                        }
                     }
-                }
 
-                2 -> {
-                    UserDetailCollectionScreen(collectPaging) {
-                        onNavigate(it)
+                    2 -> {
+                        UserDetailCollectionScreen(collectPaging) {
+                            onNavigate(it)
+                        }
                     }
                 }
             }

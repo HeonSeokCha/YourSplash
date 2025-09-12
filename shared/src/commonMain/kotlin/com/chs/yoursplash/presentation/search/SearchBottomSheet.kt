@@ -16,6 +16,9 @@ import com.chs.yoursplash.util.Constants
 import kotlinx.coroutines.launch
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
+import com.chs.yoursplash.presentation.ui.theme.Purple200
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,7 +32,7 @@ fun SearchBottomSheet(
 ) {
     val sheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
-    var selectFilterValue by remember { mutableStateOf(searchFilter)}
+    var selectFilterValue by remember { mutableStateOf(searchFilter) }
 
     ModalBottomSheet(
         sheetState = sheetState,
@@ -48,7 +51,7 @@ fun SearchBottomSheet(
 
             Spacer(Modifier.height(8.dp))
 
-            TabRow(
+            SecondaryTabRow(
                 selectedTabIndex = SortType.entries.indexOf(selectFilterValue.orderBy),
                 containerColor = Color.LightGray
             ) {
@@ -111,7 +114,8 @@ fun SearchBottomSheet(
                     Constants.SEARCH_COLOR_LIST.forEach { selectionOption ->
                         DropdownMenuItem(
                             onClick = {
-                                selectFilterValue = selectFilterValue.copy(color = selectionOption.second)
+                                selectFilterValue =
+                                    selectFilterValue.copy(color = selectionOption.second)
                                 onChangeExpanded(false)
                             }, text = {
                                 Text(text = selectionOption.first)
@@ -130,8 +134,8 @@ fun SearchBottomSheet(
 
             Spacer(Modifier.height(8.dp))
 
-            TabRow(
-                selectedTabIndex = Orientations.entries.indexOf(searchFilter.orientation),
+            SecondaryTabRow(
+                selectedTabIndex = Orientations.entries.indexOf(selectFilterValue.orientation),
                 containerColor = Color.LightGray
             ) {
                 Constants.SEARCH_ORI_LIST.forEach { info ->

@@ -26,6 +26,8 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.chs.yoursplash.domain.model.User
+import com.chs.yoursplash.domain.model.UserDetail
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
 import com.chs.yoursplash.presentation.base.ShimmerImage
@@ -52,45 +54,8 @@ fun ImageDetailScreen(
                     url = state.imageDetailInfo?.urls
                 )
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            top = 16.dp,
-                            start = 16.dp,
-                            end = 16.dp
-                        ),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .clickable {
-                                if (state.imageDetailInfo?.user?.userName != null) {
-                                    onNavigate(
-                                        Screens.UserDetailScreen(state.imageDetailInfo.user.userName)
-                                    )
-                                }
-                            },
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        ShimmerImage(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(RoundedCornerShape(100)),
-                            url = state.imageDetailInfo?.user?.photoProfile?.large
-                        )
-
-                        Spacer(modifier = Modifier.width(16.dp))
-
-                        Text(
-                            text = state.imageDetailInfo?.user?.name ?: Constants.TEXT_PREVIEW,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            overflow = TextOverflow.Ellipsis,
-                            maxLines = 1
-                        )
-                    }
+                ItemUserInfoFromPhotoDetail(state.imageDetailInfo?.user) {
+                    onNavigate(it)
                 }
 
                 HorizontalDivider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
@@ -107,7 +72,6 @@ fun ImageDetailScreen(
         isShowTopBar = false,
         onCloseClick = onClose
     ) {
-
         LazyVerticalStaggeredGrid(
             modifier = Modifier
                 .fillMaxSize(),
@@ -118,9 +82,7 @@ fun ImageDetailScreen(
             contentPadding = PaddingValues(horizontal = 4.dp, vertical = 8.dp)
         ) {
             if (state.imageRelatedList.isNotEmpty()) {
-                items(
-                    count = state.imageRelatedList.size,
-                ) { idx ->
+                items(count = state.imageRelatedList.size) { idx ->
                     val item = state.imageRelatedList[idx]
                     ShimmerImage(
                         modifier = Modifier
@@ -131,6 +93,55 @@ fun ImageDetailScreen(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ItemUserInfoFromPhotoDetail(
+    info: User?,
+    onNavigate: (Screens) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                top = 16.dp,
+                start = 16.dp,
+                end = 16.dp
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Row(
+            modifier = Modifier
+                .clickable {
+                    if (info?.userName != null) {
+                        onNavigate(
+                            Screens.UserDetailScreen(info.userName)
+                        )
+                    }
+                },
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            ShimmerImage(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(100)),
+                url = info?.photoProfile?.large
+            )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Text(
+                modifier = Modifier
+                    .shimmer(visible = info == null),
+                text = info?.name ?: Constants.TEXT_PREVIEW,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
+            )
         }
     }
 }

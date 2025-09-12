@@ -42,14 +42,25 @@ class SearchResultViewModel(
                 _state.update { it.copy(expandColorFilter = !it.expandColorFilter) }
             }
             is SearchIntent.ChangeSearchFilter -> {
-                _state.update { it.copy(searchFilter = intent.filter) }
+                _state.update {
+                    it.copy(
+                        searchPhotoList =searchResultPhotoUseCase(
+                            query = it.query,
+                            searchFilter = intent.filter
+                        ).cachedIn(viewModelScope),
+                        searchFilter = intent.filter
+                    )
+                }
             }
 
             is SearchIntent.ClickBrowseInfo -> {
                 _effect.trySend(NavigateBrowse(intent.info))
             }
 
-            is SearchIntent.ChangeSearchQuery -> searchResult(intent.query)
+            is SearchIntent.ChangeSearchQuery -> {
+                _state.update { it.copy(query = intent.query) }
+                searchResult(intent.query)
+            }
             is SearchIntent.ChangeShowModal -> _state.update { it.copy(showModal = !it.showModal) }
             is SearchIntent.ChangeTabIndex -> _state.update { it.copy(selectIdx = intent.idx) }
             SearchIntent.ClickBack -> _effect.trySend(SearchEffect.NavigateBack)

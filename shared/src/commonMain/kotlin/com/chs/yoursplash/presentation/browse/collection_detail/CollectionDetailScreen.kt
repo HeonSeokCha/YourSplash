@@ -3,10 +3,8 @@ package com.chs.yoursplash.presentation.browse.collection_detail
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -20,6 +18,15 @@ import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.util.Constants
 
 @Composable
+fun CollectionDetailScreenRoot(
+    viewModel: CollectionDetailViewModel,
+    onClose: () -> Unit,
+    onNavigate: (Screens) -> Unit
+) {
+
+}
+
+@Composable
 fun CollectionDetailScreen(
     state: CollectionDetailState,
     onClose: () -> Unit,
@@ -31,22 +38,19 @@ fun CollectionDetailScreen(
     CollapsingToolbarScaffold(
         scrollState = scrollState,
         header = {
-            if (state.isError) {
-                Text(state.errorMessage ?: "UnknownError")
-            } else {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .shimmer(visible = state.collectionDetailInfo == null),
-                    text = if (state.collectionDetailInfo == null) {
-                        Constants.TEXT_PREVIEW
-                    } else { "${state.collectionDetailInfo.totalPhotos} Photos ● " + "Create by ${state.collectionDetailInfo.user.name}"
-                    },
-                    textAlign = TextAlign.Center,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
-            }
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .shimmer(visible = state.collectionDetailInfo == null),
+                text = if (state.collectionDetailInfo == null) {
+                    Constants.TEXT_PREVIEW
+                } else {
+                    "${state.collectionDetailInfo.totalPhotos} Photos ● " + "Create by ${state.collectionDetailInfo.user.name}"
+                },
+                textAlign = TextAlign.Center,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold
+            )
         },
         isShowTopBar = true,
         onCloseClick = onClose

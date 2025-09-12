@@ -2,6 +2,7 @@ package com.chs.yoursplash.presentation.browse.photo_detail
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AssistChip
@@ -10,6 +11,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -22,8 +24,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.chs.yoursplash.domain.model.PhotoDetail
 import com.chs.yoursplash.domain.model.UnSplashTag
+import com.chs.yoursplash.presentation.toCommaFormat
 
 @Composable
 fun ImageDetailInfo(
@@ -39,10 +43,11 @@ fun ImageDetailInfo(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            ItemDetailValue(title = "Views", value = imageDetailInfo.views)
-            ItemDetailValue(title = "Downloads", value = imageDetailInfo.downloads)
-            ItemDetailValue(title = "Likes", value = imageDetailInfo.likes)
+            ItemDetailValue(title = "Views", value = imageDetailInfo.views.toCommaFormat())
+            ItemDetailValue(title = "Downloads", value = imageDetailInfo.downloads.toCommaFormat())
+            ItemDetailValue(title = "Likes", value = imageDetailInfo.likes.toCommaFormat())
         }
+
         HorizontalDivider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
 
         if (imageDetailInfo.tags.isNotEmpty()) {
@@ -72,7 +77,7 @@ fun ImageDetailInfo(
 @Composable
 private fun ItemDetailValue(
     title: String,
-    value: Int
+    value: String
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
@@ -80,7 +85,7 @@ private fun ItemDetailValue(
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = value.toString(),
+            text = value,
             fontWeight = FontWeight.Light
         )
     }
@@ -93,70 +98,33 @@ private fun RelatedTags(
     color: String,
     onClick: (String) -> Unit
 ) {
-    var maxLines by remember { mutableIntStateOf(1) }
-
-    ContextualFlowRow(
+    FlowRow(
         modifier = Modifier
-            .animateContentSize(),
-        itemCount = list.count(),
-        maxLines = maxLines,
-        overflow = ContextualFlowRowOverflow.expandOrCollapseIndicator(
-            minRowsToShowCollapse = 2,
-            expandIndicator = {
-                TextButton(
-                    modifier = Modifier
-                        .padding(
-                            top = 4.dp,
-                            end = 4.dp
-                        ),
-                    onClick = { maxLines += 1 },
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = MaterialTheme.colorScheme.surfaceVariant,
-                        containerColor = MaterialTheme.colorScheme.onSurface
-                    )
-                ) {
-                    Text(
-                        text = "${this@expandOrCollapseIndicator.totalItemCount - this@expandOrCollapseIndicator.shownItemCount}+ more"
-                    )
-                }
-            },
-            collapseIndicator = {
-                TextButton(
-                    modifier = Modifier
-                        .padding(
-                            top = 4.dp,
-                            end = 4.dp
-                        ),
-                    onClick = { maxLines = 1 },
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = MaterialTheme.colorScheme.errorContainer,
-                        containerColor = MaterialTheme.colorScheme.error
-                    )
-                ) {
-                    Icon(
-                        modifier = Modifier.size(16.dp),
-                        imageVector = Icons.Default.Close,
-                        contentDescription = null
-                    )
-                    Text(text = "Hide")
-                }
-            }
-        ),
+            .fillMaxWidth()
+            .padding(start = 2.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) { idx ->
-        val tag = list[idx]
-        AssistChip(
-            onClick = {
-                onClick(tag.title)
-            }, label = {
-                Text(text = tag.title)
-            }, colors = AssistChipDefaults.assistChipColors(
-                containerColor = Color.LightGray,
-                labelColor = Color.White
-            ), border = AssistChipDefaults.assistChipBorder(
-                enabled = true,
-                borderColor = Color.LightGray,
+    ) {
+        list.forEach { info ->
+            SuggestionChip(
+                modifier = Modifier
+                    .height(24.dp)
+                    .padding(horizontal = 2.dp),
+                onClick = { onClick(info.title) },
+                label = {
+                    Text(
+                        text = info.title,
+                        fontSize = 12.sp
+                    )
+                }, colors = AssistChipDefaults.assistChipColors(
+                    containerColor = Color.LightGray,
+                    labelColor = Color.White
+                ), border = AssistChipDefaults.assistChipBorder(
+                    enabled = true,
+                    borderColor = Color.LightGray
+                ),
+                shape = RoundedCornerShape(16.dp)
             )
-        )
+        }
     }
 }
