@@ -1,10 +1,14 @@
 package com.chs.yoursplash.presentation.search
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.FloatingActionButton
@@ -13,9 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -24,7 +25,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.chs.yoursplash.domain.model.BrowseInfo
-import com.chs.yoursplash.presentation.bottom.home.HomeEffect
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import kotlinx.coroutines.launch
 
@@ -75,7 +75,11 @@ private fun SearchScreen(
 
     Scaffold(
         floatingActionButton = {
-            AnimatedVisibility(visible = state.selectIdx == 0) {
+            AnimatedVisibility(
+                visible = state.selectIdx == 0,
+                enter = fadeIn() ,
+                exit = fadeOut(),
+            ) {
                 FloatingActionButton(
                     onClick = { onIntent(SearchIntent.ChangeShowModal) }
                 ) {
@@ -94,6 +98,11 @@ private fun SearchScreen(
                         text = {
                             Text(
                                 text = title,
+                                autoSize = TextAutoSize.StepBased(
+                                    minFontSize = 6.sp,
+                                    maxFontSize = 12.sp,
+                                    stepSize = 1.sp
+                                ),
                                 maxLines = 1,
                                 color = Purple200,
                                 overflow = TextOverflow.Ellipsis,

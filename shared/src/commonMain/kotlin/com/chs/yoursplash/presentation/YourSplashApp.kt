@@ -1,6 +1,9 @@
 package com.chs.yoursplash.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,35 +24,35 @@ fun YourSplashApp(onBrowseInfo: (BrowseInfo) -> Unit) {
     val navController: NavHostController = rememberNavController()
     val viewModel = koinViewModel<MainViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val textFieldState = rememberTextFieldState()
 
-    YourSplashTheme {
-        Scaffold(
-            topBar = {
-                MainTopBar(
-                    navController = navController,
-                    searchHistoryList = state.searchHistory,
-                    onQueryChange = {
-                        if (it.isNotEmpty()) {
-                            viewModel.insertSearchHistory(it)
-                        }
-                        viewModel.updateSearchQuery(it)
-                    },
-                    onDeleteSearchHistory = {
-                        viewModel.deleteSearchHistory(it)
-                    }
-                )
-            },
-            bottomBar = {
-                BottomBar(navController = navController)
-            },
-        ) {
-            MainNavHost(
-                modifier = Modifier.padding(it),
+    Scaffold(
+        topBar = {
+            MainTopBar(
                 navController = navController,
-                searchQuery = state.searchQuery,
-                onBack = { viewModel.updateSearchQuery("") },
-                onBrowse = onBrowseInfo
+                textFieldState = textFieldState,
+                searchHistoryList = state.searchHistory,
+                onQueryChange = {
+                    if (it.isNotEmpty()) {
+                        viewModel.insertSearchHistory(it)
+                    }
+                    viewModel.updateSearchQuery(it)
+                },
+                onDeleteSearchHistory = {
+                    viewModel.deleteSearchHistory(it)
+                }
             )
+        },
+        bottomBar = {
+            BottomBar(navController = navController)
         }
+    ) {
+        MainNavHost(
+            modifier = Modifier.padding(it),
+            navController = navController,
+            searchQuery = state.searchQuery,
+            onBack = { viewModel.updateSearchQuery("") },
+            onBrowse = onBrowseInfo
+        )
     }
 }
