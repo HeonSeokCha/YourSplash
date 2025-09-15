@@ -27,10 +27,7 @@ fun UserDetailLikeScreen(
         contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        items(
-            count = pagingItems.itemCount,
-            key = pagingItems.itemKey { it.id }
-        ) { idx ->
+        items(count = pagingItems.itemCount) { idx ->
             ImageCard(
                 photoInfo = pagingItems[idx],
                 onPhotoClick = { onNavigate(Screens.ImageDetailScreen(it)) },

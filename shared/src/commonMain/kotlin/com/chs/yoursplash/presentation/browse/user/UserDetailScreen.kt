@@ -117,20 +117,20 @@ fun UserDetailScreen(
             )
         } else {
             HorizontalPager(state = pagerState) { pager ->
-                when (pager) {
-                    0 -> {
+                when (state.userTabLabList[pager]) {
+                    "PHOTOS" -> {
                         UserDetailPhotoScreen(photoPaging) {
                             onNavigate(it)
                         }
                     }
 
-                    1 -> {
+                    "LIKES" -> {
                         UserDetailLikeScreen(likePaging) {
                             onNavigate(it)
                         }
                     }
 
-                    2 -> {
+                    "COLLECT" -> {
                         UserDetailCollectionScreen(collectPaging) {
                             onNavigate(it)
                         }

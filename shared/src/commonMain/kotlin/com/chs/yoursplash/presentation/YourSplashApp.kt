@@ -1,9 +1,7 @@
 package com.chs.yoursplash.presentation
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.input.rememberTextFieldState
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -16,7 +14,6 @@ import com.chs.yoursplash.presentation.bottom.BottomBar
 import com.chs.yoursplash.presentation.main.MainNavHost
 import com.chs.yoursplash.presentation.main.MainTopBar
 import com.chs.yoursplash.presentation.main.MainViewModel
-import com.chs.yoursplash.presentation.ui.theme.YourSplashTheme
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -36,6 +33,7 @@ fun YourSplashApp(onBrowseInfo: (BrowseInfo) -> Unit) {
                     if (it.isNotEmpty()) {
                         viewModel.insertSearchHistory(it)
                     }
+                    textFieldState.edit { replace(0, length, it) }
                     viewModel.updateSearchQuery(it)
                 },
                 onDeleteSearchHistory = {
@@ -51,7 +49,6 @@ fun YourSplashApp(onBrowseInfo: (BrowseInfo) -> Unit) {
             modifier = Modifier.padding(it),
             navController = navController,
             searchQuery = state.searchQuery,
-            onBack = { viewModel.updateSearchQuery("") },
             onBrowse = onBrowseInfo
         )
     }

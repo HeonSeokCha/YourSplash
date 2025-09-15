@@ -28,10 +28,7 @@ fun UserDetailCollectionScreen(
         contentPadding = PaddingValues(8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        items(
-            count = pagingItems.itemCount,
-            key = pagingItems.itemKey { it.id }
-        ) { idx ->
+        items(count = pagingItems.itemCount) { idx ->
             CollectionSimpleCard(collectionInfo = pagingItems[idx]) {
                 onNavigate(Screens.CollectionDetailScreen(it))
             }

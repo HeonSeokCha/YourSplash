@@ -19,6 +19,7 @@ import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
@@ -32,14 +33,12 @@ import kotlinx.coroutines.launch
 fun SearchScreenRoot(
     viewModel: SearchResultViewModel,
     onBrowse: (BrowseInfo) -> Unit,
-    onBack: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                SearchEffect.NavigateBack -> onBack()
                 is SearchEffect.NavigateBrowse -> onBrowse(effect.info)
             }
         }
@@ -52,7 +51,7 @@ fun SearchScreenRoot(
 }
 
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun SearchScreen(
     state: SearchState,
@@ -70,7 +69,9 @@ private fun SearchScreen(
     }
 
     DisposableEffect(Unit) {
-        onDispose { onIntent(SearchIntent.ClickBack) }
+        onDispose {
+            onIntent(SearchIntent.ChangeSearchQuery(""))
+        }
     }
 
     Scaffold(

@@ -11,10 +11,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.chs.youranimelist.res.Res
+import com.chs.youranimelist.res.lorem_ipsum
 import com.chs.yoursplash.domain.model.User
 import com.chs.yoursplash.util.Constants
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun UserCard(
@@ -22,57 +26,64 @@ fun UserCard(
     userClickAble: (userName: String) -> Unit,
     photoClickAble: (photoId: String) -> Unit
 ) {
-
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .clickable {
-                userClickAble(userInfo?.userName ?: "")
-            },
     ) {
-        ShimmerImage(
+        Row(
             modifier = Modifier
-                .size(50.dp)
-                .clip(RoundedCornerShape(100)),
-            url = userInfo?.photoProfile?.large
-        )
-
-        Column {
-            Box(
+                .fillMaxWidth()
+                .padding(8.dp)
+                .clickable {
+                    if (userInfo == null) return@clickable
+                    userClickAble(userInfo.userName)
+                },
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            ShimmerImage(
                 modifier = Modifier
-                    .height(50.dp)
-                    .padding(start = 8.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = userInfo?.name ?: "",
-                    textAlign = TextAlign.Center,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                    .size(50.dp)
+                    .clip(RoundedCornerShape(100))
+                    .shimmer(visible = userInfo == null),
+                url = userInfo?.photoProfile?.large
+            )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Text(
+                modifier = Modifier.shimmer(userInfo == null),
+                text = userInfo?.userName ?: stringResource(Res.string.lorem_ipsum),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
+            )
+        }
+
+        if (userInfo?.photos == null || userInfo.photos.isEmpty()) {
+            repeat(3) {
+                Box(
+                    modifier = Modifier
+                        .size(90.dp, 190.dp)
+                        .clip(RoundedCornerShape(15))
+                        .shimmer(true)
                 )
             }
-            LazyRow(
+        } else {
+            Row(
                 modifier = Modifier
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                contentPadding = PaddingValues(top = 8.dp, end = 8.dp)
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                if (userInfo?.photos != null && userInfo.photos.isNotEmpty()) {
-                    items(
-                        count = userInfo.photos.size,
-                        key = { userInfo.photos[it].id }
-                    ) { idx ->
-                        ShimmerImage(
-                            modifier = Modifier
-                                .size(90.dp, 190.dp)
-                                .clip(RoundedCornerShape(15))
-                                .clickable {
-                                    photoClickAble(userInfo.photos[idx].id)
-                                },
-                            url = userInfo.photos[idx].urls
-                        )
-                    }
+                userInfo.photos.forEach { info ->
+                    ShimmerImage(
+                        modifier = Modifier
+                            .size(90.dp, 190.dp)
+                            .clip(RoundedCornerShape(15))
+                            .clickable { photoClickAble(info.id) },
+                        url = info.urls
+                    )
                 }
             }
         }

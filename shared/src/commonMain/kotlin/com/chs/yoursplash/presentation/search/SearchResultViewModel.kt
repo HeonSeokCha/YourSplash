@@ -58,12 +58,16 @@ class SearchResultViewModel(
             }
 
             is SearchIntent.ChangeSearchQuery -> {
+                if (intent.query.isEmpty()) {
+                    _state.update { SearchState() }
+                    return
+                }
+
                 _state.update { it.copy(query = intent.query) }
                 searchResult(intent.query)
             }
             is SearchIntent.ChangeShowModal -> _state.update { it.copy(showModal = !it.showModal) }
             is SearchIntent.ChangeTabIndex -> _state.update { it.copy(selectIdx = intent.idx) }
-            SearchIntent.ClickBack -> _effect.trySend(SearchEffect.NavigateBack)
 
             SearchIntent.Collection.Loading -> _state.update { it.copy(collectionLoadingState = LoadingState.Loading) }
             SearchIntent.Collection.LoadComplete -> _state.update { it.copy(collectionLoadingState = LoadingState.Success) }

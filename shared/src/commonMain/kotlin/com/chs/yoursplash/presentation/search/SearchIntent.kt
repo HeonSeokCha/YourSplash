@@ -4,7 +4,6 @@ import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.domain.model.SearchFilter
 
 sealed interface SearchIntent {
-    data object ClickBack : SearchIntent
     data class ChangeTabIndex(val idx: Int) : SearchIntent
     data class ChangeSearchQuery(val query: String) : SearchIntent
     data class ChangeSearchFilter(val filter : SearchFilter) : SearchIntent
