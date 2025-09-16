@@ -33,6 +33,7 @@ import kotlinx.coroutines.launch
 fun SearchScreenRoot(
     viewModel: SearchResultViewModel,
     onBrowse: (BrowseInfo) -> Unit,
+    onBack: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -42,6 +43,10 @@ fun SearchScreenRoot(
                 is SearchEffect.NavigateBrowse -> onBrowse(effect.info)
             }
         }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose { onBack() }
     }
 
     SearchScreen(
@@ -66,12 +71,6 @@ private fun SearchScreen(
 
     LaunchedEffect(pagerState.currentPage) {
         onIntent(SearchIntent.ChangeTabIndex(pagerState.currentPage))
-    }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            onIntent(SearchIntent.ChangeSearchQuery(""))
-        }
     }
 
     Scaffold(

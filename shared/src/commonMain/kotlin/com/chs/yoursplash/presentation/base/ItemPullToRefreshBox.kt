@@ -17,7 +17,6 @@ fun ItemPullToRefreshBox(
     content: @Composable () -> Unit,
 ) {
     val pullRefreshState = rememberPullToRefreshState()
-    println(isRefreshing.toString())
 
     PullToRefreshBox(
         modifier = Modifier.fillMaxSize(),

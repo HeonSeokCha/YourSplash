@@ -1,6 +1,7 @@
 package com.chs.yoursplash.presentation
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -49,7 +50,11 @@ fun YourSplashApp(onBrowseInfo: (BrowseInfo) -> Unit) {
             modifier = Modifier.padding(it),
             navController = navController,
             searchQuery = state.searchQuery,
-            onBrowse = onBrowseInfo
+            onBrowse = onBrowseInfo,
+            onBack = {
+                viewModel.updateSearchQuery("")
+                textFieldState.clearText()
+            }
         )
     }
 }

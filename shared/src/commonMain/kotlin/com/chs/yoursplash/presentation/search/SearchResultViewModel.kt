@@ -58,11 +58,6 @@ class SearchResultViewModel(
             }
 
             is SearchIntent.ChangeSearchQuery -> {
-                if (intent.query.isEmpty()) {
-                    _state.update { SearchState() }
-                    return
-                }
-
                 _state.update { it.copy(query = intent.query) }
                 searchResult(intent.query)
             }

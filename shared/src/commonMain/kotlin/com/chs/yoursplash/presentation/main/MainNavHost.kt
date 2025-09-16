@@ -29,6 +29,7 @@ fun MainNavHost(
     navController: NavHostController,
     searchQuery: String,
     onBrowse: (BrowseInfo) -> Unit,
+    onBack: () -> Unit
 ) {
     NavHost(
         modifier = modifier,
@@ -56,14 +57,17 @@ fun MainNavHost(
             LaunchedEffect(searchQuery) {
                 snapshotFlow { searchQuery }
                     .distinctUntilChanged()
+                    .filter { it.isNotEmpty() }
                     .collect {
+                        println(searchQuery)
                         viewModel.changeEvent(SearchIntent.ChangeSearchQuery(it))
                     }
             }
 
             SearchScreenRoot(
                 viewModel = viewModel,
-                onBrowse = onBrowse
+                onBrowse = onBrowse,
+                onBack = onBack
             )
         }
 

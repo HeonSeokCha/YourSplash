@@ -130,7 +130,6 @@ fun MainTopBar(
                 searchHistoryList = searchHistoryList,
                 onDeleteSearchHistory = onDeleteSearchHistory,
                 onBack = {
-                    onQueryChange("")
                     navController.navigateUp()
                 }
             )
