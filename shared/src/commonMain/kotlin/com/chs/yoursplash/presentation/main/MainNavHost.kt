@@ -12,8 +12,8 @@ import androidx.navigation.compose.composable
 import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.bottom.collection.CollectionScreenRoot
 import com.chs.yoursplash.presentation.bottom.collection.CollectionViewModel
-import com.chs.yoursplash.presentation.bottom.home.HomeScreenRoot
-import com.chs.yoursplash.presentation.bottom.home.HomeViewModel
+import com.chs.yoursplash.presentation.bottom.photo.PhotoScreenRoot
+import com.chs.yoursplash.presentation.bottom.photo.PhotoViewModel
 import com.chs.yoursplash.presentation.search.SearchIntent
 import com.chs.yoursplash.presentation.search.SearchResultViewModel
 import com.chs.yoursplash.presentation.search.SearchScreenRoot
@@ -34,11 +34,11 @@ fun MainNavHost(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = MainScreens.HomeScreen
+        startDestination = MainScreens.PhotoScreen
     ) {
-        composable<MainScreens.HomeScreen> {
-            val viewModel = koinViewModel<HomeViewModel>()
-            HomeScreenRoot(
+        composable<MainScreens.PhotoScreen> {
+            val viewModel = koinViewModel<PhotoViewModel>()
+            PhotoScreenRoot(
                 viewModel = viewModel,
                 onBrowse = onBrowse
             )

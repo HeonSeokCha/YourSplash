@@ -126,21 +126,21 @@ private fun SearchScreen(
                     0 -> {
                         SearchResultPhotoScreen(
                             state = state,
-                            onBrowse = { onIntent(SearchIntent.ClickBrowseInfo(it)) }
+                            onIntent = onIntent
                         )
                     }
 
                     1 -> {
                         SearchResultCollectionScreen(
                             state = state,
-                            onBrowse = { onIntent(SearchIntent.ClickBrowseInfo(it)) }
+                            onIntent = onIntent
                         )
                     }
 
                     2 -> {
                         SearchResultUserScreen(
                             state = state,
-                            onBrowse = { onIntent(SearchIntent.ClickBrowseInfo(it)) }
+                            onIntent = onIntent
                         )
                     }
                 }

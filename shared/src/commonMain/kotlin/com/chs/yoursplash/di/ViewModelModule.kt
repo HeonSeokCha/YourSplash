@@ -1,7 +1,7 @@
 package com.chs.yoursplash.di
 
 import com.chs.yoursplash.presentation.bottom.collection.CollectionViewModel
-import com.chs.yoursplash.presentation.bottom.home.HomeViewModel
+import com.chs.yoursplash.presentation.bottom.photo.PhotoViewModel
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailViewModel
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailViewModel
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListViewModel
@@ -14,7 +14,7 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModelOf(::MainViewModel)
-    viewModelOf(::HomeViewModel)
+    viewModelOf(::PhotoViewModel)
     viewModelOf(::CollectionViewModel)
     viewModelOf(::SearchResultViewModel)
     viewModelOf(::SettingViewModel)

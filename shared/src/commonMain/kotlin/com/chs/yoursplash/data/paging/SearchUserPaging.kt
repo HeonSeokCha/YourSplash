@@ -13,7 +13,7 @@ class SearchUserPaging(
     private val api: UnSplashService,
     private val query: String,
     private val loadQuality: LoadQuality
-): PagingSource<Int, User>() {
+) : PagingSource<Int, User>() {
     override fun getRefreshKey(state: PagingState<Int, User>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             val anchorPage = state.closestPageToPosition(anchorPosition)
@@ -30,13 +30,14 @@ class SearchUserPaging(
                     "query" to query,
                     "page" to page.toString()
                 )
-            ).result.map {
-                it.toUnSplashUser(loadQuality)
-            }
+            ).result
+                .map { it.toUnSplashUser(loadQuality) }
+                .filter { it.photos.isNotEmpty() }
+
             LoadResult.Page(
                 data = response,
                 prevKey = if (page == 0) null else page - 1,
-                nextKey = if(response.isNotEmpty()) page + 1 else null
+                nextKey = if (response.isNotEmpty()) page + 1 else null
             )
         } catch (e: Exception) {
             LoadResult.Error(e)

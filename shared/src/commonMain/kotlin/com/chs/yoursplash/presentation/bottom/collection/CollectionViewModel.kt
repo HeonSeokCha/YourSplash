@@ -7,7 +7,6 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.usecase.GetHomeCollectionsUseCase
-import com.chs.yoursplash.presentation.LoadingState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +33,7 @@ class CollectionViewModel(
 
     fun handleIntent(intent: CollectionIntent) {
         when (intent) {
-            CollectionIntent.Loading -> updateState { it.copy(loadingState = LoadingState.Loading) }
+            CollectionIntent.Loading -> updateState { it.copy(isLoading = true) }
 
             is CollectionIntent.ClickCollection -> {
                 _effect.trySend(CollectionEffect.NavigateCollectionDetail(intent.id))
@@ -48,17 +47,14 @@ class CollectionViewModel(
                 updateState {
                     it.copy(
                         isRefresh = false,
-                        loadingState = LoadingState.Success
+                        isLoading = false
                     )
                 }
             }
 
             CollectionIntent.RefreshData -> {
                 updateState {
-                    it.copy(
-                        isRefresh = true,
-                        loadingState = LoadingState.Loading
-                    )
+                    it.copy(isRefresh = true)
                 }
             }
 

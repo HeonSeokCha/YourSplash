@@ -18,7 +18,7 @@ import androidx.compose.foundation.text.input.clearText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.twotone.Search
 import androidx.compose.material3.AlertDialog
@@ -60,7 +60,7 @@ fun MainTopBar(
     val currentDest = navBackStackEntry?.destination
 
     when {
-        currentDest?.hasRoute(MainScreens.HomeScreen::class) == true
+        currentDest?.hasRoute(MainScreens.PhotoScreen::class) == true
                 || currentDest?.hasRoute(MainScreens.CollectionScreen::class) == true -> {
 
             TopAppBar(
@@ -230,13 +230,15 @@ fun SearchAppBar(
                                     textFieldState.edit { replace(0, length, title) }
                                     isShowDialog = true
                                 }
-                            )
+                            ),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
                             modifier = Modifier.padding(end = 10.dp),
-                            imageVector = Icons.Default.Home,
+                            imageVector = Icons.Default.History,
                             contentDescription = null
                         )
+
                         Text(text = title)
                     }
                 }

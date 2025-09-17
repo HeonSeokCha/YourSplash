@@ -1,33 +1,27 @@
-package com.chs.yoursplash.presentation.bottom.home
+package com.chs.yoursplash.presentation.bottom.photo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.usecase.GetHomePhotosUseCase
-import com.chs.yoursplash.presentation.ErrorState
-import com.chs.yoursplash.presentation.LoadingState
-import com.chs.yoursplash.presentation.bottom.home.HomeEffect.*
+import com.chs.yoursplash.presentation.bottom.photo.PhotoEffect.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
-class HomeViewModel(
+class PhotoViewModel(
     getHomePhotosUseCase: GetHomePhotosUseCase,
 ) : ViewModel() {
 
     val pagingDataFlow: Flow<PagingData<Photo>> = getHomePhotosUseCase()
         .cachedIn(viewModelScope)
 
-    private val _state = MutableStateFlow(HomeState())
+    private val _state = MutableStateFlow(PhotoState())
     val state = _state
         .stateIn(
             viewModelScope,
@@ -35,45 +29,42 @@ class HomeViewModel(
             _state.value
         )
 
-    private val _effect = Channel<HomeEffect>(Channel.BUFFERED)
+    private val _effect = Channel<PhotoEffect>(Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
 
-    fun handleIntent(intent: HomeIntent) {
+    fun handleIntent(intent: PhotoIntent) {
         when (intent) {
-            HomeIntent.Loading -> updateState { it.copy(loadingState = LoadingState.Loading) }
+            PhotoIntent.Loading -> updateState { it.copy(isLoading = true) }
 
-            is HomeIntent.ClickPhoto -> {
+            is PhotoIntent.ClickPhoto -> {
                 _effect.trySend(NavigatePhotoDetail(intent.id))
             }
 
-            is HomeIntent.ClickUser -> {
+            is PhotoIntent.ClickUser -> {
                 _effect.trySend(NavigateUserDetail(intent.name))
             }
 
-            HomeIntent.LoadComplete -> {
+            PhotoIntent.LoadComplete -> {
                 updateState {
                     it.copy(
                         isRefresh = false,
-                        loadingState = LoadingState.Success
+                        isLoading = false
                     )
                 }
             }
 
-            HomeIntent.RefreshData -> {
+            PhotoIntent.RefreshData -> {
                 updateState {
-                    it.copy(
-                        isRefresh = true,
-                        loadingState = LoadingState.Loading
-                    )
+                    it.copy(isRefresh = true)
                 }
             }
 
-            is HomeIntent.OnError -> {
+            is PhotoIntent.OnError -> {
             }
         }
     }
 
-    private fun updateState(reducer: (HomeState) -> HomeState) {
+    private fun updateState(reducer: (PhotoState) -> PhotoState) {
         _state.value = reducer(_state.value)
     }
 }

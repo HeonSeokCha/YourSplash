@@ -7,81 +7,91 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.chs.youranimelist.res.Res
+import com.chs.youranimelist.res.text_no_result
 import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.base.CollectionInfoCard
+import com.chs.yoursplash.presentation.base.ItemEmpty
+import com.chs.yoursplash.util.Constants
 import io.ktor.websocket.Frame
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun SearchResultCollectionScreen(
     state: SearchState,
-    onBrowse: (BrowseInfo) -> Unit
+    onIntent: (SearchIntent) -> Unit
 ) {
     val pagingList = state.searchCollectionList?.collectAsLazyPagingItems()
-    val scrollState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize(),
-        state = scrollState,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
-    ) {
-        if (pagingList != null) {
+    val isEmpty by remember {
+        derivedStateOf {
+            pagingList != null
+                    && pagingList.loadState.refresh is LoadState.NotLoading
+                    && pagingList.loadState.append.endOfPaginationReached
+                    && pagingList.itemCount == 0
+        }
+    }
 
-            items(count = pagingList.itemCount) { idx ->
-                val item = pagingList[idx]
-                CollectionInfoCard(
-                    collectionInfo = item,
-                    onCollection = { onBrowse(BrowseInfo.Collection(it)) },
-                    onUser = { onBrowse(BrowseInfo.User(it)) }
-                )
-            }
-
+    if (pagingList != null) {
+        LaunchedEffect(pagingList.loadState.refresh) {
             when (pagingList.loadState.refresh) {
-                is LoadState.Loading -> {
-                    coroutineScope.launch {
-                        scrollState.scrollToItem(0)
-                    }
-                    items(10) {
-                        CollectionInfoCard(collectionInfo = null)
-                    }
-                }
+                is LoadState.Loading -> onIntent(SearchIntent.Collection.Loading)
 
                 is LoadState.Error -> {
-                    item {
-                        Frame.Text(
-                            text = "Something Wrong for Loading List."
-                        )
+                    (pagingList.loadState.refresh as LoadState.Error).error.run {
+                        onIntent(SearchIntent.Collection.OnError(this.message))
                     }
                 }
 
-                else -> Unit
+                is LoadState.NotLoading -> onIntent(SearchIntent.Collection.LoadComplete)
             }
-
-            when (pagingList.loadState.append) {
-                is LoadState.Loading -> {
-                    items(10) {
+        }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
+        ) {
+            when {
+                state.collectionLoadingState -> {
+                    items(Constants.COUNT_LOADING_ITEM) {
                         CollectionInfoCard(collectionInfo = null)
                     }
                 }
 
-                is LoadState.Error -> {
+                isEmpty -> {
                     item {
-                        Frame.Text(
-                            text = "Something Wrong for Loading List."
+                        ItemEmpty(
+                            modifier = Modifier.fillParentMaxSize(),
+                            text = stringResource(Res.string.text_no_result)
                         )
                     }
                 }
 
-                else -> Unit
+                else -> {
+                    items(count = pagingList.itemCount) { idx ->
+                        val item = pagingList[idx]
+                        CollectionInfoCard(
+                            collectionInfo = item,
+                            onCollection = {
+                                onIntent(SearchIntent.ClickBrowseInfo(BrowseInfo.Collection(it)))
+                            },
+                            onUser = {
+                                onIntent(SearchIntent.ClickBrowseInfo(BrowseInfo.User(it)))
+                            }
+                        )
+                    }
+                }
             }
         }
     }

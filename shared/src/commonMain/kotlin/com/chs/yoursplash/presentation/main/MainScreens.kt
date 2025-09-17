@@ -2,14 +2,15 @@ package com.chs.yoursplash.presentation.main
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.PermMedia
+import androidx.compose.material.icons.filled.Photo
 import androidx.compose.ui.graphics.vector.ImageVector
 import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class MainScreens {
     @Serializable
-    data object HomeScreen : MainScreens()
+    data object PhotoScreen : MainScreens()
     @Serializable
     data object CollectionScreen : MainScreens()
     @Serializable
@@ -23,6 +24,6 @@ enum class BottomNavigation(
     val icon: ImageVector,
     val route: MainScreens
 ) {
-    HOME("Home", Icons.Filled.Home, MainScreens.HomeScreen),
-    SEARCH("Collection", Icons.AutoMirrored.Default.List, MainScreens.CollectionScreen),
+    Photo("Photo", Icons.Filled.Photo, MainScreens.PhotoScreen),
+    Collection("Collection", Icons.Filled.PermMedia, MainScreens.CollectionScreen),
 }

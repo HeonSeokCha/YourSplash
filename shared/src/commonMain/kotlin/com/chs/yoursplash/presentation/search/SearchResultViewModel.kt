@@ -6,7 +6,6 @@ import androidx.paging.cachedIn
 import com.chs.yoursplash.domain.usecase.GetSearchResultCollectionUseCase
 import com.chs.yoursplash.domain.usecase.GetSearchResultPhotoUseCase
 import com.chs.yoursplash.domain.usecase.GetSearchResultUserUseCase
-import com.chs.yoursplash.presentation.LoadingState
 import com.chs.yoursplash.presentation.search.SearchEffect.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -44,7 +43,7 @@ class SearchResultViewModel(
             is SearchIntent.ChangeSearchFilter -> {
                 _state.update {
                     it.copy(
-                        searchPhotoList =searchResultPhotoUseCase(
+                        searchPhotoList = searchResultPhotoUseCase(
                             query = it.query,
                             searchFilter = intent.filter
                         ).cachedIn(viewModelScope),
@@ -64,16 +63,16 @@ class SearchResultViewModel(
             is SearchIntent.ChangeShowModal -> _state.update { it.copy(showModal = !it.showModal) }
             is SearchIntent.ChangeTabIndex -> _state.update { it.copy(selectIdx = intent.idx) }
 
-            SearchIntent.Collection.Loading -> _state.update { it.copy(collectionLoadingState = LoadingState.Loading) }
-            SearchIntent.Collection.LoadComplete -> _state.update { it.copy(collectionLoadingState = LoadingState.Success) }
+            SearchIntent.Collection.Loading -> _state.update { it.copy(collectionLoadingState = true) }
+            SearchIntent.Collection.LoadComplete -> _state.update { it.copy(collectionLoadingState = false) }
             is SearchIntent.Collection.OnError -> _state.update { it.copy(collectionErrorMessage = intent.message) }
 
-            SearchIntent.Photo.Loading -> _state.update { it.copy(photoLoadingState = LoadingState.Loading) }
-            SearchIntent.Photo.LoadComplete -> _state.update { it.copy(photoLoadingState = LoadingState.Success) }
+            SearchIntent.Photo.Loading -> _state.update { it.copy(photoLoadingState = true) }
+            SearchIntent.Photo.LoadComplete -> _state.update { it.copy(photoLoadingState = false) }
             is SearchIntent.Photo.OnError -> _state.update { it.copy(photoErrorMessage = intent.message) }
 
-            SearchIntent.User.Loading -> _state.update { it.copy(userLoadingState = LoadingState.Loading) }
-            SearchIntent.User.LoadComplete -> _state.update { it.copy(userLoadingState = LoadingState.Success) }
+            SearchIntent.User.Loading -> _state.update { it.copy(userLoadingState = true) }
+            SearchIntent.User.LoadComplete -> _state.update { it.copy(userLoadingState = false) }
             is SearchIntent.User.OnError -> _state.update { it.copy(userErrorMessage = intent.message) }
         }
     }

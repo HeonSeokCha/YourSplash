@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.bottom.home
+package com.chs.yoursplash.presentation.bottom.photo
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,8 +24,8 @@ import com.chs.yoursplash.util.Constants
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun HomeScreenRoot(
-    viewModel: HomeViewModel,
+fun PhotoScreenRoot(
+    viewModel: PhotoViewModel,
     onBrowse: (BrowseInfo) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -34,28 +34,28 @@ fun HomeScreenRoot(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is HomeEffect.NavigatePhotoDetail -> onBrowse(BrowseInfo.Photo(effect.id))
-                is HomeEffect.NavigateUserDetail -> onBrowse(BrowseInfo.User(effect.name))
-                is HomeEffect.ShowToast -> Unit
+                is PhotoEffect.NavigatePhotoDetail -> onBrowse(BrowseInfo.Photo(effect.id))
+                is PhotoEffect.NavigateUserDetail -> onBrowse(BrowseInfo.User(effect.name))
+                is PhotoEffect.ShowToast -> Unit
             }
         }
     }
 
     LaunchedEffect(pagingItems.loadState.refresh) {
         when (pagingItems.loadState.refresh) {
-            is LoadState.Loading -> viewModel.handleIntent(HomeIntent.Loading)
+            is LoadState.Loading -> viewModel.handleIntent(PhotoIntent.Loading)
 
             is LoadState.Error -> {
                 (pagingItems.loadState.refresh as LoadState.Error).error.run {
-                    viewModel.handleIntent(HomeIntent.OnError(this.message))
+                    viewModel.handleIntent(PhotoIntent.OnError(this.message))
                 }
             }
 
-            is LoadState.NotLoading -> viewModel.handleIntent(HomeIntent.LoadComplete)
+            is LoadState.NotLoading -> viewModel.handleIntent(PhotoIntent.LoadComplete)
         }
     }
 
-    HomeScreen(
+    PhotoScreen(
         state = state,
         pagingItems = pagingItems,
         onIntent = viewModel::handleIntent
@@ -63,10 +63,10 @@ fun HomeScreenRoot(
 }
 
 @Composable
-fun HomeScreen(
-    state: HomeState,
+fun PhotoScreen(
+    state: PhotoState,
     pagingItems: LazyPagingItems<Photo>,
-    onIntent: (HomeIntent) -> Unit
+    onIntent: (PhotoIntent) -> Unit
 ) {
     val isEmpty by remember {
         derivedStateOf {
@@ -79,7 +79,7 @@ fun HomeScreen(
     ItemPullToRefreshBox(
         isRefreshing = state.isRefresh,
         onRefresh = {
-            onIntent(HomeIntent.RefreshData)
+            onIntent(PhotoIntent.RefreshData)
             pagingItems.refresh()
         }
     ) {
@@ -112,10 +112,10 @@ fun HomeScreen(
                         ImageCard(
                             photoInfo = photo,
                             onPhotoClick = {
-                                onIntent(HomeIntent.ClickPhoto(it))
+                                onIntent(PhotoIntent.ClickPhoto(it))
                             },
                             onUserClick = {
-                                onIntent(HomeIntent.ClickUser(it))
+                                onIntent(PhotoIntent.ClickUser(it))
                             }
                         )
                     }
