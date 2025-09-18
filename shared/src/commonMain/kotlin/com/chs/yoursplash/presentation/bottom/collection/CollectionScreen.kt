@@ -73,7 +73,6 @@ fun CollectionScreen(
     pagingItems: LazyPagingItems<UnSplashCollection>,
     onIntent: (CollectionIntent) -> Unit
 ) {
-
     val isEmpty by remember {
         derivedStateOf {
             pagingItems.loadState.refresh is LoadState.NotLoading

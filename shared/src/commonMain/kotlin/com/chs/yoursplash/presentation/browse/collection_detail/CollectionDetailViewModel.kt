@@ -9,13 +9,17 @@ import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.usecase.GetCollectionDetailUseCase
 import com.chs.yoursplash.domain.usecase.GetCollectionPhotoUseCase
 import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
+import com.chs.yoursplash.presentation.bottom.collection.CollectionEffect
+import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailEffect.*
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.NetworkResult
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -27,8 +31,7 @@ class CollectionDetailViewModel(
 ) : ViewModel() {
 
     private val collectionId: String = savedStateHandle[Constants.ARG_KEY_COLLECTION_ID] ?: ""
-    private var collectionDetailJob: Job? = null
-    private val pagingItems: Flow<PagingData<Photo>> =
+    val pagingItems: Flow<PagingData<Photo>> =
         getCollectionPhotoUseCase(id = collectionId).cachedIn(viewModelScope)
 
     private val _state = MutableStateFlow(CollectionDetailState())
@@ -41,18 +44,40 @@ class CollectionDetailViewModel(
             _state.value
         )
 
+    private val _effect = Channel<CollectionDetailEffect>(Channel.BUFFERED)
+    val effect = _effect.receiveAsFlow()
+
+    fun changeIntent(intent: CollectionDetailIntent) {
+        when (intent) {
+            CollectionDetailIntent.LoadComplete -> _state.update { it.copy(isLoading = false) }
+            CollectionDetailIntent.Loading -> _state.update { it.copy(isLoading = true) }
+            CollectionDetailIntent.RefreshData -> _state.update { it.copy(isRefresh = true) }
+            is CollectionDetailIntent.ClickPhoto -> {
+                _effect.trySend(
+                    NavigatePhotoDetail(intent.id)
+                )
+            }
+
+            is CollectionDetailIntent.ClickUser -> {
+                _effect.trySend(
+                    NavigateUserDetail(intent.name)
+                )
+            }
+
+            is CollectionDetailIntent.OnError -> {
+                _effect.trySend(ShowToast(intent.message!!))
+            }
+
+            CollectionDetailIntent.ClickClose -> _effect.trySend(Close)
+        }
+    }
+
     private fun getCollectionDetailInfo() {
-        collectionDetailJob?.cancel()
-        collectionDetailJob = viewModelScope.launch {
+        viewModelScope.launch {
             getCollectionDetailUseCase(collectionId).collect { result ->
                 _state.update {
                     when (result) {
-                        is NetworkResult.Loading -> {
-                            it.copy(
-                                isLoading = true,
-                                isError = false
-                            )
-                        }
+                        is NetworkResult.Loading -> it
 
                         is NetworkResult.Success -> {
                             it.copy(
@@ -62,20 +87,12 @@ class CollectionDetailViewModel(
                         }
 
                         is NetworkResult.Error -> {
-                            it.copy(
-                                isLoading = false,
-                                isError = true,
-                                errorMessage = result.message
-                            )
+                            _effect.trySend(CollectionDetailEffect.ShowToast(result.message!!))
+                            it.copy(isLoading = false)
                         }
                     }
                 }
             }
         }
-    }
-
-    override fun onCleared() {
-        collectionDetailJob?.cancel()
-        super.onCleared()
     }
 }

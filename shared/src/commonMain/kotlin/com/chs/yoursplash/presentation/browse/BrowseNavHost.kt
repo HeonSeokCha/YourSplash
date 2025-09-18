@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailScreen
+import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailScreenRoot
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailViewModel
 import com.chs.yoursplash.presentation.browse.photo_detail.ImageDetailScreen
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailViewModel
@@ -81,14 +82,12 @@ fun BrowseNavHost(
             val viewModel: CollectionDetailViewModel = koinViewModel<CollectionDetailViewModel>(
                 viewModelStoreOwner = parentEntry
             )
-            val state by viewModel.state.collectAsStateWithLifecycle()
 
-            CollectionDetailScreen(
-                state = state,
-                onClose = onBack
-            ) {
-                navController.navigate(it)
-            }
+            CollectionDetailScreenRoot(
+                viewModel = viewModel,
+                onBrowse = { navController.navigate(it) },
+                onClose = { navController.navigateUp() }
+            )
         }
 
         composable<Screens.UserDetailScreen> {
