@@ -49,9 +49,8 @@ class CollectionDetailViewModel(
 
     fun changeIntent(intent: CollectionDetailIntent) {
         when (intent) {
-            CollectionDetailIntent.LoadComplete -> _state.update { it.copy(isLoading = false) }
-            CollectionDetailIntent.Loading -> _state.update { it.copy(isLoading = true) }
-            CollectionDetailIntent.RefreshData -> _state.update { it.copy(isRefresh = true) }
+            CollectionDetailIntent.LoadComplete -> _state.update { it.copy(isPagingLoading = false) }
+            CollectionDetailIntent.Loading -> _state.update { it.copy(isPagingLoading = true) }
             is CollectionDetailIntent.ClickPhoto -> {
                 _effect.trySend(
                     NavigatePhotoDetail(intent.id)
@@ -77,18 +76,20 @@ class CollectionDetailViewModel(
             getCollectionDetailUseCase(collectionId).collect { result ->
                 _state.update {
                     when (result) {
-                        is NetworkResult.Loading -> it
+                        is NetworkResult.Loading -> {
+                            it.copy(isDetailLoad = true)
+                        }
 
                         is NetworkResult.Success -> {
                             it.copy(
-                                isLoading = false,
+                                isDetailLoad = false,
                                 collectionDetailInfo = result.data
                             )
                         }
 
                         is NetworkResult.Error -> {
-                            _effect.trySend(CollectionDetailEffect.ShowToast(result.message!!))
-                            it.copy(isLoading = false)
+                            _effect.trySend(ShowToast(result.message!!))
+                            it.copy(isDetailLoad = false)
                         }
                     }
                 }

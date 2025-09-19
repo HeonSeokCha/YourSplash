@@ -7,12 +7,15 @@ import com.chs.yoursplash.domain.usecase.GetImageDetailQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoDetailUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoRelatedListUseCase
+import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailEffect
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.NetworkResult
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -21,12 +24,14 @@ class PhotoDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val getPhotoDetailUseCase: GetPhotoDetailUseCase,
     private val getPhotoRelatedListUseCase: GetPhotoRelatedListUseCase,
-
 ) : ViewModel() {
-
     private val imageId: String = savedStateHandle[Constants.ARG_KEY_PHOTO_ID] ?: ""
     private var imageDetailJob: Job? = null
     private var relatedListJob: Job? = null
+
+    private val _effect = Channel<PhotoDetailEffect>(Channel.BUFFERED)
+    val effect = _effect.receiveAsFlow()
+
     private var _state = MutableStateFlow(PhotoDetailState())
     val state = _state
         .onStart {
@@ -39,6 +44,22 @@ class PhotoDetailViewModel(
             _state.value
         )
 
+    fun handleIntent(intent: PhotoDetailIntent) {
+        when (intent) {
+            PhotoDetailIntent.ClickClose -> _effect.trySend(PhotoDetailEffect.Close)
+
+            is PhotoDetailIntent.ClickPhoto -> {
+                _effect.trySend(PhotoDetailEffect.NavigatePhotoDetail(intent.id))
+            }
+            is PhotoDetailIntent.ClickTag -> {
+                _effect.trySend(PhotoDetailEffect.NavigatePhotoTag(intent.name))
+            }
+            is PhotoDetailIntent.ClickUser -> {
+                _effect.trySend(PhotoDetailEffect.NavigateUserDetail(intent.name))
+            }
+        }
+    }
+
     private fun getImageDetailInfo() {
         imageDetailJob?.cancel()
         imageDetailJob = viewModelScope.launch {
@@ -47,24 +68,20 @@ class PhotoDetailViewModel(
                     when (result) {
                         is NetworkResult.Loading -> {
                             it.copy(
-                                isLoading = true,
-                                isError = false
+                                isDetailLoading = true
                             )
                         }
 
                         is NetworkResult.Success -> {
                             it.copy(
-                                isLoading = false,
+                                isDetailLoading = false,
                                 imageDetailInfo = result.data
                             )
                         }
 
                         is NetworkResult.Error -> {
-                            it.copy(
-                                isLoading = false,
-                                isError = true,
-                                errorMessage = result.message
-                            )
+                            _effect.trySend(PhotoDetailEffect.ShowToast(result.message ?: ""))
+                            it.copy(isDetailLoading = false)
                         }
                     }
                 }
@@ -79,25 +96,19 @@ class PhotoDetailViewModel(
                 _state.update {
                     when (result) {
                         is NetworkResult.Loading -> {
-                            it.copy(
-                                isLoading = true,
-                                isError = false
-                            )
+                            it.copy(isRelatedLoading = true)
                         }
 
                         is NetworkResult.Success -> {
                             it.copy(
-                                isLoading = false,
+                                isRelatedLoading = false,
                                 imageRelatedList = result.data ?: emptyList()
                             )
                         }
 
                         is NetworkResult.Error -> {
-                            it.copy(
-                                isLoading = false,
-                                isError = true,
-                                errorMessage = result.message
-                            )
+                            _effect.trySend(PhotoDetailEffect.ShowToast(result.message ?: ""))
+                            it.copy(isRelatedLoading = false)
                         }
                     }
                 }

@@ -92,7 +92,7 @@ fun CollectionDetailScreen(
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .shimmer(visible = state.isLoading),
+                    .shimmer(visible = state.isDetailLoad),
                 text = if (state.collectionDetailInfo == null) {
                     Constants.TEXT_PREVIEW
                 } else {
@@ -113,7 +113,7 @@ fun CollectionDetailScreen(
             verticalArrangement = Arrangement.spacedBy(32.dp),
         ) {
             when {
-                state.isLoading -> {
+                state.isPagingLoading -> {
                     items(Constants.COUNT_LOADING_ITEM) {
                         ImageCard(null)
                     }

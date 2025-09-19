@@ -3,7 +3,6 @@ package com.chs.yoursplash.presentation.browse.collection_detail
 sealed interface CollectionDetailIntent {
     object Loading : CollectionDetailIntent
     object LoadComplete : CollectionDetailIntent
-    object RefreshData : CollectionDetailIntent
     data class OnError(val message: String?) : CollectionDetailIntent
     data class ClickPhoto(val id: String) : CollectionDetailIntent
     data class ClickUser(val name: String) : CollectionDetailIntent

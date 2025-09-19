@@ -2,9 +2,6 @@ package com.chs.yoursplash.presentation.browse.photo_detail
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
@@ -15,30 +12,54 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.ColorPainter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
-import coil3.compose.LocalPlatformContext
-import coil3.request.ImageRequest
-import coil3.request.crossfade
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.chs.youranimelist.res.Res
+import com.chs.youranimelist.res.text_no_photos
+import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.domain.model.User
-import com.chs.yoursplash.domain.model.UserDetail
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
+import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ShimmerImage
 import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.util.Constants
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun ImageDetailScreen(
+fun PhotoDetailScreenRoot(
+    viewModel: PhotoDetailViewModel,
+    onNavigate: (BrowseInfo) -> Unit,
+    onClose: () -> Unit
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                PhotoDetailEffect.Close -> onClose()
+                is PhotoDetailEffect.NavigatePhotoDetail -> onNavigate(BrowseInfo.Photo(effect.id))
+                is PhotoDetailEffect.NavigatePhotoTag -> onNavigate(BrowseInfo.PhotoTag(effect.tag))
+                is PhotoDetailEffect.NavigateUserDetail -> onNavigate(BrowseInfo.User(effect.name))
+                is PhotoDetailEffect.ShowToast -> Unit
+            }
+        }
+    }
+
+    PhotoDetailScreen(
+        state = state,
+        onIntent = viewModel::handleIntent
+    )
+}
+
+
+@Composable
+fun PhotoDetailScreen(
     state: PhotoDetailState,
-    onClose: () -> Unit,
-    onNavigate: (Screens) -> Unit
+    onIntent: (PhotoDetailIntent) -> Unit
 ) {
     val scrollState = rememberScrollState()
     val lazyVerticalStaggeredState = rememberLazyStaggeredGridState()
@@ -50,27 +71,26 @@ fun ImageDetailScreen(
                 ShimmerImage(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(300.dp),
+                        .height(300.dp)
+                        .shimmer(state.isDetailLoading && (state.imageDetailInfo == null)),
                     url = state.imageDetailInfo?.urls
                 )
 
                 ItemUserInfoFromPhotoDetail(state.imageDetailInfo?.user) {
-                    onNavigate(it)
+                    onIntent(PhotoDetailIntent.ClickUser(it))
                 }
 
                 HorizontalDivider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
 
                 if (state.imageDetailInfo != null) {
                     ImageDetailInfo(state.imageDetailInfo) { selectTag ->
-                        onNavigate(
-                            Screens.PhotoTagResultScreen(selectTag)
-                        )
+                        onIntent(PhotoDetailIntent.ClickTag(selectTag))
                     }
                 }
             }
         },
         isShowTopBar = false,
-        onCloseClick = onClose
+        onCloseClick = { onIntent(PhotoDetailIntent.ClickClose) }
     ) {
         LazyVerticalStaggeredGrid(
             modifier = Modifier
@@ -79,18 +99,40 @@ fun ImageDetailScreen(
             columns = StaggeredGridCells.Fixed(3),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalItemSpacing = 4.dp,
-            contentPadding = PaddingValues(horizontal = 4.dp, vertical = 8.dp)
+            contentPadding = PaddingValues(horizontal = 4.dp, vertical = 32.dp)
         ) {
-            if (state.imageRelatedList.isNotEmpty()) {
-                items(count = state.imageRelatedList.size) { idx ->
-                    val item = state.imageRelatedList[idx]
-                    ShimmerImage(
-                        modifier = Modifier
-                            .width(130.dp)
-                            .height(280.dp)
-                            .clickable { onNavigate(Screens.ImageDetailScreen(item.id)) },
-                        url = item.urls
-                    )
+            when {
+                state.isRelatedLoading -> {
+                    items(Constants.COUNT_LOADING_ITEM) {
+                        Box(
+                            modifier = Modifier
+                                .width(130.dp)
+                                .height(280.dp)
+                                .shimmer(true)
+                        )
+                    }
+                }
+
+                state.imageRelatedList.isEmpty() -> {
+                    item(span = StaggeredGridItemSpan.FullLine) {
+                        ItemEmpty(
+                            modifier = Modifier.fillMaxSize(),
+                            text = stringResource(Res.string.text_no_photos)
+                        )
+                    }
+                }
+
+                else -> {
+                    items(count = state.imageRelatedList.size) { idx ->
+                        val item = state.imageRelatedList[idx]
+                        ShimmerImage(
+                            modifier = Modifier
+                                .width(130.dp)
+                                .height(280.dp)
+                                .clickable { onIntent(PhotoDetailIntent.ClickPhoto(item.id)) },
+                            url = item.urls
+                        )
+                    }
                 }
             }
         }
@@ -100,7 +142,7 @@ fun ImageDetailScreen(
 @Composable
 private fun ItemUserInfoFromPhotoDetail(
     info: User?,
-    onNavigate: (Screens) -> Unit
+    onUser: (String) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -116,11 +158,8 @@ private fun ItemUserInfoFromPhotoDetail(
         Row(
             modifier = Modifier
                 .clickable {
-                    if (info?.userName != null) {
-                        onNavigate(
-                            Screens.UserDetailScreen(info.userName)
-                        )
-                    }
+                    if (info?.userName == null) return@clickable
+                    onUser(info.userName)
                 },
             verticalAlignment = Alignment.CenterVertically,
         ) {

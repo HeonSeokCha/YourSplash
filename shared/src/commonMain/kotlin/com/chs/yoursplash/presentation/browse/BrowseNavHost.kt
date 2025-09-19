@@ -1,7 +1,6 @@
 package com.chs.yoursplash.presentation.browse
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -11,15 +10,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.chs.yoursplash.presentation.Screens
-import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailScreen
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailScreenRoot
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailViewModel
-import com.chs.yoursplash.presentation.browse.photo_detail.ImageDetailScreen
+import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailScreenRoot
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailViewModel
-import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListScreen
-import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListScreenRoot
-import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListViewModel
-import com.chs.yoursplash.presentation.browse.user.UserDetailScreen
+import com.chs.yoursplash.presentation.browse.photo_tag.PhotoTagListScreenRoot
+import com.chs.yoursplash.presentation.browse.photo_tag.PhotoTagListViewModel
 import com.chs.yoursplash.presentation.browse.user.UserDetailScreenRoot
 import com.chs.yoursplash.presentation.browse.user.UserDetailViewModel
 import com.chs.yoursplash.util.Constants
@@ -64,14 +60,12 @@ fun BrowseNavHost(
             val viewModel: PhotoDetailViewModel = koinViewModel<PhotoDetailViewModel>(
                 viewModelStoreOwner = parentEntry
             )
-            val state by viewModel.state.collectAsStateWithLifecycle()
 
-            ImageDetailScreen(
-                state = state,
+            PhotoDetailScreenRoot(
+                viewModel = viewModel,
+                onNavigate = { navController.navigate(it) },
                 onClose = onBack
-            ) {
-                navController.navigate(it)
-            }
+            )
         }
 
         composable<Screens.CollectionDetailScreen> {
@@ -86,7 +80,7 @@ fun BrowseNavHost(
             CollectionDetailScreenRoot(
                 viewModel = viewModel,
                 onBrowse = { navController.navigate(it) },
-                onClose = { navController.navigateUp() }
+                onClose = onBack
             )
         }
 

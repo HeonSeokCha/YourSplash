@@ -4,7 +4,7 @@ import com.chs.yoursplash.presentation.bottom.collection.CollectionViewModel
 import com.chs.yoursplash.presentation.bottom.photo.PhotoViewModel
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailViewModel
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailViewModel
-import com.chs.yoursplash.presentation.browse.photo_detail.PhotoTagListViewModel
+import com.chs.yoursplash.presentation.browse.photo_tag.PhotoTagListViewModel
 import com.chs.yoursplash.presentation.browse.user.UserDetailViewModel
 import com.chs.yoursplash.presentation.main.MainViewModel
 import com.chs.yoursplash.presentation.search.SearchResultViewModel

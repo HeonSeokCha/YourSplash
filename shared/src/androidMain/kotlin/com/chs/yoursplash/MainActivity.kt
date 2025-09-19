@@ -30,6 +30,11 @@ class MainActivity : ComponentActivity() {
                                 this.putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
                                 this.putExtra(Constants.TARGET_ID, it.name)
                             }
+
+                            is BrowseInfo.PhotoTag -> {
+                                this.putExtra(Constants.TARGET_TYPE, Constants.TARGET_USER)
+                                this.putExtra(Constants.TARGET_ID, it.tag)
+                            }
                         }
                     }
                 )

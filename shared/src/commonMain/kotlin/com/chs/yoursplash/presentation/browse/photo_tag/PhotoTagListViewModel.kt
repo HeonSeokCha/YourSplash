@@ -1,4 +1,4 @@
-package com.chs.yoursplash.presentation.browse.photo_detail
+package com.chs.yoursplash.presentation.browse.photo_tag
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
