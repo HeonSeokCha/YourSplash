@@ -30,7 +30,7 @@ fun UserDetailLikeScreen(
         items(count = pagingItems.itemCount) { idx ->
             ImageCard(
                 photoInfo = pagingItems[idx],
-                onPhotoClick = { onNavigate(Screens.ImageDetailScreen(it)) },
+                onPhotoClick = { onNavigate(Screens.PhotoDetailScreen(it)) },
                 onUserClick = { onNavigate(Screens.UserDetailScreen(it)) }
             )
         }

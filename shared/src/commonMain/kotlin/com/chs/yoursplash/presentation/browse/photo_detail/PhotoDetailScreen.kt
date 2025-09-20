@@ -32,7 +32,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun PhotoDetailScreenRoot(
     viewModel: PhotoDetailViewModel,
-    onNavigate: (BrowseInfo) -> Unit,
+    onNavigate: (Screens) -> Unit,
     onClose: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -41,9 +41,9 @@ fun PhotoDetailScreenRoot(
         viewModel.effect.collect { effect ->
             when (effect) {
                 PhotoDetailEffect.Close -> onClose()
-                is PhotoDetailEffect.NavigatePhotoDetail -> onNavigate(BrowseInfo.Photo(effect.id))
-                is PhotoDetailEffect.NavigatePhotoTag -> onNavigate(BrowseInfo.PhotoTag(effect.tag))
-                is PhotoDetailEffect.NavigateUserDetail -> onNavigate(BrowseInfo.User(effect.name))
+                is PhotoDetailEffect.NavigatePhotoDetail -> onNavigate(Screens.PhotoDetailScreen(effect.id))
+                is PhotoDetailEffect.NavigatePhotoTag -> onNavigate(Screens.PhotoTagResultScreen(effect.tag))
+                is PhotoDetailEffect.NavigateUserDetail -> onNavigate(Screens.UserDetailScreen(effect.name))
                 is PhotoDetailEffect.ShowToast -> Unit
             }
         }

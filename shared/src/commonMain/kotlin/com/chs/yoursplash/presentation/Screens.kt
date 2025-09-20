@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class Screens {
     @Serializable
-    data class ImageDetailScreen(val photoId: String) : Screens()
+    data class PhotoDetailScreen(val photoId: String) : Screens()
 
     @Serializable
     data class UserDetailScreen(val userName: String) : Screens()

@@ -39,7 +39,7 @@ fun UserDetailPhotoScreen(
                         bottom = 16.dp
                     ).clickable {
                         if (pagingItems[idx] != null) {
-                            onNavigate(Screens.ImageDetailScreen(pagingItems[idx]!!.id))
+                            onNavigate(Screens.PhotoDetailScreen(pagingItems[idx]!!.id))
                         }
                     },
                 url = pagingItems[idx]?.urls

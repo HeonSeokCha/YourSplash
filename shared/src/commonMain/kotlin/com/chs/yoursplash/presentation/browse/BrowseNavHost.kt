@@ -31,7 +31,7 @@ fun BrowseNavHost(
 ) {
     val startDestination: Screens = when (type) {
         Constants.TARGET_PHOTO -> {
-            Screens.ImageDetailScreen(id)
+            Screens.PhotoDetailScreen(id)
         }
 
         Constants.TARGET_COLLECTION -> {
@@ -43,7 +43,7 @@ fun BrowseNavHost(
         }
 
         else -> {
-            Screens.ImageDetailScreen(id)
+            Screens.PhotoDetailScreen(id)
         }
     }
 
@@ -52,8 +52,8 @@ fun BrowseNavHost(
         navController = navController,
         startDestination = startDestination
     ) {
-        composable<Screens.ImageDetailScreen> {
-            val arg = it.toRoute<Screens.ImageDetailScreen>()
+        composable<Screens.PhotoDetailScreen> {
+            val arg = it.toRoute<Screens.PhotoDetailScreen>()
             val parentEntry = remember(it) {
                 navController.getBackStackEntry(arg)
             }
