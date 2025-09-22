@@ -6,6 +6,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
@@ -51,13 +52,24 @@ fun UserDetailScreenRoot(
     val likePaging = viewModel.likePaging
     val collectPaging = viewModel.collectPaging
 
+    LaunchedEffect(Unit) {
+        viewModel.effect.collect { effect ->
+            when (effect) {
+                UserDetailEffect.Close -> onClose()
+                is UserDetailEffect.NavigateCollectionDetail -> onNavigate(Screens.CollectionDetailScreen(effect.id))
+                is UserDetailEffect.NavigatePhotoDetail -> onNavigate(Screens.PhotoDetailScreen(effect.id))
+                is UserDetailEffect.NavigateUserDetail -> onNavigate(Screens.UserDetailScreen(effect.name))
+                is UserDetailEffect.ShowToast -> Unit
+            }
+        }
+    }
+
     UserDetailScreen(
         state = state,
         photoPaging = photoPaging,
         likePaging = likePaging,
         collectPaging = collectPaging,
-        onClose = onClose,
-        onNavigate = onNavigate
+        onIntent = viewModel::handleIntent
     )
 }
 
@@ -68,30 +80,38 @@ fun UserDetailScreen(
     photoPaging: Flow<PagingData<Photo>>,
     likePaging: Flow<PagingData<Photo>>,
     collectPaging: Flow<PagingData<UnSplashCollection>>,
-    onClose: () -> Unit,
-    onNavigate: (Screens) -> Unit
+    onIntent: (UserDetailIntent) -> Unit
 ) {
-    val pagerState = rememberPagerState { state.userTabLabList.size }
+    val pagerState = rememberPagerState { state.tabList.size }
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
+
+    LaunchedEffect(state.selectIdx) {
+        pagerState.animateScrollToPage(state.selectIdx)
+    }
+
+    LaunchedEffect(pagerState.currentPage) {
+        onIntent(UserDetailIntent.ChangeTabIndex(pagerState.currentPage))
+    }
 
     CollapsingToolbarScaffold(
         scrollState = scrollState,
         isShowTopBar = true,
         header = {
-            if (state.isError) {
-                Text(text = state.errorMessage ?: "UnknownError")
-            } else {
-                UserDetailInfo(userInfo = state.userDetailInfo)
-            }
+            UserDetailInfo(userInfo = state.userDetailInfo)
         },
         stickyHeader = {
             SecondaryTabRow(pagerState.currentPage) {
-                state.userTabLabList.forEachIndexed { index, title ->
+                state.tabList.forEachIndexed { index, title ->
                     Tab(
                         text = {
                             Text(
                                 text = title,
+                                autoSize = TextAutoSize.StepBased(
+                                    minFontSize = 6.sp,
+                                    maxFontSize = 12.sp,
+                                    stepSize = 1.sp
+                                ),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 fontSize = 12.sp,
@@ -108,32 +128,38 @@ fun UserDetailScreen(
                 }
             }
         },
-        onCloseClick = onClose
+        onCloseClick = { onIntent(UserDetailIntent.ClickClose) }
     ) {
-        if (state.userTabLabList.isEmpty()) {
+        if (state.tabList.isEmpty()) {
             ItemEmpty(
                 modifier = Modifier.fillMaxSize(),
                 text = stringResource(Res.string.text_no_items)
             )
         } else {
             HorizontalPager(state = pagerState) { pager ->
-                when (state.userTabLabList[pager]) {
+                when (state.tabList[pager]) {
                     "PHOTOS" -> {
-                        UserDetailPhotoScreen(photoPaging) {
-                            onNavigate(it)
-                        }
+                        UserDetailPhotoScreen(
+                            photoList = photoPaging,
+                            isLoading = state.isPhotoLoading,
+                            onIntent = onIntent
+                        )
                     }
 
                     "LIKES" -> {
-                        UserDetailLikeScreen(likePaging) {
-                            onNavigate(it)
-                        }
+                        UserDetailLikeScreen(
+                            photoList = likePaging,
+                            isLoading = state.isLikeLoading,
+                            onIntent = onIntent
+                        )
                     }
 
-                    "COLLECT" -> {
-                        UserDetailCollectionScreen(collectPaging) {
-                            onNavigate(it)
-                        }
+                    "COLLECTIONS" -> {
+                        UserDetailCollectionScreen(
+                            collectionList = collectPaging,
+                            isLoading = state.isCollectLoading,
+                            onIntent = onIntent
+                        )
                     }
                 }
             }
