@@ -21,15 +21,16 @@ class HomePhotosPaging(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Photo> {
         return try {
-            val page = params.key ?: 0
+            val page = params.key ?: 1
             val response = api.requestUnsplash<List<ResponsePhoto>>(
                 url = Constants.GET_PHOTOS,
                 params = hashMapOf("page" to page.toString())
             ).map { it.toUnSplashImage(loadQuality) }
+                .distinctBy { it.id }
 
             LoadResult.Page(
                 data = response,
-                prevKey = if (page == 0) null else page - 1,
+                prevKey = if (page == 1) null else page - 1,
                 nextKey = if (response.isNotEmpty()) page + 1 else null
             )
         } catch (e: Exception) {

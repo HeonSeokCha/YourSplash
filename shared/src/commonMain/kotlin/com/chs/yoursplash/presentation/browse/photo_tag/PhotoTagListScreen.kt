@@ -1,17 +1,23 @@
 package com.chs.yoursplash.presentation.browse.photo_tag
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -25,6 +31,7 @@ import com.chs.yoursplash.presentation.Screens.*
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
 import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.presentation.base.ItemEmpty
+import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.presentation.bottom.photo.PhotoIntent
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailEffect
 import com.chs.yoursplash.util.Constants
@@ -94,7 +101,17 @@ fun PhotoTagListScreen(
     CollapsingToolbarScaffold(
         scrollState = scrollState,
         isShowTopBar = true,
-        header = { },
+        header = {
+//            Text(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .shimmer(visible = state.isLoading),
+//                text = "",
+//                textAlign = TextAlign.Center,
+//                fontSize = 16.sp,
+//                fontWeight = FontWeight.SemiBold
+//            )
+        },
         onCloseClick = { onIntent(PhotoTagIntent.ClickClose) }
     ) {
         LazyColumn(
