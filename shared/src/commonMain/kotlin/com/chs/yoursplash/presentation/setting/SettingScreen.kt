@@ -1,5 +1,6 @@
 package com.chs.yoursplash.presentation.setting
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -9,20 +10,31 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.chs.yoursplash.domain.model.LoadQuality
 import com.chs.yoursplash.presentation.ui.theme.Purple500
-import com.chs.yoursplash.util.Constants
+
+
+@Composable
+fun SettingScreenRoot(viewModel: SettingViewModel) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    SettingScreen(
+        state = state,
+        onEvent = viewModel::onEvent
+    )
+}
 
 @Composable
 fun SettingScreen(
     state: SettingState,
-    onEvent: (SettingEvent) -> Unit
+    onEvent: (SettingIntent) -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(
-                start = 64.dp,
+                start = 32.dp,
                 end = 64.dp,
                 top = 16.dp
             )
@@ -32,34 +44,39 @@ fun SettingScreen(
             fontWeight = FontWeight.SemiBold,
             fontSize = 20.sp
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        SettingItem(
-            title = "Load Quality",
-            subTitle = state.loadQualityValue.name,
-            clickAble = { onEvent(SettingEvent.ClickLoad) }
-        )
 
-        SettingItem(
-            title = "Download Quality",
-            subTitle = state.downLoadQualityValue.name,
-            clickAble = { onEvent(SettingEvent.ClickDownload) }
-        )
+        Column(
+            modifier = Modifier
+                .padding(top = 16.dp, start = 32.dp)
+        ) {
+            SettingItem(
+                title = "Load Quality",
+                subTitle = state.loadQualityValue.name,
+                clickAble = { onEvent(SettingIntent.ClickLoad) }
+            )
 
-        SettingItem(
-            title = "Wallpaper Quality",
-            subTitle = state.wallpaperQualityValue.name,
-            clickAble = { onEvent(SettingEvent.ClickWallpaper) }
-        )
+            SettingItem(
+                title = "Download Quality",
+                subTitle = state.downLoadQualityValue.name,
+                clickAble = { onEvent(SettingIntent.ClickDownload) }
+            )
+
+            SettingItem(
+                title = "Wallpaper Quality",
+                subTitle = state.wallpaperQualityValue.name,
+                clickAble = { onEvent(SettingIntent.ClickWallpaper) }
+            )
+        }
 
         if (state.showDialog) {
             AlertDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight(),
-                onDismissRequest = { onEvent(SettingEvent.CloseDialog) },
+                onDismissRequest = { onEvent(SettingIntent.CloseDialog) },
                 confirmButton = {
                     Button(
-                        onClick = { onEvent(SettingEvent.ClickSave) }
+                        onClick = { onEvent(SettingIntent.ClickSave) }
                     ) {
                         Text(text = "APPLY")
                     }
@@ -79,13 +96,17 @@ fun SettingScreen(
                                 unselectedColor = Color.LightGray
                             )
                             Row (
+                                modifier = Modifier
+                                    .clickable {
+                                        onEvent(SettingIntent.SelectValue(it))
+                                    },
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 RadioButton(
                                     colors = color,
                                     selected = isSelected,
                                     onClick = {
-                                        onEvent(SettingEvent.SelectValue(it))
+                                        onEvent(SettingIntent.SelectValue(it))
                                     }
                                 )
 

@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.map
 class GetDownloadQualityUseCase(
     private val repository: SettingRepository
 ) {
-    suspend operator fun invoke(): Flow<LoadQuality> {
+    operator fun invoke(): Flow<LoadQuality> {
         return repository.getFlowableString(
             Constants.PREFERENCE_KEY_DOWNLOAD_QUALITY,
             LoadQuality.Regular.name

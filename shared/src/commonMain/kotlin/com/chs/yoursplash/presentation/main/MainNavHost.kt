@@ -18,6 +18,7 @@ import com.chs.yoursplash.presentation.search.SearchIntent
 import com.chs.yoursplash.presentation.search.SearchResultViewModel
 import com.chs.yoursplash.presentation.search.SearchScreenRoot
 import com.chs.yoursplash.presentation.setting.SettingScreen
+import com.chs.yoursplash.presentation.setting.SettingScreenRoot
 import com.chs.yoursplash.presentation.setting.SettingViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
@@ -73,11 +74,8 @@ fun MainNavHost(
 
         composable<MainScreens.SettingScreen> {
             val viewModel = koinViewModel<SettingViewModel>()
-            val state by viewModel.state.collectAsStateWithLifecycle()
-            SettingScreen(
-                state = state,
-                onEvent = viewModel::onEvent
-            )
+
+            SettingScreenRoot(viewModel)
         }
     }
 }

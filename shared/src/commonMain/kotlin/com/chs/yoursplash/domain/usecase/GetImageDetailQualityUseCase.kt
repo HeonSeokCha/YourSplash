@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.map
 class GetImageDetailQualityUseCase(
     private val repository: SettingRepository
 ) {
-    suspend operator fun invoke(): Flow<LoadQuality> {
+    operator fun invoke(): Flow<LoadQuality> {
         return repository.getFlowableString(
             Constants.PREFERENCE_KEY_WALLPAPER_QUALITY,
             LoadQuality.Regular.name
