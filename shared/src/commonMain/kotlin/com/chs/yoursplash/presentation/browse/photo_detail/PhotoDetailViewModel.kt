@@ -8,6 +8,7 @@ import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoDetailUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoRelatedListUseCase
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailEffect
+import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailEffect.*
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.NetworkResult
 import kotlinx.coroutines.Job
@@ -49,14 +50,16 @@ class PhotoDetailViewModel(
             PhotoDetailIntent.ClickClose -> _effect.trySend(PhotoDetailEffect.Close)
 
             is PhotoDetailIntent.ClickPhoto -> {
-                _effect.trySend(PhotoDetailEffect.NavigatePhotoDetail(intent.id))
+                _effect.trySend(NavigatePhotoDetail(intent.id))
             }
             is PhotoDetailIntent.ClickTag -> {
-                _effect.trySend(PhotoDetailEffect.NavigatePhotoTag(intent.name))
+                _effect.trySend(NavigatePhotoTag(intent.name))
             }
             is PhotoDetailIntent.ClickUser -> {
-                _effect.trySend(PhotoDetailEffect.NavigateUserDetail(intent.name))
+                _effect.trySend(NavigateUserDetail(intent.name))
             }
+
+            is PhotoDetailIntent.ClickDownload -> Unit
         }
     }
 

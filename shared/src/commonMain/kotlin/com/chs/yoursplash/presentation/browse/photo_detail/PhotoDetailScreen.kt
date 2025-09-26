@@ -7,6 +7,8 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,6 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.chs.youranimelist.res.Res
 import com.chs.youranimelist.res.text_no_photos
 import com.chs.yoursplash.domain.model.BrowseInfo
+import com.chs.yoursplash.domain.model.PhotoDetail
 import com.chs.yoursplash.domain.model.User
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
@@ -41,9 +44,24 @@ fun PhotoDetailScreenRoot(
         viewModel.effect.collect { effect ->
             when (effect) {
                 PhotoDetailEffect.Close -> onClose()
-                is PhotoDetailEffect.NavigatePhotoDetail -> onNavigate(Screens.PhotoDetailScreen(effect.id))
-                is PhotoDetailEffect.NavigatePhotoTag -> onNavigate(Screens.PhotoTagResultScreen(effect.tag))
-                is PhotoDetailEffect.NavigateUserDetail -> onNavigate(Screens.UserDetailScreen(effect.name))
+                is PhotoDetailEffect.NavigatePhotoDetail -> onNavigate(
+                    Screens.PhotoDetailScreen(
+                        effect.id
+                    )
+                )
+
+                is PhotoDetailEffect.NavigatePhotoTag -> onNavigate(
+                    Screens.PhotoTagResultScreen(
+                        effect.tag
+                    )
+                )
+
+                is PhotoDetailEffect.NavigateUserDetail -> onNavigate(
+                    Screens.UserDetailScreen(
+                        effect.name
+                    )
+                )
+
                 is PhotoDetailEffect.ShowToast -> Unit
             }
         }
@@ -54,7 +72,6 @@ fun PhotoDetailScreenRoot(
         onIntent = viewModel::handleIntent
     )
 }
-
 
 @Composable
 fun PhotoDetailScreen(
@@ -76,16 +93,16 @@ fun PhotoDetailScreen(
                     url = state.imageDetailInfo?.urls
                 )
 
-                ItemUserInfoFromPhotoDetail(state.imageDetailInfo?.user) {
-                    onIntent(PhotoDetailIntent.ClickUser(it))
-                }
+                ItemUserInfoFromPhotoDetail(
+                    info = state.imageDetailInfo,
+                    onUser = { onIntent(PhotoDetailIntent.ClickUser(it)) },
+                    onDownload = {}
+                )
 
                 HorizontalDivider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
 
-                if (state.imageDetailInfo != null) {
-                    ImageDetailInfo(state.imageDetailInfo) { selectTag ->
-                        onIntent(PhotoDetailIntent.ClickTag(selectTag))
-                    }
+                ImageDetailInfo(state.imageDetailInfo) { selectTag ->
+                    onIntent(PhotoDetailIntent.ClickTag(selectTag))
                 }
             }
         },
@@ -141,8 +158,9 @@ fun PhotoDetailScreen(
 
 @Composable
 private fun ItemUserInfoFromPhotoDetail(
-    info: User?,
-    onUser: (String) -> Unit
+    info: PhotoDetail?,
+    onUser: (String) -> Unit,
+    onDownload: (String) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -158,8 +176,8 @@ private fun ItemUserInfoFromPhotoDetail(
         Row(
             modifier = Modifier
                 .clickable {
-                    if (info?.userName == null) return@clickable
-                    onUser(info.userName)
+                    if (info?.user?.userName == null) return@clickable
+                    onUser(info.user.userName)
                 },
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -167,7 +185,7 @@ private fun ItemUserInfoFromPhotoDetail(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(RoundedCornerShape(100)),
-                url = info?.photoProfile?.large
+                url = info?.user?.photoProfile?.large
             )
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -175,12 +193,21 @@ private fun ItemUserInfoFromPhotoDetail(
             Text(
                 modifier = Modifier
                     .shimmer(visible = info == null),
-                text = info?.name ?: Constants.TEXT_PREVIEW,
+                text = info?.user?.name ?: Constants.TEXT_PREVIEW,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
             )
+        }
+
+        IconButton(
+            onClick = {
+                if (info == null || info.urls.isNullOrEmpty()) return@IconButton
+                onDownload(info.urls)
+            }
+        ) {
+            Icon(imageVector = Icons.Default.Download, contentDescription = null)
         }
     }
 }

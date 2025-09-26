@@ -34,7 +34,7 @@ fun Modifier.shimmer(
         targetValue = 1200f,
         animationSpec = infiniteRepeatable(
             animation = tween(
-                durationMillis = 1600, // slower = smoother
+                durationMillis = 2400, // slower = smoother
                 easing = FastOutSlowInEasing // smoother easing
             )
         ),
