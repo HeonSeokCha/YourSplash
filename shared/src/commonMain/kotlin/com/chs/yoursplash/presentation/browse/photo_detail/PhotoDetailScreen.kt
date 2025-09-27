@@ -29,6 +29,7 @@ import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
 import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ShimmerImage
 import com.chs.yoursplash.presentation.base.shimmer
+import com.chs.yoursplash.presentation.toSettingUrl
 import com.chs.yoursplash.util.Constants
 import org.jetbrains.compose.resources.stringResource
 
@@ -90,11 +91,11 @@ fun PhotoDetailScreen(
                         .fillMaxWidth()
                         .height(300.dp)
                         .shimmer(state.isDetailLoading && (state.imageDetailInfo == null)),
-                    url = state.imageDetailInfo?.urls
+                    url = state.imageDetailInfo?.urls?.toSettingUrl(state.loadQualityValue)
                 )
 
                 ItemUserInfoFromPhotoDetail(
-                    info = state.imageDetailInfo,
+                    state = state,
                     onUser = { onIntent(PhotoDetailIntent.ClickUser(it)) },
                     onDownload = {}
                 )
@@ -158,10 +159,11 @@ fun PhotoDetailScreen(
 
 @Composable
 private fun ItemUserInfoFromPhotoDetail(
-    info: PhotoDetail?,
+    state: PhotoDetailState,
     onUser: (String) -> Unit,
     onDownload: (String) -> Unit
 ) {
+    val info = state.imageDetailInfo
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -203,8 +205,12 @@ private fun ItemUserInfoFromPhotoDetail(
 
         IconButton(
             onClick = {
-                if (info == null || info.urls.isNullOrEmpty()) return@IconButton
-                onDownload(info.urls)
+                if (info == null
+                    || info.urls.toSettingUrl(state.downLoadQualityValue).isNullOrEmpty()
+                ) {
+                    return@IconButton
+                }
+                onDownload(info.urls.toSettingUrl(state.downLoadQualityValue)!!)
             }
         ) {
             Icon(imageVector = Icons.Default.Download, contentDescription = null)

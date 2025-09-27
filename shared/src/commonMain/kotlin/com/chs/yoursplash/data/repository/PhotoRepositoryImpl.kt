@@ -146,4 +146,17 @@ class PhotoRepositoryImpl (
                 LoadQuality.valueOf(this)
             }
     }
+
+    override fun getImageFile(url: String): Flow<NetworkResult<ByteArray>> {
+        return flow {
+            emit(NetworkResult.Loading())
+            try {
+                emit(
+                    NetworkResult.Success(client.requestUnsplash(url = url))
+                )
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(e.message ?: "Unknown Error..."))
+            }
+        }
+    }
 }

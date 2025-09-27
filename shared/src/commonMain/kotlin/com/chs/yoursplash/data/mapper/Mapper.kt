@@ -118,7 +118,7 @@ fun ResponsePhotoDetail.toUnSplashImageDetail(quality: LoadQuality): PhotoDetail
         color = color,
         blurHash = blurHash,
         likes = likes,
-        urls = urls.toUnSplashImageUrls(quality),
+        urls = urls.toPhotoUrls(),
         description = description,
         user = user.toUnSplashUser(quality),
         exif = exif.toUnSplashExif(),
@@ -160,5 +160,15 @@ fun ResponseCollection.toPhotoCollection(quality: LoadQuality): UnSplashCollecti
         previewPhotos = previewPhotos?.map {
             it.toRelatedCollectionPreview(quality)
         }
+    )
+}
+
+fun ResponsePhotoUrls.toPhotoUrls(): PhotoUrls {
+    return PhotoUrls(
+        raw = raw,
+        full = full,
+        regular = regular,
+        small = small,
+        thumb = thumb
     )
 }

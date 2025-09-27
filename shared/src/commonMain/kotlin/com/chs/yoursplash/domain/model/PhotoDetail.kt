@@ -8,7 +8,7 @@ data class PhotoDetail(
     val color: String,
     val blurHash: String,
     val likes: Int,
-    val urls: String?,
+    val urls: PhotoUrls,
     val description: String?,
     val user: User,
     val exif: Exif,

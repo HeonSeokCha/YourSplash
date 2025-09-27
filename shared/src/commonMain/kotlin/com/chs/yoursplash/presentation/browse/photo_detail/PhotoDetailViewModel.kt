@@ -3,6 +3,7 @@ package com.chs.yoursplash.presentation.browse.photo_detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.chs.yoursplash.domain.usecase.GetDownloadQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetImageDetailQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoDetailUseCase
@@ -15,6 +16,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -25,6 +27,9 @@ class PhotoDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val getPhotoDetailUseCase: GetPhotoDetailUseCase,
     private val getPhotoRelatedListUseCase: GetPhotoRelatedListUseCase,
+    private val getDownloadQualityUseCase: GetDownloadQualityUseCase,
+    private val getLoadQualityUseCase: GetLoadQualityUseCase,
+    private val getImageDetailQualityUseCase: GetImageDetailQualityUseCase
 ) : ViewModel() {
     private val imageId: String = savedStateHandle[Constants.ARG_KEY_PHOTO_ID] ?: ""
     private var imageDetailJob: Job? = null
@@ -78,7 +83,10 @@ class PhotoDetailViewModel(
                         is NetworkResult.Success -> {
                             it.copy(
                                 isDetailLoading = false,
-                                imageDetailInfo = result.data
+                                imageDetailInfo = result.data,
+                                loadQualityValue = getImageDetailQualityUseCase().first(),
+                                downLoadQualityValue = getDownloadQualityUseCase().first(),
+                                wallpaperQualityValue = getImageDetailQualityUseCase().first()
                             )
                         }
 

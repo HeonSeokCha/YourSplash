@@ -49,7 +49,16 @@ fun String?.toComposeColor(): Color {
             }
         }
     } catch (e: Exception) {
-        // 잘못된 hex 문자가 포함된 경우
         Color.LightGray
+    }
+}
+
+fun PhotoUrls.toSettingUrl(loadQuality: LoadQuality): String? {
+    return when (loadQuality) {
+        LoadQuality.Raw -> this.raw
+        LoadQuality.Full -> this.full
+        LoadQuality.Regular -> this.regular
+        LoadQuality.Small -> this.small
+        LoadQuality.Thumb -> this.thumb
     }
 }
