@@ -27,5 +27,8 @@ interface PhotoRepository {
 
     fun getRelatedCollectionList(id: String): Flow<NetworkResult<List<UnSplashCollection>>>
 
-    fun getImageFile(url: String): Flow<NetworkResult<ByteArray>>
+    fun getPhotoFileUseCase(
+        fileName: String,
+        url: String
+    ): Flow<NetworkResult<Boolean>>
 }

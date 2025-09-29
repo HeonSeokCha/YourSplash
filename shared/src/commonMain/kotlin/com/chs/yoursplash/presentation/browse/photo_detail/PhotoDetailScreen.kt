@@ -1,5 +1,7 @@
 package com.chs.yoursplash.presentation.browse.photo_detail
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -9,6 +11,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridS
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Downloading
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -97,7 +100,7 @@ fun PhotoDetailScreen(
                 ItemUserInfoFromPhotoDetail(
                     state = state,
                     onUser = { onIntent(PhotoDetailIntent.ClickUser(it)) },
-                    onDownload = {}
+                    onDownload = { onIntent(PhotoDetailIntent.ClickDownload(it)) }
                 )
 
                 HorizontalDivider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
@@ -213,7 +216,13 @@ private fun ItemUserInfoFromPhotoDetail(
                 onDownload(info.urls.toSettingUrl(state.downLoadQualityValue)!!)
             }
         ) {
-            Icon(imageVector = Icons.Default.Download, contentDescription = null)
+            AnimatedContent(targetState = state.isFileDownLoading) {
+                if (state.isFileDownLoading) {
+                    Icon(imageVector = Icons.Default.Downloading, contentDescription = null)
+                } else {
+                    Icon(imageVector = Icons.Default.Download, contentDescription = null)
+                }
+            }
         }
     }
 }

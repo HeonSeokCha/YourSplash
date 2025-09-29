@@ -3,6 +3,7 @@ package com.chs.yoursplash.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.chs.yoursplash.data.FileManager
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.data.api.UnSplashService
 import com.chs.yoursplash.data.mapper.toPhotoCollection
@@ -24,9 +25,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
-class PhotoRepositoryImpl (
+class PhotoRepositoryImpl(
     private val client: UnSplashService,
-    private val dataStore: DataStorePrefManager
+    private val dataStore: DataStorePrefManager,
+    private val fileManager: FileManager
 ) : PhotoRepository {
     override fun getPagingPhoto(loadQuality: LoadQuality): Flow<PagingData<Photo>> {
         return Pager(
@@ -147,13 +149,19 @@ class PhotoRepositoryImpl (
             }
     }
 
-    override fun getImageFile(url: String): Flow<NetworkResult<ByteArray>> {
+    override fun getPhotoFileUseCase(
+        fileName: String,
+        url: String
+    ): Flow<NetworkResult<Boolean>> {
         return flow {
             emit(NetworkResult.Loading())
             try {
-                emit(
-                    NetworkResult.Success(client.requestUnsplash(url = url))
-                )
+                val a = fileManager.saveFile(
+                    fileName = fileName,
+                    data = client.requestUnsplash(url = url)
+                ).isSuccess
+
+                emit(NetworkResult.Success(a))
             } catch (e: Exception) {
                 emit(NetworkResult.Error(e.message ?: "Unknown Error..."))
             }

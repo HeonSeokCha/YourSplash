@@ -7,9 +7,11 @@ import com.chs.yoursplash.domain.usecase.GetDownloadQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetImageDetailQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoDetailUseCase
+import com.chs.yoursplash.domain.usecase.GetPhotoFileUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoRelatedListUseCase
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailEffect
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailEffect.*
+import com.chs.yoursplash.presentation.toSettingUrl
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.NetworkResult
 import kotlinx.coroutines.Job
@@ -28,12 +30,13 @@ class PhotoDetailViewModel(
     private val getPhotoDetailUseCase: GetPhotoDetailUseCase,
     private val getPhotoRelatedListUseCase: GetPhotoRelatedListUseCase,
     private val getDownloadQualityUseCase: GetDownloadQualityUseCase,
-    private val getLoadQualityUseCase: GetLoadQualityUseCase,
-    private val getImageDetailQualityUseCase: GetImageDetailQualityUseCase
+    private val getImageDetailQualityUseCase: GetImageDetailQualityUseCase,
+    private val getPhotoFileUseCase: GetPhotoFileUseCase
 ) : ViewModel() {
     private val imageId: String = savedStateHandle[Constants.ARG_KEY_PHOTO_ID] ?: ""
     private var imageDetailJob: Job? = null
     private var relatedListJob: Job? = null
+    private var downloadJob: Job? = null
 
     private val _effect = Channel<PhotoDetailEffect>(Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
@@ -64,7 +67,9 @@ class PhotoDetailViewModel(
                 _effect.trySend(NavigateUserDetail(intent.name))
             }
 
-            is PhotoDetailIntent.ClickDownload -> Unit
+            is PhotoDetailIntent.ClickDownload -> {
+                getPhotoFile(intent.url)
+            }
         }
     }
 
@@ -127,9 +132,39 @@ class PhotoDetailViewModel(
         }
     }
 
+    private fun getPhotoFile(url: String) {
+        downloadJob?.cancel()
+        downloadJob = viewModelScope.launch {
+            getPhotoFileUseCase(
+                fileName = imageId,
+                url = url
+            ).collect { result ->
+                _state.update {
+                    when (result) {
+                        is NetworkResult.Loading -> {
+                            it.copy(isFileDownloaded = true)
+                        }
+
+                        is NetworkResult.Success -> {
+                            it.copy(
+                                isFileDownloaded = result.data ?: false,
+                            )
+                        }
+
+                        is NetworkResult.Error -> {
+                            _effect.trySend(PhotoDetailEffect.ShowToast(result.message ?: ""))
+                            it.copy(isFileDownloaded = false)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     override fun onCleared() {
         imageDetailJob?.cancel()
         relatedListJob?.cancel()
+        downloadJob?.cancel()
         super.onCleared()
     }
 }
