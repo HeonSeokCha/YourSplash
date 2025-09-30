@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.chs.yoursplash.domain.model.BrowseInfo
 
 @Composable
 fun BrowseApp(

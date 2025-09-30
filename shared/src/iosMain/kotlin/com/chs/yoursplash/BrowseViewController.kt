@@ -7,7 +7,7 @@ import com.chs.yoursplash.presentation.browse.BrowseApp
 
 fun BrowseViewController(
     controller: UINavigationController,
-    info: BrowseInfo
+    info: Pair<String, String>
 ) = ComposeUIViewController(
     configure = {
         enforceStrictPlistSanityCheck = false
@@ -16,8 +16,6 @@ fun BrowseViewController(
 
     BrowseApp(
         info = info,
-        onBack = {
-            controller.popViewControllerAnimated(true)
-        }
+        onBack = { controller.popViewControllerAnimated(true) }
     )
 }

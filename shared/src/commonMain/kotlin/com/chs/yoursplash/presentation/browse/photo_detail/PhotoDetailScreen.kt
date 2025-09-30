@@ -210,18 +210,16 @@ private fun ItemUserInfoFromPhotoDetail(
             onClick = {
                 if (info == null
                     || info.urls.toSettingUrl(state.downLoadQualityValue).isNullOrEmpty()
-                ) {
-                    return@IconButton
-                }
+                    || state.isFileDownLoading
+                ) return@IconButton
+
                 onDownload(info.urls.toSettingUrl(state.downLoadQualityValue)!!)
             }
         ) {
-            AnimatedContent(targetState = state.isFileDownLoading) {
-                if (state.isFileDownLoading) {
-                    Icon(imageVector = Icons.Default.Downloading, contentDescription = null)
-                } else {
-                    Icon(imageVector = Icons.Default.Download, contentDescription = null)
-                }
+            if (state.isFileDownLoading) {
+                Icon(imageVector = Icons.Default.Downloading, contentDescription = null)
+            } else {
+                Icon(imageVector = Icons.Default.Download, contentDescription = null)
             }
         }
     }

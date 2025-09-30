@@ -13,7 +13,7 @@ actual class FileManager(
     actual suspend fun saveFile(
         fileName: String,
         data: ByteArray
-    ): Result<Boolean> {
+    ): Result<Unit> {
         return withContext(Dispatchers.IO) {
             saveImage(byteArray = data, fileName = fileName)
         }
@@ -45,7 +45,10 @@ actual class FileManager(
         }
     }
 
-    private fun saveImage(byteArray: ByteArray, fileName: String): Result<Boolean> {
+    private fun saveImage(
+        byteArray: ByteArray,
+        fileName: String
+    ): Result<Unit> {
         val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
             put(MediaStore.Images.Media.MIME_TYPE, "image/png")
@@ -58,7 +61,7 @@ actual class FileManager(
 
         val resolver = context.contentResolver
         val imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-        if (imageUri == null) return Result.success(false)
+        if (imageUri == null) return Result.failure(Exception("imageUri is Null."))
 
         return try {
             resolver.openOutputStream(imageUri)?.use { outputStream ->
@@ -69,7 +72,7 @@ actual class FileManager(
             contentValues.put(MediaStore.Images.Media.IS_PENDING, 0)
             resolver.update(imageUri, contentValues, null, null)
 
-            Result.success(true)
+            Result.success(Unit)
         } catch (e: Exception) {
             resolver.delete(imageUri, null, null)
             Result.failure(e)

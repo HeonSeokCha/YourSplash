@@ -27,7 +27,6 @@ import com.chs.yoursplash.util.Constants
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 
-
 @Composable
 fun CollectionScreenRoot(
     viewModel: CollectionViewModel,

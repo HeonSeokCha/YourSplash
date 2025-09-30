@@ -156,12 +156,13 @@ class PhotoRepositoryImpl(
         return flow {
             emit(NetworkResult.Loading())
             try {
-                val a = fileManager.saveFile(
+                val responseByteArray: ByteArray = client.requestUnsplash(url = url)
+                val saveResult = fileManager.saveFile(
                     fileName = fileName,
-                    data = client.requestUnsplash(url = url)
-                ).isSuccess
+                    data = responseByteArray
+                )
 
-                emit(NetworkResult.Success(a))
+                emit(NetworkResult.Success(saveResult.isSuccess))
             } catch (e: Exception) {
                 emit(NetworkResult.Error(e.message ?: "Unknown Error..."))
             }

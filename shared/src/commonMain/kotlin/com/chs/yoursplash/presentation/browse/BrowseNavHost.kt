@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.Screens
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailScreenRoot
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailViewModel

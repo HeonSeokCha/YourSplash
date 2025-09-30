@@ -142,18 +142,20 @@ class PhotoDetailViewModel(
                 _state.update {
                     when (result) {
                         is NetworkResult.Loading -> {
-                            it.copy(isFileDownloaded = true)
+                            it.copy(
+                                isFileDownLoading = true,
+                            )
                         }
 
                         is NetworkResult.Success -> {
                             it.copy(
-                                isFileDownloaded = result.data ?: false,
+                                isFileDownLoading = result.data ?: false,
                             )
                         }
 
                         is NetworkResult.Error -> {
                             _effect.trySend(PhotoDetailEffect.ShowToast(result.message ?: ""))
-                            it.copy(isFileDownloaded = false)
+                            it.copy(isFileDownLoading = false)
                         }
                     }
                 }
