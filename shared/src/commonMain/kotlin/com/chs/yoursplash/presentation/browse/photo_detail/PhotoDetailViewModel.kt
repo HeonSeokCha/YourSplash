@@ -149,7 +149,8 @@ class PhotoDetailViewModel(
 
                         is NetworkResult.Success -> {
                             it.copy(
-                                isFileDownLoading = result.data ?: false,
+                                isFileDownLoading = false,
+                                isFileDownloaded = (result.data ?: false),
                             )
                         }
 

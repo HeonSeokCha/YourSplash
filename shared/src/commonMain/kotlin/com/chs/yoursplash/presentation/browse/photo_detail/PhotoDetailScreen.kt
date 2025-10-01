@@ -84,79 +84,100 @@ fun PhotoDetailScreen(
 ) {
     val scrollState = rememberScrollState()
     val lazyVerticalStaggeredState = rememberLazyStaggeredGridState()
+    val snackBarHost = remember { SnackbarHostState() }
 
-    CollapsingToolbarScaffold(
-        scrollState = scrollState,
-        header = {
-            Column {
-                ShimmerImage(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(300.dp)
-                        .shimmer(state.isDetailLoading && (state.imageDetailInfo == null)),
-                    url = state.imageDetailInfo?.urls?.toSettingUrl(state.loadQualityValue)
-                )
+    LaunchedEffect(state.isFileDownloaded) {
+        if (state.isFileDownloaded) {
+            snackBarHost.showSnackbar(
+                message = "Download Complete.",
+                withDismissAction = true
+            )
+        }
+    }
 
-                ItemUserInfoFromPhotoDetail(
-                    state = state,
-                    onUser = { onIntent(PhotoDetailIntent.ClickUser(it)) },
-                    onDownload = { onIntent(PhotoDetailIntent.ClickDownload(it)) }
-                )
-
-                HorizontalDivider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
-
-                ImageDetailInfo(state.imageDetailInfo) { selectTag ->
-                    onIntent(PhotoDetailIntent.ClickTag(selectTag))
-                }
-            }
-        },
-        isShowTopBar = false,
-        onCloseClick = { onIntent(PhotoDetailIntent.ClickClose) }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
     ) {
-        LazyVerticalStaggeredGrid(
-            modifier = Modifier
-                .fillMaxSize(),
-            state = lazyVerticalStaggeredState,
-            columns = StaggeredGridCells.Fixed(3),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            verticalItemSpacing = 4.dp,
-            contentPadding = PaddingValues(horizontal = 4.dp, vertical = 32.dp)
+        CollapsingToolbarScaffold(
+            scrollState = scrollState,
+            header = {
+                Column {
+                    ShimmerImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(300.dp)
+                            .shimmer(state.isDetailLoading && (state.imageDetailInfo == null)),
+                        url = state.imageDetailInfo?.urls?.toSettingUrl(state.loadQualityValue)
+                    )
+
+                    ItemUserInfoFromPhotoDetail(
+                        state = state,
+                        onUser = { onIntent(PhotoDetailIntent.ClickUser(it)) },
+                        onDownload = { onIntent(PhotoDetailIntent.ClickDownload(it)) }
+                    )
+
+                    HorizontalDivider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
+
+                    ImageDetailInfo(state.imageDetailInfo) { selectTag ->
+                        onIntent(PhotoDetailIntent.ClickTag(selectTag))
+                    }
+                }
+            },
+            isShowTopBar = false,
+            onCloseClick = { onIntent(PhotoDetailIntent.ClickClose) }
         ) {
-            when {
-                state.isRelatedLoading -> {
-                    items(Constants.COUNT_LOADING_ITEM) {
-                        Box(
-                            modifier = Modifier
-                                .width(130.dp)
-                                .height(280.dp)
-                                .shimmer(true)
-                        )
+            LazyVerticalStaggeredGrid(
+                modifier = Modifier
+                    .fillMaxSize(),
+                state = lazyVerticalStaggeredState,
+                columns = StaggeredGridCells.Fixed(3),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalItemSpacing = 4.dp,
+                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 32.dp)
+            ) {
+                when {
+                    state.isRelatedLoading -> {
+                        items(Constants.COUNT_LOADING_ITEM) {
+                            Box(
+                                modifier = Modifier
+                                    .width(130.dp)
+                                    .height(280.dp)
+                                    .shimmer(true)
+                            )
+                        }
                     }
-                }
 
-                state.imageRelatedList.isEmpty() -> {
-                    item(span = StaggeredGridItemSpan.FullLine) {
-                        ItemEmpty(
-                            modifier = Modifier.fillMaxSize(),
-                            text = stringResource(Res.string.text_no_photos)
-                        )
+                    state.imageRelatedList.isEmpty() -> {
+                        item(span = StaggeredGridItemSpan.FullLine) {
+                            ItemEmpty(
+                                modifier = Modifier.fillMaxSize(),
+                                text = stringResource(Res.string.text_no_photos)
+                            )
+                        }
                     }
-                }
 
-                else -> {
-                    items(count = state.imageRelatedList.size) { idx ->
-                        val item = state.imageRelatedList[idx]
-                        ShimmerImage(
-                            modifier = Modifier
-                                .width(130.dp)
-                                .height(280.dp)
-                                .clickable { onIntent(PhotoDetailIntent.ClickPhoto(item.id)) },
-                            url = item.urls
-                        )
+                    else -> {
+                        items(count = state.imageRelatedList.size) { idx ->
+                            val item = state.imageRelatedList[idx]
+                            ShimmerImage(
+                                modifier = Modifier
+                                    .width(130.dp)
+                                    .height(280.dp)
+                                    .clickable { onIntent(PhotoDetailIntent.ClickPhoto(item.id)) },
+                                url = item.urls
+                            )
+                        }
                     }
                 }
             }
         }
+        SnackbarHost(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(horizontal = 16.dp),
+            hostState = snackBarHost
+        )
     }
 }
 
