@@ -15,6 +15,7 @@ import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetail
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailViewModel
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailScreenRoot
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailViewModel
+import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailViewScreen
 import com.chs.yoursplash.presentation.browse.photo_tag.PhotoTagListScreenRoot
 import com.chs.yoursplash.presentation.browse.photo_tag.PhotoTagListViewModel
 import com.chs.yoursplash.presentation.browse.user.UserDetailScreenRoot
@@ -115,6 +116,12 @@ fun BrowseNavHost(
                 onClose = onBack,
                 onNavigate = { navController.navigate(it) }
             )
+        }
+
+        composable<Screens.PhotoDetailViewScreen> {
+            val arg = it.toRoute<Screens.PhotoDetailViewScreen>()
+
+            PhotoDetailViewScreen(arg.photoUrl)
         }
     }
 }

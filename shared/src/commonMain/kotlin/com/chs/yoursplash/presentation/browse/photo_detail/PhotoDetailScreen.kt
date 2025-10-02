@@ -28,6 +28,7 @@ import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.domain.model.PhotoDetail
 import com.chs.yoursplash.domain.model.User
 import com.chs.yoursplash.presentation.Screens
+import com.chs.yoursplash.presentation.Screens.*
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
 import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ShimmerImage
@@ -48,23 +49,22 @@ fun PhotoDetailScreenRoot(
         viewModel.effect.collect { effect ->
             when (effect) {
                 PhotoDetailEffect.Close -> onClose()
-                is PhotoDetailEffect.NavigatePhotoDetail -> onNavigate(
-                    Screens.PhotoDetailScreen(
-                        effect.id
+                is PhotoDetailEffect.NavigatePhotoDetail -> {
+                    onNavigate(Screens.PhotoDetailScreen(effect.id)
                     )
-                )
+                }
 
-                is PhotoDetailEffect.NavigatePhotoTag -> onNavigate(
-                    Screens.PhotoTagResultScreen(
-                        effect.tag
-                    )
-                )
+                is PhotoDetailEffect.NavigatePhotoTag -> {
+                    onNavigate(PhotoTagResultScreen(effect.tag))
+                }
 
-                is PhotoDetailEffect.NavigateUserDetail -> onNavigate(
-                    Screens.UserDetailScreen(
-                        effect.name
-                    )
-                )
+                is PhotoDetailEffect.NavigateUserDetail -> {
+                    onNavigate(UserDetailScreen(effect.name))
+                }
+
+                is PhotoDetailEffect.NavigatePhotoDetailView -> {
+                    onNavigate(Screens.PhotoDetailViewScreen(effect.url))
+                }
 
                 is PhotoDetailEffect.ShowToast -> Unit
             }
@@ -107,7 +107,15 @@ fun PhotoDetailScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(300.dp)
-                            .shimmer(state.isDetailLoading && (state.imageDetailInfo == null)),
+                            .shimmer(state.isDetailLoading && (state.imageDetailInfo == null))
+                            .clickable {
+                                if (state.imageDetailInfo?.urls?.toSettingUrl(state.wallpaperQualityValue) == null) return@clickable
+                                onIntent(
+                                    PhotoDetailIntent.ClickPhotoDetail(
+                                        state.imageDetailInfo.urls.toSettingUrl(state.wallpaperQualityValue)!!
+                                    )
+                                )
+                            },
                         url = state.imageDetailInfo?.urls?.toSettingUrl(state.loadQualityValue)
                     )
 

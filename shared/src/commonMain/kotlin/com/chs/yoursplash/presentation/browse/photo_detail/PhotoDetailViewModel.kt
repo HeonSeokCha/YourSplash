@@ -55,7 +55,7 @@ class PhotoDetailViewModel(
 
     fun handleIntent(intent: PhotoDetailIntent) {
         when (intent) {
-            PhotoDetailIntent.ClickClose -> _effect.trySend(PhotoDetailEffect.Close)
+            PhotoDetailIntent.ClickClose -> _effect.trySend(Close)
 
             is PhotoDetailIntent.ClickPhoto -> {
                 _effect.trySend(NavigatePhotoDetail(intent.id))
@@ -70,6 +70,8 @@ class PhotoDetailViewModel(
             is PhotoDetailIntent.ClickDownload -> {
                 getPhotoFile(intent.url)
             }
+
+            is PhotoDetailIntent.ClickPhotoDetail -> _effect.trySend(NavigatePhotoDetailView(intent.url))
         }
     }
 

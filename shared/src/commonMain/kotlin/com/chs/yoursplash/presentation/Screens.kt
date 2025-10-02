@@ -15,4 +15,7 @@ sealed class Screens {
 
     @Serializable
     data class PhotoTagResultScreen(val tagName: String) : Screens()
+
+    @Serializable
+    data class PhotoDetailViewScreen(val photoUrl: String) : Screens()
 }
