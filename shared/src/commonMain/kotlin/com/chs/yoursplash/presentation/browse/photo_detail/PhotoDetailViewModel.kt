@@ -71,7 +71,7 @@ class PhotoDetailViewModel(
                 getPhotoFile(intent.url)
             }
 
-            is PhotoDetailIntent.ClickPhotoDetail -> _effect.trySend(NavigatePhotoDetailView(intent.url))
+            is PhotoDetailIntent.ClickPhotoDetail -> _effect.trySend(NavigatePhotoDetailView(intent.data))
         }
     }
 
@@ -93,7 +93,6 @@ class PhotoDetailViewModel(
                                 imageDetailInfo = result.data,
                                 loadQualityValue = getImageDetailQualityUseCase().first(),
                                 downLoadQualityValue = getDownloadQualityUseCase().first(),
-                                wallpaperQualityValue = getImageDetailQualityUseCase().first()
                             )
                         }
 

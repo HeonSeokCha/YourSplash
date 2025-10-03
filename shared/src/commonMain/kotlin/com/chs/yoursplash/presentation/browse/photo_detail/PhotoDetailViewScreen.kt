@@ -20,7 +20,7 @@ import coil3.compose.AsyncImage
 
 @Composable
 fun PhotoDetailViewScreen(
-    imageUrl: String
+    imageData: Array<Byte>
 ) {
     var scale by remember { mutableStateOf(1f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
@@ -32,7 +32,7 @@ fun PhotoDetailViewScreen(
     ) {
         AsyncImage(
             placeholder = ColorPainter(Color.LightGray),
-            model = imageUrl,
+            model = imageData,
             contentDescription = null,
             contentScale = ContentScale.Fit,
             modifier = Modifier

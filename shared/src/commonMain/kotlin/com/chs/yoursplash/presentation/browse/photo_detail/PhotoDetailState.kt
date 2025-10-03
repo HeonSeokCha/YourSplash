@@ -11,8 +11,7 @@ data class PhotoDetailState(
     val isFileDownloaded: Boolean = false,
     val imageDetailInfo: PhotoDetail? = null,
     val imageRelatedList: List<Photo> = listOf(),
+    val imageWallPaperImage: Array<Byte> = arrayOf(),
     val loadQualityValue: LoadQuality = LoadQuality.Regular,
     val downLoadQualityValue: LoadQuality = LoadQuality.Regular,
-    val wallpaperQualityValue: LoadQuality = LoadQuality.Regular,
 )
-
