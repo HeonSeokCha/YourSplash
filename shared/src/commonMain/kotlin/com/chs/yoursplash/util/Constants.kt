@@ -23,7 +23,10 @@ object Constants {
     const val GET_SEARCH_PHOTOS: String = "/search/photos"
     const val GET_SEARCH_COLLECTIONS: String = "/search/collections"
     const val GET_SEARCH_USERS: String = "/search/users"
-    const val PREFERENCE_NAME: String = "setting_preferences"
+    val TITLE_LOAD_QUALITY: Pair<String, String> = "Load Quality" to PREFERENCE_KEY_LOAD_QUALITY
+    val TITLE_DOWNLOAD_QUALITY: Pair<String, String> = "Download Quality" to PREFERENCE_KEY_DOWNLOAD_QUALITY
+    val TITLE_WALLPAPER_LOAD_QUALITY: Pair<String, String> = "Wallpaper Quality" to PREFERENCE_KEY_WALLPAPER_QUALITY
+
     const val PREFERENCE_KEY_LOAD_QUALITY: String = "load_quality"
     const val PREFERENCE_KEY_DOWNLOAD_QUALITY: String = "download_quality"
     const val PREFERENCE_KEY_WALLPAPER_QUALITY: String = "wallpaper_quality"
@@ -32,7 +35,6 @@ object Constants {
     const val TARGET_PHOTO: String = "target_photo"
     const val TARGET_COLLECTION: String = "target_collection"
     const val TARGET_USER: String = "target_user"
-    const val TARGET_TAG: String = "target_tag"
     const val ARG_KEY_PHOTO_ID: String = "photoId"
     const val ARG_KEY_COLLECTION_ID: String = "collectionId"
     const val ARG_KEY_USER_NAME: String = "userName"

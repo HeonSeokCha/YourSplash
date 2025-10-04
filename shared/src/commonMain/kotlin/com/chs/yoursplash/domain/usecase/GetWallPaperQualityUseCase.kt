@@ -6,7 +6,7 @@ import com.chs.yoursplash.util.Constants
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class GetImageDetailQualityUseCase(
+class GetWallPaperQualityUseCase(
     private val repository: SettingRepository
 ) {
     operator fun invoke(): Flow<LoadQuality> {

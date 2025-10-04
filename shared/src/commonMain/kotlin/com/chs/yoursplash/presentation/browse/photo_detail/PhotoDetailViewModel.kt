@@ -4,14 +4,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chs.yoursplash.domain.usecase.GetDownloadQualityUseCase
-import com.chs.yoursplash.domain.usecase.GetImageDetailQualityUseCase
+import com.chs.yoursplash.domain.usecase.GetWallPaperQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoDetailUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoFileUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoRelatedListUseCase
-import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailEffect
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailEffect.*
-import com.chs.yoursplash.presentation.toSettingUrl
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.NetworkResult
 import kotlinx.coroutines.Job
@@ -30,7 +28,8 @@ class PhotoDetailViewModel(
     private val getPhotoDetailUseCase: GetPhotoDetailUseCase,
     private val getPhotoRelatedListUseCase: GetPhotoRelatedListUseCase,
     private val getDownloadQualityUseCase: GetDownloadQualityUseCase,
-    private val getImageDetailQualityUseCase: GetImageDetailQualityUseCase,
+    private val getLoadQualityUseCase: GetLoadQualityUseCase,
+    private val getWallPaperQualityUseCase: GetWallPaperQualityUseCase,
     private val getPhotoFileUseCase: GetPhotoFileUseCase
 ) : ViewModel() {
     private val imageId: String = savedStateHandle[Constants.ARG_KEY_PHOTO_ID] ?: ""
@@ -71,7 +70,7 @@ class PhotoDetailViewModel(
                 getPhotoFile(intent.url)
             }
 
-            is PhotoDetailIntent.ClickPhotoDetail -> _effect.trySend(NavigatePhotoDetailView(intent.data))
+            is PhotoDetailIntent.ClickPhotoDetail -> _effect.trySend(NavigatePhotoDetailView(intent.url))
         }
     }
 
@@ -91,7 +90,8 @@ class PhotoDetailViewModel(
                             it.copy(
                                 isDetailLoading = false,
                                 imageDetailInfo = result.data,
-                                loadQualityValue = getImageDetailQualityUseCase().first(),
+                                loadQualityValue = getLoadQualityUseCase().first(),
+                                wallpaperQuality = getWallPaperQualityUseCase().first(),
                                 downLoadQualityValue = getDownloadQualityUseCase().first(),
                             )
                         }

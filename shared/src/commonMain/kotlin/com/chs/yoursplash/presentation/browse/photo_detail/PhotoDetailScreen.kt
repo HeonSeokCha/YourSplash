@@ -50,8 +50,7 @@ fun PhotoDetailScreenRoot(
             when (effect) {
                 PhotoDetailEffect.Close -> onClose()
                 is PhotoDetailEffect.NavigatePhotoDetail -> {
-                    onNavigate(Screens.PhotoDetailScreen(effect.id)
-                    )
+                    onNavigate(Screens.PhotoDetailScreen(effect.id))
                 }
 
                 is PhotoDetailEffect.NavigatePhotoTag -> {
@@ -63,7 +62,7 @@ fun PhotoDetailScreenRoot(
                 }
 
                 is PhotoDetailEffect.NavigatePhotoDetailView -> {
-                    onNavigate(Screens.PhotoDetailViewScreen(state.imageWallPaperImage))
+                    onNavigate(Screens.PhotoDetailViewScreen(effect.url))
                 }
 
                 is PhotoDetailEffect.ShowToast -> Unit
@@ -109,8 +108,13 @@ fun PhotoDetailScreen(
                             .height(300.dp)
                             .shimmer(state.isDetailLoading && (state.imageDetailInfo == null))
                             .clickable {
+                                if (state.imageDetailInfo == null) return@clickable
                                 onIntent(
-                                    PhotoDetailIntent.ClickPhotoDetail(state.imageWallPaperImage)
+                                    PhotoDetailIntent.ClickPhotoDetail(
+                                        state.imageDetailInfo.urls.toSettingUrl(
+                                            state.wallpaperQuality
+                                        )!!
+                                    )
                                 )
                             },
                         url = state.imageDetailInfo?.urls?.toSettingUrl(state.loadQualityValue)

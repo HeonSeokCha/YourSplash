@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun SettingItem(
-    title: String,
+    info: Pair<String, String>,
     subTitle: String,
     clickAble: () -> Unit
 ) {
@@ -22,7 +22,7 @@ fun SettingItem(
             .clickable { clickAble() }
     ) {
         Text(
-            text = title,
+            text = info.first,
             fontSize = 22.sp
         )
 

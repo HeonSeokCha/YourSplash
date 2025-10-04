@@ -121,7 +121,7 @@ fun BrowseNavHost(
         composable<Screens.PhotoDetailViewScreen> {
             val arg = it.toRoute<Screens.PhotoDetailViewScreen>()
 
-            PhotoDetailViewScreen(arg.photoUrl)
+            PhotoDetailViewScreen(arg.url)
         }
     }
 }

@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.chs.yoursplash.domain.model.LoadQuality
 import com.chs.yoursplash.presentation.ui.theme.Purple500
-
+import com.chs.yoursplash.util.Constants
 
 @Composable
 fun SettingScreenRoot(viewModel: SettingViewModel) {
@@ -50,19 +50,19 @@ fun SettingScreen(
                 .padding(top = 16.dp, start = 32.dp)
         ) {
             SettingItem(
-                title = "Load Quality",
+                info = Constants.TITLE_LOAD_QUALITY,
                 subTitle = state.loadQualityValue.name,
                 clickAble = { onEvent(SettingIntent.ClickLoad) }
             )
 
             SettingItem(
-                title = "Download Quality",
+                info = Constants.TITLE_DOWNLOAD_QUALITY,
                 subTitle = state.downLoadQualityValue.name,
                 clickAble = { onEvent(SettingIntent.ClickDownload) }
             )
 
             SettingItem(
-                title = "Wallpaper Quality",
+                info = Constants.TITLE_WALLPAPER_LOAD_QUALITY,
                 subTitle = state.wallpaperQualityValue.name,
                 clickAble = { onEvent(SettingIntent.ClickWallpaper) }
             )
@@ -82,7 +82,7 @@ fun SettingScreen(
                     }
                 },title = {
                     Text(
-                        text = state.selectSettingTitle,
+                        text = state.selectSettingInfo?.first!!,
                         fontSize = 18.sp,
                         color = Color.Black,
                         fontWeight = FontWeight.Bold

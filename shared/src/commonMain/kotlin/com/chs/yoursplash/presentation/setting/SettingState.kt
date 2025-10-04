@@ -7,6 +7,6 @@ data class SettingState(
     val downLoadQualityValue: LoadQuality = LoadQuality.Regular,
     val wallpaperQualityValue: LoadQuality = LoadQuality.Regular,
     val showDialog: Boolean = false,
-    val selectSettingTitle: String = "",
+    val selectSettingInfo: Pair<String, String>? = null,
     val selectValue: LoadQuality = LoadQuality.Regular,
 )
