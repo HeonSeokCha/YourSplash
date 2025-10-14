@@ -1,5 +1,5 @@
 [versions]
-androidStudioGradlePlugin = "8.12.3"
+androidStudioGradlePlugin = "8.13.0"
 
 compileSdkVersion = "36"
 android-minSdk = "29"
@@ -8,12 +8,12 @@ versionCode = "1"
 versionName = "1.0"
 
 activity = "1.11.0"
-compose-ui = "1.9.2"
+compose-ui = "1.9.3"
 kspVersion = "2.2.20-2.0.2"
-room = "2.8.1"
+room = "2.8.2"
 kotlin = "2.2.20"
 coroutine = "1.10.2"
-ktor = "3.3.0"
+ktor = "3.3.1"
 compose-plugin = "1.9.0"
 androidx-lifecycle = "2.9.4"
 koin = "4.1.1"

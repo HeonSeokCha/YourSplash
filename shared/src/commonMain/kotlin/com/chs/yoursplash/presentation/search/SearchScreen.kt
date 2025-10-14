@@ -25,8 +25,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.PagingData
 import com.chs.yoursplash.domain.model.BrowseInfo
+import com.chs.yoursplash.domain.model.Photo
+import com.chs.yoursplash.domain.model.UnSplashCollection
+import com.chs.yoursplash.domain.model.User
 import com.chs.yoursplash.presentation.ui.theme.Purple200
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @Composable
@@ -51,6 +56,9 @@ fun SearchScreenRoot(
 
     SearchScreen(
         state = state,
+        photoPaging = viewModel.photoPaging,
+        collectPaging = viewModel.collectPaging,
+        userPaging = viewModel.userPaging,
         onIntent = viewModel::changeEvent
     )
 }
@@ -60,6 +68,9 @@ fun SearchScreenRoot(
 @Composable
 private fun SearchScreen(
     state: SearchState,
+    photoPaging: Flow<PagingData<Photo>>,
+    collectPaging: Flow<PagingData<UnSplashCollection>>,
+    userPaging: Flow<PagingData<User>>,
     onIntent: (SearchIntent) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -72,12 +83,11 @@ private fun SearchScreen(
     LaunchedEffect(pagerState.currentPage) {
         onIntent(SearchIntent.ChangeTabIndex(pagerState.currentPage))
     }
-
-    Scaffold(
+ Scaffold(
         floatingActionButton = {
             AnimatedVisibility(
                 visible = state.selectIdx == 0,
-                enter = fadeIn() ,
+                enter = fadeIn(),
                 exit = fadeOut(),
             ) {
                 FloatingActionButton(
@@ -126,6 +136,7 @@ private fun SearchScreen(
                     0 -> {
                         SearchResultPhotoScreen(
                             state = state,
+                            pagingList = photoPaging,
                             onIntent = onIntent
                         )
                     }
@@ -133,6 +144,7 @@ private fun SearchScreen(
                     1 -> {
                         SearchResultCollectionScreen(
                             state = state,
+                            pagingList = collectPaging,
                             onIntent = onIntent
                         )
                     }
@@ -140,6 +152,7 @@ private fun SearchScreen(
                     2 -> {
                         SearchResultUserScreen(
                             state = state,
+                            pagingList = userPaging,
                             onIntent = onIntent
                         )
                     }
