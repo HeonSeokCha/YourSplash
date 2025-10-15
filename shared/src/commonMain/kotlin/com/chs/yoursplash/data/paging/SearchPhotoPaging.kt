@@ -17,12 +17,7 @@ class SearchPhotoPaging(
     private val searchFilter: SearchFilter,
     private val loadQuality: LoadQuality
 ): PagingSource<Int, Photo>() {
-    override fun getRefreshKey(state: PagingState<Int, Photo>): Int? {
-        return state.anchorPosition?.let { anchorPosition ->
-            val anchorPage = state.closestPageToPosition(anchorPosition)
-            anchorPage?.prevKey ?: anchorPage?.nextKey
-        }
-    }
+    override fun getRefreshKey(state: PagingState<Int, Photo>): Int? = null
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Photo> {
         return try {
@@ -46,7 +41,7 @@ class SearchPhotoPaging(
 
             LoadResult.Page(
                 data = response,
-                prevKey = if (page == 0) null else page - 1,
+                prevKey = null,
                 nextKey = if(response.isNotEmpty()) page + 1 else null
             )
         } catch (e: Exception) {
