@@ -2,6 +2,7 @@ package com.chs.yoursplash.presentation.search
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,9 +27,7 @@ import com.chs.yoursplash.presentation.ui.theme.Purple200
 fun SearchBottomSheet(
     searchFilter: SearchFilter,
     expanded: Boolean,
-    onClick: (SearchFilter) -> Unit,
-    onChangeExpanded: (Boolean) -> Unit,
-    onDismiss: () -> Unit
+    onIntent: (SearchIntent) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
@@ -36,7 +35,7 @@ fun SearchBottomSheet(
 
     ModalBottomSheet(
         sheetState = sheetState,
-        onDismissRequest = onDismiss
+        onDismissRequest = { onIntent(SearchIntent.ChangeShowModal(false)) }
     ) {
         Column(
             modifier = Modifier
@@ -51,10 +50,7 @@ fun SearchBottomSheet(
 
             Spacer(Modifier.height(8.dp))
 
-            SecondaryTabRow(
-                selectedTabIndex = SortType.entries.indexOf(selectFilterValue.orderBy),
-                containerColor = Color.LightGray
-            ) {
+            SecondaryTabRow(selectedTabIndex = SortType.entries.indexOf(selectFilterValue.orderBy)) {
                 Constants.SORT_BY_LIST.forEach { info ->
                     Row(
                         modifier = Modifier
@@ -69,7 +65,15 @@ fun SearchBottomSheet(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = info.first)
+                        Text(
+                            text = info.first,
+                            color = Purple200,
+                            autoSize = TextAutoSize.StepBased(
+                                minFontSize = 6.sp,
+                                maxFontSize = 12.sp,
+                                stepSize = 1.sp
+                            )
+                        )
                     }
                 }
             }
@@ -87,9 +91,7 @@ fun SearchBottomSheet(
                 modifier = Modifier
                     .fillMaxWidth(),
                 expanded = expanded,
-                onExpandedChange = {
-                    onChangeExpanded(expanded)
-                }
+                onExpandedChange = { onIntent(SearchIntent.ChangeExpandColorFilter(it)) }
             ) {
                 OutlinedTextField(
                     modifier = Modifier
@@ -109,14 +111,13 @@ fun SearchBottomSheet(
 
                 ExposedDropdownMenu(
                     expanded = expanded,
-                    onDismissRequest = { onChangeExpanded(false) }
+                    onDismissRequest = { onIntent(SearchIntent.ChangeExpandColorFilter(false)) }
                 ) {
                     Constants.SEARCH_COLOR_LIST.forEach { selectionOption ->
                         DropdownMenuItem(
                             onClick = {
-                                selectFilterValue =
-                                    selectFilterValue.copy(color = selectionOption.second)
-                                onChangeExpanded(false)
+                                selectFilterValue = selectFilterValue.copy(color = selectionOption.second)
+                                onIntent(SearchIntent.ChangeExpandColorFilter(false))
                             }, text = {
                                 Text(text = selectionOption.first)
                             }
@@ -134,25 +135,30 @@ fun SearchBottomSheet(
 
             Spacer(Modifier.height(8.dp))
 
-            SecondaryTabRow(
-                selectedTabIndex = Orientations.entries.indexOf(selectFilterValue.orientation),
-                containerColor = Color.LightGray
-            ) {
+            SecondaryTabRow(selectedTabIndex = Orientations.entries.indexOf(selectFilterValue.orientation)) {
                 Constants.SEARCH_ORI_LIST.forEach { info ->
                     Row(
                         modifier = Modifier
-                            .clickable(onClick = {
-                                selectFilterValue = selectFilterValue.copy(
-                                    orientation = Orientations.entries.find { it.name == info.first }!!
-                                )
-                            })
+                            .clickable(
+                                onClick = {
+                                    selectFilterValue = selectFilterValue.copy(
+                                        orientation = Orientations.entries.find { it.name == info.first }!!
+                                    )
+                                }
+                            )
                             .padding(16.dp),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = info.first,
-                            maxLines = 1
+                            maxLines = 1,
+                            color = Purple200,
+                            autoSize = TextAutoSize.StepBased(
+                                minFontSize = 6.sp,
+                                maxFontSize = 12.sp,
+                                stepSize = 1.sp
+                            )
                         )
                     }
                 }
@@ -165,12 +171,12 @@ fun SearchBottomSheet(
                     .fillMaxWidth()
                     .wrapContentHeight(),
                 onClick = {
-                    onClick(selectFilterValue)
+                    onIntent(SearchIntent.ChangeSearchFilter(selectFilterValue))
                     coroutineScope.launch {
                         sheetState.hide()
                     }.invokeOnCompletion {
                         if (!sheetState.isVisible) {
-                            onDismiss()
+                            onIntent(SearchIntent.ChangeShowModal(false))
                         }
                     }
                 }

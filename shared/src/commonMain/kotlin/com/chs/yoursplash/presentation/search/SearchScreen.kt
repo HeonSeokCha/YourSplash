@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -21,6 +22,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
@@ -33,6 +36,7 @@ import com.chs.yoursplash.domain.model.User
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlin.math.absoluteValue
 
 @Composable
 fun SearchScreenRoot(
@@ -74,24 +78,39 @@ private fun SearchScreen(
     onIntent: (SearchIntent) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
+    var fabScale by remember { mutableStateOf(1f) }
     val pagerState = rememberPagerState(initialPage = 0) { state.tabList.size }
 
     LaunchedEffect(state.selectIdx) {
         pagerState.animateScrollToPage(state.selectIdx)
     }
 
-    LaunchedEffect(pagerState.currentPage) {
-        onIntent(SearchIntent.ChangeTabIndex(pagerState.currentPage))
+    LaunchedEffect(pagerState.currentPage, pagerState.currentPageOffsetFraction) {
+        val offset = pagerState.currentPageOffsetFraction.absoluteValue
+        val currentPage = pagerState.currentPage
+
+        fabScale = when (currentPage) {
+            0 -> {
+                // 오른쪽으로 스크롤할 때 (페이지 1로 이동)
+                (1f - offset).coerceIn(0f, 1f)
+            }
+            1 -> {
+                // 왼쪽으로 스크롤할 때 (페이지 0으로 이동)
+                if (offset < 0) (offset + 1f).coerceIn(0f, 1f)
+                else 0f
+            }
+            else -> 0f
+        }
     }
- Scaffold(
+
+    Scaffold(
         floatingActionButton = {
-            AnimatedVisibility(
-                visible = state.selectIdx == 0,
-                enter = fadeIn(),
-                exit = fadeOut(),
-            ) {
+            if (fabScale > 0f) {
                 FloatingActionButton(
-                    onClick = { onIntent(SearchIntent.ChangeShowModal) }
+                    modifier = Modifier
+                        .scale(fabScale)
+                        .alpha(fabScale),
+                    onClick = { onIntent(SearchIntent.ChangeShowModal(true)) }
                 ) {
                     Icon(Icons.Filled.Search, contentDescription = "")
                 }
@@ -120,11 +139,7 @@ private fun SearchScreen(
                             )
                         },
                         selected = pagerState.currentPage == index,
-                        onClick = {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(index)
-                            }
-                        },
+                        onClick = { onIntent(SearchIntent.ChangeTabIndex(index)) },
                         selectedContentColor = MaterialTheme.colorScheme.primary,
                         unselectedContentColor = Color.Gray
                     )
@@ -164,9 +179,7 @@ private fun SearchScreen(
             SearchBottomSheet(
                 searchFilter = state.searchFilter,
                 expanded = state.expandColorFilter,
-                onClick = { onIntent(SearchIntent.ChangeSearchFilter(it)) },
-                onChangeExpanded = { onIntent(SearchIntent.ChangeExpandColorFilter) },
-                onDismiss = { onIntent(SearchIntent.ChangeShowModal) }
+                onIntent = onIntent
             )
         }
     }

@@ -45,7 +45,7 @@ fun SearchResultPhotoScreen(
         when (pagingItems.loadState.refresh) {
             is LoadState.Loading -> {
                 onIntent(SearchIntent.Photo.Loading)
-                lazyColScrollState.animateScrollToItem(0)
+                lazyColScrollState.scrollToItem(0, 0)
             }
 
             is LoadState.Error -> {
@@ -76,6 +76,7 @@ fun SearchResultPhotoScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize(),
+        state = lazyColScrollState,
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
     ) {

@@ -51,7 +51,7 @@ fun SearchResultUserScreen(
         when (pagingItems.loadState.refresh) {
             is LoadState.Loading -> {
                 onIntent(SearchIntent.User.Loading)
-                lazyColScrollState.animateScrollToItem(0)
+                lazyColScrollState.scrollToItem(0, 0)
             }
 
             is LoadState.Error -> {
@@ -83,6 +83,7 @@ fun SearchResultUserScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize(),
+        state = lazyColScrollState,
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
     ) {

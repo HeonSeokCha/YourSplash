@@ -58,8 +58,6 @@ class SearchResultViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val collectPaging = queryState
-        .debounce(300L)
-        .distinctUntilChanged()
         .filterNot { it.isEmpty() }
         .flatMapLatest { searchResultCollectionUseCase(it) }
         .cachedIn(viewModelScope)
@@ -71,8 +69,6 @@ class SearchResultViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val userPaging = queryState
-        .debounce(300L)
-        .distinctUntilChanged()
         .filterNot { it.isEmpty() }
         .flatMapLatest { searchResultUserUseCase(it) }
         .cachedIn(viewModelScope)
@@ -87,11 +83,14 @@ class SearchResultViewModel(
 
     fun changeEvent(intent: SearchIntent) {
         when (intent) {
-            SearchIntent.ChangeExpandColorFilter -> {
-                _state.update { it.copy(expandColorFilter = !it.expandColorFilter) }
+            is SearchIntent.ChangeExpandColorFilter -> {
+                _state.update { it.copy(expandColorFilter = intent.value) }
             }
 
-            is SearchIntent.ChangeSearchFilter -> searchFilterState.update { intent.filter }
+            is SearchIntent.ChangeSearchFilter -> {
+                _state.update { it.copy(searchFilter = intent.filter) }
+                searchFilterState.update { intent.filter }
+            }
             is SearchIntent.ChangeSearchQuery -> {
                 queryState.update { intent.query }
             }
@@ -100,7 +99,7 @@ class SearchResultViewModel(
                 _effect.trySend(NavigateBrowse(intent.info))
             }
 
-            is SearchIntent.ChangeShowModal -> _state.update { it.copy(showModal = !it.showModal) }
+            is SearchIntent.ChangeShowModal -> _state.update { it.copy(showModal = intent.value) }
             is SearchIntent.ChangeTabIndex -> _state.update { it.copy(selectIdx = intent.idx) }
 
             SearchIntent.Collection.Loading -> _state.update { it.copy(isCollectionLoading = true) }
