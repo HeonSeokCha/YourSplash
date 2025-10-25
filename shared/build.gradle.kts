@@ -56,7 +56,6 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(compose.components.resources)
-            implementation(libs.jetbrain.backHandler)
 
             implementation(libs.jetbrain.compose.material3.icon)
             implementation(libs.androidx.lifecycle.runtime.compose)

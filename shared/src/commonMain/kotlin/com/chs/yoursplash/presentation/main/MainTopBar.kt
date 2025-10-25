@@ -73,6 +73,7 @@ fun MainTopBar(
                     )
                 }, actions = {
                     IconButton(onClick = {
+                        onQueryChange("")
                         navController.navigate(MainScreens.SearchScreen)
                     }) {
                         Icon(
@@ -82,9 +83,11 @@ fun MainTopBar(
                         )
                     }
 
-                    IconButton(onClick = {
-                        navController.navigate(MainScreens.SettingScreen)
-                    }) {
+                    IconButton(
+                        onClick = {
+                            navController.navigate(MainScreens.SettingScreen)
+                        }
+                    ) {
                         Icon(
                             Icons.Filled.Settings,
                             contentDescription = null,

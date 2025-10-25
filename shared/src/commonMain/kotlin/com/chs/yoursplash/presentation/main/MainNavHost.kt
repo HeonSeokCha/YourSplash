@@ -30,7 +30,6 @@ fun MainNavHost(
     navController: NavHostController,
     searchQuery: String,
     onBrowse: (BrowseInfo) -> Unit,
-    onBack: () -> Unit
 ) {
     NavHost(
         modifier = modifier,
@@ -67,8 +66,7 @@ fun MainNavHost(
 
             SearchScreenRoot(
                 viewModel = viewModel,
-                onBrowse = onBrowse,
-                onBack = onBack
+                onBrowse = onBrowse
             )
         }
 

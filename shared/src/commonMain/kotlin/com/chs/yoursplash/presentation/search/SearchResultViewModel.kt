@@ -41,12 +41,11 @@ class SearchResultViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val photoPaging = combine(
-        queryState.debounce(300L),
+        queryState,
         searchFilterState
     ) { query, filter ->
         query to filter
     }
-        .distinctUntilChanged()
         .filterNot { it.first.isEmpty() }
         .flatMapLatest { searchResultPhotoUseCase(it.first, it.second) }
         .cachedIn(viewModelScope)
@@ -91,6 +90,7 @@ class SearchResultViewModel(
                 _state.update { it.copy(searchFilter = intent.filter) }
                 searchFilterState.update { intent.filter }
             }
+
             is SearchIntent.ChangeSearchQuery -> {
                 queryState.update { intent.query }
             }
@@ -114,10 +114,15 @@ class SearchResultViewModel(
             SearchIntent.User.LoadComplete -> _state.update { it.copy(isUserLoading = false) }
             is SearchIntent.User.OnError -> _state.update { it.copy(userErrorMessage = intent.message) }
 
-            SearchIntent.Collection.AppendLoadComplete -> _state.update { it.copy(isCollectAppendLoading = false) }
+            SearchIntent.Collection.AppendLoadComplete -> _state.update {
+                it.copy(
+                    isCollectAppendLoading = false
+                )
+            }
+
             SearchIntent.Collection.AppendLoading -> _state.update { it.copy(isCollectAppendLoading = true) }
             SearchIntent.Photo.AppendLoadComplete -> _state.update { it.copy(isPhotoAppendLoading = false) }
-            SearchIntent.Photo.AppendLoading -> _state.update { it.copy(isPhotoAppendLoading= true) }
+            SearchIntent.Photo.AppendLoading -> _state.update { it.copy(isPhotoAppendLoading = true) }
             SearchIntent.User.AppendLoadComplete -> _state.update { it.copy(isUserAppendLoading = false) }
             SearchIntent.User.AppendLoading -> _state.update { it.copy(isUserAppendLoading = true) }
         }

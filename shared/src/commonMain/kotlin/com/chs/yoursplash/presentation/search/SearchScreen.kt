@@ -1,9 +1,5 @@
 package com.chs.yoursplash.presentation.search
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandIn
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
@@ -12,7 +8,6 @@ import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -35,14 +30,12 @@ import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.User
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
 @Composable
 fun SearchScreenRoot(
     viewModel: SearchResultViewModel,
     onBrowse: (BrowseInfo) -> Unit,
-    onBack: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -54,10 +47,6 @@ fun SearchScreenRoot(
         }
     }
 
-    DisposableEffect(Unit) {
-        onDispose { onBack() }
-    }
-
     SearchScreen(
         state = state,
         photoPaging = viewModel.photoPaging,
@@ -66,7 +55,6 @@ fun SearchScreenRoot(
         onIntent = viewModel::changeEvent
     )
 }
-
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable

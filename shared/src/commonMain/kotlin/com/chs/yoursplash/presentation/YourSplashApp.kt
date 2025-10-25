@@ -50,11 +50,7 @@ fun YourSplashApp(onBrowseInfo: (BrowseInfo) -> Unit) {
             modifier = Modifier.padding(it),
             navController = navController,
             searchQuery = state.searchQuery,
-            onBrowse = onBrowseInfo,
-            onBack = {
-                viewModel.updateSearchQuery("")
-                textFieldState.clearText()
-            }
+            onBrowse = onBrowseInfo
         )
     }
 }
