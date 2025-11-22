@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.navigation3.ui.NavDisplay
 import com.chs.yoursplash.presentation.browse.BrowseApp
 import com.chs.yoursplash.util.Constants
 

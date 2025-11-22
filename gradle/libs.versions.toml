@@ -1,5 +1,5 @@
 [versions]
-androidStudioGradlePlugin = "8.13.0"
+androidStudioGradlePlugin = "8.13.1"
 
 compileSdkVersion = "36"
 android-minSdk = "29"
@@ -7,29 +7,34 @@ android-targetSdk = "35"
 versionCode = "1"
 versionName = "1.0"
 
-activity = "1.11.0"
-compose-ui = "1.9.4"
-kspVersion = "2.2.20-2.0.2"
-room = "2.8.3"
+activity = "1.12.0"
+compose-ui = "1.9.3"
+kspVersion = "2.2.21-2.0.4"
+room = "2.8.4"
 kotlin = "2.2.21"
 coroutine = "1.10.2"
-ktor = "3.3.1"
-compose-plugin = "1.9.1"
-androidx-lifecycle = "2.9.5"
-koin = "4.1.1"
+ktor = "3.3.2"
+compose-plugin = "1.9.3"
+lifecycle = "2.9.6"
+koin = "4.2.0-alpha2"
 android-paging = "3.4.0-alpha04"
 coil = "3.3.0"
-sqlite = "2.6.1"
-datastore = "1.1.7"
+sqlite = "2.6.2"
+datastore = "1.2.0"
+kotlinxSerializationCore = "1.9.0"
+nav3Core = "1.0.0"
+lifecycleViewmodelNav3 = "2.10.0"
 
 [libraries]
 # AndroidX
-androidX-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity"}
-androidx-lifecycle-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
-androidx-lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
+androidX-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
+lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "lifecycle" }
+lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }
+lifecycle-viewmodel-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 androidX-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose-ui" }
-androidX-navigation-compose = "androidx.navigation:navigation-compose:2.9.5"
-navigation-compose = "org.jetbrains.androidx.navigation:navigation-compose:2.9.1"
+androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
+androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
+androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
 jetbrain-compose-material3-icon = "org.jetbrains.compose.material:material-icons-extended:1.7.3"
 jetbrain-matreial3 = "org.jetbrains.compose.material3:material3:1.9.0"
 
@@ -47,8 +52,9 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
 ## Kotlin
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerializationCore" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationCore" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutine" }
-kotlin-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0"
 
 ## Koin
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
@@ -56,18 +62,30 @@ koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", versi
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
+koin-nav3 = { module = "io.insert-koin:koin-compose-navigation3", version.ref = "koin" }
 
 ## Ktor
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
-ktor-serialization = {module = "io.ktor:ktor-serialization-kotlinx-json", version.ref="ktor"}
-ktor-client-content-negotiation = {module = "io.ktor:ktor-client-content-negotiation", version.ref= "ktor"}
+ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 
 datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 
 [bundles]
+android = [
+    "lifecycle-runtime-compose",
+    "lifecycle-viewmodel-compose",
+    "lifecycle-viewmodel",
+    "kotlinx-serialization-core",
+    "kotlinx-serialization-json",
+    "androidx-lifecycle-viewmodel-navigation3",
+    "androidx-navigation3-runtime",
+    "androidx-navigation3-ui"
+]
+
 ktor = [
     "ktor-client-core",
     "ktor-client-content-negotiation",
@@ -88,7 +106,8 @@ room = [
 
 koin = [
     "koin-compose",
-    "koin-compose-viewmodel"
+    "koin-compose-viewmodel",
+    "koin-nav3"
 ]
 
 

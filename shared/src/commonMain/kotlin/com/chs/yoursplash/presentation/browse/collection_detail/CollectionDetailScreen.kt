@@ -42,7 +42,7 @@ fun CollectionDetailScreenRoot(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is CollectionDetailEffect.NavigatePhotoDetail -> onBrowse(BrowseInfo.Photo(effect.id))
+                is CollectionDetailEffect.NavigatePhotoDetail -> onBrowse(Photo(effect.id))
                 is CollectionDetailEffect.NavigateUserDetail -> onBrowse(User(effect.name))
                 is CollectionDetailEffect.ShowToast -> Unit
                 CollectionDetailEffect.Close -> onClose

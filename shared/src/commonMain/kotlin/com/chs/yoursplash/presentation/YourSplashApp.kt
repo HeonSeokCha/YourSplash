@@ -10,16 +10,31 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.savedstate.serialization.SavedStateConfiguration
 import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.bottom.BottomBar
 import com.chs.yoursplash.presentation.main.MainNavHost
+import com.chs.yoursplash.presentation.main.MainScreens
 import com.chs.yoursplash.presentation.main.MainTopBar
 import com.chs.yoursplash.presentation.main.MainViewModel
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun YourSplashApp(onBrowseInfo: (BrowseInfo) -> Unit) {
-    val navController: NavHostController = rememberNavController()
+    val module = SerializersModule {
+        polymorphic(MainScreens::class) {
+            subclass(MainScreens.PhotoScreen::class, MainScreens.PhotoScreen.serializer())
+            subclass(MainScreens.CollectionScreen::class, MainScreens.CollectionScreen.serializer())
+            subclass(MainScreens.SearchScreen::class, MainScreens.SearchScreen.serializer())
+            subclass(MainScreens.SettingScreen::class, MainScreens.SettingScreen.serializer())
+        }
+    }
+
+    val config = SavedStateConfiguration { serializersModule = module }
+    val backStack = rememberNavBackStack(configuration = config, MainScreens.PhotoScreen)
     val viewModel = koinViewModel<MainViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
     val textFieldState = rememberTextFieldState()
@@ -27,7 +42,7 @@ fun YourSplashApp(onBrowseInfo: (BrowseInfo) -> Unit) {
     Scaffold(
         topBar = {
             MainTopBar(
-                navController = navController,
+                backStack = backStack,
                 textFieldState = textFieldState,
                 searchHistoryList = state.searchHistory,
                 onQueryChange = {
@@ -48,7 +63,7 @@ fun YourSplashApp(onBrowseInfo: (BrowseInfo) -> Unit) {
     ) {
         MainNavHost(
             modifier = Modifier.padding(it),
-            navController = navController,
+            backStack = backStack,
             searchQuery = state.searchQuery,
             onBrowse = onBrowseInfo
         )

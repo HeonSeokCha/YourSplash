@@ -1,7 +1,5 @@
 package com.chs.yoursplash.presentation.browse.photo_detail
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -24,11 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.chs.youranimelist.res.Res
 import com.chs.youranimelist.res.text_no_photos
-import com.chs.yoursplash.domain.model.BrowseInfo
-import com.chs.yoursplash.domain.model.PhotoDetail
-import com.chs.yoursplash.domain.model.User
-import com.chs.yoursplash.presentation.Screens
-import com.chs.yoursplash.presentation.Screens.*
+import com.chs.yoursplash.presentation.BrowseScreens
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
 import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ShimmerImage
@@ -40,7 +34,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun PhotoDetailScreenRoot(
     viewModel: PhotoDetailViewModel,
-    onNavigate: (Screens) -> Unit,
+    onNavigate: (BrowseScreens) -> Unit,
     onClose: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -50,19 +44,19 @@ fun PhotoDetailScreenRoot(
             when (effect) {
                 PhotoDetailEffect.Close -> onClose()
                 is PhotoDetailEffect.NavigatePhotoDetail -> {
-                    onNavigate(Screens.PhotoDetailScreen(effect.id))
+                    onNavigate(BrowseScreens.PhotoDetailScreen(effect.id))
                 }
 
                 is PhotoDetailEffect.NavigatePhotoTag -> {
-                    onNavigate(PhotoTagResultScreen(effect.tag))
+                    onNavigate(BrowseScreens.PhotoTagResultScreen(effect.tag))
                 }
 
                 is PhotoDetailEffect.NavigateUserDetail -> {
-                    onNavigate(UserDetailScreen(effect.name))
+                    onNavigate(BrowseScreens.UserDetailScreen(effect.name))
                 }
 
                 is PhotoDetailEffect.NavigatePhotoDetailView -> {
-                    onNavigate(Screens.PhotoDetailViewScreen(effect.url))
+                    onNavigate(BrowseScreens.PhotoDetailViewScreen(effect.url))
                 }
 
                 is PhotoDetailEffect.ShowToast -> Unit

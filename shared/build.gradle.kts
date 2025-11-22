@@ -1,5 +1,6 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -18,10 +19,8 @@ kotlin {
     }
 
     androidTarget {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "11"
-            }
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
         }
     }
 
@@ -37,6 +36,9 @@ kotlin {
     }
 
     sourceSets {
+        sourceSets.all {
+            languageSettings.enableLanguageFeature("ExplicitBackingFields")
+        }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
         }
@@ -44,7 +46,6 @@ kotlin {
             implementation(libs.androidX.compose.ui.tooling.preview)
             implementation(libs.androidX.activity.compose)
             implementation(libs.ktor.client.android)
-            implementation(libs.androidX.navigation.compose)
 
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
@@ -52,20 +53,17 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(compose.foundation)
-            implementation(libs.jetbrain.matreial3)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(compose.components.resources)
 
+            implementation(libs.jetbrain.matreial3)
             implementation(libs.jetbrain.compose.material3.icon)
-            implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation(libs.androidx.lifecycle.viewmodel.compose)
-            implementation(libs.navigation.compose)
             implementation(libs.kotlinx.coroutines.core)
 
-            implementation(libs.bundles.ktor)
+            implementation(libs.bundles.android)
 
-            implementation(libs.kotlin.serialization)
+            implementation(libs.bundles.ktor)
 
             implementation(libs.android.paging.compose)
             implementation(libs.android.paging.common)

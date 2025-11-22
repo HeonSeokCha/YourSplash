@@ -1,23 +1,17 @@
 package com.chs.yoursplash.presentation.browse.photo_tag
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -26,14 +20,10 @@ import androidx.paging.compose.itemKey
 import com.chs.youranimelist.res.Res
 import com.chs.youranimelist.res.text_no_photos
 import com.chs.yoursplash.domain.model.Photo
-import com.chs.yoursplash.presentation.Screens
-import com.chs.yoursplash.presentation.Screens.*
+import com.chs.yoursplash.presentation.BrowseScreens
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
 import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.presentation.base.ItemEmpty
-import com.chs.yoursplash.presentation.base.shimmer
-import com.chs.yoursplash.presentation.bottom.photo.PhotoIntent
-import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailEffect
 import com.chs.yoursplash.util.Constants
 import org.jetbrains.compose.resources.stringResource
 
@@ -41,7 +31,7 @@ import org.jetbrains.compose.resources.stringResource
 fun PhotoTagListScreenRoot(
     viewModel: PhotoTagListViewModel,
     onClose: () -> Unit,
-    onNavigate: (Screens) -> Unit
+    onNavigate: (BrowseScreens) -> Unit
 ) {
     val pagingItems = viewModel.pagingItems.collectAsLazyPagingItems()
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -51,10 +41,10 @@ fun PhotoTagListScreenRoot(
             when (effect) {
                 PhotoTagEffect.Close -> onClose()
                 is PhotoTagEffect.NavigatePhotoDetail -> {
-                    onNavigate(Screens.PhotoDetailScreen(effect.id))
+                    onNavigate(BrowseScreens.PhotoDetailScreen(effect.id))
                 }
                 is PhotoTagEffect.NavigateUser -> {
-                    onNavigate(Screens.UserDetailScreen(effect.name))
+                    onNavigate(BrowseScreens.UserDetailScreen(effect.name))
                 }
                 is PhotoTagEffect.ShowToast -> Unit
             }

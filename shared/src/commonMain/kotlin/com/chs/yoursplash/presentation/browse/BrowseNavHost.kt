@@ -1,17 +1,14 @@
 package com.chs.yoursplash.presentation.browse
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
-import com.chs.yoursplash.domain.model.BrowseInfo
-import com.chs.yoursplash.presentation.Screens
-import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailScreenRoot
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
+import androidx.savedstate.serialization.SavedStateConfiguration
+import com.chs.yoursplash.presentation.BrowseScreens
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailViewModel
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailScreenRoot
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailViewModel
@@ -21,107 +18,98 @@ import com.chs.yoursplash.presentation.browse.photo_tag.PhotoTagListViewModel
 import com.chs.yoursplash.presentation.browse.user.UserDetailScreenRoot
 import com.chs.yoursplash.presentation.browse.user.UserDetailViewModel
 import com.chs.yoursplash.util.Constants
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun BrowseNavHost(
     modifier: Modifier,
-    navController: NavHostController,
     type: String,
     id: String,
     onBack: () -> Unit
 ) {
-    val startDestination: Screens = when (type) {
+    val module = SerializersModule {
+        polymorphic(BrowseScreens::class) {
+            subclass(BrowseScreens.PhotoDetailScreen::class, BrowseScreens.PhotoDetailScreen.serializer())
+            subclass(BrowseScreens.PhotoDetailViewScreen::class, BrowseScreens.PhotoDetailViewScreen.serializer())
+            subclass(BrowseScreens.CollectionDetailScreen::class, BrowseScreens.CollectionDetailScreen.serializer())
+            subclass(BrowseScreens.UserDetailScreen::class, BrowseScreens.UserDetailScreen.serializer())
+            subclass(BrowseScreens.PhotoTagResultScreen::class, BrowseScreens.PhotoTagResultScreen.serializer())
+        }
+    }
+
+    val config = SavedStateConfiguration { serializersModule = module }
+    val startDestination = when(type) {
         Constants.TARGET_PHOTO -> {
-            Screens.PhotoDetailScreen(id)
+            BrowseScreens.PhotoDetailScreen(id)
         }
 
         Constants.TARGET_COLLECTION -> {
-            Screens.CollectionDetailScreen(id)
+            BrowseScreens.CollectionDetailScreen(id)
         }
 
         Constants.TARGET_USER -> {
-            Screens.UserDetailScreen(id)
+            BrowseScreens.UserDetailScreen(id)
         }
 
         else -> {
-            Screens.PhotoDetailScreen(id)
+            BrowseScreens.PhotoDetailScreen(id)
         }
     }
+    val backStack = rememberNavBackStack(configuration = config, startDestination)
 
-    NavHost(
+    NavDisplay(
         modifier = modifier,
-        navController = navController,
-        startDestination = startDestination
-    ) {
-        composable<Screens.PhotoDetailScreen> {
-            val arg = it.toRoute<Screens.PhotoDetailScreen>()
-            val parentEntry = remember(it) {
-                navController.getBackStackEntry(arg)
+        backStack = backStack,
+        onBack = { backStack.removeLastOrNull() },
+        entryDecorators = listOf(
+            rememberSaveableStateHolderNavEntryDecorator(),
+            rememberViewModelStoreNavEntryDecorator()
+        ),
+        entryProvider = entryProvider {
+            entry<BrowseScreens.PhotoDetailScreen> {
+                val viewModel: PhotoDetailViewModel = koinViewModel<PhotoDetailViewModel>()
+
+                PhotoDetailScreenRoot(
+                    viewModel = viewModel,
+                    onNavigate = { backStack.add(it) },
+                    onClose = onBack
+                )
             }
-            val viewModel: PhotoDetailViewModel = koinViewModel<PhotoDetailViewModel>(
-                viewModelStoreOwner = parentEntry
-            )
 
-            PhotoDetailScreenRoot(
-                viewModel = viewModel,
-                onNavigate = { navController.navigate(it) },
-                onClose = onBack
-            )
-        }
+            entry<BrowseScreens.CollectionDetailScreen> {
+                val viewModel: CollectionDetailViewModel = koinViewModel<CollectionDetailViewModel>()
 
-        composable<Screens.CollectionDetailScreen> {
-            val arg = it.toRoute<Screens.CollectionDetailScreen>()
-            val parentEntry = remember(it) {
-                navController.getBackStackEntry(arg)
+//                CollectionDetailScreenRoot(
+//                    viewModel = viewModel,
+//                    onBrowse = { navController.navigate(it) },
+//                    onClose = onBack
+//                )
             }
-            val viewModel: CollectionDetailViewModel = koinViewModel<CollectionDetailViewModel>(
-                viewModelStoreOwner = parentEntry
-            )
 
-            CollectionDetailScreenRoot(
-                viewModel = viewModel,
-                onBrowse = { navController.navigate(it) },
-                onClose = onBack
-            )
-        }
-
-        composable<Screens.UserDetailScreen> {
-            val arg = it.toRoute<Screens.UserDetailScreen>()
-            val parentEntry = remember(it) {
-                navController.getBackStackEntry(arg)
+            entry<BrowseScreens.UserDetailScreen> {
+                val viewModel: UserDetailViewModel = koinViewModel<UserDetailViewModel>()
+                UserDetailScreenRoot(
+                    viewModel = viewModel,
+                    onClose = onBack,
+                    onNavigate = { backStack.add(it) }
+                )
             }
-            val viewModel: UserDetailViewModel = koinViewModel<UserDetailViewModel>(
-                viewModelStoreOwner = parentEntry
-            )
 
-            UserDetailScreenRoot(
-                viewModel = viewModel,
-                onClose = onBack,
-                onNavigate = { navController.navigate(it) }
-            )
-        }
+            entry<BrowseScreens.PhotoTagResultScreen> {
+                val viewModel: PhotoTagListViewModel = koinViewModel<PhotoTagListViewModel>()
 
-        composable<Screens.PhotoTagResultScreen> {
-            val arg = it.toRoute<Screens.PhotoTagResultScreen>()
-            val parentEntry = remember(it) {
-                navController.getBackStackEntry(arg)
+                PhotoTagListScreenRoot(
+                    viewModel = viewModel,
+                    onClose = onBack,
+                    onNavigate = { backStack.add(it) }
+                )
             }
-            val viewModel: PhotoTagListViewModel = koinViewModel<PhotoTagListViewModel>(
-                viewModelStoreOwner = parentEntry
-            )
 
-            PhotoTagListScreenRoot(
-                viewModel = viewModel,
-                onClose = onBack,
-                onNavigate = { navController.navigate(it) }
-            )
+            entry<BrowseScreens.PhotoDetailViewScreen> { key ->
+                PhotoDetailViewScreen(key.url)
+            }
         }
-
-        composable<Screens.PhotoDetailViewScreen> {
-            val arg = it.toRoute<Screens.PhotoDetailViewScreen>()
-
-            PhotoDetailViewScreen(arg.url)
-        }
-    }
+    )
 }

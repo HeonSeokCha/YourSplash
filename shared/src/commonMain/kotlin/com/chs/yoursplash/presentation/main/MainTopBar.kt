@@ -43,25 +43,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainTopBar(
-    navController: NavHostController,
+    backStack: NavBackStack<NavKey>,
     textFieldState: TextFieldState,
     searchHistoryList: List<String>,
     onQueryChange: (String) -> Unit,
     onDeleteSearchHistory: (String) -> Unit
 ) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDest = navBackStackEntry?.destination
-
     when {
-        currentDest?.hasRoute(MainScreens.PhotoScreen::class) == true
-                || currentDest?.hasRoute(MainScreens.CollectionScreen::class) == true -> {
+        backStack.last() == MainScreens.PhotoScreen
+                || backStack.last() == MainScreens.CollectionScreen::class -> {
 
             TopAppBar(
                 title = {
@@ -74,7 +70,7 @@ fun MainTopBar(
                 }, actions = {
                     IconButton(onClick = {
                         onQueryChange("")
-                        navController.navigate(MainScreens.SearchScreen)
+                        backStack.add(MainScreens.SearchScreen)
                     }) {
                         Icon(
                             imageVector = Icons.TwoTone.Search,
@@ -85,7 +81,7 @@ fun MainTopBar(
 
                     IconButton(
                         onClick = {
-                            navController.navigate(MainScreens.SettingScreen)
+                            backStack.add(MainScreens.SettingScreen)
                         }
                     ) {
                         Icon(
@@ -101,7 +97,7 @@ fun MainTopBar(
             )
         }
 
-        currentDest?.hasRoute(MainScreens.SettingScreen::class) == true -> {
+        backStack.last() == MainScreens.SettingScreen -> {
             TopAppBar(
                 title = {
                     Text(
@@ -110,9 +106,7 @@ fun MainTopBar(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        navController.navigateUp()
-                    }) {
+                    IconButton(onClick = { backStack.removeLastOrNull() }) {
                         Icon(
                             Icons.AutoMirrored.Rounded.ArrowBack,
                             contentDescription = null,
@@ -132,9 +126,7 @@ fun MainTopBar(
                 onSearch = onQueryChange,
                 searchHistoryList = searchHistoryList,
                 onDeleteSearchHistory = onDeleteSearchHistory,
-                onBack = {
-                    navController.navigateUp()
-                }
+                onBack = { backStack.removeLastOrNull() }
             )
         }
     }

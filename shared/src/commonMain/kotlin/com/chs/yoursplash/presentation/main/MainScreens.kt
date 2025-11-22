@@ -5,10 +5,11 @@ import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.PermMedia
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class MainScreens {
+sealed class MainScreens : NavKey {
     @Serializable
     data object PhotoScreen : MainScreens()
     @Serializable

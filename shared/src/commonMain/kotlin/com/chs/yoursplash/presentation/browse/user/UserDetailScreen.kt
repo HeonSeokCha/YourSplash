@@ -22,14 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.chs.youranimelist.res.Res
 import com.chs.youranimelist.res.text_no_items
-import com.chs.youranimelist.res.text_no_photos
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.UserDetail
-import com.chs.yoursplash.presentation.Screens
+import com.chs.yoursplash.presentation.BrowseScreens
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
 import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ShimmerImage
@@ -45,7 +43,7 @@ import org.jetbrains.compose.resources.stringResource
 fun UserDetailScreenRoot(
     viewModel: UserDetailViewModel,
     onClose: () -> Unit,
-    onNavigate: (Screens) -> Unit
+    onNavigate: (BrowseScreens) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val photoPaging = viewModel.photoPaging
@@ -56,9 +54,9 @@ fun UserDetailScreenRoot(
         viewModel.effect.collect { effect ->
             when (effect) {
                 UserDetailEffect.Close -> onClose()
-                is UserDetailEffect.NavigateCollectionDetail -> onNavigate(Screens.CollectionDetailScreen(effect.id))
-                is UserDetailEffect.NavigatePhotoDetail -> onNavigate(Screens.PhotoDetailScreen(effect.id))
-                is UserDetailEffect.NavigateUserDetail -> onNavigate(Screens.UserDetailScreen(effect.name))
+                is UserDetailEffect.NavigateCollectionDetail -> onNavigate(BrowseScreens.CollectionDetailScreen(effect.id))
+                is UserDetailEffect.NavigatePhotoDetail -> onNavigate(BrowseScreens.PhotoDetailScreen(effect.id))
+                is UserDetailEffect.NavigateUserDetail -> onNavigate(BrowseScreens.UserDetailScreen(effect.name))
                 is UserDetailEffect.ShowToast -> Unit
             }
         }
