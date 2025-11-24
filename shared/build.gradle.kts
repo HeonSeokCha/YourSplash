@@ -43,7 +43,6 @@ kotlin {
             implementation(libs.ktor.client.darwin)
         }
         androidMain.dependencies {
-            implementation(libs.androidX.compose.ui.tooling.preview)
             implementation(libs.androidX.activity.compose)
             implementation(libs.ktor.client.android)
 

@@ -6,33 +6,24 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import com.chs.yoursplash.presentation.Screens
+import androidx.navigation3.runtime.NavBackStack
+import androidx.navigation3.runtime.NavKey
+import com.chs.yoursplash.presentation.BrowseScreens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImageDetailTopBar(
-    navController: NavHostController,
+    backStack: NavBackStack<NavKey>,
     onBack: () -> Unit
 ) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-
-    val currentDestination = navBackStackEntry?.destination
     TopAppBar(
         title = { },
         navigationIcon = {
-            if (currentDestination?.hasRoute(Screens.PhotoTagResultScreen::class) == true) {
-                IconButton(
-                    onClick = {
-                        navController.navigateUp()
-                    }
-                ) {
+            if (backStack.last() == BrowseScreens.PhotoTagResultScreen) {
+                IconButton(onClick = { backStack.removeLastOrNull() }) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                 }
-            } else {
+            }  else {
                 IconButton(onClick = onBack) {
                     Icon(Icons.Filled.Close, contentDescription = null)
                 }

@@ -35,7 +35,6 @@ fun MainNavHost(
     searchQuery: String,
     onBrowse: (BrowseInfo) -> Unit,
 ) {
-
     NavDisplay(
         modifier = modifier,
         backStack = backStack,

@@ -1,15 +1,13 @@
 package com.chs.yoursplash.presentation
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.chs.yoursplash.domain.model.BrowseInfo
@@ -25,7 +23,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun YourSplashApp(onBrowseInfo: (BrowseInfo) -> Unit) {
     val module = SerializersModule {
-        polymorphic(MainScreens::class) {
+        polymorphic(NavKey::class) {
             subclass(MainScreens.PhotoScreen::class, MainScreens.PhotoScreen.serializer())
             subclass(MainScreens.CollectionScreen::class, MainScreens.CollectionScreen.serializer())
             subclass(MainScreens.SearchScreen::class, MainScreens.SearchScreen.serializer())
@@ -58,7 +56,7 @@ fun YourSplashApp(onBrowseInfo: (BrowseInfo) -> Unit) {
             )
         },
         bottomBar = {
-            BottomBar(navController = navController)
+            BottomBar(backStack)
         }
     ) {
         MainNavHost(

@@ -8,16 +8,18 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
-@Serializable
-sealed class MainScreens : NavKey {
+sealed interface MainScreens : NavKey {
     @Serializable
-    data object PhotoScreen : MainScreens()
+    data object PhotoScreen : MainScreens
+
     @Serializable
-    data object CollectionScreen : MainScreens()
+    data object CollectionScreen : MainScreens
+
     @Serializable
-    data object SearchScreen : MainScreens()
+    data object SearchScreen : MainScreens
+
     @Serializable
-    data object SettingScreen : MainScreens()
+    data object SettingScreen : MainScreens
 }
 
 enum class BottomNavigation(

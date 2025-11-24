@@ -3,6 +3,7 @@ package com.chs.yoursplash.presentation.browse
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
@@ -30,7 +31,7 @@ fun BrowseNavHost(
     onBack: () -> Unit
 ) {
     val module = SerializersModule {
-        polymorphic(BrowseScreens::class) {
+        polymorphic(NavKey::class) {
             subclass(BrowseScreens.PhotoDetailScreen::class, BrowseScreens.PhotoDetailScreen.serializer())
             subclass(BrowseScreens.PhotoDetailViewScreen::class, BrowseScreens.PhotoDetailViewScreen.serializer())
             subclass(BrowseScreens.CollectionDetailScreen::class, BrowseScreens.CollectionDetailScreen.serializer())

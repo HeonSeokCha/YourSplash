@@ -14,15 +14,15 @@ room = "2.8.4"
 kotlin = "2.2.21"
 coroutine = "1.10.2"
 ktor = "3.3.2"
-compose-plugin = "1.9.3"
-lifecycle = "2.9.6"
+compose-plugin = "1.10.0-beta02"
+lifecycle = "2.10.0-alpha05"
 koin = "4.2.0-alpha2"
 android-paging = "3.4.0-alpha04"
 coil = "3.3.0"
 sqlite = "2.6.2"
 datastore = "1.2.0"
 kotlinxSerializationCore = "1.9.0"
-nav3Core = "1.0.0"
+nav3Core = "1.0.0-alpha05"
 lifecycleViewmodelNav3 = "2.10.0"
 
 [libraries]
@@ -30,11 +30,9 @@ lifecycleViewmodelNav3 = "2.10.0"
 androidX-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity" }
 lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "lifecycle" }
 lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }
+lifecycle-viewmodel-nav3 = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycle" }
+nav3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
 lifecycle-viewmodel-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
-androidX-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose-ui" }
-androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
-androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
-androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
 jetbrain-compose-material3-icon = "org.jetbrains.compose.material:material-icons-extended:1.7.3"
 jetbrain-matreial3 = "org.jetbrains.compose.material3:material3:1.9.0"
 
@@ -81,9 +79,8 @@ android = [
     "lifecycle-viewmodel",
     "kotlinx-serialization-core",
     "kotlinx-serialization-json",
-    "androidx-lifecycle-viewmodel-navigation3",
-    "androidx-navigation3-runtime",
-    "androidx-navigation3-ui"
+    "lifecycle-viewmodel-nav3",
+    "nav3-ui"
 ]
 
 ktor = [
