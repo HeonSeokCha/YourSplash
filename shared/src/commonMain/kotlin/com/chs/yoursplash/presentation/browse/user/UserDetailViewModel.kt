@@ -22,14 +22,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class UserDetailViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val userName: String,
     private val getUserDetailUseCase: GetUserDetailUseCase,
     getUserPhotoUseCase: GetUserPhotoUseCase,
     getUserLikesUseCase: GetUserLikesUseCase,
     getUserCollectionUseCase: GetUserCollectionUseCase,
 ) : ViewModel() {
 
-    private val userName: String = savedStateHandle[Constants.ARG_KEY_USER_NAME] ?: ""
     private val _state = MutableStateFlow(UserDetailState())
     val state = _state
         .onStart {

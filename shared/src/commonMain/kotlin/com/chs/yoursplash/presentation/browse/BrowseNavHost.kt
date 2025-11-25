@@ -10,6 +10,7 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.chs.yoursplash.presentation.BrowseScreens
+import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailScreenRoot
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailViewModel
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailScreenRoot
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailViewModel
@@ -22,6 +23,7 @@ import com.chs.yoursplash.util.Constants
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun BrowseNavHost(
@@ -69,8 +71,10 @@ fun BrowseNavHost(
             rememberViewModelStoreNavEntryDecorator()
         ),
         entryProvider = entryProvider {
-            entry<BrowseScreens.PhotoDetailScreen> {
-                val viewModel: PhotoDetailViewModel = koinViewModel<PhotoDetailViewModel>()
+            entry<BrowseScreens.PhotoDetailScreen> { key ->
+                val viewModel: PhotoDetailViewModel = koinViewModel<PhotoDetailViewModel> {
+                    parametersOf(key.photoId)
+                }
 
                 PhotoDetailScreenRoot(
                     viewModel = viewModel,
@@ -79,18 +83,22 @@ fun BrowseNavHost(
                 )
             }
 
-            entry<BrowseScreens.CollectionDetailScreen> {
-                val viewModel: CollectionDetailViewModel = koinViewModel<CollectionDetailViewModel>()
+            entry<BrowseScreens.CollectionDetailScreen> { key ->
+                val viewModel: CollectionDetailViewModel = koinViewModel<CollectionDetailViewModel> {
+                    parametersOf(key.collectionId)
+                }
 
-//                CollectionDetailScreenRoot(
-//                    viewModel = viewModel,
-//                    onBrowse = { navController.navigate(it) },
-//                    onClose = onBack
-//                )
+                CollectionDetailScreenRoot(
+                    viewModel = viewModel,
+                    onBrowse = { backStack.removeLastOrNull() },
+                    onClose = onBack
+                )
             }
 
-            entry<BrowseScreens.UserDetailScreen> {
-                val viewModel: UserDetailViewModel = koinViewModel<UserDetailViewModel>()
+            entry<BrowseScreens.UserDetailScreen> { key ->
+                val viewModel: UserDetailViewModel = koinViewModel<UserDetailViewModel> {
+                    parametersOf(key.userName)
+                }
                 UserDetailScreenRoot(
                     viewModel = viewModel,
                     onClose = onBack,
@@ -98,8 +106,10 @@ fun BrowseNavHost(
                 )
             }
 
-            entry<BrowseScreens.PhotoTagResultScreen> {
-                val viewModel: PhotoTagListViewModel = koinViewModel<PhotoTagListViewModel>()
+            entry<BrowseScreens.PhotoTagResultScreen> { key ->
+                val viewModel: PhotoTagListViewModel = koinViewModel<PhotoTagListViewModel> {
+                    parametersOf(key.tagName)
+                }
 
                 PhotoTagListScreenRoot(
                     viewModel = viewModel,

@@ -1,6 +1,5 @@
 package com.chs.yoursplash.presentation.browse.photo_detail
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chs.yoursplash.domain.usecase.GetDownloadQualityUseCase
@@ -10,7 +9,6 @@ import com.chs.yoursplash.domain.usecase.GetPhotoDetailUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoFileUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoRelatedListUseCase
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailEffect.*
-import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.util.NetworkResult
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -24,7 +22,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PhotoDetailViewModel(
-    savedStateHandle: SavedStateHandle,
+    private val imageId: String,
     private val getPhotoDetailUseCase: GetPhotoDetailUseCase,
     private val getPhotoRelatedListUseCase: GetPhotoRelatedListUseCase,
     private val getDownloadQualityUseCase: GetDownloadQualityUseCase,
@@ -32,7 +30,6 @@ class PhotoDetailViewModel(
     private val getWallPaperQualityUseCase: GetWallPaperQualityUseCase,
     private val getPhotoFileUseCase: GetPhotoFileUseCase
 ) : ViewModel() {
-    private val imageId: String = savedStateHandle[Constants.ARG_KEY_PHOTO_ID] ?: ""
     private var imageDetailJob: Job? = null
     private var relatedListJob: Job? = null
     private var downloadJob: Job? = null
