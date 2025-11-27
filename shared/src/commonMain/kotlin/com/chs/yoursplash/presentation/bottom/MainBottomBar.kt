@@ -7,13 +7,13 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Color
-import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.NavKey
 import com.chs.yoursplash.presentation.main.BottomNavigation
+import com.chs.yoursplash.presentation.main.MainScreens
 
 @Composable
-fun BottomBar(backStack: NavBackStack<NavKey>) {
+fun BottomBar(backStack: SnapshotStateList<MainScreens>) {
     if (BottomNavigation.entries.any { it.route == backStack.last()}) {
         NavigationBar(containerColor = MaterialTheme.colorScheme.primary) {
             BottomNavigation.entries.forEachIndexed { index, navItem ->
@@ -26,7 +26,8 @@ fun BottomBar(backStack: NavBackStack<NavKey>) {
                         unselectedTextColor = Color.White.copy(0.4f),
                         indicatorColor = MaterialTheme.colorScheme.primary
                     ), onClick = {
-                        backStack.removeLastOrNull()
+                        //popUpTo
+                        backStack.remove(navItem.route)
                         backStack.add(navItem.route)
                     },
                     icon = { Icon(imageVector = navItem.icon, contentDescription = null) },

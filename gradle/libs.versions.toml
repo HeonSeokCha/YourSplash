@@ -8,7 +8,6 @@ versionCode = "1"
 versionName = "1.0"
 
 activity = "1.12.0"
-compose-ui = "1.9.3"
 kspVersion = "2.2.21-2.0.4"
 room = "2.8.4"
 kotlin = "2.2.21"
@@ -16,14 +15,13 @@ coroutine = "1.10.2"
 ktor = "3.3.2"
 compose-plugin = "1.10.0-beta02"
 lifecycle = "2.10.0-alpha05"
-koin = "4.2.0-alpha2"
+koin = "4.2.0-alpha3"
 android-paging = "3.4.0-alpha04"
 coil = "3.3.0"
 sqlite = "2.6.2"
 datastore = "1.2.0"
 kotlinxSerializationCore = "1.9.0"
 nav3Core = "1.0.0-alpha05"
-lifecycleViewmodelNav3 = "2.10.0"
 
 [libraries]
 # AndroidX

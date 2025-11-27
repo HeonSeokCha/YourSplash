@@ -1,10 +1,9 @@
-package com.chs.yoursplash.presentation
+package com.chs.yoursplash.presentation.browse
 
-import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed interface BrowseScreens : NavKey {
+sealed interface BrowseScreens {
     @Serializable
     data class PhotoDetailScreen(val photoId: String) : BrowseScreens
 

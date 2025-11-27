@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.chs.youranimelist.res.Res
 import com.chs.youranimelist.res.text_no_photos
-import com.chs.yoursplash.presentation.BrowseScreens
+import com.chs.yoursplash.presentation.browse.BrowseScreens
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
 import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ShimmerImage

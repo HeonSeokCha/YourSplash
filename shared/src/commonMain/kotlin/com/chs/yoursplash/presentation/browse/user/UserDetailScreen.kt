@@ -27,7 +27,7 @@ import com.chs.youranimelist.res.text_no_items
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.UserDetail
-import com.chs.yoursplash.presentation.BrowseScreens
+import com.chs.yoursplash.presentation.browse.BrowseScreens
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
 import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ShimmerImage

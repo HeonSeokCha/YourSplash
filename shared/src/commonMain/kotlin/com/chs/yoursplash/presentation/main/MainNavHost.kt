@@ -3,15 +3,12 @@ package com.chs.yoursplash.presentation.main
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import androidx.savedstate.serialization.SavedStateConfiguration
 import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.bottom.collection.CollectionScreenRoot
 import com.chs.yoursplash.presentation.bottom.collection.CollectionViewModel
@@ -24,17 +21,18 @@ import com.chs.yoursplash.presentation.setting.SettingScreenRoot
 import com.chs.yoursplash.presentation.setting.SettingViewModel
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.polymorphic
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MainNavHost(
     modifier: Modifier = Modifier,
-    backStack: NavBackStack<NavKey>,
+    backStack: SnapshotStateList<MainScreens>,
     searchQuery: String,
     onBrowse: (BrowseInfo) -> Unit,
 ) {
+    LaunchedEffect(backStack.count()) {
+        println(backStack.toString())
+    }
     NavDisplay(
         modifier = modifier,
         backStack = backStack,

@@ -1,14 +1,13 @@
 package com.chs.yoursplash.presentation.main
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.PermMedia
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
-sealed interface MainScreens : NavKey {
+@Serializable
+sealed interface MainScreens {
     @Serializable
     data object PhotoScreen : MainScreens
 

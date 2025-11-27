@@ -20,7 +20,7 @@ import androidx.paging.compose.itemKey
 import com.chs.youranimelist.res.Res
 import com.chs.youranimelist.res.text_no_photos
 import com.chs.yoursplash.domain.model.Photo
-import com.chs.yoursplash.presentation.BrowseScreens
+import com.chs.yoursplash.presentation.browse.BrowseScreens
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
 import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.presentation.base.ItemEmpty

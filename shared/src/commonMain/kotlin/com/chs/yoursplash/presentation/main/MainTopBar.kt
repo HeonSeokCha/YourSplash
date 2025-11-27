@@ -37,19 +37,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.NavKey
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainTopBar(
-    backStack: NavBackStack<NavKey>,
+    backStack: SnapshotStateList<MainScreens>,
     textFieldState: TextFieldState,
     searchHistoryList: List<String>,
     onQueryChange: (String) -> Unit,
@@ -57,7 +56,7 @@ fun MainTopBar(
 ) {
     when {
         backStack.last() == MainScreens.PhotoScreen
-                || backStack.last() == MainScreens.CollectionScreen::class -> {
+                || backStack.last() == MainScreens.CollectionScreen -> {
 
             TopAppBar(
                 title = {
