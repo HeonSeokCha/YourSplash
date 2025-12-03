@@ -9,7 +9,7 @@ fun BrowseApp(
     info: Pair<String, String>,
     onBack: () -> Unit
 ) {
-    BrowseNavHost(
+    BrowseNavDisplay(
         modifier = Modifier
             .fillMaxSize(),
         type = info.first,

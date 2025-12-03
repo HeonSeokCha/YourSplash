@@ -1,5 +1,8 @@
 package com.chs.yoursplash.presentation.browse
 
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -23,7 +26,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun BrowseNavHost(
+fun BrowseNavDisplay(
     modifier: Modifier,
     type: String,
     id: String,
@@ -57,6 +60,18 @@ fun BrowseNavHost(
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator()
         ),
+        transitionSpec = {
+            slideInHorizontally(initialOffsetX = { it }) togetherWith slideOutHorizontally(
+                targetOffsetX = { -it })
+        },
+        popTransitionSpec = {
+            slideInHorizontally(initialOffsetX = { -it }) togetherWith slideOutHorizontally(
+                targetOffsetX = { it })
+        },
+        predictivePopTransitionSpec = {
+            slideInHorizontally(initialOffsetX = { -it }) togetherWith slideOutHorizontally(
+                targetOffsetX = { it })
+        },
         entryProvider = entryProvider {
             entry<BrowseScreens.PhotoDetailScreen> { key ->
                 val viewModel: PhotoDetailViewModel = koinViewModel<PhotoDetailViewModel> {
@@ -77,7 +92,7 @@ fun BrowseNavHost(
 
                 CollectionDetailScreenRoot(
                     viewModel = viewModel,
-                    onBrowse = { backStack.removeLastOrNull() },
+                    onNavigate = { backStack.add(it) },
                     onClose = onBack
                 )
             }

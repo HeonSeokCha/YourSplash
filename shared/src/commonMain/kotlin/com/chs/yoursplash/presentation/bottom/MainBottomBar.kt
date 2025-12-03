@@ -16,7 +16,7 @@ import com.chs.yoursplash.presentation.main.MainScreens
 fun BottomBar(backStack: SnapshotStateList<MainScreens>) {
     if (BottomNavigation.entries.any { it.route == backStack.last()}) {
         NavigationBar(containerColor = MaterialTheme.colorScheme.primary) {
-            BottomNavigation.entries.forEachIndexed { index, navItem ->
+            BottomNavigation.entries.forEach { navItem ->
                 NavigationBarItem(
                     selected = backStack.last() == navItem.route,
                     colors = NavigationBarItemDefaults.colors(
@@ -26,7 +26,12 @@ fun BottomBar(backStack: SnapshotStateList<MainScreens>) {
                         unselectedTextColor = Color.White.copy(0.4f),
                         indicatorColor = MaterialTheme.colorScheme.primary
                     ), onClick = {
-                        //popUpTo
+                        if (navItem.route == MainScreens.PhotoScreen) {
+                            backStack.clear()
+                            backStack.add(navItem.route)
+                            return@NavigationBarItem
+                        }
+
                         backStack.remove(navItem.route)
                         backStack.add(navItem.route)
                     },

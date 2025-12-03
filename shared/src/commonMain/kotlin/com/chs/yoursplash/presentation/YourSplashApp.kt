@@ -1,5 +1,6 @@
 package com.chs.yoursplash.presentation
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Scaffold
@@ -12,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.bottom.BottomBar
-import com.chs.yoursplash.presentation.main.MainNavHost
+import com.chs.yoursplash.presentation.main.MainNavDisplay
 import com.chs.yoursplash.presentation.main.MainScreens
 import com.chs.yoursplash.presentation.main.MainTopBar
 import com.chs.yoursplash.presentation.main.MainViewModel
@@ -47,8 +48,10 @@ fun YourSplashApp(onBrowseInfo: (BrowseInfo) -> Unit) {
             BottomBar(backStack)
         }
     ) {
-        MainNavHost(
-            modifier = Modifier.padding(it),
+        MainNavDisplay(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it),
             backStack = backStack,
             searchQuery = state.searchQuery,
             onBrowse = onBrowseInfo

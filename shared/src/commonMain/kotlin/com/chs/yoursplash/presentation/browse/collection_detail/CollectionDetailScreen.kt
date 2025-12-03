@@ -27,13 +27,14 @@ import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
 import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.shimmer
+import com.chs.yoursplash.presentation.browse.BrowseScreens
 import com.chs.yoursplash.util.Constants
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun CollectionDetailScreenRoot(
     viewModel: CollectionDetailViewModel,
-    onBrowse: (BrowseInfo) -> Unit,
+    onNavigate: (BrowseScreens) -> Unit,
     onClose: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -42,10 +43,14 @@ fun CollectionDetailScreenRoot(
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is CollectionDetailEffect.NavigatePhotoDetail -> onBrowse(Photo(effect.id))
-                is CollectionDetailEffect.NavigateUserDetail -> onBrowse(User(effect.name))
+                is CollectionDetailEffect.NavigatePhotoDetail -> {
+                    onNavigate(BrowseScreens.PhotoDetailScreen(effect.id))
+                }
+                is CollectionDetailEffect.NavigateUserDetail -> {
+                    onNavigate(BrowseScreens.UserDetailScreen(effect.name))
+                }
                 is CollectionDetailEffect.ShowToast -> Unit
-                CollectionDetailEffect.Close -> onClose
+                CollectionDetailEffect.Close -> onClose()
             }
         }
     }

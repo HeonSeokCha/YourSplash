@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import androidx.navigation3.ui.defaultTransitionSpec
 import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.bottom.collection.CollectionScreenRoot
 import com.chs.yoursplash.presentation.bottom.collection.CollectionViewModel
@@ -19,20 +20,18 @@ import com.chs.yoursplash.presentation.search.SearchResultViewModel
 import com.chs.yoursplash.presentation.search.SearchScreenRoot
 import com.chs.yoursplash.presentation.setting.SettingScreenRoot
 import com.chs.yoursplash.presentation.setting.SettingViewModel
+import com.chs.yoursplash.util.defaultPredictivePopTransitionSpec2
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun MainNavHost(
+fun MainNavDisplay(
     modifier: Modifier = Modifier,
     backStack: SnapshotStateList<MainScreens>,
     searchQuery: String,
     onBrowse: (BrowseInfo) -> Unit,
 ) {
-    LaunchedEffect(backStack.count()) {
-        println(backStack.toString())
-    }
     NavDisplay(
         modifier = modifier,
         backStack = backStack,
@@ -41,6 +40,8 @@ fun MainNavHost(
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator()
         ),
+        popTransitionSpec = defaultTransitionSpec(),
+        predictivePopTransitionSpec = defaultPredictivePopTransitionSpec2(),
         entryProvider = entryProvider {
             entry<MainScreens.PhotoScreen> {
                 val viewModel = koinViewModel<PhotoViewModel>()
