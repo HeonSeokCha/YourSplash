@@ -27,8 +27,12 @@ interface PhotoRepository {
 
     fun getRelatedCollectionList(id: String): Flow<NetworkResult<List<UnSplashCollection>>>
 
-    fun getPhotoFileUseCase(
+    fun requestFileDownload(
         fileName: String,
         url: String
     ): Flow<NetworkResult<Boolean>>
+
+    suspend fun getFileIsExist(
+        fileName: String
+    ): Boolean
 }

@@ -21,6 +21,7 @@ import com.chs.yoursplash.domain.model.PhotoDetail
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.repository.PhotoRepository
 import com.chs.yoursplash.util.NetworkResult
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -60,7 +61,10 @@ class PhotoRepositoryImpl(
                     NetworkResult.Success(
                         client.requestUnsplash<ResponsePhotoDetail>(
                             Constants.GET_PHOTO_DETAIL(id)
-                        ).toUnSplashImageDetail(getLoadQuality())
+                        ).toUnSplashImageDetail(
+                            loadQuality = getLoadQuality(Constants.PREFERENCE_KEY_LOAD_QUALITY),
+                            downloadQuality = getLoadQuality(Constants.PREFERENCE_KEY_DOWNLOAD_QUALITY)
+                        )
                     )
                 )
             } catch (e: Exception) {
@@ -77,7 +81,11 @@ class PhotoRepositoryImpl(
                     NetworkResult.Success(
                         client.requestUnsplash<ResponseRelatedPhoto>(
                             Constants.GET_PHOTO_RELATED(id)
-                        ).results.map { it.toUnSplashImage(getLoadQuality()) }
+                        ).results.map {
+                            it.toUnSplashImage(
+                                quality = getLoadQuality(Constants.PREFERENCE_KEY_LOAD_QUALITY)
+                            )
+                        }
                     )
                 )
             } catch (e: Exception) {
@@ -95,7 +103,7 @@ class PhotoRepositoryImpl(
                     NetworkResult.Success(
                         client.requestUnsplash<ResponseCollection>(
                             Constants.GET_COLLECTION_DETAILED(id)
-                        ).toPhotoCollection(getLoadQuality())
+                        ).toPhotoCollection(getLoadQuality(Constants.PREFERENCE_KEY_LOAD_QUALITY))
                     )
                 )
             } catch (e: Exception) {
@@ -128,7 +136,7 @@ class PhotoRepositoryImpl(
                         client.requestUnsplash<List<ResponseCollection>>(
                             Constants.GET_COLLECTION_RELATED(id)
                         ).map {
-                            it.toPhotoCollection(getLoadQuality())
+                            it.toPhotoCollection(getLoadQuality(Constants.PREFERENCE_KEY_LOAD_QUALITY))
                         }
                     )
                 )
@@ -138,9 +146,9 @@ class PhotoRepositoryImpl(
         }
     }
 
-    private suspend fun getLoadQuality(): LoadQuality {
+    private suspend fun getLoadQuality(keyName: String): LoadQuality {
         return dataStore.getData(
-            keyName = Constants.PREFERENCE_KEY_LOAD_QUALITY,
+            keyName = keyName,
             defaultValue = LoadQuality.Regular.name
         )
             .first()
@@ -149,7 +157,7 @@ class PhotoRepositoryImpl(
             }
     }
 
-    override fun getPhotoFileUseCase(
+    override fun requestFileDownload(
         fileName: String,
         url: String
     ): Flow<NetworkResult<Boolean>> {
@@ -166,6 +174,14 @@ class PhotoRepositoryImpl(
             } catch (e: Exception) {
                 emit(NetworkResult.Error(e.message ?: "Unknown Error..."))
             }
+        }
+    }
+
+    override suspend fun getFileIsExist(fileName: String): Boolean {
+        return try {
+            fileManager.isFileExist(fileName).isSuccess
+        } catch (e: Exception) {
+            false
         }
     }
 }

@@ -6,7 +6,8 @@ import com.chs.yoursplash.domain.usecase.GetDownloadQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetWallPaperQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoDetailUseCase
-import com.chs.yoursplash.domain.usecase.GetPhotoFileUseCase
+import com.chs.yoursplash.domain.usecase.GetPhotoFileExistUseCase
+import com.chs.yoursplash.domain.usecase.RequestPhotoDownloadUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoRelatedListUseCase
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailEffect.*
 import com.chs.yoursplash.util.NetworkResult
@@ -25,10 +26,8 @@ class PhotoDetailViewModel(
     private val imageId: String,
     private val getPhotoDetailUseCase: GetPhotoDetailUseCase,
     private val getPhotoRelatedListUseCase: GetPhotoRelatedListUseCase,
-    private val getDownloadQualityUseCase: GetDownloadQualityUseCase,
-    private val getLoadQualityUseCase: GetLoadQualityUseCase,
-    private val getWallPaperQualityUseCase: GetWallPaperQualityUseCase,
-    private val getPhotoFileUseCase: GetPhotoFileUseCase
+    private val requestPhotoDownloadUseCase: RequestPhotoDownloadUseCase,
+    private val getPhotoFileExistUseCase: GetPhotoFileExistUseCase
 ) : ViewModel() {
     private var imageDetailJob: Job? = null
     private var relatedListJob: Job? = null
@@ -64,7 +63,7 @@ class PhotoDetailViewModel(
             }
 
             is PhotoDetailIntent.ClickDownload -> {
-                getPhotoFile(intent.url)
+                requestPhotoDownload(intent.url)
             }
 
             is PhotoDetailIntent.ClickPhotoDetail -> _effect.trySend(NavigatePhotoDetailView(intent.url))
@@ -87,14 +86,12 @@ class PhotoDetailViewModel(
                             it.copy(
                                 isDetailLoading = false,
                                 imageDetailInfo = result.data,
-                                loadQualityValue = getLoadQualityUseCase().first(),
-                                wallpaperQuality = getWallPaperQualityUseCase().first(),
-                                downLoadQualityValue = getDownloadQualityUseCase().first(),
+                                isFileDownloaded = getPhotoFileExistUseCase(imageId)
                             )
                         }
 
                         is NetworkResult.Error -> {
-                            _effect.trySend(PhotoDetailEffect.ShowToast(result.message ?: ""))
+                            _effect.trySend(ShowToast(result.message ?: ""))
                             it.copy(isDetailLoading = false)
                         }
                     }
@@ -130,30 +127,24 @@ class PhotoDetailViewModel(
         }
     }
 
-    private fun getPhotoFile(url: String) {
+    private fun requestPhotoDownload(url: String) {
         downloadJob?.cancel()
         downloadJob = viewModelScope.launch {
-            getPhotoFileUseCase(
+            requestPhotoDownloadUseCase(
                 fileName = imageId,
                 url = url
             ).collect { result ->
                 _state.update {
                     when (result) {
-                        is NetworkResult.Loading -> {
-                            it.copy(
-                                isFileDownLoading = true,
-                            )
-                        }
+                        is NetworkResult.Loading -> it.copy(isFileDownLoading = true)
 
                         is NetworkResult.Success -> {
-                            it.copy(
-                                isFileDownLoading = false,
-                                isFileDownloaded = (result.data ?: false),
-                            )
+                            _effect.trySend(PhotoDetailEffect.DownloadSuccess)
+                            it.copy(isFileDownLoading = false)
                         }
 
                         is NetworkResult.Error -> {
-                            _effect.trySend(PhotoDetailEffect.ShowToast(result.message ?: ""))
+                            _effect.trySend(PhotoDetailEffect.DownloadFailed)
                             it.copy(isFileDownLoading = false)
                         }
                     }

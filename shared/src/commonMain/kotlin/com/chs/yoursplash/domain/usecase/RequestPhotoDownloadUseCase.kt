@@ -4,13 +4,13 @@ import com.chs.yoursplash.domain.repository.PhotoRepository
 import com.chs.yoursplash.util.NetworkResult
 import kotlinx.coroutines.flow.Flow
 
-class GetPhotoFileUseCase(
+class RequestPhotoDownloadUseCase(
     private val repository: PhotoRepository,
 ) {
     operator fun invoke(
         fileName: String,
         url: String
     ): Flow<NetworkResult<Boolean>> {
-        return repository.getPhotoFileUseCase(fileName = fileName, url = url)
+        return repository.requestFileDownload(fileName = fileName, url = url)
     }
 }

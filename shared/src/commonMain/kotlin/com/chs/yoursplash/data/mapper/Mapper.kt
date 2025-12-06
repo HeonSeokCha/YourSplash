@@ -110,7 +110,10 @@ fun ResponsePhotoPosition.toUnSplashPosition(): PhotoPosition {
     )
 }
 
-fun ResponsePhotoDetail.toUnSplashImageDetail(quality: LoadQuality): PhotoDetail {
+fun ResponsePhotoDetail.toUnSplashImageDetail(
+    loadQuality: LoadQuality,
+    downloadQuality: LoadQuality
+): PhotoDetail {
     return PhotoDetail(
         id = id,
         width = width,
@@ -118,9 +121,10 @@ fun ResponsePhotoDetail.toUnSplashImageDetail(quality: LoadQuality): PhotoDetail
         color = color,
         blurHash = blurHash,
         likes = likes,
-        urls = urls.toPhotoUrls(),
+        url = urls.toUnSplashImageUrls(loadQuality),
+        downloadUrl = urls.toUnSplashImageUrls(downloadQuality),
         description = description,
-        user = user.toUnSplashUser(quality),
+        user = user.toUnSplashUser(loadQuality),
         exif = exif.toUnSplashExif(),
         location = location.toUnSplashLocation(),
         tags = tags.map { it.toUnSplashTag() },
@@ -160,15 +164,5 @@ fun ResponseCollection.toPhotoCollection(quality: LoadQuality): UnSplashCollecti
         previewPhotos = previewPhotos?.map {
             it.toRelatedCollectionPreview(quality)
         }
-    )
-}
-
-fun ResponsePhotoUrls.toPhotoUrls(): PhotoUrls {
-    return PhotoUrls(
-        raw = raw,
-        full = full,
-        regular = regular,
-        small = small,
-        thumb = thumb
     )
 }

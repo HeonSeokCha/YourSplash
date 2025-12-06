@@ -27,6 +27,7 @@ import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
 import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ShimmerImage
 import com.chs.yoursplash.presentation.base.shimmer
+import com.chs.yoursplash.presentation.browse.BrowseScreens.*
 import com.chs.yoursplash.presentation.toSettingUrl
 import com.chs.yoursplash.util.Constants
 import org.jetbrains.compose.resources.stringResource
@@ -38,21 +39,22 @@ fun PhotoDetailScreenRoot(
     onClose: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackBarHost = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 PhotoDetailEffect.Close -> onClose()
                 is PhotoDetailEffect.NavigatePhotoDetail -> {
-                    onNavigate(BrowseScreens.PhotoDetailScreen(effect.id))
+                    onNavigate(PhotoDetailScreen(effect.id))
                 }
 
                 is PhotoDetailEffect.NavigatePhotoTag -> {
-                    onNavigate(BrowseScreens.PhotoTagResultScreen(effect.tag))
+                    onNavigate(PhotoTagResultScreen(effect.tag))
                 }
 
                 is PhotoDetailEffect.NavigateUserDetail -> {
-                    onNavigate(BrowseScreens.UserDetailScreen(effect.name))
+                    onNavigate(UserDetailScreen(effect.name))
                 }
 
                 is PhotoDetailEffect.NavigatePhotoDetailView -> {
@@ -60,12 +62,25 @@ fun PhotoDetailScreenRoot(
                 }
 
                 is PhotoDetailEffect.ShowToast -> Unit
+                PhotoDetailEffect.DownloadFailed -> {
+                    snackBarHost.showSnackbar(
+                        message = "Download Failed.",
+                        withDismissAction = true
+                    )
+                }
+                PhotoDetailEffect.DownloadSuccess -> {
+                    snackBarHost.showSnackbar(
+                        message = "Download Complete.",
+                        withDismissAction = true
+                    )
+                }
             }
         }
     }
 
     PhotoDetailScreen(
         state = state,
+        snackBarHost = snackBarHost,
         onIntent = viewModel::handleIntent
     )
 }
@@ -73,20 +88,11 @@ fun PhotoDetailScreenRoot(
 @Composable
 fun PhotoDetailScreen(
     state: PhotoDetailState,
+    snackBarHost: SnackbarHostState,
     onIntent: (PhotoDetailIntent) -> Unit
 ) {
     val scrollState = rememberScrollState()
     val lazyVerticalStaggeredState = rememberLazyStaggeredGridState()
-    val snackBarHost = remember { SnackbarHostState() }
-
-    LaunchedEffect(state.isFileDownloaded) {
-        if (state.isFileDownloaded) {
-            snackBarHost.showSnackbar(
-                message = "Download Complete.",
-                withDismissAction = true
-            )
-        }
-    }
 
     Box(
         modifier = Modifier
@@ -104,14 +110,10 @@ fun PhotoDetailScreen(
                             .clickable {
                                 if (state.imageDetailInfo == null) return@clickable
                                 onIntent(
-                                    PhotoDetailIntent.ClickPhotoDetail(
-                                        state.imageDetailInfo.urls.toSettingUrl(
-                                            state.wallpaperQuality
-                                        )!!
-                                    )
+                                    PhotoDetailIntent.ClickPhotoDetail(state.imageDetailInfo.url)
                                 )
                             },
-                        url = state.imageDetailInfo?.urls?.toSettingUrl(state.loadQualityValue)
+                        url = state.imageDetailInfo?.url
                     )
 
                     ItemUserInfoFromPhotoDetail(
@@ -232,12 +234,9 @@ private fun ItemUserInfoFromPhotoDetail(
 
         IconButton(
             onClick = {
-                if (info == null
-                    || info.urls.toSettingUrl(state.downLoadQualityValue).isNullOrEmpty()
-                    || state.isFileDownLoading
-                ) return@IconButton
+                if (info == null || state.isFileDownLoading) return@IconButton
 
-                onDownload(info.urls.toSettingUrl(state.downLoadQualityValue)!!)
+                onDownload(info.downloadUrl)
             }
         ) {
             if (state.isFileDownLoading) {

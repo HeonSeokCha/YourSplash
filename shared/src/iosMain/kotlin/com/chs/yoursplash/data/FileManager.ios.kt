@@ -65,10 +65,9 @@ actual class FileManager {
     }
 
     actual suspend fun isFileExist(fileName: String): Result<Boolean> {
-        TODO("Not yet implemented")
+        return Result.success(false)
     }
 
-    // 확장 함수들
     @OptIn(ExperimentalForeignApi::class)
     private fun NSData.toByteArray(): ByteArray {
         return ByteArray(this.length.toInt()).apply {

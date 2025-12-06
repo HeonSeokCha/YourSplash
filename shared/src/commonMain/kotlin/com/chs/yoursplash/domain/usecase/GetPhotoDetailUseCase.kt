@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 class GetPhotoDetailUseCase(
     private val repository: PhotoRepository
 ) {
-    suspend operator fun invoke(photoId: String): Flow<NetworkResult<PhotoDetail>> {
+    operator fun invoke(photoId: String): Flow<NetworkResult<PhotoDetail>> {
         return repository.getPhotoDetailInfo(photoId)
     }
 }

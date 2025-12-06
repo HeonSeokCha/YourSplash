@@ -9,7 +9,8 @@ import com.chs.yoursplash.domain.usecase.GetHomePhotosUseCase
 import com.chs.yoursplash.domain.usecase.GetWallPaperQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoDetailUseCase
-import com.chs.yoursplash.domain.usecase.GetPhotoFileUseCase
+import com.chs.yoursplash.domain.usecase.GetPhotoFileExistUseCase
+import com.chs.yoursplash.domain.usecase.RequestPhotoDownloadUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoRelatedListUseCase
 import com.chs.yoursplash.domain.usecase.GetRecentSearchHistoryUseCase
 import com.chs.yoursplash.domain.usecase.GetSearchResultCollectionUseCase
@@ -51,5 +52,6 @@ val useCaseModule = module {
     singleOf(::GetUserDetailUseCase)
     singleOf(::GetUserPhotoUseCase)
     singleOf(::GetUserLikesUseCase)
-    singleOf(::GetPhotoFileUseCase)
+    singleOf(::RequestPhotoDownloadUseCase)
+    singleOf(::GetPhotoFileExistUseCase)
 }
