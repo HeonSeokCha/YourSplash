@@ -6,4 +6,8 @@
     <string name="text_no_collections">Collection is Empty.</string>
     <string name="text_no_users">User is Empty.</string>
     <string name="text_no_result">Result is Empty.</string>
+    <string name="text_yes">YES</string>
+    <string name="text_no">NO</string>
+    <string name="text_download_again">Download again?</string>
+    <string name="text_download_again_desc">This photo has already been downloaded. Do you want to download this photo again?</string>
 </resources>

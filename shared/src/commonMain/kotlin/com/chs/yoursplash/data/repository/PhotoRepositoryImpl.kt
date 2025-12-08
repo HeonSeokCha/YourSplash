@@ -179,7 +179,7 @@ class PhotoRepositoryImpl(
 
     override suspend fun getFileIsExist(fileName: String): Boolean {
         return try {
-            fileManager.isFileExist(fileName).isSuccess
+            fileManager.isFileExist(fileName)
         } catch (e: Exception) {
             false
         }

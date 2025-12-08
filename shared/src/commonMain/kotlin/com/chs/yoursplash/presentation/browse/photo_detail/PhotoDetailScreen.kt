@@ -15,20 +15,28 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.chs.youranimelist.res.Res
+import com.chs.youranimelist.res.text_download_again
+import com.chs.youranimelist.res.text_download_again_desc
+import com.chs.youranimelist.res.text_no
 import com.chs.youranimelist.res.text_no_photos
+import com.chs.youranimelist.res.text_yes
+import com.chs.yoursplash.domain.model.LoadQuality
 import com.chs.yoursplash.presentation.browse.BrowseScreens
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
 import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ShimmerImage
 import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.presentation.browse.BrowseScreens.*
+import com.chs.yoursplash.presentation.setting.SettingIntent
 import com.chs.yoursplash.presentation.toSettingUrl
+import com.chs.yoursplash.presentation.ui.theme.Purple500
 import com.chs.yoursplash.util.Constants
 import org.jetbrains.compose.resources.stringResource
 
@@ -68,6 +76,7 @@ fun PhotoDetailScreenRoot(
                         withDismissAction = true
                     )
                 }
+
                 PhotoDetailEffect.DownloadSuccess -> {
                     snackBarHost.showSnackbar(
                         message = "Download Complete.",
@@ -177,11 +186,18 @@ fun PhotoDetailScreen(
                 }
             }
         }
+
         SnackbarHost(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(horizontal = 16.dp),
             hostState = snackBarHost
+        )
+    }
+
+    if (state.imageDetailInfo != null && state.isShowFileAlreadyDialog) {
+        AlreadyDownloadDialog(
+            onIntent = onIntent
         )
     }
 }
@@ -246,4 +262,40 @@ private fun ItemUserInfoFromPhotoDetail(
             }
         }
     }
+}
+
+@Composable
+private fun AlreadyDownloadDialog(
+    onIntent: (PhotoDetailIntent) -> Unit
+) {
+    AlertDialog(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        onDismissRequest = { onIntent(PhotoDetailIntent.ClickDismiss) },
+        confirmButton = {
+            Button(
+                onClick = { onIntent(PhotoDetailIntent.ClickAlreadyDownload) }
+            ) {
+                Text(text = stringResource(Res.string.text_yes))
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = { onIntent(PhotoDetailIntent.ClickDismiss) }
+            ) {
+                Text(text = stringResource(Res.string.text_no))
+            }
+        },
+        title = {
+            Text(
+                text = stringResource(Res.string.text_download_again),
+                fontSize = 18.sp,
+                color = Color.Black,
+                fontWeight = FontWeight.Bold
+            )
+        }, text = {
+            Text(text = stringResource(Res.string.text_download_again_desc))
+        }
+    )
 }

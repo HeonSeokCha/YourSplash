@@ -64,8 +64,8 @@ actual class FileManager {
         )
     }
 
-    actual suspend fun isFileExist(fileName: String): Result<Boolean> {
-        return Result.success(false)
+    actual suspend fun isFileExist(fileName: String): Boolean {
+        return false
     }
 
     @OptIn(ExperimentalForeignApi::class)

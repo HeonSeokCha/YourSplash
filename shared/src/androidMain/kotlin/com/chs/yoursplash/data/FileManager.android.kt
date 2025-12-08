@@ -1,9 +1,7 @@
 package com.chs.yoursplash.data
 
-import android.content.ContentValues
 import android.content.Context
 import android.os.Environment
-import android.provider.MediaStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -26,13 +24,15 @@ actual class FileManager(
         }
     }
 
-    actual suspend fun isFileExist(fileName: String): Result<Boolean> = withContext(Dispatchers.IO) {
+    actual suspend fun isFileExist(fileName: String): Boolean = withContext(Dispatchers.IO) {
         val dir: File = File(PATH)
 
         return@withContext withContext(Dispatchers.IO) {
-            if (!dir.exists()) return@withContext Result.success(false)
+            if (!dir.exists() && dir.listFiles() == null) return@withContext false
 
-            Result.success(dir.listFiles()?.find { it.name == fileName } != null)
+            val result = dir.listFiles()!!.any { it.nameWithoutExtension == fileName }
+
+            result
         }
     }
 
@@ -43,7 +43,7 @@ actual class FileManager(
         val dir: File = File(PATH)
         if (!dir.exists()) dir.mkdirs()
 
-        val file: File = File(dir, fileName)
+        val file: File = File(dir, "${fileName}.png")
 
         return try {
             FileOutputStream(file).use {

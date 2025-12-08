@@ -9,5 +9,6 @@ data class PhotoDetailState(
     val isFileDownLoading: Boolean = false,
     val isFileDownloaded: Boolean = false,
     val imageDetailInfo: PhotoDetail? = null,
-    val imageRelatedList: List<Photo> = listOf()
+    val imageRelatedList: List<Photo> = listOf(),
+    val isShowFileAlreadyDialog: Boolean = false
 )

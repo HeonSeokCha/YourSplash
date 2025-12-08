@@ -55,18 +55,32 @@ class PhotoDetailViewModel(
             is PhotoDetailIntent.ClickPhoto -> {
                 _effect.trySend(NavigatePhotoDetail(intent.id))
             }
+
             is PhotoDetailIntent.ClickTag -> {
                 _effect.trySend(NavigatePhotoTag(intent.name))
             }
+
             is PhotoDetailIntent.ClickUser -> {
                 _effect.trySend(NavigateUserDetail(intent.name))
             }
 
             is PhotoDetailIntent.ClickDownload -> {
+                if (_state.value.isFileDownloaded) {
+                    _state.update { it.copy(isShowFileAlreadyDialog = true) }
+                    return
+                }
+
                 requestPhotoDownload(intent.url)
             }
 
             is PhotoDetailIntent.ClickPhotoDetail -> _effect.trySend(NavigatePhotoDetailView(intent.url))
+
+            PhotoDetailIntent.ClickAlreadyDownload -> {
+                if (_state.value.imageDetailInfo == null) return
+                requestPhotoDownload(_state.value.imageDetailInfo!!.downloadUrl)
+            }
+
+            PhotoDetailIntent.ClickDismiss -> _state.update { it.copy(isShowFileAlreadyDialog = false) }
         }
     }
 
@@ -83,10 +97,11 @@ class PhotoDetailViewModel(
                         }
 
                         is NetworkResult.Success -> {
+                             val result2 = getPhotoFileExistUseCase(imageId)
                             it.copy(
                                 isDetailLoading = false,
                                 imageDetailInfo = result.data,
-                                isFileDownloaded = getPhotoFileExistUseCase(imageId)
+                                isFileDownloaded = result2
                             )
                         }
 
@@ -140,7 +155,10 @@ class PhotoDetailViewModel(
 
                         is NetworkResult.Success -> {
                             _effect.trySend(PhotoDetailEffect.DownloadSuccess)
-                            it.copy(isFileDownLoading = false)
+                            it.copy(
+                                isFileDownLoading = false,
+                                isFileDownloaded = getPhotoFileExistUseCase(_state.value.imageDetailInfo!!.id)
+                            )
                         }
 
                         is NetworkResult.Error -> {
