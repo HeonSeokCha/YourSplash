@@ -4,10 +4,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
@@ -31,6 +33,7 @@ import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ShimmerImage
 import com.chs.yoursplash.presentation.base.shimmer
+import com.chs.yoursplash.presentation.pxToDp
 import com.chs.yoursplash.presentation.search.SearchIntent
 import com.chs.yoursplash.util.Constants
 import kotlinx.coroutines.flow.Flow
@@ -101,20 +104,21 @@ fun UserDetailPhotoScreen(
 
             else -> {
                 items(count = pagingItems.itemCount) { idx ->
+                    val item = pagingItems[idx] ?: return@items
+
                     ShimmerImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(300.dp)
+                            .aspectRatio((item.width.toFloat() / item.height.toFloat()))
                             .clip(RoundedCornerShape(10.dp))
                             .padding(
                                 start = 8.dp,
                                 end = 8.dp,
                                 bottom = 16.dp
                             ).clickable {
-                                if (pagingItems[idx] == null) return@clickable
-                                onIntent(UserDetailIntent.ClickPhoto(pagingItems[idx]!!.id))
+                                onIntent(UserDetailIntent.ClickPhoto(item.id))
                             },
-                        url = pagingItems[idx]?.urls
+                        url = item.urls
                     )
                 }
             }

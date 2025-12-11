@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -67,10 +68,12 @@ fun MainTopBar(
                         fontWeight = FontWeight.Bold
                     )
                 }, actions = {
-                    IconButton(onClick = {
-                        onQueryChange("")
-                        backStack.add(MainScreens.SearchScreen)
-                    }) {
+                    IconButton(
+                        onClick = {
+                            onQueryChange("")
+                            backStack.add(MainScreens.SearchScreen)
+                        }
+                    ) {
                         Icon(
                             imageVector = Icons.TwoTone.Search,
                             contentDescription = null,
@@ -185,13 +188,15 @@ fun SearchAppBar(
                     trailingIcon = {
                         if (!expanded || textFieldState.text.isEmpty()) null
                         else {
-                            IconButton(onClick = {
-                                if (textFieldState.text.isNotEmpty()) {
-                                    textFieldState.clearText()
-                                } else {
-                                    expanded = false
+                            IconButton(
+                                onClick = {
+                                    if (textFieldState.text.isNotEmpty()) {
+                                        textFieldState.clearText()
+                                    } else {
+                                        expanded = false
+                                    }
                                 }
-                            }) {
+                            ) {
                                 Icon(
                                     Icons.Default.Close,
                                     contentDescription = null

@@ -1,5 +1,10 @@
 package com.chs.yoursplash.presentation.browse.photo_detail
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -34,6 +39,7 @@ import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ShimmerImage
 import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.presentation.browse.BrowseScreens.*
+import com.chs.yoursplash.presentation.pxToDp
 import com.chs.yoursplash.presentation.setting.SettingIntent
 import com.chs.yoursplash.presentation.toSettingUrl
 import com.chs.yoursplash.presentation.ui.theme.Purple500
@@ -176,9 +182,11 @@ fun PhotoDetailScreen(
                             val item = state.imageRelatedList[idx]
                             ShimmerImage(
                                 modifier = Modifier
-                                    .width(130.dp)
-                                    .height(280.dp)
-                                    .clickable { onIntent(PhotoDetailIntent.ClickPhoto(item.id)) },
+                                    .fillMaxSize()
+                                    .aspectRatio((item.width.toFloat() / item.height.toFloat()))
+                                    .clickable {
+                                        onIntent(PhotoDetailIntent.ClickPhoto(item.id))
+                                    },
                                 url = item.urls
                             )
                         }
@@ -255,10 +263,17 @@ private fun ItemUserInfoFromPhotoDetail(
                 onDownload(info.downloadUrl)
             }
         ) {
-            if (state.isFileDownLoading) {
-                Icon(imageVector = Icons.Default.Downloading, contentDescription = null)
-            } else {
-                Icon(imageVector = Icons.Default.Download, contentDescription = null)
+            AnimatedContent(
+                targetState = state.isFileDownLoading,
+                transitionSpec = {
+                    fadeIn() togetherWith fadeOut()
+                }
+            ) { targetState ->
+                if (targetState) {
+                    Icon(imageVector = Icons.Default.Downloading, contentDescription = null)
+                } else {
+                    Icon(imageVector = Icons.Default.Download, contentDescription = null)
+                }
             }
         }
     }
