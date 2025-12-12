@@ -67,7 +67,7 @@ fun ImageCard(
         ShimmerImage(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(250.dp)
+                .aspectRatio((photoInfo?.width ?: 16).toFloat() / (photoInfo?.height ?: 9).toFloat())
                 .clip(RoundedCornerShape(10.dp))
                 .shimmer(photoInfo == null)
                 .clickable {

@@ -91,17 +91,7 @@ fun PhotoTagListScreen(
     CollapsingToolbarScaffold(
         scrollState = scrollState,
         isShowTopBar = true,
-        header = {
-//            Text(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .shimmer(visible = state.isLoading),
-//                text = "",
-//                textAlign = TextAlign.Center,
-//                fontSize = 16.sp,
-//                fontWeight = FontWeight.SemiBold
-//            )
-        },
+        header = { },
         onCloseClick = { onIntent(PhotoTagIntent.ClickClose) }
     ) {
         LazyColumn(
