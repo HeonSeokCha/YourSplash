@@ -22,22 +22,24 @@ class MainViewModel(
 
     private val _state: MutableStateFlow<MainState> = MutableStateFlow(MainState())
     val state = _state
-        .onStart {
-            viewModelScope.launch {
-                getRecentSearchHistoryUseCase().collect { list ->
-                    _state.update {
-                        it.copy(
-                            searchHistory = list
-                        )
-                    }
-                }
-            }
-        }
+        .onStart { observeSearchHistory() }
         .stateIn(
             viewModelScope,
             SharingStarted.Eagerly,
             _state.value
         )
+
+    private fun observeSearchHistory() {
+        viewModelScope.launch {
+            getRecentSearchHistoryUseCase().collect { list ->
+                _state.update {
+                    it.copy(
+                        searchHistory = list
+                    )
+                }
+            }
+        }
+    }
 
     fun updateSearchQuery(query: String) {
         _state.update {
