@@ -28,6 +28,7 @@ import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.presentation.browse.BrowseScreens
+import com.chs.yoursplash.presentation.browse.BrowseScreens.*
 import com.chs.yoursplash.util.Constants
 import org.jetbrains.compose.resources.stringResource
 
@@ -35,6 +36,7 @@ import org.jetbrains.compose.resources.stringResource
 fun CollectionDetailScreenRoot(
     viewModel: CollectionDetailViewModel,
     onNavigate: (BrowseScreens) -> Unit,
+    onBrowser: (String) -> Unit,
     onClose: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -44,13 +46,14 @@ fun CollectionDetailScreenRoot(
         viewModel.effect.collect { effect ->
             when (effect) {
                 is CollectionDetailEffect.NavigatePhotoDetail -> {
-                    onNavigate(BrowseScreens.PhotoDetailScreen(effect.id))
+                    onNavigate(PhotoDetailScreen(effect.id))
                 }
                 is CollectionDetailEffect.NavigateUserDetail -> {
-                    onNavigate(BrowseScreens.UserDetailScreen(effect.name))
+                    onNavigate(UserDetailScreen(effect.name))
                 }
                 is CollectionDetailEffect.ShowToast -> Unit
                 CollectionDetailEffect.Close -> onClose()
+                is CollectionDetailEffect.NavigateBrowser -> onBrowser(effect.id)
             }
         }
     }
@@ -97,6 +100,7 @@ fun CollectionDetailScreen(
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(top = 8.dp)
                     .shimmer(visible = state.isDetailLoad),
                 text = if (state.collectionDetailInfo == null) {
                     Constants.TEXT_PREVIEW

@@ -81,6 +81,10 @@ class PhotoDetailViewModel(
             }
 
             PhotoDetailIntent.ClickDismiss -> _state.update { it.copy(isShowFileAlreadyDialog = false) }
+
+            is PhotoDetailIntent.ClickOpenBrowser -> {
+                _effect.trySend(PhotoDetailEffect.NavigateBrowser(intent.id))
+            }
         }
     }
 

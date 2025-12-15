@@ -62,6 +62,9 @@ class CollectionDetailViewModel(
             }
 
             CollectionDetailIntent.ClickClose -> _effect.trySend(Close)
+            is CollectionDetailIntent.ClickOpenBrowser -> {
+                _effect.trySend(CollectionDetailEffect.NavigateBrowser(intent.id))
+            }
         }
     }
 

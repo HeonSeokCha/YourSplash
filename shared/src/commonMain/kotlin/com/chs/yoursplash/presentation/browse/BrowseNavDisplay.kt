@@ -30,6 +30,7 @@ fun BrowseNavDisplay(
     modifier: Modifier,
     type: String,
     id: String,
+    onBrowser: (String) -> Unit,
     onBack: () -> Unit
 ) {
     val startDestination = when(type) {
@@ -81,6 +82,7 @@ fun BrowseNavDisplay(
                 PhotoDetailScreenRoot(
                     viewModel = viewModel,
                     onNavigate = { backStack.add(it) },
+                    onBrowser = { onBrowser(Constants.PHOTO_SOURCE_URL(it)) },
                     onClose = onBack
                 )
             }
@@ -93,6 +95,7 @@ fun BrowseNavDisplay(
                 CollectionDetailScreenRoot(
                     viewModel = viewModel,
                     onNavigate = { backStack.add(it) },
+                    onBrowser = { onBrowser(Constants.COLLECTION_SOURCE_URL(it)) },
                     onClose = onBack
                 )
             }

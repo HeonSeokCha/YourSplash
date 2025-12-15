@@ -5,6 +5,7 @@ sealed interface PhotoDetailEffect {
     data class NavigatePhotoDetailView(val url: String) : PhotoDetailEffect
     data class NavigatePhotoTag(val tag: String) : PhotoDetailEffect
     data class NavigateUserDetail(val name: String) : PhotoDetailEffect
+    data class NavigateBrowser(val id: String) : PhotoDetailEffect
     data object DownloadSuccess : PhotoDetailEffect
     data object DownloadFailed : PhotoDetailEffect
     data class ShowToast(val message: String) : PhotoDetailEffect

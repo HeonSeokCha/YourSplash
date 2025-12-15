@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 @Composable
 fun BrowseApp(
     info: Pair<String, String>,
+    onBrowser: (String) -> Unit,
     onBack: () -> Unit
 ) {
     BrowseNavDisplay(
@@ -14,6 +15,7 @@ fun BrowseApp(
             .fillMaxSize(),
         type = info.first,
         id = info.second,
+        onBrowser = onBrowser,
         onBack = onBack
     )
 }

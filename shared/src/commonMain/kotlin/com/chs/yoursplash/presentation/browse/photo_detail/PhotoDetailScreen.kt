@@ -1,7 +1,6 @@
 package com.chs.yoursplash.presentation.browse.photo_detail
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
@@ -15,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Downloading
+import androidx.compose.material.icons.filled.OpenInBrowser
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -50,6 +50,7 @@ import org.jetbrains.compose.resources.stringResource
 fun PhotoDetailScreenRoot(
     viewModel: PhotoDetailViewModel,
     onNavigate: (BrowseScreens) -> Unit,
+    onBrowser: (String) -> Unit,
     onClose: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -89,6 +90,8 @@ fun PhotoDetailScreenRoot(
                         withDismissAction = true
                     )
                 }
+
+                is PhotoDetailEffect.NavigateBrowser -> onBrowser(effect.id)
             }
         }
     }
@@ -98,9 +101,7 @@ fun PhotoDetailScreenRoot(
         snackBarHost = snackBarHost,
         onIntent = viewModel::handleIntent
     )
-}
-
-@Composable
+}  @Composable
 fun PhotoDetailScreen(
     state: PhotoDetailState,
     snackBarHost: SnackbarHostState,
@@ -134,7 +135,8 @@ fun PhotoDetailScreen(
                     ItemUserInfoFromPhotoDetail(
                         state = state,
                         onUser = { onIntent(PhotoDetailIntent.ClickUser(it)) },
-                        onDownload = { onIntent(PhotoDetailIntent.ClickDownload(it)) }
+                        onDownload = { onIntent(PhotoDetailIntent.ClickDownload(it)) },
+                        onSource = { onIntent(PhotoDetailIntent.ClickOpenBrowser(it)) }
                     )
 
                     HorizontalDivider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
@@ -214,6 +216,7 @@ fun PhotoDetailScreen(
 private fun ItemUserInfoFromPhotoDetail(
     state: PhotoDetailState,
     onUser: (String) -> Unit,
+    onSource: (String) -> Unit,
     onDownload: (String) -> Unit
 ) {
     val info = state.imageDetailInfo
@@ -256,25 +259,38 @@ private fun ItemUserInfoFromPhotoDetail(
             )
         }
 
-        IconButton(
-            onClick = {
-                if (info == null || state.isFileDownLoading) return@IconButton
+        Row {
+            IconButton(
+                onClick = {
+                    if (info == null) return@IconButton
 
-                onDownload(info.downloadUrl)
-            }
-        ) {
-            AnimatedContent(
-                targetState = state.isFileDownLoading,
-                transitionSpec = {
-                    fadeIn() togetherWith fadeOut()
+                    onSource(info.id)
                 }
-            ) { targetState ->
-                if (targetState) {
-                    Icon(imageVector = Icons.Default.Downloading, contentDescription = null)
-                } else {
-                    Icon(imageVector = Icons.Default.Download, contentDescription = null)
+            ) {
+                Icon(imageVector = Icons.Default.OpenInBrowser, contentDescription = null)
+            }
+
+            IconButton(
+                onClick = {
+                    if (info == null || state.isFileDownLoading) return@IconButton
+
+                    onDownload(info.downloadUrl)
+                }
+            ) {
+                AnimatedContent(
+                    targetState = state.isFileDownLoading,
+                    transitionSpec = {
+                        fadeIn() togetherWith fadeOut()
+                    }
+                ) { targetState ->
+                    if (targetState) {
+                        Icon(imageVector = Icons.Default.Downloading, contentDescription = null)
+                    } else {
+                        Icon(imageVector = Icons.Default.Download, contentDescription = null)
+                    }
                 }
             }
+
         }
     }
 }

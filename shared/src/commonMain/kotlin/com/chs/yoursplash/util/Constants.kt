@@ -18,6 +18,8 @@ object Constants {
     val GET_USER_PHOTOS: ((String) -> String) = { "/users/$it/photos" }
     val GET_USER_LIKES: ((String) -> String) = { "/users/$it/likes" }
     val GET_USER_COLLECTIONS: ((String) -> String) = { "/users/$it/collections" }
+    val PHOTO_SOURCE_URL: ((String) -> String) = { "https://unsplash.com/photos/$it" }
+    val COLLECTION_SOURCE_URL: ((String) -> String) = { "https://unsplash.com/collections/$it" }
     val CLIENT_ID: String = BuildKonfig.API_ACCESS_KEY
     const val PAGING_SIZE: Int = 3
     const val GET_SEARCH_PHOTOS: String = "/search/photos"
