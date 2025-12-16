@@ -290,7 +290,6 @@ private fun ItemUserInfoFromPhotoDetail(
                     }
                 }
             }
-
         }
     }
 }

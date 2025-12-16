@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -77,6 +78,8 @@ fun CollapsingToolbarScaffold(
     scrollState: ScrollState,
     header: @Composable () -> Unit,
     isShowTopBar: Boolean,
+    topBarItem: ImageVector? = null,
+    onIconClick: () -> Unit = {},
     onCloseClick: () -> Unit,
     stickyHeader: @Composable () -> Unit = { },
     content: @Composable () -> Unit
@@ -127,6 +130,8 @@ fun CollapsingToolbarScaffold(
                     .fillMaxWidth()
                     .align(Alignment.TopStart)
                     .background(MaterialTheme.colorScheme.primary),
+                topBarIcon = topBarItem,
+                onIconClick = onIconClick,
                 onCloseClick = onCloseClick
             )
         } else {
@@ -148,6 +153,8 @@ fun CollapsingToolbarScaffold(
 @Composable
 private fun GradientTopBar(
     modifier: Modifier,
+    topBarIcon: ImageVector? = null,
+    onIconClick: () -> Unit = {},
     onCloseClick: () -> Unit
 ) {
     Box {
@@ -160,13 +167,28 @@ private fun GradientTopBar(
                 modifier = Modifier
                     .size(56.dp)
                     .align(Alignment.TopStart),
-                onClick = { onCloseClick() }
+                onClick = onCloseClick
             ) {
                 Icon(
                     imageVector = Icons.Filled.Close,
                     tint = White,
                     contentDescription = null
                 )
+            }
+
+            if (topBarIcon != null) {
+                IconButton(
+                    modifier = Modifier
+                        .size(56.dp)
+                        .align(Alignment.TopEnd),
+                    onClick = onIconClick
+                ) {
+                    Icon(
+                        imageVector = topBarIcon,
+                        tint = White,
+                        contentDescription = null
+                    )
+                }
             }
         }
 

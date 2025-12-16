@@ -3,6 +3,8 @@ package com.chs.yoursplash.presentation.browse.collection_detail
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.OpenInBrowser
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -48,9 +50,11 @@ fun CollectionDetailScreenRoot(
                 is CollectionDetailEffect.NavigatePhotoDetail -> {
                     onNavigate(PhotoDetailScreen(effect.id))
                 }
+
                 is CollectionDetailEffect.NavigateUserDetail -> {
                     onNavigate(UserDetailScreen(effect.name))
                 }
+
                 is CollectionDetailEffect.ShowToast -> Unit
                 CollectionDetailEffect.Close -> onClose()
                 is CollectionDetailEffect.NavigateBrowser -> onBrowser(effect.id)
@@ -113,6 +117,11 @@ fun CollectionDetailScreen(
             )
         },
         isShowTopBar = true,
+        topBarItem = Icons.Default.OpenInBrowser,
+        onIconClick = {
+            if (state.collectionDetailInfo == null) return@CollapsingToolbarScaffold
+            onIntent(CollectionDetailIntent.ClickOpenBrowser(state.collectionDetailInfo.id))
+        },
         onCloseClick = { onIntent(CollectionDetailIntent.ClickClose) }
     ) {
         LazyColumn(
