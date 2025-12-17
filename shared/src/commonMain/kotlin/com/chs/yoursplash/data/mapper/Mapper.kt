@@ -44,7 +44,7 @@ fun ResponseUser.toUnSplashUser(quality: LoadQuality): User {
         id = id,
         userName = userName,
         name = name,
-        photoProfile = photoProfile.toUnsplashUserProfileImage(),
+        profileImageUrl = photoProfile.toUnsplashUserProfileImage(quality),
         photos = photos.map {
             it.toUserPhotos(quality)
         }
@@ -59,26 +59,28 @@ fun ResponseUserPhotos.toUserPhotos(quality: LoadQuality): UserPhotos {
     )
 }
 
-fun ResponseUserDetail.toUserDetail(): UserDetail {
+fun ResponseUserDetail.toUserDetail(quality: LoadQuality): UserDetail {
     return UserDetail(
         id = id,
         userName = userName,
         name = name,
         bio = bio,
         location = location,
-        profileImage = profileImage.toUnsplashUserProfileImage(),
+        profileImageUrl = profileImage.toUnsplashUserProfileImage(quality),
         totalCollections = totalCollection,
         totalLikes = totalLikes,
         totalPhotos = totalPhotos
     )
 }
 
-fun ResponseUserProfileImage.toUnsplashUserProfileImage(): UserProfileImage {
-    return UserProfileImage(
-        small = small,
-        medium = medium,
-        large = large
-    )
+fun ResponseUserProfileImage.toUnsplashUserProfileImage(quality: LoadQuality): String {
+    return when (quality) {
+        LoadQuality.Raw -> this.large
+        LoadQuality.Full -> this.large
+        LoadQuality.Regular -> this.medium
+        LoadQuality.Small -> this.small
+        LoadQuality.Thumb -> this.small
+    }
 }
 
 fun ResponseExif.toUnSplashExif(): Exif {

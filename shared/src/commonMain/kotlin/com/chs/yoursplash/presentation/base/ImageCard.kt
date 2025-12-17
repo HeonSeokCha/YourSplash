@@ -49,7 +49,7 @@ fun ImageCard(
                     .size(50.dp)
                     .clip(RoundedCornerShape(100))
                     .shimmer(photoInfo == null),
-                url = photoInfo?.user?.photoProfile?.large
+                url = photoInfo?.user?.profileImageUrl
             )
 
             Spacer(modifier = Modifier.width(16.dp))

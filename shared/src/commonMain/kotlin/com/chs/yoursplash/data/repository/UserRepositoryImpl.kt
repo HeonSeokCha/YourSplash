@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 
-class UserRepositoryImpl (
+class UserRepositoryImpl(
     private val client: UnSplashService,
     private val dataStore: DataStorePrefManager
 ) : UserRepository {
@@ -32,8 +32,10 @@ class UserRepositoryImpl (
                 emit(
                     NetworkResult.Success(
                         client.requestUnsplash<ResponseUserDetail>(
-                            Constants.GET_USER_DETAILED(userName)
-                        ).toUserDetail()
+                            url = Constants.GET_USER_DETAILED(
+                                userName
+                            )
+                        ).toUserDetail(getLoadQuality())
                     )
                 )
             } catch (e: Exception) {
@@ -85,5 +87,16 @@ class UserRepositoryImpl (
                 loadQuality = loadQuality
             )
         }.flow
+    }
+
+    private suspend fun getLoadQuality(): LoadQuality {
+        return dataStore.getData(
+            keyName = Constants.PREFERENCE_KEY_LOAD_QUALITY,
+            defaultValue = LoadQuality.Regular.name
+        )
+            .first()
+            .run {
+                LoadQuality.valueOf(this)
+            }
     }
 }

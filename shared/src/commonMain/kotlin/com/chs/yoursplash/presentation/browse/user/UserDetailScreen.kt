@@ -182,7 +182,7 @@ private fun UserDetailInfo(userInfo: UserDetail?) {
             modifier = Modifier
                 .size(100.dp, 100.dp)
                 .clip(RoundedCornerShape(100)),
-            url = userInfo?.profileImage?.large
+            url = userInfo?.profileImageUrl
         )
 
         Column(

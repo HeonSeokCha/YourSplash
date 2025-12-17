@@ -37,10 +37,6 @@ object Constants {
     const val TARGET_PHOTO: String = "target_photo"
     const val TARGET_COLLECTION: String = "target_collection"
     const val TARGET_USER: String = "target_user"
-    const val ARG_KEY_PHOTO_ID: String = "photoId"
-    const val ARG_KEY_COLLECTION_ID: String = "collectionId"
-    const val ARG_KEY_USER_NAME: String = "userName"
-    const val ARG_KEY_TAG_NAME: String = "tagName"
     const val TEXT_PREVIEW: String = "This is Title."
 
     val SEARCH_COLOR_LIST = listOf(

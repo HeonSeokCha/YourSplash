@@ -101,7 +101,9 @@ fun PhotoDetailScreenRoot(
         snackBarHost = snackBarHost,
         onIntent = viewModel::handleIntent
     )
-}  @Composable
+}
+
+@Composable
 fun PhotoDetailScreen(
     state: PhotoDetailState,
     snackBarHost: SnackbarHostState,
@@ -200,7 +202,7 @@ fun PhotoDetailScreen(
         SnackbarHost(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(horizontal = 16.dp),
+                .padding(bottom = 16.dp),
             hostState = snackBarHost
         )
     }
@@ -233,6 +235,7 @@ private fun ItemUserInfoFromPhotoDetail(
     ) {
         Row(
             modifier = Modifier
+                .weight(0.7f)
                 .clickable {
                     if (info?.user?.userName == null) return@clickable
                     onUser(info.user.userName)
@@ -243,7 +246,7 @@ private fun ItemUserInfoFromPhotoDetail(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(RoundedCornerShape(100)),
-                url = info?.user?.photoProfile?.large
+                url = info?.user?.profileImageUrl
             )
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -259,7 +262,10 @@ private fun ItemUserInfoFromPhotoDetail(
             )
         }
 
-        Row {
+        Row(
+            modifier = Modifier
+                .weight(0.3f)
+        ) {
             IconButton(
                 onClick = {
                     if (info == null) return@IconButton
@@ -279,9 +285,7 @@ private fun ItemUserInfoFromPhotoDetail(
             ) {
                 AnimatedContent(
                     targetState = state.isFileDownLoading,
-                    transitionSpec = {
-                        fadeIn() togetherWith fadeOut()
-                    }
+                    transitionSpec = { fadeIn() togetherWith fadeOut() }
                 ) { targetState ->
                     if (targetState) {
                         Icon(imageVector = Icons.Default.Downloading, contentDescription = null)

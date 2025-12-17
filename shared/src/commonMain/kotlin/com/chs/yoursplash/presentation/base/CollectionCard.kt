@@ -58,7 +58,7 @@ fun CollectionInfoCard(
                     .size(50.dp)
                     .clip(RoundedCornerShape(100))
                     .shimmer(visible = collectionInfo == null),
-                url = collectionInfo?.user?.photoProfile?.large
+                url = collectionInfo?.user?.profileImageUrl
             )
 
             Spacer(modifier = Modifier.width(16.dp))

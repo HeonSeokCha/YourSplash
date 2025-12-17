@@ -6,7 +6,7 @@ data class UserDetail(
     val name: String,
     val bio: String?,
     val location: String?,
-    val profileImage: UserProfileImage,
+    val profileImageUrl: String,
     val totalCollections: Int = 0,
     val totalLikes: Int = 0,
     val totalPhotos: Int = 0

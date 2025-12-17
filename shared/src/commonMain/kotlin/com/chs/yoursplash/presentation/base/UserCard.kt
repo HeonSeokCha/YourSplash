@@ -43,7 +43,7 @@ fun UserCard(
                     .size(50.dp)
                     .clip(RoundedCornerShape(100))
                     .shimmer(visible = userInfo == null),
-                url = userInfo?.photoProfile?.large
+                url = userInfo?.profileImageUrl
             )
 
             Spacer(modifier = Modifier.width(16.dp))
