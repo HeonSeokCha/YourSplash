@@ -19,6 +19,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -35,6 +36,8 @@ import com.chs.youranimelist.res.text_yes
 import com.chs.yoursplash.domain.model.LoadQuality
 import com.chs.yoursplash.presentation.browse.BrowseScreens
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
+import com.chs.yoursplash.presentation.base.FlexibleCollapsingAppBar
+import com.chs.yoursplash.presentation.base.GradientTopBar
 import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ShimmerImage
 import com.chs.yoursplash.presentation.base.shimmer
@@ -109,21 +112,35 @@ fun PhotoDetailScreen(
     snackBarHost: SnackbarHostState,
     onIntent: (PhotoDetailIntent) -> Unit
 ) {
-    val scrollState = rememberScrollState()
     val lazyVerticalStaggeredState = rememberLazyStaggeredGridState()
-
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        CollapsingToolbarScaffold(
-            scrollState = scrollState,
-            header = {
-                Column {
+        FlexibleCollapsingAppBar(
+            collapsedContent = { alpha ->
+                GradientTopBar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .alpha(alpha)
+                        .align(Alignment.TopStart)
+                        .background(MaterialTheme.colorScheme.primary),
+                    onCloseClick = {
+                        if (alpha > 0.5f) return@GradientTopBar
+                        onIntent(PhotoDetailIntent.ClickClose)
+                    }
+                )
+            },
+            expandedContent = { alpha, scrollState ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
+                ) {
                     ShimmerImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(300.dp)
+                            .aspectRatio((state.imageDetailInfo?.width ?: 16).toFloat() / (state.imageDetailInfo?.height ?: 9).toFloat())
                             .shimmer(state.isDetailLoading && (state.imageDetailInfo == null))
                             .clickable {
                                 if (state.imageDetailInfo == null) return@clickable
@@ -147,13 +164,12 @@ fun PhotoDetailScreen(
                         onIntent(PhotoDetailIntent.ClickTag(selectTag))
                     }
                 }
-            },
-            isShowTopBar = false,
-            onCloseClick = { onIntent(PhotoDetailIntent.ClickClose) }
+            }
         ) {
             LazyVerticalStaggeredGrid(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .padding(it),
                 state = lazyVerticalStaggeredState,
                 columns = StaggeredGridCells.Fixed(3),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),

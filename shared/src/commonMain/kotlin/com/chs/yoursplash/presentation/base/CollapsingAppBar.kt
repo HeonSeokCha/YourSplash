@@ -151,7 +151,7 @@ fun CollapsingToolbarScaffold(
 }
 
 @Composable
-private fun GradientTopBar(
+fun GradientTopBar(
     modifier: Modifier,
     topBarIcon: ImageVector? = null,
     onIconClick: () -> Unit = {},
