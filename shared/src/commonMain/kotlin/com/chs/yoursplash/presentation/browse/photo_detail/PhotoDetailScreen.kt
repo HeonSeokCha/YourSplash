@@ -33,19 +33,14 @@ import com.chs.youranimelist.res.text_download_again_desc
 import com.chs.youranimelist.res.text_no
 import com.chs.youranimelist.res.text_no_photos
 import com.chs.youranimelist.res.text_yes
-import com.chs.yoursplash.domain.model.LoadQuality
 import com.chs.yoursplash.presentation.browse.BrowseScreens
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
-import com.chs.yoursplash.presentation.base.FlexibleCollapsingAppBar
+import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold2
 import com.chs.yoursplash.presentation.base.GradientTopBar
 import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ShimmerImage
 import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.presentation.browse.BrowseScreens.*
-import com.chs.yoursplash.presentation.pxToDp
-import com.chs.yoursplash.presentation.setting.SettingIntent
-import com.chs.yoursplash.presentation.toSettingUrl
-import com.chs.yoursplash.presentation.ui.theme.Purple500
 import com.chs.yoursplash.util.Constants
 import org.jetbrains.compose.resources.stringResource
 
@@ -112,35 +107,23 @@ fun PhotoDetailScreen(
     snackBarHost: SnackbarHostState,
     onIntent: (PhotoDetailIntent) -> Unit
 ) {
+    val scrollState = rememberScrollState()
     val lazyVerticalStaggeredState = rememberLazyStaggeredGridState()
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        FlexibleCollapsingAppBar(
-            collapsedContent = { alpha ->
-                GradientTopBar(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .alpha(alpha)
-                        .align(Alignment.TopStart)
-                        .background(MaterialTheme.colorScheme.primary),
-                    onCloseClick = {
-                        if (alpha > 0.5f) return@GradientTopBar
-                        onIntent(PhotoDetailIntent.ClickClose)
-                    }
-                )
-            },
-            expandedContent = { alpha, scrollState ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(scrollState)
-                ) {
+        CollapsingToolbarScaffold2(
+            scrollState = scrollState,
+            expandContent = {
+                Column {
                     ShimmerImage(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .aspectRatio((state.imageDetailInfo?.width ?: 16).toFloat() / (state.imageDetailInfo?.height ?: 9).toFloat())
+                            .aspectRatio(
+                                (state.imageDetailInfo?.width ?: 16).toFloat() /
+                                        (state.imageDetailInfo?.height ?: 9).toFloat()
+                            )
                             .shimmer(state.isDetailLoading && (state.imageDetailInfo == null))
                             .clickable {
                                 if (state.imageDetailInfo == null) return@clickable
@@ -164,12 +147,24 @@ fun PhotoDetailScreen(
                         onIntent(PhotoDetailIntent.ClickTag(selectTag))
                     }
                 }
+            },
+            collapsedContent = { visiblePercentage ->
+                GradientTopBar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .alpha(1f - visiblePercentage)
+                        .align(Alignment.TopStart)
+                        .background(MaterialTheme.colorScheme.primary),
+                    onCloseClick = {
+                        if (visiblePercentage > 0.5f) return@GradientTopBar
+                        onIntent(PhotoDetailIntent.ClickClose)
+                    }
+                )
             }
         ) {
             LazyVerticalStaggeredGrid(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(it),
+                    .fillMaxSize(),
                 state = lazyVerticalStaggeredState,
                 columns = StaggeredGridCells.Fixed(3),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),

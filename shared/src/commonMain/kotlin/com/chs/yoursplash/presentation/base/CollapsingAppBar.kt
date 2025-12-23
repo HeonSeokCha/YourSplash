@@ -44,11 +44,15 @@ import androidx.compose.ui.unit.toSize
 import com.chs.yoursplash.presentation.pxToDp
 
 
-private var isHeaderHide: Boolean = false
-
 internal class BackgroundScrollConnection(
     private val scrollState: ScrollState
 ) : NestedScrollConnection {
+
+    private var isHeaderHide: Boolean = false
+
+    fun changeHeaderValue(value: Boolean) {
+        isHeaderHide = value
+    }
 
     override fun onPreScroll(
         available: Offset,
@@ -107,10 +111,12 @@ fun CollapsingToolbarScaffold(
         ) {
             Column {
                 HeadSection(
+                    scrollState = scrollState,
                     header = header,
+                    onVisibleChange = { visiblePercentage = it },
                     onHide = { isHide ->
-                        isHeaderHide = isHide
-                    }, onVisibleChange = { visiblePercentage = it }
+                        nestedScrollConnection.changeHeaderValue(isHide)
+                    }
                 )
 
                 Column(
@@ -147,6 +153,82 @@ fun CollapsingToolbarScaffold(
                 }
             )
         }
+    }
+}
+
+@Composable
+fun CollapsingToolbarScaffold2(
+    scrollState: ScrollState,
+    expandContent: @Composable (alpha: Float) -> Unit,
+    collapsedContent: @Composable (alpha: Float) -> Unit,
+    stickyContent: @Composable () -> Unit = { },
+    content: @Composable () -> Unit
+) {
+    val nestedScrollConnection = remember {
+        BackgroundScrollConnection(scrollState)
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        var globalHeight by remember { mutableIntStateOf(0) }
+        var visiblePercentage by remember { mutableFloatStateOf(0f) }
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .onSizeChanged { size ->
+                    globalHeight = size.height
+                }
+                .verticalScroll(scrollState)
+                .nestedScroll(nestedScrollConnection)
+        ) {
+            Column {
+                HeadSection(
+                    scrollState = scrollState,
+                    header = { expandContent(visiblePercentage) },
+                    onHide = { isHide ->
+                        nestedScrollConnection.changeHeaderValue(isHide)
+                    }, onVisibleChange = { visiblePercentage = it }
+                )
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(globalHeight.pxToDp())
+                ) {
+                    stickyContent()
+                    content()
+                }
+            }
+        }
+
+        collapsedContent(visiblePercentage)
+
+//        if (isShowTopBar) {
+//            GradientTopBar(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .align(Alignment.TopStart)
+//                    .background(MaterialTheme.colorScheme.primary),
+//                topBarIcon = topBarItem,
+//                onIconClick = onIconClick,
+//                onCloseClick = onCloseClick
+//            )
+//        } else {
+//            GradientTopBar(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .alpha(1f - visiblePercentage)
+//                    .align(Alignment.TopStart)
+//                    .background(MaterialTheme.colorScheme.primary),
+//                onCloseClick = {
+//                    if (visiblePercentage > 0.5f) return@GradientTopBar
+//                    onCloseClick()
+//                }
+//            )
+//        }
     }
 }
 
@@ -203,6 +285,7 @@ fun GradientTopBar(
 
 @Composable
 private fun HeadSection(
+    scrollState: ScrollState,
     header: @Composable () -> Unit,
     onHide: (Boolean) -> Unit,
     onVisibleChange: (Float) -> Unit
@@ -210,18 +293,21 @@ private fun HeadSection(
     var contentHeight by remember { mutableIntStateOf(0) }
     var visiblePercentage by remember { mutableFloatStateOf(1f) }
 
-    LaunchedEffect(visiblePercentage) {
-        onVisibleChange(visiblePercentage)
-        onHide(visiblePercentage <= 0f)
+    LaunchedEffect(scrollState.value, contentHeight) {
+        if (contentHeight > 0) {
+            // 스크롤 양에 따라 가시성 계산
+            visiblePercentage = ((contentHeight - scrollState.value).toFloat() / contentHeight)
+                .coerceIn(0f, 1f)
+
+            onVisibleChange(visiblePercentage)
+            onHide(visiblePercentage <= 0f)
+        }
     }
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(min = 1.dp)
-            .onGloballyPositioned { layoutCoordinates ->
-                visiblePercentage = layoutCoordinates.boundsInRoot().height / contentHeight
-            }
             .onSizeChanged {
                 contentHeight = it.height
             }
