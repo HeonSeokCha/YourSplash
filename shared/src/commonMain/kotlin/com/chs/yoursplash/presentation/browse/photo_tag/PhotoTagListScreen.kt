@@ -1,10 +1,13 @@
 package com.chs.yoursplash.presentation.browse.photo_tag
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -22,8 +25,10 @@ import com.chs.youranimelist.res.text_no_photos
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.presentation.browse.BrowseScreens
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
+import com.chs.yoursplash.presentation.base.GradientTopBar
 import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.presentation.base.ItemEmpty
+import com.chs.yoursplash.presentation.browse.user.UserDetailIntent
 import com.chs.yoursplash.util.Constants
 import org.jetbrains.compose.resources.stringResource
 
@@ -91,8 +96,15 @@ fun PhotoTagListScreen(
     CollapsingToolbarScaffold(
         scrollState = scrollState,
         isShowTopBar = true,
-        header = { },
-        onCloseClick = { onIntent(PhotoTagIntent.ClickClose) }
+        expandContent = {},
+        collapsedContent = {
+            GradientTopBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.primary),
+                onCloseClick = { onIntent(PhotoTagIntent.ClickClose) }
+            )
+        }
     ) {
         LazyColumn(
             modifier = Modifier

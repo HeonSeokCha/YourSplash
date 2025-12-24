@@ -1,13 +1,17 @@
 package com.chs.yoursplash.presentation.browse.user
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.TextAutoSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.OpenInBrowser
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
@@ -29,9 +33,11 @@ import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.UserDetail
 import com.chs.yoursplash.presentation.browse.BrowseScreens
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
+import com.chs.yoursplash.presentation.base.GradientTopBar
 import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ShimmerImage
 import com.chs.yoursplash.presentation.base.shimmer
+import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailIntent
 import com.chs.yoursplash.presentation.toCommaFormat
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import com.chs.yoursplash.util.Constants
@@ -95,10 +101,18 @@ fun UserDetailScreen(
     CollapsingToolbarScaffold(
         scrollState = scrollState,
         isShowTopBar = true,
-        header = {
+        expandContent = {
             UserDetailInfo(userInfo = state.userDetailInfo)
         },
-        stickyHeader = {
+        collapsedContent = {
+            GradientTopBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.primary),
+                onCloseClick = { onIntent(UserDetailIntent.ClickClose) }
+            )
+        },
+        stickyContent = {
             SecondaryTabRow(pagerState.currentPage) {
                 state.tabList.forEachIndexed { index, title ->
                     Tab(
@@ -125,8 +139,7 @@ fun UserDetailScreen(
                     )
                 }
             }
-        },
-        onCloseClick = { onIntent(UserDetailIntent.ClickClose) }
+        }
     ) {
         if (state.tabList.isEmpty()) {
             ItemEmpty(

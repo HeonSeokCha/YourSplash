@@ -35,7 +35,6 @@ import com.chs.youranimelist.res.text_no_photos
 import com.chs.youranimelist.res.text_yes
 import com.chs.yoursplash.presentation.browse.BrowseScreens
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
-import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold2
 import com.chs.yoursplash.presentation.base.GradientTopBar
 import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ShimmerImage
@@ -113,7 +112,7 @@ fun PhotoDetailScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        CollapsingToolbarScaffold2(
+        CollapsingToolbarScaffold(
             scrollState = scrollState,
             expandContent = {
                 Column {
