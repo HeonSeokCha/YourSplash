@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -96,7 +97,6 @@ fun PhotoTagListScreen(
     CollapsingToolbarScaffold(
         scrollState = scrollState,
         isShowTopBar = true,
-        expandContent = {},
         collapsedContent = {
             GradientTopBar(
                 modifier = Modifier

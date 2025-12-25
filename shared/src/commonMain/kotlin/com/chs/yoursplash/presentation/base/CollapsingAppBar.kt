@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,15 +12,14 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.mutableFloatStateOf
@@ -30,7 +28,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
@@ -38,15 +35,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.boundsInRoot
-import androidx.compose.ui.layout.boundsInWindow
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toSize
 import com.chs.yoursplash.presentation.pxToDp
-
 
 internal class BackgroundScrollConnection(
     private val scrollState: ScrollState
@@ -84,7 +76,7 @@ internal class BackgroundScrollConnection(
 @Composable
 fun CollapsingToolbarScaffold(
     scrollState: ScrollState,
-    expandContent: @Composable () -> Unit,
+    expandContent: @Composable () -> Unit = { },
     collapsedContent: @Composable (alpha: Float) -> Unit,
     isShowTopBar: Boolean = false,
     stickyContent: @Composable () -> Unit = { },
@@ -100,15 +92,19 @@ fun CollapsingToolbarScaffold(
 
     var globalHeight by remember { mutableIntStateOf(0) }
     var contentHeight by remember { mutableIntStateOf(0) }
-    var visiblePercentage by remember { mutableFloatStateOf(1f) }
     var stickyHeaderHeight by remember { mutableIntStateOf(0) }
     var collapsedHeight by remember { mutableIntStateOf(0) }
-
     var topBarPadding by remember { mutableIntStateOf(0) }
 
-    LaunchedEffect(scrollState.value, contentHeight) {
-        if (contentHeight <= 0) return@LaunchedEffect
-        visiblePercentage = ((contentHeight - scrollState.value).toFloat() / contentHeight).coerceIn(0f, 1f)
+    val visiblePercentage by remember {
+        derivedStateOf {
+            if (contentHeight <= 0) return@derivedStateOf 1f
+
+            ((contentHeight - scrollState.value).toFloat() / contentHeight).coerceIn(0f, 1f)
+        }
+    }
+
+    LaunchedEffect(visiblePercentage) {
         nestedScrollConnection.changeHeaderValue(visiblePercentage <= 0f)
     }
 
@@ -137,7 +133,7 @@ fun CollapsingToolbarScaffold(
                         .heightIn(min = 1.dp)
                         .padding(top = topBarPadding.pxToDp())
                         .onSizeChanged {
-                            contentHeight = it.height
+                            contentHeight = it.height.coerceAtLeast(1)
                         }
                 ) {
                     expandContent()
@@ -167,12 +163,12 @@ fun CollapsingToolbarScaffold(
                 .offset {
                     val scrollProgress = scrollState.value.coerceAtMost(contentHeight)
 
-                    println("$contentHeight - $scrollProgress = $collapsedHeight")
-                    val yOffset = if ((contentHeight - scrollProgress) < (collapsedHeight - topBarPadding)) {
-                        (collapsedHeight - topBarPadding)
-                    } else {
-                        contentHeight - scrollProgress
-                    }
+                    val yOffset =
+                        if ((contentHeight - scrollProgress) < (collapsedHeight - topBarPadding)) {
+                            (collapsedHeight - topBarPadding)
+                        } else {
+                            contentHeight - scrollProgress
+                        }
 
                     IntOffset(0, yOffset)
                 }
