@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,6 +47,7 @@ fun UserDetailPhotoScreen(
     onIntent: (UserDetailIntent) -> Unit
 ) {
     val pagingItems = photoList.collectAsLazyPagingItems()
+    val lazyVerticalStaggeredState = rememberLazyStaggeredGridState()
     val isEmpty by remember {
         derivedStateOf {
             pagingItems.loadState.refresh is LoadState.NotLoading
@@ -69,11 +71,13 @@ fun UserDetailPhotoScreen(
     }
 
     LazyVerticalStaggeredGrid(
-        modifier = Modifier.fillMaxSize(),
-        columns = StaggeredGridCells.Fixed(2),
-        contentPadding = PaddingValues(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalItemSpacing = 8.dp
+        modifier = Modifier
+            .fillMaxSize(),
+        state = lazyVerticalStaggeredState,
+        columns = StaggeredGridCells.Fixed(3),
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        verticalItemSpacing = 4.dp,
+        contentPadding = PaddingValues(4.dp)
     ) {
         when {
             isLoading -> {
@@ -105,17 +109,11 @@ fun UserDetailPhotoScreen(
             else -> {
                 items(count = pagingItems.itemCount) { idx ->
                     val item = pagingItems[idx] ?: return@items
-
                     ShimmerImage(
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio((item.width.toFloat() / item.height.toFloat()))
-                            .clip(RoundedCornerShape(10.dp))
-                            .padding(
-                                start = 8.dp,
-                                end = 8.dp,
-                                bottom = 16.dp
-                            ).clickable {
+                            .clickable {
                                 onIntent(UserDetailIntent.ClickPhoto(item.id))
                             },
                         url = item.urls

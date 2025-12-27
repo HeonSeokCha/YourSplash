@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -91,16 +93,16 @@ fun CollapsingToolbarScaffold(
     }
 
     var globalHeight by remember { mutableIntStateOf(0) }
-    var contentHeight by remember { mutableIntStateOf(0) }
+    var expandContent by remember { mutableIntStateOf(0) }
     var stickyHeaderHeight by remember { mutableIntStateOf(0) }
     var collapsedHeight by remember { mutableIntStateOf(0) }
     var topBarPadding by remember { mutableIntStateOf(0) }
 
     val visiblePercentage by remember {
         derivedStateOf {
-            if (contentHeight <= 0) return@derivedStateOf 1f
+            if (expandContent <= 0) return@derivedStateOf 1f
 
-            ((contentHeight - scrollState.value).toFloat() / contentHeight).coerceIn(0f, 1f)
+            ((expandContent - scrollState.value).toFloat() / expandContent).coerceIn(0f, 1f)
         }
     }
 
@@ -133,7 +135,7 @@ fun CollapsingToolbarScaffold(
                         .heightIn(min = 1.dp)
                         .padding(top = topBarPadding.pxToDp())
                         .onSizeChanged {
-                            contentHeight = it.height.coerceAtLeast(1)
+                            expandContent = it.height.coerceAtLeast(1)
                         }
                 ) {
                     expandContent()
@@ -161,13 +163,13 @@ fun CollapsingToolbarScaffold(
                 .padding(top = topBarPadding.pxToDp())
                 .align(Alignment.TopStart)
                 .offset {
-                    val scrollProgress = scrollState.value.coerceAtMost(contentHeight)
+                    val scrollProgress = scrollState.value.coerceAtMost(expandContent)
 
                     val yOffset =
-                        if ((contentHeight - scrollProgress) < (collapsedHeight - topBarPadding)) {
+                        if ((expandContent - scrollProgress) < (collapsedHeight - topBarPadding)) {
                             (collapsedHeight - topBarPadding)
                         } else {
-                            contentHeight - scrollProgress
+                            expandContent - scrollProgress
                         }
 
                     IntOffset(0, yOffset)

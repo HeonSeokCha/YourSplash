@@ -163,8 +163,7 @@ fun PhotoDetailScreen(
             }
         ) {
             LazyVerticalStaggeredGrid(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxWidth(),
                 state = lazyVerticalStaggeredState,
                 columns = StaggeredGridCells.Fixed(3),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
