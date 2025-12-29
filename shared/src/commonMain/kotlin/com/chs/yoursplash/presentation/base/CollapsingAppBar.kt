@@ -152,7 +152,14 @@ fun CollapsingToolbarScaffold(
                         .fillMaxWidth()
                         .height(globalHeight.pxToDp())
                 ) {
-                    content()
+                    Box(
+                        modifier = Modifier
+                            .onSizeChanged {
+                                globalHeight = it.height
+                            }
+                    ) {
+                        content()
+                    }
                 }
             }
         }

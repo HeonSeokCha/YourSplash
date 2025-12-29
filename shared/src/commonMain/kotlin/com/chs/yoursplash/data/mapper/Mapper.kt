@@ -77,8 +77,8 @@ fun ResponseUserProfileImage.toUnsplashUserProfileImage(quality: LoadQuality): S
     return when (quality) {
         LoadQuality.Raw -> this.large
         LoadQuality.Full -> this.large
-        LoadQuality.Regular -> this.medium
-        LoadQuality.Small -> this.small
+        LoadQuality.Regular -> this.large
+        LoadQuality.Small -> this.medium
         LoadQuality.Thumb -> this.small
     }
 }

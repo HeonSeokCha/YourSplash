@@ -116,36 +116,34 @@ fun PhotoDetailScreen(
         CollapsingToolbarScaffold(
             scrollState = scrollState,
             expandContent = {
-                Column {
-                    ShimmerImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(
-                                (state.imageDetailInfo?.width ?: 16).toFloat() /
-                                        (state.imageDetailInfo?.height ?: 9).toFloat()
+                ShimmerImage(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(
+                            (state.imageDetailInfo?.width ?: 16).toFloat() /
+                                    (state.imageDetailInfo?.height ?: 9).toFloat()
+                        )
+                        .shimmer(state.isDetailLoading && (state.imageDetailInfo == null))
+                        .clickable {
+                            if (state.imageDetailInfo == null) return@clickable
+                            onIntent(
+                                PhotoDetailIntent.ClickPhotoDetail(state.imageDetailInfo.url)
                             )
-                            .shimmer(state.isDetailLoading && (state.imageDetailInfo == null))
-                            .clickable {
-                                if (state.imageDetailInfo == null) return@clickable
-                                onIntent(
-                                    PhotoDetailIntent.ClickPhotoDetail(state.imageDetailInfo.url)
-                                )
-                            },
-                        url = state.imageDetailInfo?.url
-                    )
+                        },
+                    url = state.imageDetailInfo?.url
+                )
 
-                    ItemUserInfoFromPhotoDetail(
-                        state = state,
-                        onUser = { onIntent(PhotoDetailIntent.ClickUser(it)) },
-                        onDownload = { onIntent(PhotoDetailIntent.ClickDownload(it)) },
-                        onSource = { onIntent(PhotoDetailIntent.ClickOpenBrowser(it)) }
-                    )
+                ItemUserInfoFromPhotoDetail(
+                    state = state,
+                    onUser = { onIntent(PhotoDetailIntent.ClickUser(it)) },
+                    onDownload = { onIntent(PhotoDetailIntent.ClickDownload(it)) },
+                    onSource = { onIntent(PhotoDetailIntent.ClickOpenBrowser(it)) }
+                )
 
-                    HorizontalDivider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
+                HorizontalDivider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
 
-                    ImageDetailInfo(state.imageDetailInfo) { selectTag ->
-                        onIntent(PhotoDetailIntent.ClickTag(selectTag))
-                    }
+                ImageDetailInfo(state.imageDetailInfo) { selectTag ->
+                    onIntent(PhotoDetailIntent.ClickTag(selectTag))
                 }
             },
             collapsedContent = { visiblePercentage ->
