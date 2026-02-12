@@ -3,12 +3,15 @@ package com.chs.yoursplash.presentation
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -34,10 +37,7 @@ fun YourSplashApp(onBrowseInfo: (BrowseInfo) -> Unit) {
                 textFieldState = textFieldState,
                 searchHistoryList = state.searchHistory,
                 onQueryChange = {
-                    if (it.isNotEmpty()) {
-                        viewModel.insertSearchHistory(it)
-                    }
-                    textFieldState.edit { replace(0, length, it) }
+                    viewModel.insertSearchHistory(it)
                     viewModel.updateSearchQuery(it)
                 },
                 onDeleteSearchHistory = {
