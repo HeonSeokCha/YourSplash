@@ -5,9 +5,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.chs.yoursplash.domain.model.SearchFilter
+import com.chs.yoursplash.domain.usecase.DeleteSearchHistoryUseCase
+import com.chs.yoursplash.domain.usecase.GetRecentSearchHistoryUseCase
 import com.chs.yoursplash.domain.usecase.GetSearchResultCollectionUseCase
 import com.chs.yoursplash.domain.usecase.GetSearchResultPhotoUseCase
 import com.chs.yoursplash.domain.usecase.GetSearchResultUserUseCase
+import com.chs.yoursplash.domain.usecase.InsertSearchHistoryUseCase
 import com.chs.yoursplash.presentation.search.SearchEffect.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -21,6 +24,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -28,16 +32,25 @@ import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 
 class SearchResultViewModel(
+    private val insertSearchHistoryUseCase: InsertSearchHistoryUseCase,
+    private val deleteSearchHistoryUseCase: DeleteSearchHistoryUseCase,
+    private val getRecentSearchHistoryUseCase: GetRecentSearchHistoryUseCase,
     private val searchResultPhotoUseCase: GetSearchResultPhotoUseCase,
     private val searchResultCollectionUseCase: GetSearchResultCollectionUseCase,
     private val searchResultUserUseCase: GetSearchResultUserUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SearchState())
-    val state = _state.asStateFlow()
+    val state = _state
+        .onStart { initSearchHistory() }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000L),
+            _state.value
+        )
+
     private val queryState = MutableStateFlow("")
     private val searchFilterState = MutableStateFlow(SearchFilter())
-
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val photoPaging = combine(
@@ -80,6 +93,16 @@ class SearchResultViewModel(
     private val _effect: Channel<SearchEffect> = Channel(Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
 
+    private fun initSearchHistory() {
+        viewModelScope.launch {
+            getRecentSearchHistoryUseCase().collect { list ->
+                _state.update {
+                    it.copy(searchHistory = list)
+                }
+            }
+        }
+    }
+
     fun changeEvent(intent: SearchIntent) {
         when (intent) {
             is SearchIntent.ChangeExpandColorFilter -> {
@@ -91,13 +114,15 @@ class SearchResultViewModel(
                 searchFilterState.update { intent.filter }
             }
 
-            is SearchIntent.ChangeSearchQuery -> {
-                queryState.update { intent.query }
-            }
-
             is SearchIntent.ClickBrowseInfo -> {
                 _effect.trySend(NavigateBrowse(intent.info))
             }
+
+            is SearchIntent.OnSearchQuery -> {
+                queryState.update { intent.query }
+                insertSearchHistory(intent.query)
+            }
+            is SearchIntent.OnDeleteQuery -> deleteSearchHistory(intent.query)
 
             is SearchIntent.ChangeShowModal -> _state.update { it.copy(showModal = intent.value) }
             is SearchIntent.ChangeTabIndex -> _state.update { it.copy(selectIdx = intent.idx) }
@@ -125,6 +150,20 @@ class SearchResultViewModel(
             SearchIntent.Photo.AppendLoading -> _state.update { it.copy(isPhotoAppendLoading = true) }
             SearchIntent.User.AppendLoadComplete -> _state.update { it.copy(isUserAppendLoading = false) }
             SearchIntent.User.AppendLoading -> _state.update { it.copy(isUserAppendLoading = true) }
+            SearchIntent.OnBackClick -> _effect.trySend(SearchEffect.OnBack)
         }
+    }
+
+    private fun insertSearchHistory(query: String) {
+        viewModelScope.launch { insertSearchHistoryUseCase(query) }
+    }
+
+    private fun deleteSearchHistory(query: String) {
+        viewModelScope.launch { deleteSearchHistoryUseCase(query) }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        println("ONCLEARED")
     }
 }

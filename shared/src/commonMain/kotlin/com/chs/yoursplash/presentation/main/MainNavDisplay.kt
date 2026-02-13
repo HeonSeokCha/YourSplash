@@ -1,6 +1,7 @@
 package com.chs.yoursplash.presentation.main
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -29,7 +30,6 @@ import org.koin.compose.viewmodel.koinViewModel
 fun MainNavDisplay(
     modifier: Modifier = Modifier,
     backStack: SnapshotStateList<MainScreens>,
-    searchQuery: String,
     onBrowse: (BrowseInfo) -> Unit,
 ) {
     NavDisplay(
@@ -61,19 +61,11 @@ fun MainNavDisplay(
 
             entry<MainScreens.SearchScreen> {
                 val viewModel = koinViewModel<SearchResultViewModel>()
-                LaunchedEffect(searchQuery) {
-                    snapshotFlow { searchQuery }
-                        .distinctUntilChanged()
-                        .filter { it.isNotEmpty() }
-                        .collect {
-                            println(searchQuery)
-                            viewModel.changeEvent(SearchIntent.ChangeSearchQuery(it))
-                        }
-                }
 
                 SearchScreenRoot(
                     viewModel = viewModel,
-                    onBrowse = onBrowse
+                    onBrowse = onBrowse,
+                    onBack = { backStack.removeLastOrNull() }
                 )
             }
 

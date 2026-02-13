@@ -5,11 +5,13 @@ import com.chs.yoursplash.domain.model.SearchFilter
 
 sealed interface SearchIntent {
     data class ChangeTabIndex(val idx: Int) : SearchIntent
-    data class ChangeSearchQuery(val query: String) : SearchIntent
     data class ChangeSearchFilter(val filter : SearchFilter) : SearchIntent
     data class ChangeShowModal(val value: Boolean) : SearchIntent
     data class ChangeExpandColorFilter(val value: Boolean) : SearchIntent
     data class ClickBrowseInfo(val info: BrowseInfo) : SearchIntent
+    data class OnSearchQuery(val query: String) : SearchIntent
+    data class OnDeleteQuery(val query: String) : SearchIntent
+    data object OnBackClick : SearchIntent
 
     sealed interface Photo : SearchIntent {
         data object Loading : Photo

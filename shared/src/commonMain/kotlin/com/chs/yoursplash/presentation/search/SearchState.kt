@@ -3,6 +3,8 @@ package com.chs.yoursplash.presentation.search
 import com.chs.yoursplash.domain.model.SearchFilter
 
 data class SearchState(
+    val searchHistory: List<String> = emptyList(),
+
     val searchFilter: SearchFilter = SearchFilter(),
     val isPhotoLoading: Boolean = false,
     val isPhotoAppendLoading: Boolean = false,

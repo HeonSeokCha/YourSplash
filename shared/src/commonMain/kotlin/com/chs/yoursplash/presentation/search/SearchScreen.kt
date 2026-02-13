@@ -1,6 +1,7 @@
 package com.chs.yoursplash.presentation.search
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -36,6 +37,7 @@ import kotlin.math.absoluteValue
 fun SearchScreenRoot(
     viewModel: SearchResultViewModel,
     onBrowse: (BrowseInfo) -> Unit,
+    onBack: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -43,6 +45,7 @@ fun SearchScreenRoot(
         viewModel.effect.collect { effect ->
             when (effect) {
                 is SearchEffect.NavigateBrowse -> onBrowse(effect.info)
+                SearchEffect.OnBack -> onBack()
             }
         }
     }
@@ -65,7 +68,6 @@ private fun SearchScreen(
     userPaging: Flow<PagingData<User>>,
     onIntent: (SearchIntent) -> Unit
 ) {
-    val coroutineScope = rememberCoroutineScope()
     var fabScale by remember { mutableStateOf(1f) }
     val pagerState = rememberPagerState(initialPage = 0) { state.tabList.size }
 
@@ -78,20 +80,21 @@ private fun SearchScreen(
         val currentPage = pagerState.currentPage
 
         fabScale = when (currentPage) {
-            0 -> {
-                // 오른쪽으로 스크롤할 때 (페이지 1로 이동)
-                (1f - offset).coerceIn(0f, 1f)
-            }
-            1 -> {
-                // 왼쪽으로 스크롤할 때 (페이지 0으로 이동)
-                if (offset < 0) (offset + 1f).coerceIn(0f, 1f)
-                else 0f
-            }
+            0 -> (1f - offset).coerceIn(0f, 1f)
+            1 -> if (offset < 0) (offset + 1f).coerceIn(0f, 1f) else 0f
             else -> 0f
         }
     }
 
     Scaffold(
+        topBar = {
+            SearchAppBar(
+                searchHistoryList = state.searchHistory,
+                onSearch = { onIntent(SearchIntent.OnSearchQuery(it)) },
+                onDeleteSearchHistory = { onIntent(SearchIntent.OnDeleteQuery(it)) },
+                onBack = { onIntent(SearchIntent.OnBackClick) }
+            )
+        },
         floatingActionButton = {
             if (fabScale > 0f) {
                 FloatingActionButton(
@@ -108,6 +111,7 @@ private fun SearchScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(contentPadding)
         ) {
             SecondaryTabRow(pagerState.currentPage) {
                 state.tabList.forEachIndexed { index, title ->

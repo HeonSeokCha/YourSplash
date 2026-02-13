@@ -10,7 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
@@ -20,41 +22,22 @@ import com.chs.yoursplash.presentation.bottom.BottomBar
 import com.chs.yoursplash.presentation.main.MainNavDisplay
 import com.chs.yoursplash.presentation.main.MainScreens
 import com.chs.yoursplash.presentation.main.MainTopBar
-import com.chs.yoursplash.presentation.main.MainViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun YourSplashApp(onBrowseInfo: (BrowseInfo) -> Unit) {
     val backStack: SnapshotStateList<MainScreens> = remember { mutableStateListOf(MainScreens.PhotoScreen) }
-    val viewModel = koinViewModel<MainViewModel>()
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    val textFieldState = rememberTextFieldState()
-
     Scaffold(
         topBar = {
-            MainTopBar(
-                backStack = backStack,
-                textFieldState = textFieldState,
-                searchHistoryList = state.searchHistory,
-                onQueryChange = {
-                    viewModel.insertSearchHistory(it)
-                    viewModel.updateSearchQuery(it)
-                },
-                onDeleteSearchHistory = {
-                    viewModel.deleteSearchHistory(it)
-                }
-            )
+            MainTopBar(backStack = backStack)
         },
-        bottomBar = {
-            BottomBar(backStack)
-        }
+        bottomBar = { BottomBar(backStack) }
     ) {
         MainNavDisplay(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it),
             backStack = backStack,
-            searchQuery = state.searchQuery,
             onBrowse = onBrowseInfo
         )
     }
