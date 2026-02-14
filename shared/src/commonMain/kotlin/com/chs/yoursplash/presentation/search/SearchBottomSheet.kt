@@ -50,7 +50,9 @@ fun SearchBottomSheet(
 
             Spacer(Modifier.height(8.dp))
 
-            SecondaryTabRow(selectedTabIndex = SortType.entries.indexOf(selectFilterValue.orderBy)) {
+            SecondaryTabRow(
+                selectedTabIndex = SortType.entries.indexOf(selectFilterValue.orderBy),
+            ) {
                 Constants.SORT_BY_LIST.forEach { info ->
                     Row(
                         modifier = Modifier
@@ -67,7 +69,7 @@ fun SearchBottomSheet(
                     ) {
                         Text(
                             text = info.first,
-                            color = Purple200,
+                            color = Color.Black,
                             autoSize = TextAutoSize.StepBased(
                                 minFontSize = 6.sp,
                                 maxFontSize = 12.sp,
@@ -142,7 +144,7 @@ fun SearchBottomSheet(
                             .clickable(
                                 onClick = {
                                     selectFilterValue = selectFilterValue.copy(
-                                        orientation = Orientations.entries.find { it.name == info.first }!!
+                                        orientation = Orientations.entries.find { it.rawValue == info.first }!!
                                     )
                                 }
                             )
@@ -150,16 +152,21 @@ fun SearchBottomSheet(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = info.first,
-                            maxLines = 1,
-                            color = Purple200,
-                            autoSize = TextAutoSize.StepBased(
-                                minFontSize = 6.sp,
-                                maxFontSize = 12.sp,
-                                stepSize = 1.sp
+                        if (info.second == null) {
+                            Text(
+                                text = "Any",
+                                maxLines = 1,
+                                color = Color.Black,
+                                autoSize = TextAutoSize.StepBased(
+                                    minFontSize = 6.sp,
+                                    maxFontSize = 14.sp,
+                                    stepSize = 1.sp
+                                ),
+                                fontWeight = FontWeight.Bold
                             )
-                        )
+                        } else {
+                            Icon(imageVector = info.second!!, null)
+                        }
                     }
                 }
             }

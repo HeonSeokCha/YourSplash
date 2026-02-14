@@ -8,13 +8,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
@@ -25,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.SearchBarValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberSearchBarState
 import androidx.compose.runtime.Composable
@@ -66,8 +66,19 @@ fun SearchAppBar(
                 },
                 trailingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                 leadingIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = null)
+                    IconButton(
+                        onClick = {
+                            if (searchBarState.currentValue == SearchBarValue.Expanded) {
+                                scope.launch {
+                                    searchBarState.animateToCollapsed()
+                                }
+                                onBack()
+                                return@IconButton
+                            }
+                            onBack()
+                        }
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                     }
                 }
             )
@@ -75,8 +86,7 @@ fun SearchAppBar(
 
     SearchBar(
         modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .statusBarsPadding(),
+            .padding(horizontal = 16.dp),
         inputField = inputField,
         state = searchBarState,
     )

@@ -55,7 +55,7 @@ object Constants {
 
     val SORT_BY_LIST = SortType.entries.map { it.name to it.rawValue }
 
-    val SEARCH_ORI_LIST = Orientations.entries.map { it.name to it.rawValue }
+    val SEARCH_ORI_LIST = Orientations.entries.map { it.rawValue to it.icon }
 
     const val COUNT_LOADING_ITEM: Int = 20
 }

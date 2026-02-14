@@ -7,6 +7,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Filter
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -103,7 +105,7 @@ private fun SearchScreen(
                         .alpha(fabScale),
                     onClick = { onIntent(SearchIntent.ChangeShowModal(true)) }
                 ) {
-                    Icon(Icons.Filled.Search, contentDescription = "")
+                    Icon(Icons.Default.FilterList, contentDescription = "")
                 }
             }
         }
