@@ -31,6 +31,7 @@ fun MainNavDisplay(
     modifier: Modifier = Modifier,
     backStack: SnapshotStateList<MainScreens>,
     onBrowse: (BrowseInfo) -> Unit,
+    searchQuery: String
 ) {
     NavDisplay(
         modifier = modifier,
@@ -61,6 +62,13 @@ fun MainNavDisplay(
 
             entry<MainScreens.SearchScreen> {
                 val viewModel = koinViewModel<SearchResultViewModel>()
+
+                LaunchedEffect(searchQuery) {
+                    snapshotFlow { searchQuery }
+                        .distinctUntilChanged()
+                        .filter { it.isNotEmpty() }
+                        .collect { viewModel.changeQuery(searchQuery) }
+                }
 
                 SearchScreenRoot(
                     viewModel = viewModel,

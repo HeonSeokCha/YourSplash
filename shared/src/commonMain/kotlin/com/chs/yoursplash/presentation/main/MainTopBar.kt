@@ -19,7 +19,10 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainTopBar(backStack: SnapshotStateList<MainScreens>) {
+fun MainTopBar(
+    onSearch: (String) -> Unit,
+    backStack: SnapshotStateList<MainScreens>
+) {
     when {
         backStack.last() == MainScreens.PhotoScreen
                 || backStack.last() == MainScreens.CollectionScreen -> {
@@ -60,6 +63,13 @@ fun MainTopBar(backStack: SnapshotStateList<MainScreens>) {
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary
                 )
+            )
+        }
+
+        backStack.last() == MainScreens.SearchScreen -> {
+            SearchAppBar(
+                onSearch = onSearch,
+                onBack = { backStack.removeLastOrNull() },
             )
         }
 

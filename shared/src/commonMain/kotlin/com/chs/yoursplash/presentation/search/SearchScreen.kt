@@ -1,15 +1,12 @@
 package com.chs.yoursplash.presentation.search
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Filter
 import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -18,12 +15,14 @@ import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
@@ -31,6 +30,7 @@ import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.User
+import com.chs.yoursplash.presentation.main.SearchAppBar
 import com.chs.yoursplash.presentation.ui.theme.Purple200
 import kotlinx.coroutines.flow.Flow
 import kotlin.math.absoluteValue
@@ -88,32 +88,13 @@ private fun SearchScreen(
         }
     }
 
-    Scaffold(
-        topBar = {
-            SearchAppBar(
-                searchHistoryList = state.searchHistory,
-                onSearch = { onIntent(SearchIntent.OnSearchQuery(it)) },
-                onDeleteSearchHistory = { onIntent(SearchIntent.OnDeleteQuery(it)) },
-                onBack = { onIntent(SearchIntent.OnBackClick) }
-            )
-        },
-        floatingActionButton = {
-            if (fabScale > 0f) {
-                FloatingActionButton(
-                    modifier = Modifier
-                        .scale(fabScale)
-                        .alpha(fabScale),
-                    onClick = { onIntent(SearchIntent.ChangeShowModal(true)) }
-                ) {
-                    Icon(Icons.Default.FilterList, contentDescription = "")
-                }
-            }
-        }
-    ) { contentPadding ->
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(contentPadding)
         ) {
             SecondaryTabRow(pagerState.currentPage) {
                 state.tabList.forEachIndexed { index, title ->
@@ -166,6 +147,19 @@ private fun SearchScreen(
                         )
                     }
                 }
+            }
+        }
+
+        if (fabScale > 0f) {
+            FloatingActionButton(
+                modifier = Modifier
+                    .padding(bottom = 8.dp, end = 8.dp)
+                    .align(Alignment.BottomEnd)
+                    .scale(fabScale)
+                    .alpha(fabScale),
+                onClick = { onIntent(SearchIntent.ChangeShowModal(true)) }
+            ) {
+                Icon(Icons.Default.FilterList, contentDescription = "")
             }
         }
 

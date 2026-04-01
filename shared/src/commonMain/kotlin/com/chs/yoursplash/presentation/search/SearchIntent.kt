@@ -9,8 +9,6 @@ sealed interface SearchIntent {
     data class ChangeShowModal(val value: Boolean) : SearchIntent
     data class ChangeExpandColorFilter(val value: Boolean) : SearchIntent
     data class ClickBrowseInfo(val info: BrowseInfo) : SearchIntent
-    data class OnSearchQuery(val query: String) : SearchIntent
-    data class OnDeleteQuery(val query: String) : SearchIntent
     data object OnBackClick : SearchIntent
 
     sealed interface Photo : SearchIntent {

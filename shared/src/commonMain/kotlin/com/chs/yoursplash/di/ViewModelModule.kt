@@ -6,6 +6,7 @@ import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetail
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailViewModel
 import com.chs.yoursplash.presentation.browse.photo_tag.PhotoTagListViewModel
 import com.chs.yoursplash.presentation.browse.user.UserDetailViewModel
+import com.chs.yoursplash.presentation.main.SearchBarViewModel
 import com.chs.yoursplash.presentation.search.SearchResultViewModel
 import com.chs.yoursplash.presentation.setting.SettingViewModel
 import org.koin.core.module.dsl.viewModelOf
@@ -20,4 +21,5 @@ val viewModelModule = module {
     viewModelOf(::PhotoDetailViewModel)
     viewModelOf(::PhotoTagListViewModel)
     viewModelOf(::UserDetailViewModel)
+    viewModelOf(::SearchBarViewModel)
 }

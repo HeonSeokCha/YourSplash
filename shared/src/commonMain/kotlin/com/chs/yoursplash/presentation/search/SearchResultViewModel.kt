@@ -32,23 +32,14 @@ import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 
 class SearchResultViewModel(
-    private val insertSearchHistoryUseCase: InsertSearchHistoryUseCase,
-    private val deleteSearchHistoryUseCase: DeleteSearchHistoryUseCase,
-    private val getRecentSearchHistoryUseCase: GetRecentSearchHistoryUseCase,
+
     private val searchResultPhotoUseCase: GetSearchResultPhotoUseCase,
     private val searchResultCollectionUseCase: GetSearchResultCollectionUseCase,
     private val searchResultUserUseCase: GetSearchResultUserUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SearchState())
-    val state = _state
-        .onStart { initSearchHistory() }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000L),
-            _state.value
-        )
-
+    val state = _state.asStateFlow()
     private val queryState = MutableStateFlow("")
     private val searchFilterState = MutableStateFlow(SearchFilter())
 
@@ -93,14 +84,8 @@ class SearchResultViewModel(
     private val _effect: Channel<SearchEffect> = Channel(Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
 
-    private fun initSearchHistory() {
-        viewModelScope.launch {
-            getRecentSearchHistoryUseCase().collect { list ->
-                _state.update {
-                    it.copy(searchHistory = list)
-                }
-            }
-        }
+    fun changeQuery(query: String) {
+        queryState.update { query }
     }
 
     fun changeEvent(intent: SearchIntent) {
@@ -117,12 +102,6 @@ class SearchResultViewModel(
             is SearchIntent.ClickBrowseInfo -> {
                 _effect.trySend(NavigateBrowse(intent.info))
             }
-
-            is SearchIntent.OnSearchQuery -> {
-                queryState.update { intent.query }
-                insertSearchHistory(intent.query)
-            }
-            is SearchIntent.OnDeleteQuery -> deleteSearchHistory(intent.query)
 
             is SearchIntent.ChangeShowModal -> _state.update { it.copy(showModal = intent.value) }
             is SearchIntent.ChangeTabIndex -> _state.update { it.copy(selectIdx = intent.idx) }
@@ -154,13 +133,6 @@ class SearchResultViewModel(
         }
     }
 
-    private fun insertSearchHistory(query: String) {
-        viewModelScope.launch { insertSearchHistoryUseCase(query) }
-    }
-
-    private fun deleteSearchHistory(query: String) {
-        viewModelScope.launch { deleteSearchHistoryUseCase(query) }
-    }
 
     override fun onCleared() {
         super.onCleared()
