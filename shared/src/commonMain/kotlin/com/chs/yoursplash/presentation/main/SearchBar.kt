@@ -67,11 +67,9 @@ fun SearchAppBar(
     val viewModel = koinViewModel<SearchBarViewModel>()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    var isShowDialog by remember { mutableStateOf(false) }
     var isActive by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
-    var text by remember { mutableStateOf("") }
     val searchBarState = rememberSearchBarState()
     val textFieldState = rememberTextFieldState()
     val scope = rememberCoroutineScope()
@@ -166,8 +164,8 @@ fun SearchAppBar(
                                     focusManager.clearFocus()
                                 },
                                 onLongClick = {
-                                    text = title
-                                    isShowDialog = true
+                                    viewModel.updateDeleteText(title)
+                                    viewModel.changeDialogState()
                                 }
                             )
                     ) {
@@ -184,16 +182,16 @@ fun SearchAppBar(
     }
 
 
-    if (isShowDialog) {
+    if (state.isShowDialog) {
         AlertDialog(
-            onDismissRequest = { isShowDialog = false },
-            title = { Text(text = textFieldState.text.toString()) },
+            onDismissRequest = { viewModel.changeDialogState() },
+            title = { Text(text = state.deleteText) },
             text = { Text(text = "Are You Sure Delete Search History?") },
             confirmButton = {
                 Button(
                     onClick = {
-                        isShowDialog = false
-                        viewModel.deleteSearchHistory(textFieldState.text.toString())
+                        viewModel.changeDialogState()
+                        viewModel.deleteSearchHistory(state.deleteText)
                         textFieldState.clearText()
                     }) {
                     Text("Delete")
@@ -202,7 +200,7 @@ fun SearchAppBar(
             dismissButton = {
                 Button(
                     onClick = {
-                        isShowDialog = false
+                        viewModel.changeDialogState()
                     }) {
                     Text("Cancel")
                 }

@@ -44,4 +44,12 @@ class SearchBarViewModel(
     fun deleteSearchHistory(query: String) {
         viewModelScope.launch { deleteSearchHistoryUseCase(query) }
     }
+
+    fun changeDialogState() {
+        _state.update { it.copy(isShowDialog = !it.isShowDialog) }
+    }
+
+    fun updateDeleteText(text: String) {
+        _state.update { it.copy(deleteText = text) }
+    }
 }
