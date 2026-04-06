@@ -20,7 +20,9 @@ import com.chs.yoursplash.domain.usecase.GetUserCollectionUseCase
 import com.chs.yoursplash.domain.usecase.GetUserDetailUseCase
 import com.chs.yoursplash.domain.usecase.GetUserLikesUseCase
 import com.chs.yoursplash.domain.usecase.GetUserPhotoUseCase
+import com.chs.yoursplash.domain.usecase.GetViewTypeUseCase
 import com.chs.yoursplash.domain.usecase.InsertSearchHistoryUseCase
+import com.chs.yoursplash.domain.usecase.PutIntPrefUseCase
 import com.chs.yoursplash.domain.usecase.PutStringPrefUseCase
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
@@ -54,4 +56,7 @@ val useCaseModule = module {
     singleOf(::GetUserLikesUseCase)
     singleOf(::RequestPhotoDownloadUseCase)
     singleOf(::GetPhotoFileExistUseCase)
+
+    singleOf(::PutIntPrefUseCase)
+    singleOf(::GetViewTypeUseCase)
 }

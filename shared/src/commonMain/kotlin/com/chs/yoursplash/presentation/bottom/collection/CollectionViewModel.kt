@@ -7,6 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.usecase.GetHomeCollectionsUseCase
+import com.chs.yoursplash.domain.usecase.GetViewTypeUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,8 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 
 class CollectionViewModel(
-    getHomeCollectionsUseCase: GetHomeCollectionsUseCase
+    getHomeCollectionsUseCase: GetHomeCollectionsUseCase,
+    getViewTypeUseCase: GetViewTypeUseCase
 ) : ViewModel() {
 
     val pagingDataFlow: Flow<PagingData<UnSplashCollection>> = getHomeCollectionsUseCase()

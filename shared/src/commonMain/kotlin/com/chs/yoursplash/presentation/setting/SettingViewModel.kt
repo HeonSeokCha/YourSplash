@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.chs.yoursplash.domain.usecase.GetDownloadQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetWallPaperQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
+import com.chs.yoursplash.domain.usecase.GetViewTypeUseCase
+import com.chs.yoursplash.domain.usecase.PutIntPrefUseCase
 import com.chs.yoursplash.domain.usecase.PutStringPrefUseCase
 import com.chs.yoursplash.util.Constants
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +21,9 @@ class SettingViewModel(
     private val getDownloadQualityUseCase: GetDownloadQualityUseCase,
     private val getLoadQualityUseCase: GetLoadQualityUseCase,
     private val getWallPaperQualityUseCase: GetWallPaperQualityUseCase,
-    private val putStringPrefUseCase: PutStringPrefUseCase
+    private val putStringPrefUseCase: PutStringPrefUseCase,
+    private val getViewTypeUseCase: GetViewTypeUseCase,
+    private val putIntPrefUseCase: PutIntPrefUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SettingState())

@@ -3,9 +3,10 @@ package com.chs.yoursplash.data.repository
 import com.chs.yoursplash.domain.repository.SettingRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 
 class SettingRepositoryImpl(
-    private val dataStore: DataStorePrefManager
+    val dataStore: DataStorePrefManager
 ) : SettingRepository {
 
     override suspend fun putString(
@@ -17,4 +18,9 @@ class SettingRepositoryImpl(
         keyName: String,
         defaultValue: String
     ): Flow<String> = dataStore.getData(keyName = keyName, defaultValue = defaultValue)
+
+    override suspend fun getInt(
+        keyName: String,
+        defaultValue: Int
+    ): Int = dataStore.getData(keyName, defaultValue).first()
 }
