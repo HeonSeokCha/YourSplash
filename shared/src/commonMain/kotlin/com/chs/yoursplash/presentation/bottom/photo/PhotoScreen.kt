@@ -2,6 +2,9 @@ package com.chs.yoursplash.presentation.bottom.photo
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -13,13 +16,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.chs.youranimelist.res.Res
+import com.chs.youranimelist.res.text_no_collections
 import com.chs.youranimelist.res.text_no_photos
 import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.domain.model.Photo
+import com.chs.yoursplash.presentation.base.CollectionInfoCard
 import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ItemPullToRefreshBox
+import com.chs.yoursplash.presentation.bottom.collection.CollectionIntent
 import com.chs.yoursplash.util.Constants
 import org.jetbrains.compose.resources.stringResource
 
@@ -83,45 +90,89 @@ fun PhotoScreen(
             pagingItems.refresh()
         }
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-            contentPadding = PaddingValues(vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(32.dp),
-        ) {
-            when {
-                state.isLoading -> {
-                    items(Constants.COUNT_LOADING_ITEM) {
-                        ImageCard(null)
+        if (!state.isGrid) {
+            LazyVerticalStaggeredGrid(
+                columns = StaggeredGridCells.Fixed(2),
+                contentPadding = PaddingValues(8.dp),
+                verticalItemSpacing = 8.dp,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                when {
+                    state.isLoading -> {
+                        items(Constants.COUNT_LOADING_ITEM) {
+                            ImageCard(null, isShowUserInfo = false)
+                        }
                     }
-                }
 
-                isEmpty -> {
-                    item {
-                        ItemEmpty(
-                            modifier = Modifier.fillParentMaxSize(),
-                            text = stringResource(Res.string.text_no_photos)
-                        )
+                    isEmpty -> {
+                        item(span = StaggeredGridItemSpan.FullLine) {
+                            ItemEmpty(
+                                text = stringResource(Res.string.text_no_collections)
+                            )
+                        }
                     }
-                }
 
-                else -> {
-                    items(count = pagingItems.itemCount) { idx ->
-                        val photo = pagingItems[idx]
-                        ImageCard(
-                            photoInfo = photo,
-                            onPhotoClick = {
-                                onIntent(PhotoIntent.ClickPhoto(it))
-                            },
-                            onUserClick = {
-                                onIntent(PhotoIntent.ClickUser(it))
-                            }
-                        )
+                    else -> {
+                        items(
+                            count = pagingItems.itemCount,
+                            key = pagingItems.itemKey { it.id }
+                        ) { idx ->
+                            val photo = pagingItems[idx]
+                            ImageCard(
+                                photoInfo = photo,
+                                isShowUserInfo = false,
+                                onPhotoClick = {
+                                    onIntent(PhotoIntent.ClickPhoto(it))
+                                },
+                                onUserClick = {
+                                    onIntent(PhotoIntent.ClickUser(it))
+                                }
+                            )
+                        }
                     }
                 }
             }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp),
+                contentPadding = PaddingValues(vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(32.dp),
+            ) {
+                when {
+                    state.isLoading -> {
+                        items(Constants.COUNT_LOADING_ITEM) {
+                            ImageCard(null)
+                        }
+                    }
 
+                    isEmpty -> {
+                        item {
+                            ItemEmpty(
+                                modifier = Modifier.fillParentMaxSize(),
+                                text = stringResource(Res.string.text_no_photos)
+                            )
+                        }
+                    }
+
+                    else -> {
+                        items(count = pagingItems.itemCount) { idx ->
+                            val photo = pagingItems[idx]
+                            ImageCard(
+                                photoInfo = photo,
+                                onPhotoClick = {
+                                    onIntent(PhotoIntent.ClickPhoto(it))
+                                },
+                                onUserClick = {
+                                    onIntent(PhotoIntent.ClickUser(it))
+                                }
+                            )
+                        }
+                    }
+                }
+
+            }
         }
     }
 }

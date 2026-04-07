@@ -2,6 +2,9 @@ package com.chs.yoursplash.presentation.bottom.collection
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -87,44 +90,84 @@ fun CollectionScreen(
             pagingItems.refresh()
         }
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-            contentPadding = PaddingValues(vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(32.dp),
-        ) {
-            when {
-                state.isLoading -> {
-                    items(Constants.COUNT_LOADING_ITEM) {
-                        CollectionInfoCard(null)
+        if (!state.isGrid) {
+            LazyVerticalStaggeredGrid(
+                columns = StaggeredGridCells.Fixed(2),
+                contentPadding = PaddingValues(8.dp),
+                verticalItemSpacing = 8.dp,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                when {
+                    state.isLoading -> {
+                        items(Constants.COUNT_LOADING_ITEM) {
+                            CollectionInfoCard(null, isShowUserInfo = false)
+                        }
                     }
-                }
 
-                isEmpty -> {
-                    item {
-                        ItemEmpty(
-                            modifier = Modifier.fillParentMaxSize(),
-                            text = stringResource(Res.string.text_no_collections)
-                        )
+                    isEmpty -> {
+                        item(span = StaggeredGridItemSpan.FullLine) {
+                            ItemEmpty(
+                                text = stringResource(Res.string.text_no_collections)
+                            )
+                        }
                     }
-                }
 
-                else -> {
-                    items(
-                        count = pagingItems.itemCount,
-                        key = pagingItems.itemKey { it.id }
-                    ) { idx ->
-                        val collectionInfo = pagingItems[idx]
-                        CollectionInfoCard(
-                            collectionInfo = collectionInfo,
-                            onCollection = { onIntent(CollectionIntent.ClickCollection(it)) },
-                            onUser = { onIntent(CollectionIntent.ClickUser(it)) }
-                        )
+                    else -> {
+                        items(
+                            count = pagingItems.itemCount,
+                            key = pagingItems.itemKey { it.id }
+                        ) { idx ->
+                            val collectionInfo = pagingItems[idx]
+                            CollectionInfoCard(
+                                collectionInfo = collectionInfo,
+                                isShowUserInfo = false,
+                                onCollection = { onIntent(CollectionIntent.ClickCollection(it)) },
+                                onUser = { onIntent(CollectionIntent.ClickUser(it)) }
+                            )
+                        }
                     }
                 }
             }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp),
+                contentPadding = PaddingValues(vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(32.dp),
+            ) {
+                when {
+                    state.isLoading -> {
+                        items(Constants.COUNT_LOADING_ITEM) {
+                            CollectionInfoCard(null, isShowUserInfo = false)
+                        }
+                    }
 
+                    isEmpty -> {
+                        item {
+                            ItemEmpty(
+                                modifier = Modifier.fillParentMaxSize(),
+                                text = stringResource(Res.string.text_no_collections)
+                            )
+                        }
+                    }
+
+                    else -> {
+                        items(
+                            count = pagingItems.itemCount,
+                            key = pagingItems.itemKey { it.id }
+                        ) { idx ->
+                            val collectionInfo = pagingItems[idx]
+                            CollectionInfoCard(
+                                collectionInfo = collectionInfo,
+                                onCollection = { onIntent(CollectionIntent.ClickCollection(it)) },
+                                onUser = { onIntent(CollectionIntent.ClickUser(it)) }
+                            )
+                        }
+                    }
+                }
+
+            }
         }
     }
 }

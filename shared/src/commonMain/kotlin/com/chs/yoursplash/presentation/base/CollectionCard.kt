@@ -31,6 +31,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun CollectionInfoCard(
     collectionInfo: UnSplashCollection?,
+    isShowUserInfo: Boolean = true,
     onCollection: (String) -> Unit = {},
     onUser: (String) -> Unit = {}
 ) {
@@ -39,38 +40,40 @@ fun CollectionInfoCard(
             .fillMaxWidth()
             .wrapContentHeight()
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = 4.dp,
-                    bottom = 8.dp
-                )
-                .clickable {
-                    if (collectionInfo != null) {
-                        onUser(collectionInfo.user.userName)
-                    }
-                },
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            ShimmerImage(
+        if (isShowUserInfo) {
+            Row(
                 modifier = Modifier
-                    .size(50.dp)
-                    .clip(RoundedCornerShape(100))
-                    .shimmer(visible = collectionInfo == null),
-                url = collectionInfo?.user?.profileImageUrl
-            )
+                    .fillMaxWidth()
+                    .padding(
+                        start = 4.dp,
+                        bottom = 8.dp
+                    )
+                    .clickable {
+                        if (collectionInfo != null) {
+                            onUser(collectionInfo.user.userName)
+                        }
+                    },
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                ShimmerImage(
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(RoundedCornerShape(100))
+                        .shimmer(visible = collectionInfo == null),
+                    url = collectionInfo?.user?.profileImageUrl
+                )
 
-            Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(16.dp))
 
-            Text(
-                modifier = Modifier.shimmer(collectionInfo == null),
-                text = collectionInfo?.user?.name ?: stringResource(Res.string.lorem_ipsum),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1
-            )
+                Text(
+                    modifier = Modifier.shimmer(collectionInfo == null),
+                    text = collectionInfo?.user?.name ?: stringResource(Res.string.lorem_ipsum),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
+                )
+            }
         }
 
         CollectionCard(collectionInfo = collectionInfo) {
@@ -108,7 +111,6 @@ private fun CollectionCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(250.dp)
-                .padding(end = 4.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .shimmer(visible = collectionInfo == null)
                 .drawWithContent {

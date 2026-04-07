@@ -14,6 +14,11 @@ class SettingRepositoryImpl(
         value: String
     ) = dataStore.putData(keyName, value)
 
+    override suspend fun putInt(
+        keyName: String,
+        value: Int
+    ) = dataStore.putData(keyName, value)
+
     override fun getFlowableString(
         keyName: String,
         defaultValue: String

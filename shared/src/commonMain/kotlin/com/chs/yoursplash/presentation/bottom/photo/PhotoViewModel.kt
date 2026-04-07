@@ -12,8 +12,10 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 
 class PhotoViewModel(
     getHomePhotosUseCase: GetHomePhotosUseCase,
@@ -25,6 +27,9 @@ class PhotoViewModel(
 
     private val _state = MutableStateFlow(PhotoState())
     val state = _state
+        .onStart {
+            _state.update { it.copy(isGrid = getViewTypeUseCase() == 1) }
+        }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000L),

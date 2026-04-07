@@ -12,8 +12,10 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 
 class CollectionViewModel(
     getHomeCollectionsUseCase: GetHomeCollectionsUseCase,
@@ -24,7 +26,10 @@ class CollectionViewModel(
         .cachedIn(viewModelScope)
 
     private val _state = MutableStateFlow(CollectionState())
-    val state = _state.stateIn(
+    val state = _state
+        .onStart {
+            _state.update { it.copy(isGrid = getViewTypeUseCase() == 1) }
+        }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000L),
         _state.value

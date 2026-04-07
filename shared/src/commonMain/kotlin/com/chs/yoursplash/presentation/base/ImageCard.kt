@@ -22,6 +22,7 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun ImageCard(
     photoInfo: Photo?,
+    isShowUserInfo: Boolean = true,
     onPhotoClick: (String) -> Unit = {},
     onUserClick: (String) -> Unit = {}
 ) {
@@ -30,38 +31,40 @@ fun ImageCard(
             .fillMaxWidth()
             .wrapContentHeight()
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    start = 4.dp,
-                    bottom = 8.dp
-                )
-                .clickable {
-                    if (photoInfo?.user?.userName != null) {
-                        onUserClick(photoInfo.user.userName)
-                    }
-                },
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            ShimmerImage(
+        if (isShowUserInfo) {
+            Row(
                 modifier = Modifier
-                    .size(50.dp)
-                    .clip(RoundedCornerShape(100))
-                    .shimmer(photoInfo == null),
-                url = photoInfo?.user?.profileImageUrl
-            )
+                    .fillMaxWidth()
+                    .padding(
+                        start = 4.dp,
+                        bottom = 8.dp
+                    )
+                    .clickable {
+                        if (photoInfo?.user?.userName != null) {
+                            onUserClick(photoInfo.user.userName)
+                        }
+                    },
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                ShimmerImage(
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(RoundedCornerShape(100))
+                        .shimmer(photoInfo == null),
+                    url = photoInfo?.user?.profileImageUrl
+                )
 
-            Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(16.dp))
 
-            Text(
-                modifier = Modifier.shimmer(photoInfo == null),
-                text = photoInfo?.user?.name ?: stringResource(Res.string.lorem_ipsum),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1
-            )
+                Text(
+                    modifier = Modifier.shimmer(photoInfo == null),
+                    text = photoInfo?.user?.name ?: stringResource(Res.string.lorem_ipsum),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
+                )
+            }
         }
 
         ShimmerImage(
