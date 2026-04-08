@@ -2,6 +2,7 @@ package com.chs.yoursplash.presentation.setting
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.chs.yoursplash.domain.model.LoadQuality
 import com.chs.yoursplash.domain.usecase.GetDownloadQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetWallPaperQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
@@ -91,15 +92,17 @@ class SettingViewModel(
             combine(
                 getLoadQualityUseCase(),
                 getDownloadQualityUseCase(),
-                getWallPaperQualityUseCase()
-            ) { load, download, wallpaper ->
-                Triple(load, download, wallpaper)
-            }.collect { triple ->
+                getWallPaperQualityUseCase(),
+                getViewTypeUseCase()
+            ) { load, download, wallpaper, viewType ->
+                listOf(load, download, wallpaper, viewType)
+            }.collect { list ->
                 _state.update {
                     it.copy(
-                        loadQualityValue = triple.first,
-                        downLoadQualityValue = triple.second,
-                        wallpaperQualityValue = triple.third
+                        loadQualityValue = list[0] as LoadQuality,
+                        downLoadQualityValue = list[1] as LoadQuality,
+                        wallpaperQualityValue = list[2] as LoadQuality,
+                        layoutValue = list[3] as Int
                     )
                 }
             }

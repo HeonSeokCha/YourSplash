@@ -14,18 +14,8 @@ class SettingRepositoryImpl(
         value: String
     ) = dataStore.putData(keyName, value)
 
-    override suspend fun putInt(
-        keyName: String,
-        value: Int
-    ) = dataStore.putData(keyName, value)
-
     override fun getFlowableString(
         keyName: String,
         defaultValue: String
     ): Flow<String> = dataStore.getData(keyName = keyName, defaultValue = defaultValue)
-
-    override suspend fun getInt(
-        keyName: String,
-        defaultValue: Int
-    ): Int = dataStore.getData(keyName, defaultValue).first()
 }
