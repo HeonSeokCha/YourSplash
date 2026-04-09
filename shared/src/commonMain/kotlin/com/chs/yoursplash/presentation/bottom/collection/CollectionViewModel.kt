@@ -6,12 +6,14 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.chs.yoursplash.domain.model.UnSplashCollection
+import com.chs.yoursplash.domain.model.ViewType
 import com.chs.yoursplash.domain.usecase.GetHomeCollectionsUseCase
 import com.chs.yoursplash.domain.usecase.GetViewTypeUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -28,7 +30,7 @@ class CollectionViewModel(
     private val _state = MutableStateFlow(CollectionState())
     val state = _state
         .onStart {
-            _state.update { it.copy(isGrid = getViewTypeUseCase() == 1) }
+            _state.update { it.copy(isGrid = getViewTypeUseCase().first() == ViewType.Grid) }
         }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000L),

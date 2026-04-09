@@ -1,9 +1,11 @@
 package com.chs.yoursplash.util
 
 import com.chs.yoursplash.BuildKonfig
+import com.chs.yoursplash.domain.model.LoadQuality
 import com.chs.yoursplash.domain.model.Orientations
 import com.chs.yoursplash.domain.model.PhotoUrls
 import com.chs.yoursplash.domain.model.SortType
+import com.chs.yoursplash.domain.model.ViewType
 
 object Constants {
     const val UNSPLAH_BASE_URL: String = "api.unsplash.com"
@@ -28,6 +30,7 @@ object Constants {
     val TITLE_LOAD_QUALITY: Pair<String, String> = "Load Quality" to PREFERENCE_KEY_LOAD_QUALITY
     val TITLE_DOWNLOAD_QUALITY: Pair<String, String> = "Download Quality" to PREFERENCE_KEY_DOWNLOAD_QUALITY
     val TITLE_WALLPAPER_LOAD_QUALITY: Pair<String, String> = "Wallpaper Quality" to PREFERENCE_KEY_WALLPAPER_QUALITY
+    val TITLE_VIEW_TYPE: Pair<String, String> = "View Type" to PREFERENCE_KEY_VIEW_TYPE
 
     const val PREFERENCE_KEY_LOAD_QUALITY: String = "load_quality"
     const val PREFERENCE_KEY_DOWNLOAD_QUALITY: String = "download_quality"
@@ -57,6 +60,10 @@ object Constants {
     val SORT_BY_LIST = SortType.entries.map { it.name to it.rawValue }
 
     val SEARCH_ORI_LIST = Orientations.entries.map { it.rawValue to it.icon }
+
+    val LOAD_QUALITY_LIST = LoadQuality.entries.map { it.name }
+
+    val VIEW_TYPE_LIST = ViewType.entries.map { it.name }
 
     const val COUNT_LOADING_ITEM: Int = 20
 }

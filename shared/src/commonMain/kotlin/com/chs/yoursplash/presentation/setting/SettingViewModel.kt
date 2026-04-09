@@ -3,11 +3,11 @@ package com.chs.yoursplash.presentation.setting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chs.yoursplash.domain.model.LoadQuality
+import com.chs.yoursplash.domain.model.ViewType
 import com.chs.yoursplash.domain.usecase.GetDownloadQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetWallPaperQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetViewTypeUseCase
-import com.chs.yoursplash.domain.usecase.PutIntPrefUseCase
 import com.chs.yoursplash.domain.usecase.PutStringPrefUseCase
 import com.chs.yoursplash.util.Constants
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,8 +23,7 @@ class SettingViewModel(
     private val getLoadQualityUseCase: GetLoadQualityUseCase,
     private val getWallPaperQualityUseCase: GetWallPaperQualityUseCase,
     private val putStringPrefUseCase: PutStringPrefUseCase,
-    private val getViewTypeUseCase: GetViewTypeUseCase,
-    private val putIntPrefUseCase: PutIntPrefUseCase
+    private val getViewTypeUseCase: GetViewTypeUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SettingState())
@@ -44,7 +43,8 @@ class SettingViewModel(
                 _state.update {
                     it.copy(
                         selectSettingInfo = Constants.TITLE_DOWNLOAD_QUALITY,
-                        selectValue = it.downLoadQualityValue,
+                        selectValue = it.downLoadQualityValue.name,
+                        settingList = Constants.LOAD_QUALITY_LIST,
                         showDialog = true
                     )
                 }
@@ -54,7 +54,8 @@ class SettingViewModel(
                 _state.update {
                     it.copy(
                         selectSettingInfo = Constants.TITLE_WALLPAPER_LOAD_QUALITY,
-                        selectValue = it.wallpaperQualityValue,
+                        selectValue = it.wallpaperQualityValue.name,
+                        settingList = Constants.LOAD_QUALITY_LIST,
                         showDialog = true
                     )
                 }
@@ -64,7 +65,19 @@ class SettingViewModel(
                 _state.update {
                     it.copy(
                         selectSettingInfo = Constants.TITLE_LOAD_QUALITY,
-                        selectValue = it.loadQualityValue,
+                        selectValue = it.loadQualityValue.name,
+                        settingList = Constants.LOAD_QUALITY_LIST,
+                        showDialog = true
+                    )
+                }
+            }
+
+            SettingIntent.ClickViewType -> {
+                _state.update {
+                    it.copy(
+                        selectSettingInfo = Constants.TITLE_VIEW_TYPE,
+                        selectValue = it.viewType.name,
+                        settingList = Constants.VIEW_TYPE_LIST,
                         showDialog = true
                     )
                 }
@@ -73,7 +86,7 @@ class SettingViewModel(
             SettingIntent.ClickSave -> {
                 if (_state.value.selectSettingInfo == null) return
 
-                putSettingValue(_state.value.selectSettingInfo!!.second, _state.value.selectValue.name)
+                putSettingValue(_state.value.selectSettingInfo!!.second, _state.value.selectValue)
                 _state.update { it.copy(showDialog = false) }
             }
 
@@ -102,7 +115,7 @@ class SettingViewModel(
                         loadQualityValue = list[0] as LoadQuality,
                         downLoadQualityValue = list[1] as LoadQuality,
                         wallpaperQualityValue = list[2] as LoadQuality,
-                        layoutValue = list[3] as Int
+                        viewType = list[3] as ViewType
                     )
                 }
             }

@@ -90,7 +90,7 @@ fun PhotoScreen(
             pagingItems.refresh()
         }
     ) {
-        if (!state.isGrid) {
+        if (state.isGrid) {
             LazyVerticalStaggeredGrid(
                 columns = StaggeredGridCells.Fixed(2),
                 contentPadding = PaddingValues(8.dp),

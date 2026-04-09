@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.chs.yoursplash.domain.model.Photo
+import com.chs.yoursplash.domain.model.ViewType
 import com.chs.yoursplash.domain.usecase.GetHomePhotosUseCase
 import com.chs.yoursplash.domain.usecase.GetViewTypeUseCase
 import com.chs.yoursplash.presentation.bottom.photo.PhotoEffect.*
@@ -29,7 +30,7 @@ class PhotoViewModel(
     private val _state = MutableStateFlow(PhotoState())
     val state = _state
         .onStart {
-            _state.update { it.copy(isGrid = getViewTypeUseCase().first() == "1") }
+            _state.update { it.copy(isGrid = getViewTypeUseCase().first() == ViewType.Grid) }
         }
         .stateIn(
             viewModelScope,

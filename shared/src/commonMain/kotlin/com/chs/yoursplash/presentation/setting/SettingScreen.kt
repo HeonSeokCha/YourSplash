@@ -66,6 +66,12 @@ fun SettingScreen(
                 subTitle = state.wallpaperQualityValue.name,
                 clickAble = { onEvent(SettingIntent.ClickWallpaper) }
             )
+
+            SettingItem(
+                info = Constants.TITLE_VIEW_TYPE,
+                subTitle = state.viewType.name,
+                clickAble = { onEvent(SettingIntent.ClickViewType) }
+            )
         }
 
         if (state.showDialog) {
@@ -80,7 +86,7 @@ fun SettingScreen(
                     ) {
                         Text(text = "APPLY")
                     }
-                },title = {
+                }, title = {
                     Text(
                         text = state.selectSettingInfo?.first!!,
                         fontSize = 18.sp,
@@ -89,13 +95,13 @@ fun SettingScreen(
                     )
                 }, text = {
                     Column {
-                        LoadQuality.entries.forEach {
+                        state.settingList.forEach {
                             val isSelected = it == state.selectValue
                             val color = RadioButtonDefaults.colors(
                                 selectedColor = Purple500,
                                 unselectedColor = Color.LightGray
                             )
-                            Row (
+                            Row(
                                 modifier = Modifier
                                     .clickable {
                                         onEvent(SettingIntent.SelectValue(it))
@@ -111,7 +117,7 @@ fun SettingScreen(
                                 )
 
                                 Text(
-                                    text = it.name,
+                                    text = it,
                                     fontSize = 16.sp,
                                     color = Color.Black
                                 )
