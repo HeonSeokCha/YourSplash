@@ -18,10 +18,11 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class PhotoViewModel(
     getHomePhotosUseCase: GetHomePhotosUseCase,
-    getViewTypeUseCase: GetViewTypeUseCase
+    private val getViewTypeUseCase: GetViewTypeUseCase
 ) : ViewModel() {
 
     val pagingDataFlow: Flow<PagingData<Photo>> = getHomePhotosUseCase()
@@ -30,7 +31,7 @@ class PhotoViewModel(
     private val _state = MutableStateFlow(PhotoState())
     val state = _state
         .onStart {
-            _state.update { it.copy(isGrid = getViewTypeUseCase().first() == ViewType.Grid) }
+            observeViewType()
         }
         .stateIn(
             viewModelScope,
@@ -75,5 +76,13 @@ class PhotoViewModel(
 
     private fun updateState(reducer: (PhotoState) -> PhotoState) {
         _state.value = reducer(_state.value)
+    }
+
+    private fun observeViewType() {
+        viewModelScope.launch {
+            getViewTypeUseCase().collect { viewType ->
+                _state.update { it.copy(isGrid = viewType == ViewType.Grid) }
+            }
+        }
     }
 }

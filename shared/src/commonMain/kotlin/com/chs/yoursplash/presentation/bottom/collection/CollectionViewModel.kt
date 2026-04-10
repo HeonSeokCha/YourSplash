@@ -18,10 +18,11 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class CollectionViewModel(
     getHomeCollectionsUseCase: GetHomeCollectionsUseCase,
-    getViewTypeUseCase: GetViewTypeUseCase
+    private val getViewTypeUseCase: GetViewTypeUseCase
 ) : ViewModel() {
 
     val pagingDataFlow: Flow<PagingData<UnSplashCollection>> = getHomeCollectionsUseCase()
@@ -30,7 +31,7 @@ class CollectionViewModel(
     private val _state = MutableStateFlow(CollectionState())
     val state = _state
         .onStart {
-            _state.update { it.copy(isGrid = getViewTypeUseCase().first() == ViewType.Grid) }
+            observeViewType()
         }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000L),
@@ -74,5 +75,13 @@ class CollectionViewModel(
 
     private fun updateState(reducer: (CollectionState) -> CollectionState) {
         _state.value = reducer(_state.value)
+    }
+
+    private fun observeViewType() {
+        viewModelScope.launch {
+            getViewTypeUseCase().collect { viewType ->
+                _state.update { it.copy(isGrid = viewType == ViewType.Grid) }
+            }
+        }
     }
 }
