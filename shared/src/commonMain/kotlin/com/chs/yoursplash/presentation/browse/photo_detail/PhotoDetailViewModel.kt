@@ -110,7 +110,7 @@ class PhotoDetailViewModel(
                         }
 
                         is NetworkResult.Error -> {
-                            _effect.trySend(ShowToast(result.message ?: ""))
+                            _effect.trySend(ShowSnackBar(result.message ?: ""))
                             it.copy(isDetailLoading = false)
                         }
                     }
@@ -137,7 +137,7 @@ class PhotoDetailViewModel(
                         }
 
                         is NetworkResult.Error -> {
-                            _effect.trySend(PhotoDetailEffect.ShowToast(result.message ?: ""))
+                            _effect.trySend(PhotoDetailEffect.ShowSnackBar(result.message ?: ""))
                             it.copy(isRelatedLoading = false)
                         }
                     }
@@ -158,7 +158,7 @@ class PhotoDetailViewModel(
                         is NetworkResult.Loading -> it.copy(isFileDownLoading = true)
 
                         is NetworkResult.Success -> {
-                            _effect.trySend(PhotoDetailEffect.DownloadSuccess)
+                            _effect.trySend(PhotoDetailEffect.ShowSnackBar("Download Complete."))
                             it.copy(
                                 isFileDownLoading = false,
                                 isFileDownloaded = getPhotoFileExistUseCase(_state.value.imageDetailInfo!!.id)
@@ -166,7 +166,7 @@ class PhotoDetailViewModel(
                         }
 
                         is NetworkResult.Error -> {
-                            _effect.trySend(PhotoDetailEffect.DownloadFailed)
+                            _effect.trySend(PhotoDetailEffect.ShowSnackBar("Download Failed.."))
                             it.copy(isFileDownLoading = false)
                         }
                     }

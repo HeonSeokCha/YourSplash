@@ -44,7 +44,7 @@ class PhotoTagListViewModel(
                 _effect.trySend(NavigateUser(intent.name))
             }
 
-            is PhotoTagIntent.OnError -> _effect.trySend(ShowToast(intent.error))
+            is PhotoTagIntent.OnError -> _effect.trySend(ShowSnackBar(intent.error))
             PhotoTagIntent.LoadComplete -> _state.update { it.copy(isLoading = false) }
             PhotoTagIntent.Loading -> _state.update { it.copy(isLoading = true) }
             PhotoTagIntent.RefreshData -> Unit

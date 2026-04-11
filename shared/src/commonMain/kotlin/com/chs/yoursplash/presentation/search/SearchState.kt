@@ -9,15 +9,12 @@ data class SearchState(
     val isPhotoLoading: Boolean = false,
     val isPhotoAppendLoading: Boolean = false,
 
-    val photoErrorMessage: String? = null,
     val isCollectionLoading: Boolean = false,
     val isCollectAppendLoading: Boolean = false,
 
-    val collectionErrorMessage: String? = null,
     val isUserLoading: Boolean = false,
     val isUserAppendLoading: Boolean = false,
 
-    val userErrorMessage: String? = null,
     val tabList: List<String> = listOf("PHOTOS", "COLLECTIONS", "USERS"),
     val selectIdx: Int = 0,
     val showModal: Boolean = false,

@@ -5,11 +5,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -37,34 +40,27 @@ fun PhotoScreenRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val pagingItems = viewModel.pagingDataFlow.collectAsLazyPagingItems()
+    val snackBarHost = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 is PhotoEffect.NavigatePhotoDetail -> onBrowse(BrowseInfo.Photo(effect.id))
                 is PhotoEffect.NavigateUserDetail -> onBrowse(BrowseInfo.User(effect.name))
-                is PhotoEffect.ShowToast -> Unit
-            }
-        }
-    }
-
-    LaunchedEffect(pagingItems.loadState.refresh) {
-        when (pagingItems.loadState.refresh) {
-            is LoadState.Loading -> viewModel.handleIntent(PhotoIntent.Loading)
-
-            is LoadState.Error -> {
-                (pagingItems.loadState.refresh as LoadState.Error).error.run {
-                    viewModel.handleIntent(PhotoIntent.OnError(this.message))
+                is PhotoEffect.ShowSnackBar -> {
+                    snackBarHost.showSnackbar(
+                        message = effect.message,
+                        withDismissAction = true
+                    )
                 }
             }
-
-            is LoadState.NotLoading -> viewModel.handleIntent(PhotoIntent.LoadComplete)
         }
     }
 
     PhotoScreen(
         state = state,
         pagingItems = pagingItems,
+        snackBarHost = snackBarHost,
         onIntent = viewModel::handleIntent
     )
 }
@@ -72,9 +68,24 @@ fun PhotoScreenRoot(
 @Composable
 fun PhotoScreen(
     state: PhotoState,
+    snackBarHost: SnackbarHostState,
     pagingItems: LazyPagingItems<Photo>,
     onIntent: (PhotoIntent) -> Unit
 ) {
+    LaunchedEffect(pagingItems.loadState.refresh) {
+        when (pagingItems.loadState.refresh) {
+            is LoadState.Loading -> onIntent(PhotoIntent.Loading)
+
+            is LoadState.Error -> {
+                (pagingItems.loadState.refresh as LoadState.Error).error.run {
+                    onIntent(PhotoIntent.OnError(this.message))
+                }
+            }
+
+            is LoadState.NotLoading -> onIntent(PhotoIntent.LoadComplete)
+        }
+    }
+
     val isEmpty by remember {
         derivedStateOf {
             pagingItems.loadState.refresh is LoadState.NotLoading
@@ -83,96 +94,108 @@ fun PhotoScreen(
         }
     }
 
-    ItemPullToRefreshBox(
-        isRefreshing = state.isRefresh,
-        onRefresh = {
-            onIntent(PhotoIntent.RefreshData)
-            pagingItems.refresh()
-        }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
     ) {
-        if (state.isGrid) {
-            LazyVerticalStaggeredGrid(
-                columns = StaggeredGridCells.Fixed(2),
-                contentPadding = PaddingValues(8.dp),
-                verticalItemSpacing = 8.dp,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                when {
-                    state.isLoading -> {
-                        items(Constants.COUNT_LOADING_ITEM) {
-                            ImageCard(null, isShowUserInfo = false)
-                        }
-                    }
-
-                    isEmpty -> {
-                        item(span = StaggeredGridItemSpan.FullLine) {
-                            ItemEmpty(
-                                text = stringResource(Res.string.text_no_collections)
-                            )
-                        }
-                    }
-
-                    else -> {
-                        items(
-                            count = pagingItems.itemCount,
-                            key = pagingItems.itemKey { it.id }
-                        ) { idx ->
-                            val photo = pagingItems[idx]
-                            ImageCard(
-                                photoInfo = photo,
-                                isShowUserInfo = false,
-                                onPhotoClick = {
-                                    onIntent(PhotoIntent.ClickPhoto(it))
-                                },
-                                onUserClick = {
-                                    onIntent(PhotoIntent.ClickUser(it))
-                                }
-                            )
-                        }
-                    }
-                }
+        ItemPullToRefreshBox(
+            isRefreshing = state.isRefresh,
+            onRefresh = {
+                onIntent(PhotoIntent.RefreshData)
+                pagingItems.refresh()
             }
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(8.dp),
-                contentPadding = PaddingValues(vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(32.dp),
-            ) {
-                when {
-                    state.isLoading -> {
-                        items(Constants.COUNT_LOADING_ITEM) {
-                            ImageCard(null)
+        ) {
+            if (state.isGrid) {
+                LazyVerticalStaggeredGrid(
+                    columns = StaggeredGridCells.Fixed(2),
+                    contentPadding = PaddingValues(8.dp),
+                    verticalItemSpacing = 8.dp,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    when {
+                        state.isLoading -> {
+                            items(Constants.COUNT_LOADING_ITEM) {
+                                ImageCard(null, isShowUserInfo = false)
+                            }
                         }
-                    }
 
-                    isEmpty -> {
-                        item {
-                            ItemEmpty(
-                                modifier = Modifier.fillParentMaxSize(),
-                                text = stringResource(Res.string.text_no_photos)
-                            )
+                        isEmpty -> {
+                            item(span = StaggeredGridItemSpan.FullLine) {
+                                ItemEmpty(
+                                    text = stringResource(Res.string.text_no_collections)
+                                )
+                            }
                         }
-                    }
 
-                    else -> {
-                        items(count = pagingItems.itemCount) { idx ->
-                            val photo = pagingItems[idx]
-                            ImageCard(
-                                photoInfo = photo,
-                                onPhotoClick = {
-                                    onIntent(PhotoIntent.ClickPhoto(it))
-                                },
-                                onUserClick = {
-                                    onIntent(PhotoIntent.ClickUser(it))
-                                }
-                            )
+                        else -> {
+                            items(
+                                count = pagingItems.itemCount,
+                                key = pagingItems.itemKey { it.id }
+                            ) { idx ->
+                                val photo = pagingItems[idx]
+                                ImageCard(
+                                    photoInfo = photo,
+                                    isShowUserInfo = false,
+                                    onPhotoClick = {
+                                        onIntent(PhotoIntent.ClickPhoto(it))
+                                    },
+                                    onUserClick = {
+                                        onIntent(PhotoIntent.ClickUser(it))
+                                    }
+                                )
+                            }
                         }
                     }
                 }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp),
+                    contentPadding = PaddingValues(vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(32.dp),
+                ) {
+                    when {
+                        state.isLoading -> {
+                            items(Constants.COUNT_LOADING_ITEM) {
+                                ImageCard(null)
+                            }
+                        }
 
+                        isEmpty -> {
+                            item {
+                                ItemEmpty(
+                                    modifier = Modifier.fillParentMaxSize(),
+                                    text = stringResource(Res.string.text_no_photos)
+                                )
+                            }
+                        }
+
+                        else -> {
+                            items(count = pagingItems.itemCount) { idx ->
+                                val photo = pagingItems[idx]
+                                ImageCard(
+                                    photoInfo = photo,
+                                    onPhotoClick = {
+                                        onIntent(PhotoIntent.ClickPhoto(it))
+                                    },
+                                    onUserClick = {
+                                        onIntent(PhotoIntent.ClickUser(it))
+                                    }
+                                )
+                            }
+                        }
+                    }
+
+                }
             }
         }
+
+        SnackbarHost(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 16.dp),
+            hostState = snackBarHost
+        )
     }
 }

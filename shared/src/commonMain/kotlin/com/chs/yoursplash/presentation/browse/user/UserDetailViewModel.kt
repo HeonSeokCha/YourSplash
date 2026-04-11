@@ -49,21 +49,21 @@ class UserDetailViewModel(
 
     fun handleIntent(intent: UserDetailIntent) {
         when (intent) {
-            is UserDetailIntent.OnError -> _effect.trySend(UserDetailEffect.ShowToast(intent.message ?: ""))
+            is UserDetailIntent.OnError -> _effect.trySend(UserDetailEffect.ShowSnackBar(intent.message ?: ""))
             is UserDetailIntent.ChangeTabIndex -> {
                 _state.update { it.copy(selectIdx = intent.idx) }
             }
             UserDetailIntent.Collection.LoadComplete -> _state.update { it.copy(isCollectLoading = false) }
             UserDetailIntent.Collection.Loading -> _state.update { it.copy(isCollectLoading = true) }
-            is UserDetailIntent.Collection.OnError -> _effect.trySend(UserDetailEffect.ShowToast(intent.message ?: ""))
+            is UserDetailIntent.Collection.OnError -> _effect.trySend(UserDetailEffect.ShowSnackBar(intent.message ?: ""))
 
             UserDetailIntent.Photo.LoadComplete -> _state.update { it.copy(isPhotoLoading = false) }
             UserDetailIntent.Photo.Loading -> _state.update { it.copy(isPhotoLoading = true) }
-            is UserDetailIntent.Photo.OnError -> _effect.trySend(UserDetailEffect.ShowToast(intent.message ?: ""))
+            is UserDetailIntent.Photo.OnError -> _effect.trySend(UserDetailEffect.ShowSnackBar(intent.message ?: ""))
 
             UserDetailIntent.Like.LoadComplete -> _state.update { it.copy(isLikeLoading = false) }
             UserDetailIntent.Like.Loading -> _state.update { it.copy(isLikeLoading = true) }
-            is UserDetailIntent.Like.OnError -> _effect.trySend(UserDetailEffect.ShowToast(intent.message ?: ""))
+            is UserDetailIntent.Like.OnError -> _effect.trySend(UserDetailEffect.ShowSnackBar(intent.message ?: ""))
 
             UserDetailIntent.ClickClose -> _effect.trySend(UserDetailEffect.Close)
             is UserDetailIntent.ClickCollect -> {

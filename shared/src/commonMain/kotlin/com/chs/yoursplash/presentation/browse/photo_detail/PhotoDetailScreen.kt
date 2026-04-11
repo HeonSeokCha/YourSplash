@@ -74,17 +74,9 @@ fun PhotoDetailScreenRoot(
                     onNavigate(BrowseScreens.PhotoDetailViewScreen(effect.url))
                 }
 
-                is PhotoDetailEffect.ShowToast -> Unit
-                PhotoDetailEffect.DownloadFailed -> {
+                is PhotoDetailEffect.ShowSnackBar -> {
                     snackBarHost.showSnackbar(
-                        message = "Download Failed.",
-                        withDismissAction = true
-                    )
-                }
-
-                PhotoDetailEffect.DownloadSuccess -> {
-                    snackBarHost.showSnackbar(
-                        message = "Download Complete.",
+                        message = effect.message,
                         withDismissAction = true
                     )
                 }

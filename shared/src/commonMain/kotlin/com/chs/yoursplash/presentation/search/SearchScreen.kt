@@ -12,6 +12,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SecondaryTabRow
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -42,12 +44,19 @@ fun SearchScreenRoot(
     onBack: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackBarHost = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 is SearchEffect.NavigateBrowse -> onBrowse(effect.info)
                 SearchEffect.OnBack -> onBack()
+                is SearchEffect.ShowSnackBar -> {
+                    snackBarHost.showSnackbar(
+                        message = effect.message,
+                        withDismissAction = true
+                    )
+                }
             }
         }
     }
@@ -57,6 +66,7 @@ fun SearchScreenRoot(
         photoPaging = viewModel.photoPaging,
         collectPaging = viewModel.collectPaging,
         userPaging = viewModel.userPaging,
+        snackBarHost = snackBarHost,
         onIntent = viewModel::changeEvent
     )
 }
@@ -68,6 +78,7 @@ private fun SearchScreen(
     photoPaging: Flow<PagingData<Photo>>,
     collectPaging: Flow<PagingData<UnSplashCollection>>,
     userPaging: Flow<PagingData<User>>,
+    snackBarHost: SnackbarHostState,
     onIntent: (SearchIntent) -> Unit
 ) {
     var fabScale by remember { mutableStateOf(1f) }
@@ -162,6 +173,13 @@ private fun SearchScreen(
                 Icon(Icons.Default.FilterList, contentDescription = "")
             }
         }
+
+        SnackbarHost(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 16.dp),
+            hostState = snackBarHost
+        )
 
         if (state.showModal) {
             SearchBottomSheet(

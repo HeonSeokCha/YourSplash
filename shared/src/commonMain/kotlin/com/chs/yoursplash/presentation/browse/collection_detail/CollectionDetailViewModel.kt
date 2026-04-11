@@ -58,7 +58,7 @@ class CollectionDetailViewModel(
             }
 
             is CollectionDetailIntent.OnError -> {
-                _effect.trySend(ShowToast(intent.message!!))
+                _effect.trySend(ShowSnackBar(intent.message!!))
             }
 
             CollectionDetailIntent.ClickClose -> _effect.trySend(Close)
@@ -85,7 +85,7 @@ class CollectionDetailViewModel(
                         }
 
                         is NetworkResult.Error -> {
-                            _effect.trySend(ShowToast(result.message!!))
+                            _effect.trySend(ShowSnackBar(result.message!!))
                             it.copy(isDetailLoad = false)
                         }
                     }

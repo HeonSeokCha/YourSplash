@@ -13,6 +13,8 @@ import androidx.compose.material.icons.filled.OpenInBrowser
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SecondaryTabRow
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -55,6 +57,7 @@ fun UserDetailScreenRoot(
     val photoPaging = viewModel.photoPaging
     val likePaging = viewModel.likePaging
     val collectPaging = viewModel.collectPaging
+    val snackBarHost = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -63,7 +66,12 @@ fun UserDetailScreenRoot(
                 is UserDetailEffect.NavigateCollectionDetail -> onNavigate(BrowseScreens.CollectionDetailScreen(effect.id))
                 is UserDetailEffect.NavigatePhotoDetail -> onNavigate(BrowseScreens.PhotoDetailScreen(effect.id))
                 is UserDetailEffect.NavigateUserDetail -> onNavigate(BrowseScreens.UserDetailScreen(effect.name))
-                is UserDetailEffect.ShowToast -> Unit
+                is UserDetailEffect.ShowSnackBar -> {
+                    snackBarHost.showSnackbar(
+                        message = effect.message,
+                        withDismissAction = true
+                    )
+                }
             }
         }
     }
@@ -73,6 +81,7 @@ fun UserDetailScreenRoot(
         photoPaging = photoPaging,
         likePaging = likePaging,
         collectPaging = collectPaging,
+        snackBarHost = snackBarHost,
         onIntent = viewModel::handleIntent
     )
 }
@@ -84,6 +93,7 @@ fun UserDetailScreen(
     photoPaging: Flow<PagingData<Photo>>,
     likePaging: Flow<PagingData<Photo>>,
     collectPaging: Flow<PagingData<UnSplashCollection>>,
+    snackBarHost: SnackbarHostState,
     onIntent: (UserDetailIntent) -> Unit
 ) {
     val pagerState = rememberPagerState { state.tabList.size }
@@ -98,83 +108,95 @@ fun UserDetailScreen(
         onIntent(UserDetailIntent.ChangeTabIndex(pagerState.currentPage))
     }
 
-    CollapsingToolbarScaffold(
-        scrollState = scrollState,
-        isShowTopBar = true,
-        expandContent = {
-            UserDetailInfo(userInfo = state.userDetailInfo)
-        },
-        collapsedContent = {
-            GradientTopBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.primary),
-                onCloseClick = { onIntent(UserDetailIntent.ClickClose) }
-            )
-        },
-        stickyContent = {
-            SecondaryTabRow(pagerState.currentPage) {
-                state.tabList.forEachIndexed { index, title ->
-                    Tab(
-                        text = {
-                            Text(
-                                text = title,
-                                autoSize = TextAutoSize.StepBased(
-                                    minFontSize = 6.sp,
-                                    maxFontSize = 12.sp,
-                                    stepSize = 1.sp
-                                ),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis,
-                                fontSize = 12.sp,
-                            )
-                        }, selected = pagerState.currentPage == index,
-                        onClick = {
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(index)
-                            }
-                        },
-                        selectedContentColor = Purple200,
-                        unselectedContentColor = Color.Gray
-                    )
-                }
-            }
-        }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
     ) {
-        if (state.tabList.isEmpty()) {
-            ItemEmpty(
-                modifier = Modifier.fillMaxSize(),
-                text = stringResource(Res.string.text_no_items)
-            )
-        } else {
-            HorizontalPager(state = pagerState) { pager ->
-                when (state.tabList[pager]) {
-                    "PHOTOS" -> {
-                        UserDetailPhotoScreen(
-                            photoList = photoPaging,
-                            isLoading = state.isPhotoLoading,
-                            onIntent = onIntent
-                        )
-                    }
-
-                    "LIKES" -> {
-                        UserDetailLikeScreen(
-                            photoList = likePaging,
-                            isLoading = state.isLikeLoading,
-                            onIntent = onIntent
-                        )
-                    }
-
-                    "COLLECTIONS" -> {
-                        UserDetailCollectionScreen(
-                            collectionList = collectPaging,
-                            isLoading = state.isCollectLoading,
-                            onIntent = onIntent
+        CollapsingToolbarScaffold(
+            scrollState = scrollState,
+            isShowTopBar = true,
+            expandContent = {
+                UserDetailInfo(userInfo = state.userDetailInfo)
+            },
+            collapsedContent = {
+                GradientTopBar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.primary),
+                    onCloseClick = { onIntent(UserDetailIntent.ClickClose) }
+                )
+            },
+            stickyContent = {
+                SecondaryTabRow(pagerState.currentPage) {
+                    state.tabList.forEachIndexed { index, title ->
+                        Tab(
+                            text = {
+                                Text(
+                                    text = title,
+                                    autoSize = TextAutoSize.StepBased(
+                                        minFontSize = 6.sp,
+                                        maxFontSize = 12.sp,
+                                        stepSize = 1.sp
+                                    ),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    fontSize = 12.sp,
+                                )
+                            }, selected = pagerState.currentPage == index,
+                            onClick = {
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
+                            },
+                            selectedContentColor = Purple200,
+                            unselectedContentColor = Color.Gray
                         )
                     }
                 }
             }
+        ) {
+            if (state.tabList.isEmpty()) {
+                ItemEmpty(
+                    modifier = Modifier.fillMaxSize(),
+                    text = stringResource(Res.string.text_no_items)
+                )
+            } else {
+                HorizontalPager(state = pagerState) { pager ->
+                    when (state.tabList[pager]) {
+                        "PHOTOS" -> {
+                            UserDetailPhotoScreen(
+                                photoList = photoPaging,
+                                isLoading = state.isPhotoLoading,
+                                onIntent = onIntent
+                            )
+                        }
+
+                        "LIKES" -> {
+                            UserDetailLikeScreen(
+                                photoList = likePaging,
+                                isLoading = state.isLikeLoading,
+                                onIntent = onIntent
+                            )
+                        }
+
+                        "COLLECTIONS" -> {
+                            UserDetailCollectionScreen(
+                                collectionList = collectPaging,
+                                isLoading = state.isCollectLoading,
+                                onIntent = onIntent
+                            )
+                        }
+                    }
+                }
+            }
         }
+
+        SnackbarHost(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 16.dp),
+            hostState = snackBarHost
+        )
     }
 }
 

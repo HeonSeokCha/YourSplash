@@ -108,15 +108,15 @@ class SearchResultViewModel(
 
             SearchIntent.Collection.Loading -> _state.update { it.copy(isCollectionLoading = true) }
             SearchIntent.Collection.LoadComplete -> _state.update { it.copy(isCollectionLoading = false) }
-            is SearchIntent.Collection.OnError -> _state.update { it.copy(collectionErrorMessage = intent.message) }
+            is SearchIntent.Collection.OnError -> _effect.trySend(ShowSnackBar(intent.message ?: ""))
 
             SearchIntent.Photo.Loading -> _state.update { it.copy(isPhotoLoading = true) }
             SearchIntent.Photo.LoadComplete -> _state.update { it.copy(isPhotoLoading = false) }
-            is SearchIntent.Photo.OnError -> _state.update { it.copy(photoErrorMessage = intent.message) }
+            is SearchIntent.Photo.OnError -> _effect.trySend(ShowSnackBar(intent.message ?: ""))
 
             SearchIntent.User.Loading -> _state.update { it.copy(isUserLoading = true) }
             SearchIntent.User.LoadComplete -> _state.update { it.copy(isUserLoading = false) }
-            is SearchIntent.User.OnError -> _state.update { it.copy(userErrorMessage = intent.message) }
+            is SearchIntent.User.OnError -> _effect.trySend(ShowSnackBar(intent.message ?: ""))
 
             SearchIntent.Collection.AppendLoadComplete -> _state.update {
                 it.copy(
@@ -129,7 +129,7 @@ class SearchResultViewModel(
             SearchIntent.Photo.AppendLoading -> _state.update { it.copy(isPhotoAppendLoading = true) }
             SearchIntent.User.AppendLoadComplete -> _state.update { it.copy(isUserAppendLoading = false) }
             SearchIntent.User.AppendLoading -> _state.update { it.copy(isUserAppendLoading = true) }
-            SearchIntent.OnBackClick -> _effect.trySend(SearchEffect.OnBack)
+            SearchIntent.OnBackClick -> _effect.trySend(OnBack)
         }
     }
 

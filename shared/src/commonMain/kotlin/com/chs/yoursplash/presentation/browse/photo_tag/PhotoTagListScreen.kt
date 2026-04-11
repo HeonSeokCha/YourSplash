@@ -2,18 +2,23 @@ package com.chs.yoursplash.presentation.browse.photo_tag
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -41,6 +46,7 @@ fun PhotoTagListScreenRoot(
 ) {
     val pagingItems = viewModel.pagingItems.collectAsLazyPagingItems()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackBarHost = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
@@ -52,28 +58,21 @@ fun PhotoTagListScreenRoot(
                 is PhotoTagEffect.NavigateUser -> {
                     onNavigate(BrowseScreens.UserDetailScreen(effect.name))
                 }
-                is PhotoTagEffect.ShowToast -> Unit
-            }
-        }
-    }
-
-    LaunchedEffect(pagingItems.loadState.refresh) {
-        when (pagingItems.loadState.refresh) {
-            is LoadState.Loading -> viewModel.handleIntent(PhotoTagIntent.Loading)
-
-            is LoadState.Error -> {
-                (pagingItems.loadState.refresh as LoadState.Error).error.run {
-                    viewModel.handleIntent(PhotoTagIntent.OnError(this.message ?: ""))
+                is PhotoTagEffect.ShowSnackBar -> {
+                    snackBarHost.showSnackbar(
+                        message = effect.message,
+                        withDismissAction = true
+                    )
                 }
             }
-
-            is LoadState.NotLoading -> viewModel.handleIntent(PhotoTagIntent.LoadComplete)
         }
     }
+
 
     PhotoTagListScreen(
         state = state,
         pagingItems = pagingItems,
+        snackBarHost = snackBarHost,
         onIntent = viewModel::handleIntent
     )
 }
@@ -82,9 +81,24 @@ fun PhotoTagListScreenRoot(
 fun PhotoTagListScreen(
     state: PhotoTagListState,
     pagingItems: LazyPagingItems<Photo>,
+    snackBarHost: SnackbarHostState,
     onIntent: (PhotoTagIntent) -> Unit
 ) {
     val scrollState = rememberScrollState()
+
+    LaunchedEffect(pagingItems.loadState.refresh) {
+        when (pagingItems.loadState.refresh) {
+            is LoadState.Loading -> onIntent(PhotoTagIntent.Loading)
+
+            is LoadState.Error -> {
+                (pagingItems.loadState.refresh as LoadState.Error).error.run {
+                    onIntent(PhotoTagIntent.OnError(this.message ?: ""))
+                }
+            }
+
+            is LoadState.NotLoading -> onIntent(PhotoTagIntent.LoadComplete)
+        }
+    }
 
     val isEmpty by remember {
         derivedStateOf {
@@ -94,53 +108,65 @@ fun PhotoTagListScreen(
         }
     }
 
-    CollapsingToolbarScaffold(
-        scrollState = scrollState,
-        isShowTopBar = true,
-        collapsedContent = {
-            GradientTopBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.primary),
-                onCloseClick = { onIntent(PhotoTagIntent.ClickClose) }
-            )
-        }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize(),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(32.dp)
+        CollapsingToolbarScaffold(
+            scrollState = scrollState,
+            isShowTopBar = true,
+            collapsedContent = {
+                GradientTopBar(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.primary),
+                    onCloseClick = { onIntent(PhotoTagIntent.ClickClose) }
+                )
+            }
         ) {
-            when {
-                state.isLoading -> {
-                    items(Constants.COUNT_LOADING_ITEM) {
-                        ImageCard(null)
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(32.dp)
+            ) {
+                when {
+                    state.isLoading -> {
+                        items(Constants.COUNT_LOADING_ITEM) {
+                            ImageCard(null)
+                        }
                     }
-                }
 
-                isEmpty -> {
-                    item {
-                        ItemEmpty(
-                            modifier = Modifier.fillParentMaxSize(),
-                            text = stringResource(Res.string.text_no_photos)
-                        )
+                    isEmpty -> {
+                        item {
+                            ItemEmpty(
+                                modifier = Modifier.fillParentMaxSize(),
+                                text = stringResource(Res.string.text_no_photos)
+                            )
+                        }
                     }
-                }
 
-                else -> {
-                    items(
-                        count = pagingItems.itemCount,
-                        key = pagingItems.itemKey { it.id }
-                    ) { idx ->
-                        ImageCard(
-                            photoInfo = pagingItems[idx],
-                            onPhotoClick = { onIntent(PhotoTagIntent.ClickPhoto(it)) },
-                            onUserClick = { onIntent(PhotoTagIntent.ClickUser(it)) }
-                        )
+                    else -> {
+                        items(
+                            count = pagingItems.itemCount,
+                            key = pagingItems.itemKey { it.id }
+                        ) { idx ->
+                            ImageCard(
+                                photoInfo = pagingItems[idx],
+                                onPhotoClick = { onIntent(PhotoTagIntent.ClickPhoto(it)) },
+                                onUserClick = { onIntent(PhotoTagIntent.ClickUser(it)) }
+                            )
+                        }
                     }
                 }
             }
         }
+
+        SnackbarHost(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 16.dp),
+            hostState = snackBarHost
+        )
     }
 }
