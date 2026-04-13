@@ -1,6 +1,7 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -35,9 +36,6 @@ kotlin {
     }
 
     sourceSets {
-        sourceSets.all {
-            languageSettings.enableLanguageFeature("ExplicitBackingFields")
-        }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
         }
@@ -50,10 +48,10 @@ kotlin {
             implementation(libs.room.runtime.android)
         }
         commonMain.dependencies {
-            implementation(compose.foundation)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
-            implementation(compose.components.resources)
+            implementation(libs.foundation)
+            implementation(libs.components.resources)
+            implementation(libs.ui.tooling.preview)
+            implementation(libs.components.resources)
 
             implementation(libs.jetbrain.matreial3)
             implementation(libs.jetbrain.compose.material3.icon)
@@ -68,6 +66,7 @@ kotlin {
 
             implementation(libs.koin.core)
             implementation(libs.bundles.koin)
+            api(libs.koin.annotation)
 
             implementation(libs.bundles.coil)
 
@@ -133,6 +132,7 @@ android {
 ksp {
     arg("room.schemaLocation", "${projectDir}/schemas")
     arg("KOIN_CONFIG_CHECK", "true")
+    arg("KOIN_USE_COMPOSE_VIEWMODEL","true")
 }
 
 room {
@@ -147,6 +147,15 @@ dependencies {
     ).forEach {
         add(it, libs.room.compiler)
     }
+
+    listOf(
+        "kspCommonMainMetadata",
+        "kspAndroid",
+        "kspIosSimulatorArm64",
+        "kspIosArm64"
+    ).forEach {
+        add(it, libs.koin.compiler)
+    }
 }
 
 compose.resources {
@@ -155,8 +164,8 @@ compose.resources {
     generateResClass = auto
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().configureEach {
-    if (name != "kspCommonMainKotlinMetadata") {
-        dependsOn("kspCommonMainKotlinMetadata")
-    }
-}
+//project.tasks.withType(KotlinCompilationTask::class.java).configureEach {
+//    if(name != "kspCommonMainKotlinMetadata") {
+//        dependsOn("kspCommonMainKotlinMetadata")
+//    }
+//}

@@ -17,9 +17,7 @@ import com.chs.yoursplash.domain.model.PhotoDetail
 import com.chs.yoursplash.domain.model.UnSplashTag
 import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.presentation.toCommaFormat
-import com.chs.yoursplash.presentation.toComposeColor
 import com.chs.yoursplash.util.Constants
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ImageDetailInfo(
