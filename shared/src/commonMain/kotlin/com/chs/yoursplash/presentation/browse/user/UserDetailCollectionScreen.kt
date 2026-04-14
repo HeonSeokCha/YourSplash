@@ -25,6 +25,7 @@ import org.jetbrains.compose.resources.stringResource
 fun UserDetailCollectionScreen(
     collectionList: Flow<PagingData<UnSplashCollection>>,
     isLoading: Boolean,
+    isGrid: Boolean,
     onIntent: (UserDetailIntent) -> Unit
 ) {
     val pagingItems = collectionList.collectAsLazyPagingItems()

@@ -5,14 +5,17 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.chs.yoursplash.domain.model.Photo
+import com.chs.yoursplash.domain.model.ViewType
 import com.chs.yoursplash.domain.usecase.GetCollectionDetailUseCase
 import com.chs.yoursplash.domain.usecase.GetCollectionPhotoUseCase
+import com.chs.yoursplash.domain.usecase.GetViewTypeUseCase
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailEffect.*
 import com.chs.yoursplash.util.NetworkResult
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -22,7 +25,8 @@ import kotlinx.coroutines.launch
 class CollectionDetailViewModel(
     private val collectionId: String,
     private val getCollectionDetailUseCase: GetCollectionDetailUseCase,
-    getCollectionPhotoUseCase: GetCollectionPhotoUseCase,
+    private val getViewTypeUseCase: GetViewTypeUseCase,
+    getCollectionPhotoUseCase: GetCollectionPhotoUseCase
 ) : ViewModel() {
 
     val pagingItems: Flow<PagingData<Photo>> =
@@ -69,6 +73,12 @@ class CollectionDetailViewModel(
     }
 
     private fun getCollectionDetailInfo() {
+        viewModelScope.launch {
+            getViewTypeUseCase().collect { viewType ->
+                _state.update { it.copy(isGrid = viewType == ViewType.Grid) }
+            }
+        }
+
         viewModelScope.launch {
             getCollectionDetailUseCase(collectionId).collect { result ->
                 _state.update {

@@ -3,6 +3,9 @@ package com.chs.yoursplash.presentation.browse.collection_detail
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.OpenInBrowser
@@ -26,7 +29,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.chs.youranimelist.res.Res
+import com.chs.youranimelist.res.text_no_collections
 import com.chs.youranimelist.res.text_no_photos
 import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.domain.model.BrowseInfo.*
@@ -36,6 +41,7 @@ import com.chs.yoursplash.presentation.base.GradientTopBar
 import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.shimmer
+import com.chs.yoursplash.presentation.bottom.photo.PhotoIntent
 import com.chs.yoursplash.presentation.browse.BrowseScreens
 import com.chs.yoursplash.presentation.browse.BrowseScreens.*
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailIntent
@@ -152,35 +158,71 @@ fun CollectionDetailScreen(
                 )
             }
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(32.dp),
-            ) {
-                when {
-                    state.isPagingLoading -> {
-                        items(Constants.COUNT_LOADING_ITEM) {
-                            ImageCard(null)
+            if (state.isGrid) {
+                LazyVerticalStaggeredGrid(
+                    columns = StaggeredGridCells.Fixed(2),
+                    contentPadding = PaddingValues(8.dp),
+                    verticalItemSpacing = 8.dp,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    when {
+                        state.isPagingLoading -> {
+                            items(Constants.COUNT_LOADING_ITEM) {
+                                ImageCard(null, isShowUserInfo = false)
+                            }
+                        }
+
+                        isEmpty -> {
+                            item(span = StaggeredGridItemSpan.FullLine) {
+                                ItemEmpty(
+                                    text = stringResource(Res.string.text_no_collections)
+                                )
+                            }
+                        }
+
+                        else -> {
+                            items(count = pagingItems.itemCount) { idx ->
+                                ImageCard(
+                                    photoInfo = pagingItems[idx],
+                                    isShowUserInfo = false,
+                                    onPhotoClick = { onIntent(CollectionDetailIntent.ClickPhoto(it)) },
+                                    onUserClick = { onIntent(CollectionDetailIntent.ClickUser(it)) }
+                                )
+                            }
                         }
                     }
-
-                    isEmpty -> {
-                        item {
-                            ItemEmpty(
-                                modifier = Modifier.fillParentMaxSize(),
-                                text = stringResource(Res.string.text_no_photos)
-                            )
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(32.dp),
+                ) {
+                    when {
+                        state.isPagingLoading -> {
+                            items(Constants.COUNT_LOADING_ITEM) {
+                                ImageCard(null)
+                            }
                         }
-                    }
 
-                    else -> {
-                        items(count = pagingItems.itemCount) { idx ->
-                            ImageCard(
-                                photoInfo = pagingItems[idx],
-                                onPhotoClick = { onIntent(CollectionDetailIntent.ClickPhoto(it)) },
-                                onUserClick = { onIntent(CollectionDetailIntent.ClickUser(it)) }
-                            )
+                        isEmpty -> {
+                            item {
+                                ItemEmpty(
+                                    modifier = Modifier.fillParentMaxSize(),
+                                    text = stringResource(Res.string.text_no_photos)
+                                )
+                            }
+                        }
+
+                        else -> {
+                            items(count = pagingItems.itemCount) { idx ->
+                                ImageCard(
+                                    photoInfo = pagingItems[idx],
+                                    onPhotoClick = { onIntent(CollectionDetailIntent.ClickPhoto(it)) },
+                                    onUserClick = { onIntent(CollectionDetailIntent.ClickUser(it)) }
+                                )
+                            }
                         }
                     }
                 }

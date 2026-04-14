@@ -5,5 +5,6 @@ import com.chs.yoursplash.domain.model.UnSplashCollection
 data class CollectionDetailState(
     val collectionDetailInfo: UnSplashCollection? = null,
     val isDetailLoad: Boolean = false,
-    val isPagingLoading: Boolean = false
+    val isPagingLoading: Boolean = false,
+    val isGrid: Boolean = false
 )

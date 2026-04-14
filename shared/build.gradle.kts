@@ -148,14 +148,14 @@ dependencies {
         add(it, libs.room.compiler)
     }
 
-    listOf(
-        "kspCommonMainMetadata",
-        "kspAndroid",
-        "kspIosSimulatorArm64",
-        "kspIosArm64"
-    ).forEach {
-        add(it, libs.koin.compiler)
-    }
+//    listOf(
+//        "kspCommonMainMetadata",
+//        "kspAndroid",
+//        "kspIosSimulatorArm64",
+//        "kspIosArm64"
+//    ).forEach {
+//        add(it, libs.koin.compiler)
+//    }
 }
 
 compose.resources {

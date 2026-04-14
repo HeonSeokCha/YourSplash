@@ -25,6 +25,7 @@ import org.jetbrains.compose.resources.stringResource
 fun UserDetailLikeScreen(
     photoList: Flow<PagingData<Photo>>,
     isLoading: Boolean,
+    isGrid: Boolean,
     onIntent: (UserDetailIntent) -> Unit
 ) {
     val pagingItems = photoList.collectAsLazyPagingItems()

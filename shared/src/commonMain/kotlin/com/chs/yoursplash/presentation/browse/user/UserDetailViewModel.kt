@@ -1,16 +1,15 @@
 package com.chs.yoursplash.presentation.browse.user
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.domain.model.UserDetail
+import com.chs.yoursplash.domain.model.ViewType
 import com.chs.yoursplash.domain.usecase.GetUserCollectionUseCase
 import com.chs.yoursplash.domain.usecase.GetUserDetailUseCase
 import com.chs.yoursplash.domain.usecase.GetUserLikesUseCase
 import com.chs.yoursplash.domain.usecase.GetUserPhotoUseCase
-import com.chs.yoursplash.util.Constants
+import com.chs.yoursplash.domain.usecase.GetViewTypeUseCase
 import com.chs.yoursplash.util.NetworkResult
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,6 +23,7 @@ import kotlinx.coroutines.launch
 class UserDetailViewModel(
     private val userName: String,
     private val getUserDetailUseCase: GetUserDetailUseCase,
+    private val getViewTypeUseCase: GetViewTypeUseCase,
     getUserPhotoUseCase: GetUserPhotoUseCase,
     getUserLikesUseCase: GetUserLikesUseCase,
     getUserCollectionUseCase: GetUserCollectionUseCase,
@@ -81,6 +81,16 @@ class UserDetailViewModel(
     }
 
     private fun getUserDetailInfo() {
+        viewModelScope.launch {
+            getViewTypeUseCase().collect { viewType ->
+                _state.update {
+                    it.copy(
+                        isGrid = viewType == ViewType.Grid
+                    )
+                }
+            }
+        }
+
         viewModelScope.launch {
             getUserDetailUseCase(userName).collect { result ->
                 _state.update {

@@ -7,6 +7,7 @@ data class UserDetailState(
     val isUserDetailLoading: Boolean = true,
     val selectIdx: Int = 0,
     val tabList: List<String> = listOf("PHOTOS", "LIKES", "COLLECTIONS"),
+    val isGrid: Boolean = false,
     val isPhotoLoading: Boolean = false,
     val isLikeLoading: Boolean = false,
     val isCollectLoading: Boolean = false

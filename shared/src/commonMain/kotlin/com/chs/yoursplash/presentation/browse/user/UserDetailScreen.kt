@@ -167,6 +167,7 @@ fun UserDetailScreen(
                             UserDetailPhotoScreen(
                                 photoList = photoPaging,
                                 isLoading = state.isPhotoLoading,
+                                isGrid = state.isGrid,
                                 onIntent = onIntent
                             )
                         }
@@ -175,6 +176,7 @@ fun UserDetailScreen(
                             UserDetailLikeScreen(
                                 photoList = likePaging,
                                 isLoading = state.isLikeLoading,
+                                isGrid = state.isGrid,
                                 onIntent = onIntent
                             )
                         }
@@ -183,6 +185,7 @@ fun UserDetailScreen(
                             UserDetailCollectionScreen(
                                 collectionList = collectPaging,
                                 isLoading = state.isCollectLoading,
+                                isGrid = state.isGrid,
                                 onIntent = onIntent
                             )
                         }
