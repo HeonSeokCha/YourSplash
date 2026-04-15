@@ -74,107 +74,106 @@ fun UserDetailPhotoScreen(
         }
     }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize(),
-        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(32.dp)
-    ) {
-        when {
-            isLoading -> {
-                items(count = Constants.COUNT_LOADING_ITEM) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(300.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .shimmer(true)
-                            .padding(
-                                start = 8.dp,
-                                end = 8.dp,
-                                bottom = 16.dp
-                            )
-                    )
+    if (isGrid) {
+        LazyVerticalStaggeredGrid(
+            columns = StaggeredGridCells.Fixed(2),
+            contentPadding = PaddingValues(8.dp),
+            verticalItemSpacing = 8.dp,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            when {
+                isLoading -> {
+                    items(count = Constants.COUNT_LOADING_ITEM) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(300.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .shimmer(true)
+                                .padding(
+                                    start = 8.dp,
+                                    end = 8.dp,
+                                    bottom = 16.dp
+                                )
+                        )
+                    }
+                }
+
+                isEmpty -> {
+                    item(span = StaggeredGridItemSpan.FullLine) {
+                        ItemEmpty(
+                            modifier = Modifier.fillMaxSize(),
+                            text = stringResource(Res.string.text_no_photos)
+                        )
+                    }
+                }
+
+                else -> {
+                    items(count = pagingItems.itemCount) { idx ->
+                        val item = pagingItems[idx] ?: return@items
+                        ShimmerImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .aspectRatio((item.width.toFloat() / item.height.toFloat()))
+                                .clickable {
+                                    onIntent(UserDetailIntent.ClickPhoto(item.id))
+                                },
+                            url = item.urls
+                        )
+                    }
                 }
             }
-
-            isEmpty -> {
-                item {
-                    ItemEmpty(
-                        modifier = Modifier.fillParentMaxSize(),
-                        text = stringResource(Res.string.text_no_photos)
-                    )
+        }
+    } else {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(32.dp)
+        ) {
+            when {
+                isLoading -> {
+                    items(count = Constants.COUNT_LOADING_ITEM) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(300.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .shimmer(true)
+                                .padding(
+                                    start = 8.dp,
+                                    end = 8.dp,
+                                    bottom = 16.dp
+                                )
+                        )
+                    }
                 }
-            }
 
-            else -> {
-                items(count = pagingItems.itemCount) { idx ->
-                    val item = pagingItems[idx] ?: return@items
-                    ShimmerImage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio((item.width.toFloat() / item.height.toFloat()))
-                            .clickable {
-                                onIntent(UserDetailIntent.ClickPhoto(item.id))
-                            },
-                        url = item.urls
-                    )
+                isEmpty -> {
+                    item {
+                        ItemEmpty(
+                            modifier = Modifier.fillParentMaxSize(),
+                            text = stringResource(Res.string.text_no_photos)
+                        )
+                    }
+                }
+
+                else -> {
+                    items(count = pagingItems.itemCount) { idx ->
+                        val item = pagingItems[idx] ?: return@items
+                        ShimmerImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .aspectRatio((item.width.toFloat() / item.height.toFloat()))
+                                .clip(RoundedCornerShape(10.dp))
+                                .clickable {
+                                    onIntent(UserDetailIntent.ClickPhoto(item.id))
+                                },
+                            url = item.urls
+                        )
+                    }
                 }
             }
         }
     }
-
-//        LazyVerticalStaggeredGrid(
-//            modifier = Modifier
-//                .fillMaxSize(),
-//            state = lazyVerticalStaggeredState,
-//            columns = StaggeredGridCells.Fixed(3),
-//            horizontalArrangement = Arrangement.spacedBy(4.dp),
-//            verticalItemSpacing = 4.dp,
-//            contentPadding = PaddingValues(4.dp)
-//        ) {
-//            when {
-//                isLoading -> {
-//                    items(count = Constants.COUNT_LOADING_ITEM) {
-//                        Box(
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .height(300.dp)
-//                                .clip(RoundedCornerShape(10.dp))
-//                                .shimmer(true)
-//                                .padding(
-//                                    start = 8.dp,
-//                                    end = 8.dp,
-//                                    bottom = 16.dp
-//                                )
-//                        )
-//                    }
-//                }
-//
-//                isEmpty -> {
-//                    item(span = StaggeredGridItemSpan.FullLine) {
-//                        ItemEmpty(
-//                            modifier = Modifier.fillMaxSize(),
-//                            text = stringResource(Res.string.text_no_photos)
-//                        )
-//                    }
-//                }
-//
-//                else -> {
-//                    items(count = pagingItems.itemCount) { idx ->
-//                        val item = pagingItems[idx] ?: return@items
-//                        ShimmerImage(
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .aspectRatio((item.width.toFloat() / item.height.toFloat()))
-//                                .clickable {
-//                                    onIntent(UserDetailIntent.ClickPhoto(item.id))
-//                                },
-//                            url = item.urls
-//                        )
-//                    }
-//                }
-//            }
-//        }
-
 }
