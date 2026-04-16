@@ -4,7 +4,9 @@ import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.repository.PhotoRepository
 import com.chs.yoursplash.util.NetworkResult
 import kotlinx.coroutines.flow.Flow
+import org.koin.core.annotation.Single
 
+@Single
 class GetCollectionDetailUseCase(
     private val repository: PhotoRepository
 ) {

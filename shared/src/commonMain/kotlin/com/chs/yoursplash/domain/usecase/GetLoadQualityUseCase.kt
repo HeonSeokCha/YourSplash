@@ -5,7 +5,9 @@ import com.chs.yoursplash.domain.repository.SettingRepository
 import com.chs.yoursplash.util.Constants
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.koin.core.annotation.Single
 
+@Single
 class GetLoadQualityUseCase(
     private val repository: SettingRepository
 ) {

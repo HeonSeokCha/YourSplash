@@ -1,7 +1,9 @@
 package com.chs.yoursplash.domain.usecase
 
 import com.chs.yoursplash.domain.repository.SettingRepository
+import org.koin.core.annotation.Single
 
+@Single
 class PutStringPrefUseCase(
     private val repository: SettingRepository
 ) {

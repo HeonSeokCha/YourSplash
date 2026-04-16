@@ -1,7 +1,7 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import org.gradle.kotlin.dsl.android
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -15,9 +15,10 @@ plugins {
 }
 
 kotlin {
-    sourceSets.commonMain {
-        kotlin.srcDir("build/generated/ksp/metadata")
-    }
+//    sourceSets.commonMain {
+//        kotlin.srcDir("build/generated/ksp/metadata")
+//    }
+
 
     androidTarget {
         compilerOptions {
@@ -66,7 +67,8 @@ kotlin {
 
             implementation(libs.koin.core)
             implementation(libs.bundles.koin)
-            api(libs.koin.annotation)
+
+            implementation(libs.koin.annotation)
 
             implementation(libs.bundles.coil)
 
@@ -75,6 +77,10 @@ kotlin {
             implementation(libs.datastore.preferences)
             implementation(libs.datastore)
         }
+    }
+
+    sourceSets.named("commonMain").configure {
+        kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
     }
 }
 
@@ -133,6 +139,7 @@ ksp {
     arg("room.schemaLocation", "${projectDir}/schemas")
     arg("KOIN_CONFIG_CHECK", "true")
     arg("KOIN_USE_COMPOSE_VIEWMODEL","true")
+    arg("KOIN_DEFAULT_MODULE", "true")
 }
 
 room {
@@ -148,14 +155,14 @@ dependencies {
         add(it, libs.room.compiler)
     }
 
-//    listOf(
-//        "kspCommonMainMetadata",
-//        "kspAndroid",
-//        "kspIosSimulatorArm64",
-//        "kspIosArm64"
-//    ).forEach {
-//        add(it, libs.koin.compiler)
-//    }
+    listOf(
+        "kspCommonMainMetadata",
+        "kspAndroid",
+        "kspIosSimulatorArm64",
+        "kspIosArm64"
+    ).forEach {
+        add(it, libs.koin.compiler)
+    }
 }
 
 compose.resources {
@@ -164,8 +171,6 @@ compose.resources {
     generateResClass = auto
 }
 
-//project.tasks.withType(KotlinCompilationTask::class.java).configureEach {
-//    if(name != "kspCommonMainKotlinMetadata") {
-//        dependsOn("kspCommonMainKotlinMetadata")
-//    }
-//}
+tasks.matching { it.name.startsWith("ksp") && it.name != "kspCommonMainKotlinMetadata" }.configureEach {
+    dependsOn("kspCommonMainKotlinMetadata")
+}

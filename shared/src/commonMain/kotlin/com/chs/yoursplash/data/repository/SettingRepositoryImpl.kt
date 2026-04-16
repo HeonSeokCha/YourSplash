@@ -4,7 +4,9 @@ import com.chs.yoursplash.domain.repository.SettingRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import org.koin.core.annotation.Single
 
+@Single
 class SettingRepositoryImpl(
     val dataStore: DataStorePrefManager
 ) : SettingRepository {

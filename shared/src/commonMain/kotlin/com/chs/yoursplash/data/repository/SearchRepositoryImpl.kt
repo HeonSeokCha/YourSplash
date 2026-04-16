@@ -18,7 +18,9 @@ import com.chs.yoursplash.domain.model.User
 import com.chs.yoursplash.domain.repository.SearchRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import org.koin.core.annotation.Single
 
+@Single
 class SearchRepositoryImpl(
     private val client: UnSplashService,
     private val database: YourSplashDatabase,

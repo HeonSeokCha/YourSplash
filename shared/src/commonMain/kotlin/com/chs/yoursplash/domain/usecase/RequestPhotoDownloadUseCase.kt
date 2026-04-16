@@ -3,7 +3,9 @@ package com.chs.yoursplash.domain.usecase
 import com.chs.yoursplash.domain.repository.PhotoRepository
 import com.chs.yoursplash.util.NetworkResult
 import kotlinx.coroutines.flow.Flow
+import org.koin.core.annotation.Single
 
+@Single
 class RequestPhotoDownloadUseCase(
     private val repository: PhotoRepository,
 ) {

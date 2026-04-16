@@ -8,7 +8,9 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import org.koin.core.annotation.Single
 
+@Single
 class GetHomePhotosUseCase(
     private val repository: PhotoRepository,
     private val getLoadQualityUseCase: GetLoadQualityUseCase

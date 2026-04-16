@@ -19,7 +19,9 @@ import com.chs.yoursplash.util.NetworkResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import org.koin.core.annotation.Single
 
+@Single
 class UserRepositoryImpl(
     private val client: UnSplashService,
     private val dataStore: DataStorePrefManager

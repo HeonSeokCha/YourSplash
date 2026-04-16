@@ -4,7 +4,9 @@ import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.repository.PhotoRepository
 import com.chs.yoursplash.util.NetworkResult
 import kotlinx.coroutines.flow.Flow
+import org.koin.core.annotation.Single
 
+@Single
 class GetPhotoRelatedListUseCase(
     private val repository: PhotoRepository
 ) {

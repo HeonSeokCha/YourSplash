@@ -25,7 +25,9 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import org.koin.core.annotation.Single
 
+@Single
 class PhotoRepositoryImpl(
     private val client: UnSplashService,
     private val dataStore: DataStorePrefManager,

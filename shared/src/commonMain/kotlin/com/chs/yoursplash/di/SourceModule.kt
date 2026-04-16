@@ -1,5 +1,7 @@
 package com.chs.yoursplash.di
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.data.api.UnSplashService
 import com.chs.yoursplash.data.repository.DataStorePrefManager
@@ -8,23 +10,27 @@ import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpResponseValidator
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.request.headers
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.koin.core.annotation.Module
+import org.koin.core.annotation.Single
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
-val sourceModule = module {
-    singleOf(::UnSplashService)
-    singleOf(::DataStorePrefManager)
-}
+@Module
+class SourceModule {
+    @Single
+    fun provideUnSplashService(client: HttpClient): UnSplashService = UnSplashService(client)
 
-val provideHttpClientModule = module {
-    single {
-        HttpClient {
+    @Single
+    fun provideDataStorePrefManager(dataStore: DataStore<Preferences>) = DataStorePrefManager(dataStore)
+
+    @Single
+    fun provideHttpClient(): HttpClient {
+        return HttpClient {
             expectSuccess = true
             defaultRequest {
                 headers {
