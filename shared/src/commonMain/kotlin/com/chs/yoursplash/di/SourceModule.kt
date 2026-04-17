@@ -22,11 +22,11 @@ import org.koin.dsl.module
 
 @Module
 class SourceModule {
-    @Single
-    fun provideUnSplashService(client: HttpClient): UnSplashService = UnSplashService(client)
-
-    @Single
-    fun provideDataStorePrefManager(dataStore: DataStore<Preferences>) = DataStorePrefManager(dataStore)
+//    @Single
+//    fun provideUnSplashService(client: HttpClient): UnSplashService = UnSplashService(client)
+//
+//    @Single
+//    fun provideDataStorePrefManager(dataStore: DataStore<Preferences>) = DataStorePrefManager(dataStore)
 
     @Single
     fun provideHttpClient(): HttpClient {

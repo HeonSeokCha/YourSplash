@@ -11,13 +11,15 @@ import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 
 @Module
-actual class PlatformModule {
+actual class PlatformModule(
+    private val context: Context
+) {
     @Single
-    actual fun provideDatabase(context: Context): YourSplashDatabase = getDatabaseBuilder(context)
+    actual fun provideDatabase(): YourSplashDatabase = getDatabaseBuilder(context)
 
     @Single
-    actual fun providePref(context: Context): DataStore<Preferences> = createDataStores(context)
+    actual fun providePref(): DataStore<Preferences> = createDataStores(context)
 
     @Single
-    actual fun provideFileManager(context: Context): FileManager = FileManager(context)
+    actual fun provideFileManager(): FileManager = FileManager(context)
 }
