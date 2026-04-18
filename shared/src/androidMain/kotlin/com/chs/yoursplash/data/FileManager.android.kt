@@ -7,9 +7,8 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 
-actual class FileManager(
-    private val context: Context
-) {
+actual class FileManager(scope : org.koin.core.scope.Scope) {
+    val context: Context = scope.get()
     companion object {
         private val PATH: String = Environment.getExternalStorageDirectory().absolutePath +
                 "/${Environment.DIRECTORY_PICTURES}/YourSplash"

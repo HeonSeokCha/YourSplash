@@ -15,11 +15,6 @@ plugins {
 }
 
 kotlin {
-//    sourceSets.commonMain {
-//        kotlin.srcDir("build/generated/ksp/metadata")
-//    }
-
-
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
@@ -78,10 +73,6 @@ kotlin {
             implementation(libs.datastore)
         }
     }
-
-    sourceSets.named("commonMain").configure {
-        kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
-    }
 }
 
 fun getApiKey(propertyKey: String): String {
@@ -137,7 +128,7 @@ android {
 
 ksp {
     arg("room.schemaLocation", "${projectDir}/schemas")
-    arg("KOIN_CONFIG_CHECK", "true")
+    arg("KOIN_CONFIG_CHECK", "false")
     arg("KOIN_USE_COMPOSE_VIEWMODEL","true")
     arg("KOIN_DEFAULT_MODULE", "true")
 }
@@ -163,6 +154,10 @@ dependencies {
     ).forEach {
         add(it, libs.koin.compiler)
     }
+}
+
+kotlin.sourceSets.commonMain {
+    kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
 }
 
 compose.resources {

@@ -1,15 +1,24 @@
 package com.chs.yoursplash
 
 import androidx.compose.ui.window.ComposeUIViewController
+import com.chs.yoursplash.di.IosModule
+import com.chs.yoursplash.di.PlatformModule
 import com.chs.yoursplash.domain.model.BrowseInfo
 import platform.UIKit.UIApplication
 import platform.UIKit.UINavigationController
 import com.chs.yoursplash.presentation.YourSplashApp
 import com.chs.yoursplash.util.Constants
+import org.koin.core.context.startKoin
+import org.koin.plugin.module.dsl.startKoin
 
 fun MainViewController() = ComposeUIViewController(
     configure = {
         enforceStrictPlistSanityCheck = false
+        startKoin {
+            modules(
+                PlatformModule().module
+            )
+        }
     }
 ) {
 

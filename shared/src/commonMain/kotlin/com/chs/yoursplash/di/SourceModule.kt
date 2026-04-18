@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.data.api.UnSplashService
-import com.chs.yoursplash.data.repository.DataStorePrefManager
+import com.chs.yoursplash.data.DataStorePrefManager
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpResponseValidator
@@ -22,11 +22,11 @@ import org.koin.dsl.module
 
 @Module
 class SourceModule {
-//    @Single
-//    fun provideUnSplashService(client: HttpClient): UnSplashService = UnSplashService(client)
-//
-//    @Single
-//    fun provideDataStorePrefManager(dataStore: DataStore<Preferences>) = DataStorePrefManager(dataStore)
+    @Single
+    fun provideUnSplashService(client: HttpClient): UnSplashService = UnSplashService(client)
+
+    @Single
+    fun provideDataStorePrefManager(dataStore: DataStore<Preferences>) = DataStorePrefManager(dataStore)
 
     @Single
     fun provideHttpClient(): HttpClient {

@@ -1,10 +1,14 @@
 package com.chs.yoursplash
 
 import android.app.Application
+import com.chs.yoursplash.di.AndroidModule
+import com.chs.yoursplash.di.SourceModule
 import com.chs.yoursplash.di.initKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.component.KoinComponent
+import org.koin.ksp.generated.defaultModule
+import org.koin.ksp.generated.module
 
 class YourSplashApplication : Application(), KoinComponent {
     override fun onCreate() {
@@ -12,6 +16,7 @@ class YourSplashApplication : Application(), KoinComponent {
         initKoin {
             androidLogger()
             androidContext(this@YourSplashApplication)
+            modules(AndroidModule().module)
         }
     }
 }

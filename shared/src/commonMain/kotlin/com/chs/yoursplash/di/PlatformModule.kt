@@ -7,8 +7,11 @@ import com.chs.yoursplash.data.db.YourSplashDatabase
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 
-expect class PlatformModule {
-    fun provideDatabase(): YourSplashDatabase
-    fun providePref(): DataStore<Preferences>
-    fun provideFileManager(): FileManager
-}
+//class PlatformModule {
+//    @Single
+//    fun provideDatabase(scope : org.koin.core.scope.Scope): YourSplashDatabase
+//    @Single
+//    fun providePref(scope : org.koin.core.scope.Scope): DataStore<Preferences>
+//    @Single
+//    fun provideFileManager(scope : org.koin.core.scope.Scope): FileManager
+//}

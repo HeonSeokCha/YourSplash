@@ -4,6 +4,8 @@ package com.chs.yoursplash
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import com.chs.yoursplash.data.DATA_STORE_FILE_NAME
+import com.chs.yoursplash.data.createDataStore
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager

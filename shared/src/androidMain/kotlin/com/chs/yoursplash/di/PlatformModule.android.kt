@@ -1,6 +1,5 @@
 package com.chs.yoursplash.di
 
-import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.chs.yoursplash.createDataStores
@@ -11,15 +10,13 @@ import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 
 @Module
-actual class PlatformModule(
-    private val context: Context
-) {
+class AndroidModule {
     @Single
-    actual fun provideDatabase(): YourSplashDatabase = getDatabaseBuilder(context)
+    fun provideDatabase(scope : org.koin.core.scope.Scope): YourSplashDatabase = getDatabaseBuilder(scope)
 
     @Single
-    actual fun providePref(): DataStore<Preferences> = createDataStores(context)
+    fun providePref(scope : org.koin.core.scope.Scope): DataStore<Preferences> = createDataStores(scope)
 
     @Single
-    actual fun provideFileManager(): FileManager = FileManager(context)
+    fun provideFileManager(scope : org.koin.core.scope.Scope): FileManager = FileManager(scope)
 }

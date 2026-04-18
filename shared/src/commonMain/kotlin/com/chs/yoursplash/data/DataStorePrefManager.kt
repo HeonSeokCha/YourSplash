@@ -1,4 +1,4 @@
-package com.chs.yoursplash.data.repository
+package com.chs.yoursplash.data
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
