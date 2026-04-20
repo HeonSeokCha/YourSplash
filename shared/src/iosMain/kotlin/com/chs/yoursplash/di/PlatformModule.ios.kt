@@ -8,16 +8,18 @@ import com.chs.yoursplash.data.db.YourSplashDatabase
 import com.chs.yoursplash.data.db.getDatabaseBuilder
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
-import org.koin.core.scope.Scope
 
 @Module
-actual class PlatformModule {
+class IosPlatformModule {
     @Single
-    actual fun provideDatabase(scope: Scope): YourSplashDatabase = getDatabaseBuilder()
+    fun provideDatabase(): YourSplashDatabase = getDatabaseBuilder()
 
     @Single
-    actual fun providePref(scope: Scope): DataStore<Preferences> = createDataStore()
+    fun providePref(): DataStore<Preferences> = createDataStore()
 
     @Single
-    actual fun provideFileManager(scope: Scope): FileManager = FileManager()
+    fun provideFileManager(): FileManager = FileManager()
 }
+
+actual val platformModule: org.koin.core.module.Module
+    get() = IosPlatformModule().module

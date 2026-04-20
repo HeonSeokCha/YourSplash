@@ -15,13 +15,13 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
-import org.koin.core.module.dsl.singleOf
-import org.koin.dsl.module
 
 @Module
-class SourceModule {
+@ComponentScan("com.chs.yoursplash.data")
+class DataModule {
     @Single
     fun provideUnSplashService(client: HttpClient): UnSplashService = UnSplashService(client)
 

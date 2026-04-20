@@ -1,18 +1,18 @@
 package com.chs.yoursplash.di
 
 import org.koin.core.context.startKoin
-import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration
-import org.koin.ksp.generated.defaultModule
-import org.koin.ksp.generated.module
+import org.koin.ksp.generated.*
 
 
 fun initKoin(config: KoinAppDeclaration? = null) {
     startKoin {
         config?.invoke(this)
         modules(
-            SourceModule().module,
-            defaultModule,
+            platformModule,
+            DomainModule().module,
+            DataModule().module,
+            ViewModelModule().module,
         )
     }
 }

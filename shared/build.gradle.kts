@@ -130,7 +130,6 @@ ksp {
     arg("room.schemaLocation", "${projectDir}/schemas")
     arg("KOIN_CONFIG_CHECK", "false")
     arg("KOIN_USE_COMPOSE_VIEWMODEL","true")
-    arg("KOIN_DEFAULT_MODULE", "true")
 }
 
 room {
