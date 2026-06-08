@@ -1,5 +1,6 @@
 package com.chs.yoursplash.di
 
-import org.koin.core.module.Module
+import org.koin.core.annotation.Module
 
-expect val platformModule : Module
+@Module
+expect class PlatformModule

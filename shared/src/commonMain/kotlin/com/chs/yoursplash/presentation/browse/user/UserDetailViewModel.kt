@@ -1,5 +1,6 @@
 package com.chs.yoursplash.presentation.browse.user
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -19,17 +20,18 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.koin.android.annotation.KoinViewModel
+import org.koin.core.annotation.KoinViewModel
 
 @KoinViewModel
 class UserDetailViewModel(
-    private val userName: String,
+    savedStateHandle: SavedStateHandle,
     private val getUserDetailUseCase: GetUserDetailUseCase,
     private val getViewTypeUseCase: GetViewTypeUseCase,
     getUserPhotoUseCase: GetUserPhotoUseCase,
     getUserLikesUseCase: GetUserLikesUseCase,
     getUserCollectionUseCase: GetUserCollectionUseCase,
 ) : ViewModel() {
+    private val userName: String = ""
 
     private val _state = MutableStateFlow(UserDetailState())
     val state = _state

@@ -1,30 +1,30 @@
 [versions]
-androidStudioGradlePlugin = "9.1.1"
+androidStudioGradlePlugin = "9.2.1"
 
-compileSdkVersion = "36"
+compileSdkVersion = "37"
 android-minSdk = "29"
 android-targetSdk = "36"
-componentsResources = "1.10.3"
-foundation = "1.10.3"
-uiToolingPreview = "1.10.3"
+componentsResources = "1.11.1"
+foundation = "1.11.1"
+uiToolingPreview = "1.11.1"
 versionCode = "1"
 versionName = "1.0"
 
 activity = "1.13.0"
 kspVersion = "2.3.6"
 room = "2.8.4"
-kotlin = "2.3.20"
-coroutine = "1.10.2"
-ktor = "3.4.2"
-compose-plugin = "1.10.3"
+kotlin = "2.3.21"
+coroutine = "1.11.0"
+ktor = "3.5.0"
+compose-plugin = "1.11.1"
 lifecycle = "2.10.0"
 koin = "4.2.1"
-android-paging = "3.4.2"
+android-paging = "3.5.0"
 coil = "3.4.0"
 sqlite = "2.6.2"
 datastore = "1.2.1"
 kotlinxSerializationCore = "1.11.0"
-nav3Core = "1.1.0-rc01"
+nav3Core = "1.1.1"
 
 [libraries]
 # AndroidX
@@ -62,8 +62,7 @@ koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
-koin-annotation = "io.insert-koin:koin-annotations:2.3.1"
-koin-compiler = "io.insert-koin:koin-ksp-compiler:2.3.1"
+koin-annotation = "io.insert-koin:koin-annotations:4.2.1"
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
 koin-nav3 = { module = "io.insert-koin:koin-compose-navigation3", version.ref = "koin" }
 
@@ -123,4 +122,5 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
 room = { id = "androidx.room", version.ref = "room" }
-konfig = "com.codingfeline.buildkonfig:0.18.0"
+konfig = "com.codingfeline.buildkonfig:0.21.2"
+koin-compiler = "io.insert-koin.compiler.plugin:1.0.0"

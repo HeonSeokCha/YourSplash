@@ -1,5 +1,6 @@
 package com.chs.yoursplash.presentation.browse.photo_detail
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chs.yoursplash.domain.usecase.GetDownloadQualityUseCase
@@ -21,16 +22,17 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.koin.android.annotation.KoinViewModel
+import org.koin.core.annotation.KoinViewModel
 
 @KoinViewModel
 class PhotoDetailViewModel(
-    private val imageId: String,
+    savedStateHandle: SavedStateHandle,
     private val getPhotoDetailUseCase: GetPhotoDetailUseCase,
     private val getPhotoRelatedListUseCase: GetPhotoRelatedListUseCase,
     private val requestPhotoDownloadUseCase: RequestPhotoDownloadUseCase,
     private val getPhotoFileExistUseCase: GetPhotoFileExistUseCase
 ) : ViewModel() {
+    private val imageId: String = savedStateHandle[""] ?: ""
     private var imageDetailJob: Job? = null
     private var relatedListJob: Job? = null
     private var downloadJob: Job? = null

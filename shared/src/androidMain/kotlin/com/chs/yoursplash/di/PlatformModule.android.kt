@@ -9,11 +9,9 @@ import com.chs.yoursplash.data.db.YourSplashDatabase
 import com.chs.yoursplash.data.db.getDatabaseBuilder
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
-import org.koin.core.scope.Scope
-import org.koin.ksp.generated.module
 
 @Module
-class AndroidPlatformModule {
+actual class PlatformModule {
     @Single
     fun provideDatabase(context: Context): YourSplashDatabase = getDatabaseBuilder(context)
 
@@ -23,6 +21,3 @@ class AndroidPlatformModule {
     @Single
     fun provideFileManager(context: Context): FileManager = FileManager(context)
 }
-
-actual val platformModule : org.koin.core.module.Module
-    get() = AndroidPlatformModule().module

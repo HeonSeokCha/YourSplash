@@ -19,7 +19,7 @@ import org.koin.core.annotation.ComponentScan
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 
-@Module
+@Module(includes = [PlatformModule::class])
 @ComponentScan("com.chs.yoursplash.data")
 class DataModule {
     @Single

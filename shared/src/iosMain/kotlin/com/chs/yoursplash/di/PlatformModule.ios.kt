@@ -10,7 +10,7 @@ import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 
 @Module
-class IosPlatformModule {
+actual class PlatformModule {
     @Single
     fun provideDatabase(): YourSplashDatabase = getDatabaseBuilder()
 
@@ -20,6 +20,3 @@ class IosPlatformModule {
     @Single
     fun provideFileManager(): FileManager = FileManager()
 }
-
-actual val platformModule: org.koin.core.module.Module
-    get() = IosPlatformModule().module

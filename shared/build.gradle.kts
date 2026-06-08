@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
     alias(libs.plugins.konfig)
+    alias(libs.plugins.koin.compiler)
 }
 
 kotlin {
@@ -143,15 +144,6 @@ dependencies {
         "kspIosArm64"
     ).forEach {
         add(it, libs.room.compiler)
-    }
-
-    listOf(
-        "kspCommonMainMetadata",
-        "kspAndroid",
-        "kspIosSimulatorArm64",
-        "kspIosArm64"
-    ).forEach {
-        add(it, libs.koin.compiler)
     }
 }
 
