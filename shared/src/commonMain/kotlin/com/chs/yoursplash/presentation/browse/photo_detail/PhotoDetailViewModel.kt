@@ -1,11 +1,7 @@
 package com.chs.yoursplash.presentation.browse.photo_detail
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.chs.yoursplash.domain.usecase.GetDownloadQualityUseCase
-import com.chs.yoursplash.domain.usecase.GetWallPaperQualityUseCase
-import com.chs.yoursplash.domain.usecase.GetLoadQualityUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoDetailUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoFileExistUseCase
 import com.chs.yoursplash.domain.usecase.RequestPhotoDownloadUseCase
@@ -16,23 +12,22 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
 import org.koin.core.annotation.KoinViewModel
 
 @KoinViewModel
 class PhotoDetailViewModel(
-    savedStateHandle: SavedStateHandle,
+    @InjectedParam private val imageId: String,
     private val getPhotoDetailUseCase: GetPhotoDetailUseCase,
     private val getPhotoRelatedListUseCase: GetPhotoRelatedListUseCase,
     private val requestPhotoDownloadUseCase: RequestPhotoDownloadUseCase,
     private val getPhotoFileExistUseCase: GetPhotoFileExistUseCase
 ) : ViewModel() {
-    private val imageId: String = savedStateHandle[""] ?: ""
     private var imageDetailJob: Job? = null
     private var relatedListJob: Job? = null
     private var downloadJob: Job? = null

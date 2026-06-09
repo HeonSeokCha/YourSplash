@@ -1,6 +1,5 @@
 package com.chs.yoursplash.presentation.browse.collection_detail
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -16,24 +15,24 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.InjectedParam
 import org.koin.core.annotation.KoinViewModel
 
 @KoinViewModel
 class CollectionDetailViewModel(
-    savedStateHandle: SavedStateHandle,
+    @InjectedParam private val collectionId: String,
     private val getCollectionDetailUseCase: GetCollectionDetailUseCase,
     private val getViewTypeUseCase: GetViewTypeUseCase,
     getCollectionPhotoUseCase: GetCollectionPhotoUseCase
 ) : ViewModel() {
 
     val pagingItems: Flow<PagingData<Photo>> =
-        getCollectionPhotoUseCase(id = "0").cachedIn(viewModelScope)
+        getCollectionPhotoUseCase(id = collectionId).cachedIn(viewModelScope)
 
     private val _state = MutableStateFlow(CollectionDetailState())
     val state = _state
@@ -83,7 +82,7 @@ class CollectionDetailViewModel(
         }
 
         viewModelScope.launch {
-            getCollectionDetailUseCase("0").collect { result ->
+            getCollectionDetailUseCase(collectionId).collect { result ->
                 _state.update {
                     when (result) {
                         is NetworkResult.Loading -> {

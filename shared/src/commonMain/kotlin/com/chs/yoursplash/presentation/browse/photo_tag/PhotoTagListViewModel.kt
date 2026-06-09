@@ -14,14 +14,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
+import org.koin.core.annotation.InjectedParam
 import org.koin.core.annotation.KoinViewModel
 
 @KoinViewModel
 class PhotoTagListViewModel(
+    @InjectedParam private val tagName: String,
     getSearchResultPhotoUseCase: GetSearchResultPhotoUseCase,
 ) : ViewModel() {
-    private val tagName: String = ""
-
 
     val pagingItems: Flow<PagingData<Photo>> = getSearchResultPhotoUseCase(
         query = tagName,
