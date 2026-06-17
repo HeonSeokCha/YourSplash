@@ -18,28 +18,31 @@ import com.chs.yoursplash.presentation.main.MainNavDisplay
 import com.chs.yoursplash.presentation.main.MainScreens
 import com.chs.yoursplash.presentation.main.MainTopBar
 import org.koin.compose.KoinApplication
+import org.koin.plugin.module.dsl.koinConfiguration
 
 @Composable
 fun YourSplashApp(onBrowseInfo: (BrowseInfo) -> Unit) {
-    val backStack: SnapshotStateList<MainScreens> = remember { mutableStateListOf(MainScreens.PhotoScreen) }
-    var currentSearchQuery by remember { mutableStateOf("") }
+    KoinApplication(koinConfiguration<KoinModule>()){
+        val backStack: SnapshotStateList<MainScreens> = remember { mutableStateListOf(MainScreens.PhotoScreen) }
+        var currentSearchQuery by remember { mutableStateOf("") }
 
-    Scaffold(
-        topBar = {
-            MainTopBar(
+        Scaffold(
+            topBar = {
+                MainTopBar(
+                    backStack = backStack,
+                    onSearch = { currentSearchQuery = it }
+                )
+            },
+            bottomBar = { BottomBar(backStack) }
+        ) {
+            MainNavDisplay(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it),
                 backStack = backStack,
-                onSearch = { currentSearchQuery = it }
+                onBrowse = onBrowseInfo,
+                searchQuery = currentSearchQuery,
             )
-        },
-        bottomBar = { BottomBar(backStack) }
-    ) {
-        MainNavDisplay(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it),
-            backStack = backStack,
-            onBrowse = onBrowseInfo,
-            searchQuery = currentSearchQuery,
-        )
+        }
     }
 }
