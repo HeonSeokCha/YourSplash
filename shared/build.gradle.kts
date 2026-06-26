@@ -42,7 +42,6 @@ kotlin {
 
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
-            implementation(libs.room.runtime.android)
         }
         commonMain.dependencies {
             implementation(libs.foundation)
@@ -133,7 +132,7 @@ ksp {
     arg("KOIN_USE_COMPOSE_VIEWMODEL","true")
 }
 
-room {
+room3 {
     schemaDirectory("$projectDir/schemas")
 }
 
@@ -143,7 +142,7 @@ dependencies {
         "kspIosSimulatorArm64",
         "kspIosArm64"
     ).forEach {
-        add(it, libs.room.compiler)
+        add(it, libs.room3.compiler)
     }
 }
 

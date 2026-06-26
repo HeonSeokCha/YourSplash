@@ -12,16 +12,16 @@ versionName = "1.0"
 
 activity = "1.13.0"
 kspVersion = "2.3.6"
-room = "2.8.4"
-kotlin = "2.3.21"
+room = "3.0.0-rc01"
+kotlin = "2.4.0"
 coroutine = "1.11.0"
-ktor = "3.5.0"
+ktor = "3.5.1"
 compose-plugin = "1.11.1"
 lifecycle = "2.10.0"
-koin = "4.2.1"
+koin = "4.2.2"
 android-paging = "3.5.0"
-coil = "3.4.0"
-sqlite = "2.6.2"
+coil = "3.5.0"
+sqlite = "2.7.0-rc01"
 datastore = "1.2.1"
 kotlinxSerializationCore = "1.11.0"
 nav3Core = "1.1.1"
@@ -47,9 +47,8 @@ coil-compose-core = { module = "io.coil-kt.coil3:coil-compose-core", version.ref
 coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 coil = { module = "io.coil-kt.coil3:coil", version.ref = "coil" }
 
-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
-room-runtime-android = { module = "androidx.room:room-runtime-android", version.ref = "room" }
-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+room3-runtime = { module = "androidx.room3:room3-runtime", version.ref = "room" }
+room3-compiler = { module = "androidx.room3:room3-compiler", version.ref = "room" }
 sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 
 ## Kotlin
@@ -62,7 +61,7 @@ koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
-koin-annotation = "io.insert-koin:koin-annotations:4.2.1"
+koin-annotation = "io.insert-koin:koin-annotations:4.2.2"
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
 koin-nav3 = { module = "io.insert-koin:koin-compose-navigation3", version.ref = "koin" }
 
@@ -102,7 +101,7 @@ coil = [
 ]
 
 room = [
-    "room-runtime",
+    "room3-runtime",
     "sqlite-bundled"
 ]
 
@@ -121,6 +120,6 @@ jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
-room = { id = "androidx.room", version.ref = "room" }
-konfig = "com.codingfeline.buildkonfig:0.21.2"
-koin-compiler = "io.insert-koin.compiler.plugin:1.0.0"
+room = { id = "androidx.room3", version.ref = "room" }
+konfig = "com.codingfeline.buildkonfig:0.22.0"
+koin-compiler = "io.insert-koin.compiler.plugin:1.0.1"

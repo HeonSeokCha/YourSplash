@@ -1,8 +1,7 @@
 package com.chs.yoursplash.data.db
 
-import androidx.room.RoomDatabaseConstructor
+import androidx.room3.RoomDatabaseConstructor
 
-@Suppress("NO_ACTUAL_FOR_EXPECT")
 expect object YourSplashDatabaseConstructor : RoomDatabaseConstructor<YourSplashDatabase> {
     override fun initialize(): YourSplashDatabase
 }
