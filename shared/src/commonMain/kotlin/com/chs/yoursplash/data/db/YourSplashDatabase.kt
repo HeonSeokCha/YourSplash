@@ -13,8 +13,5 @@ import com.chs.yoursplash.data.db.entity.SearchHistoryEntity
 )
 @ConstructedBy(YourSplashDatabaseConstructor::class)
 abstract class YourSplashDatabase : RoomDatabase() {
-    companion object {
-        const val DB_NAME: String = "animeList.db"
-    }
     abstract val searchHistoryDao: SearchHistoryDao
 }

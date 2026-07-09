@@ -32,6 +32,7 @@ object Constants {
     val TITLE_WALLPAPER_LOAD_QUALITY: Pair<String, String> = "Wallpaper Quality" to PREFERENCE_KEY_WALLPAPER_QUALITY
     val TITLE_VIEW_TYPE: Pair<String, String> = "View Type" to PREFERENCE_KEY_VIEW_TYPE
 
+    const val DATA_STORE_FILE_NAME = "prefs.preferences_pb"
     const val PREFERENCE_KEY_LOAD_QUALITY: String = "load_quality"
     const val PREFERENCE_KEY_DOWNLOAD_QUALITY: String = "download_quality"
     const val PREFERENCE_KEY_WALLPAPER_QUALITY: String = "wallpaper_quality"
