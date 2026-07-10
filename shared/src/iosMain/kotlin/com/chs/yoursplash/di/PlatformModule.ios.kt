@@ -5,7 +5,6 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.room3.Room
 import com.chs.yoursplash.data.FileManager
-import com.chs.yoursplash.data.createDataStore
 import com.chs.yoursplash.data.db.YourSplashDatabase
 import com.chs.yoursplash.util.Constants.DATA_STORE_FILE_NAME
 import kotlinx.cinterop.ExperimentalForeignApi
