@@ -10,10 +10,14 @@ import com.chs.yoursplash.domain.usecase.GetHomePhotosUseCase
 import com.chs.yoursplash.domain.usecase.GetViewTypeUseCase
 import com.chs.yoursplash.presentation.bottom.photo.PhotoEffect.*
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -26,20 +30,15 @@ class PhotoViewModel(
     getHomePhotosUseCase: GetHomePhotosUseCase,
     private val getViewTypeUseCase: GetViewTypeUseCase
 ) : ViewModel() {
-
-    val pagingDataFlow: Flow<PagingData<Photo>> = getHomePhotosUseCase()
-        .cachedIn(viewModelScope)
+    val pagingDataFlow: Flow<PagingData<Photo>> = flow {
+        getViewTypeUseCase().collect { emit(it) }
+    }.flatMapLatest {
+        initViewType(it)
+        getHomePhotosUseCase()
+    }.cachedIn(viewModelScope)
 
     private val _state = MutableStateFlow(PhotoState())
-    val state = _state
-        .onStart {
-            observeViewType()
-        }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000L),
-            _state.value
-        )
+    val state = _state.asStateFlow()
 
     private val _effect = Channel<PhotoEffect>(Channel.BUFFERED)
     val effect = _effect.receiveAsFlow()
@@ -80,11 +79,7 @@ class PhotoViewModel(
         _state.value = reducer(_state.value)
     }
 
-    private fun observeViewType() {
-        viewModelScope.launch {
-            getViewTypeUseCase().collect { viewType ->
-                _state.update { it.copy(isGrid = viewType == ViewType.Grid) }
-            }
-        }
+    private fun initViewType(viewType: ViewType) {
+        _state.update { it.copy(isGrid = viewType == ViewType.Grid) }
     }
 }
