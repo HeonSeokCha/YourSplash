@@ -1,27 +1,21 @@
 package com.chs.yoursplash.presentation.main
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
-import androidx.navigation3.ui.NavDisplay
-import androidx.navigation3.ui.defaultTransitionSpec
 import com.chs.yoursplash.domain.model.BrowseInfo
+import com.chs.yoursplash.presentation.base.YourNavDisplay
 import com.chs.yoursplash.presentation.bottom.collection.CollectionScreenRoot
 import com.chs.yoursplash.presentation.bottom.collection.CollectionViewModel
 import com.chs.yoursplash.presentation.bottom.photo.PhotoScreenRoot
 import com.chs.yoursplash.presentation.bottom.photo.PhotoViewModel
-import com.chs.yoursplash.presentation.search.SearchIntent
 import com.chs.yoursplash.presentation.search.SearchResultViewModel
 import com.chs.yoursplash.presentation.search.SearchScreenRoot
 import com.chs.yoursplash.presentation.setting.SettingScreenRoot
 import com.chs.yoursplash.presentation.setting.SettingViewModel
-import com.chs.yoursplash.util.defaultPredictivePopTransitionSpec2
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import org.koin.compose.viewmodel.koinViewModel
@@ -33,16 +27,9 @@ fun MainNavDisplay(
     onBrowse: (BrowseInfo) -> Unit,
     searchQuery: String
 ) {
-    NavDisplay(
+    YourNavDisplay(
         modifier = modifier,
         backStack = backStack,
-        onBack = { backStack.removeLastOrNull() },
-        entryDecorators = listOf(
-            rememberSaveableStateHolderNavEntryDecorator(),
-            rememberViewModelStoreNavEntryDecorator()
-        ),
-        popTransitionSpec = defaultTransitionSpec(),
-        predictivePopTransitionSpec = defaultPredictivePopTransitionSpec2(),
         entryProvider = entryProvider {
             entry<MainScreens.PhotoScreen> {
                 val viewModel = koinViewModel<PhotoViewModel>()
