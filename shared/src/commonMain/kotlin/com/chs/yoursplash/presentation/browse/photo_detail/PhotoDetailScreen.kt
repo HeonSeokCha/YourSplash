@@ -110,7 +110,6 @@ fun PhotoDetailScreen(
             expandContent = {
                 ShimmerImage(
                     modifier = Modifier
-                        .fillMaxWidth()
                         .aspectRatio(
                             (state.imageDetailInfo?.width ?: 16).toFloat() /
                                     (state.imageDetailInfo?.height ?: 9).toFloat()
@@ -118,9 +117,7 @@ fun PhotoDetailScreen(
                         .shimmer(state.isDetailLoading && (state.imageDetailInfo == null))
                         .clickable {
                             if (state.imageDetailInfo == null) return@clickable
-                            onIntent(
-                                PhotoDetailIntent.ClickPhotoDetail(state.imageDetailInfo.url)
-                            )
+                            onIntent(PhotoDetailIntent.ClickPhotoDetail(state.imageDetailInfo.url))
                         },
                     url = state.imageDetailInfo?.url
                 )

@@ -1,5 +1,6 @@
 package com.chs.yoursplash.data.mapper
 
+import com.chs.yoursplash.data.db.entity.FavoriteImageEntity
 import com.chs.yoursplash.data.model.*
 import com.chs.yoursplash.domain.model.Exif
 import com.chs.yoursplash.domain.model.LoadQuality
@@ -16,6 +17,7 @@ import com.chs.yoursplash.domain.model.User
 import com.chs.yoursplash.domain.model.UserDetail
 import com.chs.yoursplash.domain.model.UserPhotos
 import com.chs.yoursplash.domain.model.UserProfileImage
+import kotlin.time.Clock
 
 fun ResponsePhoto.toUnSplashImage(quality: LoadQuality): Photo {
     return Photo(
@@ -166,5 +168,13 @@ fun ResponseCollection.toPhotoCollection(quality: LoadQuality): UnSplashCollecti
         previewPhotos = previewPhotos?.map {
             it.toRelatedCollectionPreview(quality)
         }
+    )
+}
+
+fun Photo.toFavoriteImage(): FavoriteImageEntity {
+    return FavoriteImageEntity(
+        imageId = this.id,
+        imageUrl = this.urls ?: "",
+        createTime = Clock.System.now().toEpochMilliseconds()
     )
 }

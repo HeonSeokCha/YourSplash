@@ -7,6 +7,8 @@ import com.chs.yoursplash.data.DataStorePrefManager
 import com.chs.yoursplash.data.FileManager
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.data.api.UnSplashService
+import com.chs.yoursplash.data.db.dao.FavoriteImageDao
+import com.chs.yoursplash.data.mapper.toFavoriteImage
 import com.chs.yoursplash.data.mapper.toPhotoCollection
 import com.chs.yoursplash.data.mapper.toUnSplashImage
 import com.chs.yoursplash.data.mapper.toUnSplashImageDetail
@@ -26,13 +28,15 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.Single
 
 @Single
 class PhotoRepositoryImpl(
     private val client: UnSplashService,
     private val dataStore: DataStorePrefManager,
-    private val fileManager: FileManager
+    private val fileManager: FileManager,
+    private val favoriteImageDao: FavoriteImageDao
 ) : PhotoRepository {
     override fun getPagingPhoto(loadQuality: LoadQuality): Flow<PagingData<Photo>> {
         return Pager(
@@ -187,4 +191,14 @@ class PhotoRepositoryImpl(
             false
         }
     }
+
+    override fun getFavoriteState(imageId: String): Flow<Boolean> {
+        return favoriteImageDao.getFavoriteState(imageId).map { it != null }
+    }
+
+    override suspend fun insertFavoriteImage(photo: Photo) =
+        favoriteImageDao.insertEntity(photo.toFavoriteImage())
+
+    override suspend fun deleteFavoriteImage(imageId: String) =
+        favoriteImageDao.deleteFromId(imageId)
 }

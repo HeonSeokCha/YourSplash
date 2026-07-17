@@ -1,6 +1,7 @@
 package com.chs.yoursplash.presentation.main
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.PermMedia
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -13,6 +14,9 @@ sealed interface MainScreens {
 
     @Serializable
     data object CollectionScreen : MainScreens
+
+    @Serializable
+    data object FavoriteScreen : MainScreens
 
     @Serializable
     data object SearchScreen : MainScreens
@@ -28,4 +32,5 @@ enum class BottomNavigation(
 ) {
     Photo("Photo", Icons.Filled.Photo, MainScreens.PhotoScreen),
     Collection("Collection", Icons.Filled.PermMedia, MainScreens.CollectionScreen),
+    Favorite("Favorite", Icons.Filled.Favorite, MainScreens.FavoriteScreen)
 }

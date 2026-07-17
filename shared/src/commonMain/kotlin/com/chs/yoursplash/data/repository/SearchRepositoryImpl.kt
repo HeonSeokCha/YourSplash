@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.data.api.UnSplashService
 import com.chs.yoursplash.data.db.YourSplashDatabase
+import com.chs.yoursplash.data.db.dao.SearchHistoryDao
 import com.chs.yoursplash.data.db.entity.SearchHistoryEntity
 import com.chs.yoursplash.data.paging.SearchCollectionPaging
 import com.chs.yoursplash.data.paging.SearchPhotoPaging
@@ -23,7 +24,7 @@ import org.koin.core.annotation.Single
 @Single
 class SearchRepositoryImpl(
     private val client: UnSplashService,
-    private val database: YourSplashDatabase,
+    private val searchHistoryDao: SearchHistoryDao
 ) : SearchRepository {
 
     override fun getSearchResultPhoto(
@@ -74,18 +75,18 @@ class SearchRepositoryImpl(
     }
 
     override suspend fun insertSearchHistory(query: String) {
-        database.searchHistoryDao.insertEntity(
+        searchHistoryDao.insertEntity(
             SearchHistoryEntity(searchQuery = query)
         )
     }
 
     override suspend fun deleteSearchHistory(query: String) {
-        database.searchHistoryDao.deleteEntity(
+        searchHistoryDao.deleteEntity(
             SearchHistoryEntity(searchQuery = query)
         )
     }
 
     override fun getRecentSearchHistory(): Flow<List<String>> {
-        return database.searchHistoryDao.getRecentList()
+        return searchHistoryDao.getRecentList()
     }
 }

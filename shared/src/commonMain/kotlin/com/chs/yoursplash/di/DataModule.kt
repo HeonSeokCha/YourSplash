@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.data.api.UnSplashService
 import com.chs.yoursplash.data.DataStorePrefManager
+import com.chs.yoursplash.data.db.YourSplashDatabase
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.HttpResponseValidator
@@ -27,6 +28,12 @@ class DataModule {
 
     @Single
     fun provideDataStorePrefManager(dataStore: DataStore<Preferences>) = DataStorePrefManager(dataStore)
+
+    @Single
+    fun provideSearchHistoryDao(database: YourSplashDatabase) = database.searchHistoryDao
+
+    @Single
+    fun provideFavoriteImageDao(database: YourSplashDatabase) = database.favoriteImageDao
 
     @Single
     fun provideHttpClient(): HttpClient {

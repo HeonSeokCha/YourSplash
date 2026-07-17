@@ -10,6 +10,8 @@ import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.base.YourNavDisplay
 import com.chs.yoursplash.presentation.bottom.collection.CollectionScreenRoot
 import com.chs.yoursplash.presentation.bottom.collection.CollectionViewModel
+import com.chs.yoursplash.presentation.bottom.favorite.FavoriteScreenRoot
+import com.chs.yoursplash.presentation.bottom.favorite.FavoriteViewModel
 import com.chs.yoursplash.presentation.bottom.photo.PhotoScreenRoot
 import com.chs.yoursplash.presentation.bottom.photo.PhotoViewModel
 import com.chs.yoursplash.presentation.search.SearchResultViewModel
@@ -45,6 +47,11 @@ fun MainNavDisplay(
                     viewModel = viewModel,
                     onBrowse = onBrowse
                 )
+            }
+
+            entry<MainScreens.FavoriteScreen> {
+                val viewModel = koinViewModel<FavoriteViewModel>()
+                FavoriteScreenRoot()
             }
 
             entry<MainScreens.SearchScreen> {

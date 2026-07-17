@@ -35,4 +35,10 @@ interface PhotoRepository {
     suspend fun getFileIsExist(
         fileName: String
     ): Boolean
+
+    fun getFavoriteState(imageId: String): Flow<Boolean>
+
+    suspend fun insertFavoriteImage(photo: Photo)
+
+    suspend fun deleteFavoriteImage(imageId: String)
 }
