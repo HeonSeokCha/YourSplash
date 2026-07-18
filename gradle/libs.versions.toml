@@ -1,5 +1,5 @@
 [versions]
-androidStudioGradlePlugin = "9.2.1"
+androidStudioGradlePlugin = "9.3.0"
 
 compileSdkVersion = "37"
 android-minSdk = "29"

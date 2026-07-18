@@ -2,17 +2,17 @@ package com.chs.yoursplash.data.db.dao
 
 import androidx.room3.Dao
 import androidx.room3.Query
-import com.chs.yoursplash.data.db.entity.FavoriteImageEntity
+import com.chs.yoursplash.data.db.entity.FavoritePhotoEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-abstract class FavoriteImageDao : BaseDao<FavoriteImageEntity> {
+abstract class FavoritePhotoDao : BaseDao<FavoritePhotoEntity> {
 
     @Query("SELECT * FROM favorite_image ORDER BY createTime DESC")
-    abstract suspend fun getImageList(): List<FavoriteImageEntity>
+    abstract fun getImageList(): Flow<List<FavoritePhotoEntity>>
 
     @Query("SELECT * FROM favorite_image WHERE imageId = :imageId")
-    abstract fun getFavoriteState(imageId: String): Flow<FavoriteImageEntity?>
+    abstract fun getFavoriteState(imageId: String): Flow<FavoritePhotoEntity?>
 
     @Query("DELETE FROM favorite_image where imageId = :imageId")
     abstract suspend fun deleteFromId(imageId: String)

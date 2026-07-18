@@ -1,22 +1,20 @@
 package com.chs.yoursplash.data.mapper
 
-import com.chs.yoursplash.data.db.entity.FavoriteImageEntity
+import com.chs.yoursplash.data.db.entity.FavoritePhotoEntity
 import com.chs.yoursplash.data.model.*
 import com.chs.yoursplash.domain.model.Exif
+import com.chs.yoursplash.domain.model.FavoritePhoto
 import com.chs.yoursplash.domain.model.LoadQuality
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.PhotoDetail
 import com.chs.yoursplash.domain.model.PhotoLocation
 import com.chs.yoursplash.domain.model.PhotoPosition
-import com.chs.yoursplash.domain.model.PhotoUrls
 import com.chs.yoursplash.domain.model.RelatedCollectionPreview
-import com.chs.yoursplash.domain.model.RelatedPhotoCollection
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.UnSplashTag
 import com.chs.yoursplash.domain.model.User
 import com.chs.yoursplash.domain.model.UserDetail
 import com.chs.yoursplash.domain.model.UserPhotos
-import com.chs.yoursplash.domain.model.UserProfileImage
 import kotlin.time.Clock
 
 fun ResponsePhoto.toUnSplashImage(quality: LoadQuality): Photo {
@@ -171,10 +169,17 @@ fun ResponseCollection.toPhotoCollection(quality: LoadQuality): UnSplashCollecti
     )
 }
 
-fun Photo.toFavoriteImage(): FavoriteImageEntity {
-    return FavoriteImageEntity(
+fun Photo.toFavoritePhoto(): FavoritePhotoEntity {
+    return FavoritePhotoEntity(
         imageId = this.id,
         imageUrl = this.urls ?: "",
         createTime = Clock.System.now().toEpochMilliseconds()
+    )
+}
+
+fun FavoritePhotoEntity.toFavoritePhoto(): FavoritePhoto {
+    return FavoritePhoto(
+        id = this.imageId,
+        url = this.imageUrl
     )
 }

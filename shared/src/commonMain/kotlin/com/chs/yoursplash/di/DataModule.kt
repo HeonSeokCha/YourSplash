@@ -33,7 +33,7 @@ class DataModule {
     fun provideSearchHistoryDao(database: YourSplashDatabase) = database.searchHistoryDao
 
     @Single
-    fun provideFavoriteImageDao(database: YourSplashDatabase) = database.favoriteImageDao
+    fun provideFavoritePhotoDao(database: YourSplashDatabase) = database.favoritePhotoDao
 
     @Single
     fun provideHttpClient(): HttpClient {

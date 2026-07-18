@@ -7,8 +7,8 @@ import com.chs.yoursplash.data.DataStorePrefManager
 import com.chs.yoursplash.data.FileManager
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.data.api.UnSplashService
-import com.chs.yoursplash.data.db.dao.FavoriteImageDao
-import com.chs.yoursplash.data.mapper.toFavoriteImage
+import com.chs.yoursplash.data.db.dao.FavoritePhotoDao
+import com.chs.yoursplash.data.mapper.toFavoritePhoto
 import com.chs.yoursplash.data.mapper.toPhotoCollection
 import com.chs.yoursplash.data.mapper.toUnSplashImage
 import com.chs.yoursplash.data.mapper.toUnSplashImageDetail
@@ -18,13 +18,13 @@ import com.chs.yoursplash.data.model.ResponseRelatedPhoto
 import com.chs.yoursplash.data.paging.CollectionPhotoPaging
 import com.chs.yoursplash.data.paging.HomeCollectionPaging
 import com.chs.yoursplash.data.paging.HomePhotosPaging
+import com.chs.yoursplash.domain.model.FavoritePhoto
 import com.chs.yoursplash.domain.model.LoadQuality
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.PhotoDetail
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.repository.PhotoRepository
 import com.chs.yoursplash.util.NetworkResult
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -36,7 +36,7 @@ class PhotoRepositoryImpl(
     private val client: UnSplashService,
     private val dataStore: DataStorePrefManager,
     private val fileManager: FileManager,
-    private val favoriteImageDao: FavoriteImageDao
+    private val favoritePhotoDao: FavoritePhotoDao
 ) : PhotoRepository {
     override fun getPagingPhoto(loadQuality: LoadQuality): Flow<PagingData<Photo>> {
         return Pager(
@@ -192,13 +192,17 @@ class PhotoRepositoryImpl(
         }
     }
 
-    override fun getFavoriteState(imageId: String): Flow<Boolean> {
-        return favoriteImageDao.getFavoriteState(imageId).map { it != null }
+    override fun getFavoritePhotoList(): Flow<List<FavoritePhoto>> {
+        return favoritePhotoDao.getImageList().map { it.map { it.toFavoritePhoto() } }
     }
 
-    override suspend fun insertFavoriteImage(photo: Photo) =
-        favoriteImageDao.insertEntity(photo.toFavoriteImage())
+    override fun getFavoriteState(photoId: String): Flow<Boolean> {
+        return favoritePhotoDao.getFavoriteState(photoId).map { it != null }
+    }
 
-    override suspend fun deleteFavoriteImage(imageId: String) =
-        favoriteImageDao.deleteFromId(imageId)
+    override suspend fun insertFavoritePhoto(photo: Photo) =
+        favoritePhotoDao.insertEntity(photo.toFavoritePhoto())
+
+    override suspend fun deleteFavoritePhoto(photoId: String) =
+        favoritePhotoDao.deleteFromId(photoId)
 }

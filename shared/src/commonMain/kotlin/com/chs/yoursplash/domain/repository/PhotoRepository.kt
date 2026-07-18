@@ -1,6 +1,7 @@
 package com.chs.yoursplash.domain.repository
 
 import androidx.paging.PagingData
+import com.chs.yoursplash.domain.model.FavoritePhoto
 import com.chs.yoursplash.domain.model.LoadQuality
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.PhotoDetail
@@ -36,9 +37,11 @@ interface PhotoRepository {
         fileName: String
     ): Boolean
 
-    fun getFavoriteState(imageId: String): Flow<Boolean>
+    fun getFavoritePhotoList(): Flow<List<FavoritePhoto>>
 
-    suspend fun insertFavoriteImage(photo: Photo)
+    fun getFavoriteState(photoId: String): Flow<Boolean>
 
-    suspend fun deleteFavoriteImage(imageId: String)
+    suspend fun insertFavoritePhoto(photo: Photo)
+
+    suspend fun deleteFavoritePhoto(photoId: String)
 }
