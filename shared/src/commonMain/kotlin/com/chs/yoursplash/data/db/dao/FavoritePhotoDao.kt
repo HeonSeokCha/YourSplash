@@ -8,12 +8,12 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 abstract class FavoritePhotoDao : BaseDao<FavoritePhotoEntity> {
 
-    @Query("SELECT * FROM favorite_image ORDER BY createTime DESC")
+    @Query("SELECT * FROM favorite_photo ORDER BY createTime DESC")
     abstract fun getImageList(): Flow<List<FavoritePhotoEntity>>
 
-    @Query("SELECT * FROM favorite_image WHERE imageId = :imageId")
+    @Query("SELECT * FROM favorite_photo WHERE imageId = :imageId")
     abstract fun getFavoriteState(imageId: String): Flow<FavoritePhotoEntity?>
 
-    @Query("DELETE FROM favorite_image where imageId = :imageId")
+    @Query("DELETE FROM favorite_photo where imageId = :imageId")
     abstract suspend fun deleteFromId(imageId: String)
 }

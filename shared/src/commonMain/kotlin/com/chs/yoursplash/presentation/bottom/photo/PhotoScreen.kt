@@ -25,11 +25,9 @@ import com.chs.youranimelist.res.text_no_collections
 import com.chs.youranimelist.res.text_no_photos
 import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.domain.model.Photo
-import com.chs.yoursplash.presentation.base.CollectionInfoCard
 import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ItemPullToRefreshBox
-import com.chs.yoursplash.presentation.bottom.collection.CollectionIntent
 import com.chs.yoursplash.util.Constants
 import org.jetbrains.compose.resources.stringResource
 
