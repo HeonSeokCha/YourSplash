@@ -6,6 +6,7 @@ sealed interface PhotoDetailIntent {
     data class ClickTag(val name: String) : PhotoDetailIntent
     data class ClickUser(val name: String) : PhotoDetailIntent
     data class ClickDownload(val url: String) : PhotoDetailIntent
+    data object ClickFavorite : PhotoDetailIntent
     data class ClickOpenBrowser(val id: String) : PhotoDetailIntent
     data object ClickAlreadyDownload : PhotoDetailIntent
     data object ClickDismiss : PhotoDetailIntent

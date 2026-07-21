@@ -41,7 +41,7 @@ interface PhotoRepository {
 
     fun getFavoriteState(photoId: String): Flow<Boolean>
 
-    suspend fun insertFavoritePhoto(photo: Photo)
+    suspend fun insertFavoritePhoto(photoId: String, photoUrl: String)
 
     suspend fun deleteFavoritePhoto(photoId: String)
 }

@@ -8,6 +8,7 @@ import com.chs.yoursplash.data.FileManager
 import com.chs.yoursplash.util.Constants
 import com.chs.yoursplash.data.api.UnSplashService
 import com.chs.yoursplash.data.db.dao.FavoritePhotoDao
+import com.chs.yoursplash.data.db.entity.FavoritePhotoEntity
 import com.chs.yoursplash.data.mapper.toFavoritePhoto
 import com.chs.yoursplash.data.mapper.toPhotoCollection
 import com.chs.yoursplash.data.mapper.toUnSplashImage
@@ -30,6 +31,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.Single
+import kotlin.time.Clock
 
 @Single
 class PhotoRepositoryImpl(
@@ -200,9 +202,14 @@ class PhotoRepositoryImpl(
         return favoritePhotoDao.getFavoriteState(photoId).map { it != null }
     }
 
-    override suspend fun insertFavoritePhoto(photo: Photo) =
-        favoritePhotoDao.insertEntity(photo.toFavoritePhoto())
-
+    override suspend fun insertFavoritePhoto(photoId: String, photoUrl: String) =
+        favoritePhotoDao.insertEntity(
+            FavoritePhotoEntity(
+                photoId = photoId,
+                photoUrl = photoUrl,
+                createTime = Clock.System.now().toEpochMilliseconds()
+            )
+        )
     override suspend fun deleteFavoritePhoto(photoId: String) =
         favoritePhotoDao.deleteFromId(photoId)
 }

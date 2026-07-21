@@ -51,7 +51,10 @@ fun MainNavDisplay(
 
             entry<MainScreens.FavoriteScreen> {
                 val viewModel = koinViewModel<FavoriteViewModel>()
-                FavoriteScreenRoot()
+                FavoriteScreenRoot(
+                    viewModel = viewModel,
+                    onBrowse = onBrowse
+                )
             }
 
             entry<MainScreens.SearchScreen> {

@@ -169,17 +169,9 @@ fun ResponseCollection.toPhotoCollection(quality: LoadQuality): UnSplashCollecti
     )
 }
 
-fun Photo.toFavoritePhoto(): FavoritePhotoEntity {
-    return FavoritePhotoEntity(
-        imageId = this.id,
-        imageUrl = this.urls ?: "",
-        createTime = Clock.System.now().toEpochMilliseconds()
-    )
-}
-
 fun FavoritePhotoEntity.toFavoritePhoto(): FavoritePhoto {
     return FavoritePhoto(
-        id = this.imageId,
-        url = this.imageUrl
+        id = this.photoId,
+        url = this.photoUrl
     )
 }

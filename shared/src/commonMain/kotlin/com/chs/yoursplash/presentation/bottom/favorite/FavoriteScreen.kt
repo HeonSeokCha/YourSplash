@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.chs.youranimelist.res.Res
 import com.chs.youranimelist.res.text_no_photos
+import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ShimmerImage
@@ -30,14 +31,16 @@ import org.jetbrains.compose.resources.stringResource
 @Composable
 fun FavoriteScreenRoot(
     viewModel: FavoriteViewModel,
-    onClickPhoto: (String) -> Unit
+    onBrowse: (BrowseInfo) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.effect.collect { effect ->
             when (effect) {
-                is FavoriteEffect.NavigatePhotoDetail -> onClickPhoto(effect.id)
+                is FavoriteEffect.NavigatePhotoDetail -> {
+                    onBrowse(BrowseInfo.Photo(effect.id))
+                }
             }
         }
     }

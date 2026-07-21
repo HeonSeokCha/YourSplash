@@ -2,10 +2,16 @@ package com.chs.yoursplash.presentation.browse.photo_detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.chs.yoursplash.domain.model.FavoritePhoto
+import com.chs.yoursplash.domain.model.Photo
+import com.chs.yoursplash.domain.usecase.DeleteFavoriteImageUseCase
+import com.chs.yoursplash.domain.usecase.GetFavoriteImageStateUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoDetailUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoFileExistUseCase
 import com.chs.yoursplash.domain.usecase.RequestPhotoDownloadUseCase
 import com.chs.yoursplash.domain.usecase.GetPhotoRelatedListUseCase
+import com.chs.yoursplash.domain.usecase.InsertFavoriteImageUseCase
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailEffect.*
 import com.chs.yoursplash.util.NetworkResult
 import kotlinx.coroutines.Job
@@ -26,7 +32,10 @@ class PhotoDetailViewModel(
     private val getPhotoDetailUseCase: GetPhotoDetailUseCase,
     private val getPhotoRelatedListUseCase: GetPhotoRelatedListUseCase,
     private val requestPhotoDownloadUseCase: RequestPhotoDownloadUseCase,
-    private val getPhotoFileExistUseCase: GetPhotoFileExistUseCase
+    private val getPhotoFileExistUseCase: GetPhotoFileExistUseCase,
+    private val getFavoriteImageStateUseCase: GetFavoriteImageStateUseCase,
+    private val insertFavoritePhoto: InsertFavoriteImageUseCase,
+    private val deleteFavoriteImageUseCase: DeleteFavoriteImageUseCase
 ) : ViewModel() {
     private var imageDetailJob: Job? = null
     private var relatedListJob: Job? = null
@@ -38,6 +47,7 @@ class PhotoDetailViewModel(
     private var _state = MutableStateFlow(PhotoDetailState())
     val state = _state
         .onStart {
+            getFavoriteState()
             getImageDetailInfo()
             getImageRelatedList()
         }
@@ -82,8 +92,10 @@ class PhotoDetailViewModel(
             PhotoDetailIntent.ClickDismiss -> _state.update { it.copy(isShowFileAlreadyDialog = false) }
 
             is PhotoDetailIntent.ClickOpenBrowser -> {
-                _effect.trySend(PhotoDetailEffect.NavigateBrowser(intent.id))
+                _effect.trySend(NavigateBrowser(intent.id))
             }
+
+            is PhotoDetailIntent.ClickFavorite -> handleFavoriteState()
         }
     }
 
@@ -100,7 +112,7 @@ class PhotoDetailViewModel(
                         }
 
                         is NetworkResult.Success -> {
-                             val result2 = getPhotoFileExistUseCase(imageId)
+                            val result2 = getPhotoFileExistUseCase(imageId)
                             it.copy(
                                 isDetailLoading = false,
                                 imageDetailInfo = result.data,
@@ -170,6 +182,28 @@ class PhotoDetailViewModel(
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun handleFavoriteState() {
+        viewModelScope.launch {
+            if (_state.value.isFavoritePhoto) {
+                deleteFavoriteImageUseCase(imageId)
+            } else {
+                if (_state.value.imageDetailInfo == null) return@launch
+                insertFavoritePhoto(
+                    id = _state.value.imageDetailInfo!!.id,
+                    url = _state.value.imageDetailInfo!!.url
+                )
+            }
+        }
+    }
+
+    private fun getFavoriteState() {
+        viewModelScope.launch {
+            getFavoriteImageStateUseCase(imageId).collect { isFavorite ->
+                _state.update { it.copy(isFavoritePhoto = isFavorite) }
             }
         }
     }
