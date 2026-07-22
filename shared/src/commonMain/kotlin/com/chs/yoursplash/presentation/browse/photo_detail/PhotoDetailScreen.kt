@@ -14,6 +14,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Downloading
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.OpenInBrowser
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -125,6 +127,7 @@ fun PhotoDetailScreen(
                 ItemUserInfoFromPhotoDetail(
                     state = state,
                     onUser = { onIntent(PhotoDetailIntent.ClickUser(it)) },
+                    onFavorite = { onIntent(PhotoDetailIntent.ClickFavorite) },
                     onDownload = { onIntent(PhotoDetailIntent.ClickDownload(it)) },
                     onSource = { onIntent(PhotoDetailIntent.ClickOpenBrowser(it)) }
                 )
@@ -215,6 +218,7 @@ fun PhotoDetailScreen(
 private fun ItemUserInfoFromPhotoDetail(
     state: PhotoDetailState,
     onUser: (String) -> Unit,
+    onFavorite: (String) -> Unit,
     onSource: (String) -> Unit,
     onDownload: (String) -> Unit
 ) {
@@ -232,7 +236,6 @@ private fun ItemUserInfoFromPhotoDetail(
     ) {
         Row(
             modifier = Modifier
-                .weight(0.7f)
                 .clickable {
                     if (info?.user?.userName == null) return@clickable
                     onUser(info.user.userName)
@@ -261,16 +264,32 @@ private fun ItemUserInfoFromPhotoDetail(
 
         Row(
             modifier = Modifier
-                .weight(0.3f)
         ) {
             IconButton(
                 onClick = {
                     if (info == null) return@IconButton
-
                     onSource(info.id)
                 }
             ) {
                 Icon(imageVector = Icons.Default.OpenInBrowser, contentDescription = null)
+            }
+
+            IconButton(
+                onClick = {
+                    if (info == null) return@IconButton
+                    onFavorite(info.id)
+                }
+            ) {
+                AnimatedContent(
+                    targetState = state.isFavoritePhoto,
+                    transitionSpec = { fadeIn() togetherWith fadeOut() }
+                ) { targetState ->
+                    if (targetState) {
+                        Icon(imageVector = Icons.Default.Favorite, contentDescription = null)
+                    } else {
+                        Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = null)
+                    }
+                }
             }
 
             IconButton(

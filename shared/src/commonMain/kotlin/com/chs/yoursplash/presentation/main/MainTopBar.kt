@@ -24,9 +24,7 @@ fun MainTopBar(
     backStack: SnapshotStateList<MainScreens>
 ) {
     when {
-        backStack.last() == MainScreens.PhotoScreen
-                || backStack.last() == MainScreens.CollectionScreen -> {
-
+        BottomNavigation.entries.any { it.route == backStack.last() } -> {
             TopAppBar(
                 title = {
                     Text(
@@ -95,6 +93,7 @@ fun MainTopBar(
                 )
             )
         }
+
         else -> Unit
     }
 }

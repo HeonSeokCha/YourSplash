@@ -69,7 +69,7 @@ fun FavoriteScreen(
                 }
             }
 
-            state.isEmpty -> {
+            state.favoriteList.isEmpty() -> {
                 item(span = StaggeredGridItemSpan.FullLine) {
                     ItemEmpty(
                         text = stringResource(Res.string.text_no_photos)
