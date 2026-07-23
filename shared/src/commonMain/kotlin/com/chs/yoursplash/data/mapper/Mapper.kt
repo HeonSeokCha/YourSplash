@@ -172,6 +172,8 @@ fun ResponseCollection.toPhotoCollection(quality: LoadQuality): UnSplashCollecti
 fun FavoritePhotoEntity.toFavoritePhoto(): FavoritePhoto {
     return FavoritePhoto(
         id = this.photoId,
+        width = this.photoWidth,
+        height = this.photoHeight,
         url = this.photoUrl
     )
 }

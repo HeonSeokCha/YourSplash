@@ -8,5 +8,7 @@ data class FavoritePhotoEntity(
     @PrimaryKey
     val photoId: String,
     val photoUrl: String,
+    val photoWidth: Int,
+    val photoHeight: Int,
     val createTime: Long
 )

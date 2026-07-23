@@ -2,5 +2,7 @@ package com.chs.yoursplash.domain.model
 
 data class FavoritePhoto(
     val id: String,
+    val width: Int,
+    val height: Int,
     val url: String
 )

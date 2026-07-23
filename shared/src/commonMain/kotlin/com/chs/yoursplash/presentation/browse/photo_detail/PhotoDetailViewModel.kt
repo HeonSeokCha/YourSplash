@@ -192,10 +192,7 @@ class PhotoDetailViewModel(
                 deleteFavoriteImageUseCase(imageId)
             } else {
                 if (_state.value.imageDetailInfo == null) return@launch
-                insertFavoritePhoto(
-                    id = _state.value.imageDetailInfo!!.id,
-                    url = _state.value.imageDetailInfo!!.url
-                )
+                insertFavoritePhoto(_state.value.imageDetailInfo!!)
             }
         }
     }

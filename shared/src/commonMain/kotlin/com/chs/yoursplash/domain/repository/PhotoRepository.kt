@@ -33,15 +33,13 @@ interface PhotoRepository {
         url: String
     ): Flow<NetworkResult<Boolean>>
 
-    suspend fun getFileIsExist(
-        fileName: String
-    ): Boolean
+    suspend fun getFileIsExist(fileName: String): Boolean
 
     fun getFavoritePhotoList(): Flow<List<FavoritePhoto>>
 
     fun getFavoriteState(photoId: String): Flow<Boolean>
 
-    suspend fun insertFavoritePhoto(photoId: String, photoUrl: String)
+    suspend fun insertFavoritePhoto(photoDetail: PhotoDetail)
 
     suspend fun deleteFavoritePhoto(photoId: String)
 }

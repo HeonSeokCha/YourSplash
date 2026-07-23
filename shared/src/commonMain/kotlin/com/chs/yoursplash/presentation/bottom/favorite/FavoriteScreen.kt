@@ -86,6 +86,7 @@ fun FavoriteScreen(
                     ShimmerImage(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .aspectRatio(favoritePhotoInfo.width.toFloat() / favoritePhotoInfo.height.toFloat())
                             .clip(RoundedCornerShape(10.dp))
                             .clickable { onIntent(FavoriteIntent.ClickPhoto(favoritePhotoInfo.id)) },
                         url = favoritePhotoInfo.url

@@ -202,11 +202,13 @@ class PhotoRepositoryImpl(
         return favoritePhotoDao.getFavoriteState(photoId).map { it != null }
     }
 
-    override suspend fun insertFavoritePhoto(photoId: String, photoUrl: String) =
+    override suspend fun insertFavoritePhoto(photoDetail: PhotoDetail) =
         favoritePhotoDao.insertEntity(
             FavoritePhotoEntity(
-                photoId = photoId,
-                photoUrl = photoUrl,
+                photoId = photoDetail.id,
+                photoUrl = photoDetail.url,
+                photoWidth = photoDetail.width,
+                photoHeight = photoDetail.height,
                 createTime = Clock.System.now().toEpochMilliseconds()
             )
         )
