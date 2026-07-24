@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
 import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.base.YourNavDisplay
+import com.chs.yoursplash.presentation.bottom.TopLevelBackStack
 import com.chs.yoursplash.presentation.bottom.collection.CollectionScreenRoot
 import com.chs.yoursplash.presentation.bottom.collection.CollectionViewModel
 import com.chs.yoursplash.presentation.bottom.favorite.FavoriteScreenRoot
@@ -25,13 +26,14 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun MainNavDisplay(
     modifier: Modifier = Modifier,
-    backStack: SnapshotStateList<MainScreens>,
+    backStack: TopLevelBackStack<MainScreens>,
     onBrowse: (BrowseInfo) -> Unit,
     searchQuery: String
 ) {
     YourNavDisplay(
         modifier = modifier,
-        backStack = backStack,
+        backStack = backStack.backStack,
+        onBack = { backStack.removeLast() },
         entryProvider = entryProvider {
             entry<MainScreens.PhotoScreen> {
                 val viewModel = koinViewModel<PhotoViewModel>()
@@ -70,7 +72,7 @@ fun MainNavDisplay(
                 SearchScreenRoot(
                     viewModel = viewModel,
                     onBrowse = onBrowse,
-                    onBack = { backStack.removeLastOrNull() }
+                    onBack = { backStack.removeLast() }
                 )
             }
 

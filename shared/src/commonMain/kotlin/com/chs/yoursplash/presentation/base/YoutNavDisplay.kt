@@ -15,12 +15,13 @@ import androidx.navigation3.ui.NavDisplay
 fun <T: Any> YourNavDisplay(
     modifier: Modifier,
     backStack: SnapshotStateList<T>,
+    onBack: () -> Unit,
     entryProvider: (key: T) -> NavEntry<T>
 ) {
     NavDisplay(
         modifier = modifier,
         backStack = backStack,
-        onBack = { backStack.removeLastOrNull() },
+        onBack = onBack,
         entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator()

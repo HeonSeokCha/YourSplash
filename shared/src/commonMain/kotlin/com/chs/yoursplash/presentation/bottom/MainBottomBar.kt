@@ -13,7 +13,10 @@ import com.chs.yoursplash.presentation.main.BottomNavigation
 import com.chs.yoursplash.presentation.main.MainScreens
 
 @Composable
-fun BottomBar(backStack: SnapshotStateList<MainScreens>) {
+fun BottomBar(
+    backStack: SnapshotStateList<MainScreens>,
+    onClick: (MainScreens) -> Unit
+) {
     if (BottomNavigation.entries.any { it.route == backStack.last()}) {
         NavigationBar(containerColor = MaterialTheme.colorScheme.primary) {
             BottomNavigation.entries.forEach { navItem ->
@@ -25,16 +28,8 @@ fun BottomBar(backStack: SnapshotStateList<MainScreens>) {
                         unselectedIconColor = Color.White.copy(0.4f),
                         unselectedTextColor = Color.White.copy(0.4f),
                         indicatorColor = MaterialTheme.colorScheme.primary
-                    ), onClick = {
-                        if (navItem.route == MainScreens.PhotoScreen) {
-                            backStack.clear()
-                            backStack.add(navItem.route)
-                            return@NavigationBarItem
-                        }
-
-                        backStack.remove(navItem.route)
-                        backStack.add(navItem.route)
-                    },
+                    ),
+                    onClick = { onClick(navItem.route) },
                     icon = { Icon(imageVector = navItem.icon, contentDescription = null) },
                     label = { Text(text = navItem.label) }
                 )

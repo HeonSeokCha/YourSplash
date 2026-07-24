@@ -51,6 +51,7 @@ fun BrowseNavDisplay(
     YourNavDisplay(
         modifier = modifier,
         backStack = backStack,
+        onBack = { backStack.removeLastOrNull() },
         entryProvider = entryProvider {
             entry<BrowseScreens.PhotoDetailScreen> { key ->
                 val viewModel: PhotoDetailViewModel = koinViewModel<PhotoDetailViewModel> {

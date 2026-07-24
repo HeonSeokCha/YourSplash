@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import com.chs.yoursplash.di.KoinModule
 import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.bottom.BottomBar
+import com.chs.yoursplash.presentation.bottom.TopLevelBackStack
 import com.chs.yoursplash.presentation.main.MainNavDisplay
 import com.chs.yoursplash.presentation.main.MainScreens
 import com.chs.yoursplash.presentation.main.MainTopBar
@@ -22,18 +23,26 @@ import org.koin.plugin.module.dsl.koinConfiguration
 
 @Composable
 fun YourSplashApp(onBrowseInfo: (BrowseInfo) -> Unit) {
-    KoinApplication(koinConfiguration<KoinModule>()){
-        val backStack: SnapshotStateList<MainScreens> = remember { mutableStateListOf(MainScreens.PhotoScreen) }
+    KoinApplication(koinConfiguration<KoinModule>()) {
+        val backStack = remember { TopLevelBackStack<MainScreens>(MainScreens.PhotoScreen) }
         var currentSearchQuery by remember { mutableStateOf("") }
 
         Scaffold(
             topBar = {
                 MainTopBar(
-                    backStack = backStack,
-                    onSearch = { currentSearchQuery = it }
+                    currentBackStack = backStack.backStack.last(),
+                    onSearch = { currentSearchQuery = it },
+                    onNavigateSetting = { backStack.add(MainScreens.SettingScreen) },
+                    onNavigateSearch = { backStack.add(MainScreens.SearchScreen) },
+                    onClose = { backStack.removeLast() }
                 )
             },
-            bottomBar = { BottomBar(backStack) }
+            bottomBar = {
+                BottomBar(
+                    backStack = backStack.backStack,
+                    onClick = { backStack.addTopLevel(it) }
+                )
+            }
         ) {
             MainNavDisplay(
                 modifier = Modifier

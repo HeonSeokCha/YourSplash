@@ -16,15 +16,19 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.chs.yoursplash.presentation.bottom.TopLevelBackStack
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainTopBar(
+    currentBackStack: MainScreens,
     onSearch: (String) -> Unit,
-    backStack: SnapshotStateList<MainScreens>
+    onNavigateSearch: () -> Unit,
+    onNavigateSetting: () -> Unit,
+    onClose: () -> Unit
 ) {
     when {
-        BottomNavigation.entries.any { it.route == backStack.last() } -> {
+        BottomNavigation.entries.any { it.route == currentBackStack } -> {
             TopAppBar(
                 title = {
                     Text(
@@ -34,11 +38,7 @@ fun MainTopBar(
                         fontWeight = FontWeight.Bold
                     )
                 }, actions = {
-                    IconButton(
-                        onClick = {
-                            backStack.add(MainScreens.SearchScreen)
-                        }
-                    ) {
+                    IconButton(onClick = onNavigateSearch) {
                         Icon(
                             imageVector = Icons.TwoTone.Search,
                             contentDescription = null,
@@ -46,11 +46,7 @@ fun MainTopBar(
                         )
                     }
 
-                    IconButton(
-                        onClick = {
-                            backStack.add(MainScreens.SettingScreen)
-                        }
-                    ) {
+                    IconButton(onClick = onNavigateSetting) {
                         Icon(
                             Icons.Filled.Settings,
                             contentDescription = null,
@@ -64,14 +60,14 @@ fun MainTopBar(
             )
         }
 
-        backStack.last() == MainScreens.SearchScreen -> {
+        currentBackStack == MainScreens.SearchScreen -> {
             SearchAppBar(
                 onSearch = onSearch,
-                onBack = { backStack.removeLastOrNull() },
+                onBack = onClose,
             )
         }
 
-        backStack.last() == MainScreens.SettingScreen -> {
+        currentBackStack == MainScreens.SettingScreen -> {
             TopAppBar(
                 title = {
                     Text(
@@ -80,7 +76,7 @@ fun MainTopBar(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { backStack.removeLastOrNull() }) {
+                    IconButton(onClick = onClose) {
                         Icon(
                             Icons.AutoMirrored.Rounded.ArrowBack,
                             contentDescription = null,
