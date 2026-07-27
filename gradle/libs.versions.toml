@@ -1,5 +1,5 @@
 [versions]
-androidStudioGradlePlugin = "9.3.0"
+androidStudioGradlePlugin = "9.3.1"
 
 compileSdkVersion = "37"
 android-minSdk = "29"
@@ -17,7 +17,7 @@ kotlin = "2.4.0"
 coroutine = "1.11.0"
 ktor = "3.5.1"
 compose-plugin = "1.11.1"
-lifecycle = "2.10.0"
+lifecycle = "2.11.0"
 koin = "4.2.2"
 android-paging = "3.5.0"
 coil = "3.5.0"
@@ -122,4 +122,4 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 ksp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
 room = { id = "androidx.room3", version.ref = "room" }
 konfig = "com.codingfeline.buildkonfig:0.22.0"
-koin-compiler = "io.insert-koin.compiler.plugin:1.0.1"
+koin-compiler = "io.insert-koin.compiler.plugin:1.0.2"

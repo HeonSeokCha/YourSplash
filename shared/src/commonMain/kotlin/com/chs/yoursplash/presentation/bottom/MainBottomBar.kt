@@ -17,7 +17,7 @@ fun BottomBar(
     backStack: SnapshotStateList<MainScreens>,
     onClick: (MainScreens) -> Unit
 ) {
-    if (BottomNavigation.entries.any { it.route == backStack.last()}) {
+    if (BottomNavigation.entries.any { it.route == backStack.last() }) {
         NavigationBar(containerColor = MaterialTheme.colorScheme.primary) {
             BottomNavigation.entries.forEach { navItem ->
                 NavigationBarItem(
@@ -29,7 +29,37 @@ fun BottomBar(
                         unselectedTextColor = Color.White.copy(0.4f),
                         indicatorColor = MaterialTheme.colorScheme.primary
                     ),
-                    onClick = { onClick(navItem.route) },
+                    onClick = {
+                        when (navItem.route) {
+                            MainScreens.PhotoScreen -> {
+                                if (backStack.last() == MainScreens.PhotoScreen) return@NavigationBarItem
+                                backStack.clear()
+                                backStack.add(MainScreens.PhotoScreen)
+                            }
+
+                            MainScreens.CollectionScreen -> {
+                                if (backStack.last() == MainScreens.CollectionScreen) return@NavigationBarItem
+                                if (backStack.last() == MainScreens.FavoriteScreen) {
+                                    backStack.removeLast()
+                                    return@NavigationBarItem
+                                }
+                                backStack.add(MainScreens.CollectionScreen)
+                            }
+
+                            MainScreens.FavoriteScreen -> {
+                                if (backStack.last() == MainScreens.FavoriteScreen) return@NavigationBarItem
+                                if (backStack.any { it == MainScreens.CollectionScreen }) {
+                                    backStack.add(MainScreens.CollectionScreen)
+                                    backStack.add(MainScreens.FavoriteScreen)
+                                    return@NavigationBarItem
+                                }
+
+                                backStack.add(MainScreens.FavoriteScreen)
+                            }
+
+                            else -> Unit
+                        }
+                    },
                     icon = { Icon(imageVector = navItem.icon, contentDescription = null) },
                     label = { Text(text = navItem.label) }
                 )
