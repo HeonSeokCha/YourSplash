@@ -236,6 +236,7 @@ private fun ItemUserInfoFromPhotoDetail(
     ) {
         Row(
             modifier = Modifier
+                .weight(1f, fill = false)
                 .clickable {
                     if (info?.user?.userName == null) return@clickable
                     onUser(info.user.userName)
