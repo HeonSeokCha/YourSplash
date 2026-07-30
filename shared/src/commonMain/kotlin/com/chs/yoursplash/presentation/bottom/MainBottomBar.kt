@@ -32,29 +32,15 @@ fun BottomBar(
                     onClick = {
                         when (navItem.route) {
                             MainScreens.PhotoScreen -> {
-                                if (backStack.last() == MainScreens.PhotoScreen) return@NavigationBarItem
-                                backStack.clear()
-                                backStack.add(MainScreens.PhotoScreen)
+                                onClick(MainScreens.PhotoScreen)
                             }
 
                             MainScreens.CollectionScreen -> {
-                                if (backStack.last() == MainScreens.CollectionScreen) return@NavigationBarItem
-                                if (backStack.last() == MainScreens.FavoriteScreen) {
-                                    backStack.removeLast()
-                                    return@NavigationBarItem
-                                }
-                                backStack.add(MainScreens.CollectionScreen)
+                                onClick(MainScreens.CollectionScreen)
                             }
 
                             MainScreens.FavoriteScreen -> {
-                                if (backStack.last() == MainScreens.FavoriteScreen) return@NavigationBarItem
-                                if (backStack.any { it == MainScreens.CollectionScreen }) {
-                                    backStack.add(MainScreens.CollectionScreen)
-                                    backStack.add(MainScreens.FavoriteScreen)
-                                    return@NavigationBarItem
-                                }
-
-                                backStack.add(MainScreens.FavoriteScreen)
+                                onClick(MainScreens.FavoriteScreen)
                             }
 
                             else -> Unit

@@ -1,5 +1,6 @@
 package com.chs.yoursplash.presentation.base
 
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
@@ -27,16 +28,31 @@ fun <T: Any> YourNavDisplay(
             rememberViewModelStoreNavEntryDecorator()
         ),
         transitionSpec = {
-            slideInHorizontally(initialOffsetX = { it }) togetherWith slideOutHorizontally(
-                targetOffsetX = { -it })
+            slideInHorizontally(
+                initialOffsetX = { fullWidth -> fullWidth },
+                animationSpec = tween(300)
+            ) togetherWith slideOutHorizontally(
+                targetOffsetX = { fullWidth -> -fullWidth },
+                animationSpec = tween(300)
+            )
         },
         popTransitionSpec = {
-            slideInHorizontally(initialOffsetX = { -it }) togetherWith slideOutHorizontally(
-                targetOffsetX = { it })
+            slideInHorizontally(
+                initialOffsetX = { fullWidth -> -fullWidth },
+                animationSpec = tween(300)
+            ) togetherWith slideOutHorizontally(
+                targetOffsetX = { fullWidth -> fullWidth },
+                animationSpec = tween(300)
+            )
         },
         predictivePopTransitionSpec = {
-            slideInHorizontally(initialOffsetX = { -it }) togetherWith slideOutHorizontally(
-                targetOffsetX = { it })
+            slideInHorizontally(
+                initialOffsetX = { fullWidth -> -fullWidth },
+                animationSpec = tween(300)
+            ) togetherWith slideOutHorizontally(
+                targetOffsetX = { fullWidth -> fullWidth },
+                animationSpec = tween(300)
+            )
         },
         entryProvider = entryProvider
     )
