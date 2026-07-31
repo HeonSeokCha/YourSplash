@@ -1,12 +1,17 @@
 package com.chs.yoursplash.presentation.browse
 
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
-import com.chs.yoursplash.presentation.base.YourNavDisplay
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailScreenRoot
 import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailViewModel
 import com.chs.yoursplash.presentation.browse.photo_detail.PhotoDetailScreenRoot
@@ -48,10 +53,26 @@ fun BrowseNavDisplay(
 
     val backStack: SnapshotStateList<BrowseScreens> = remember { mutableStateListOf(startDestination) }
 
-    YourNavDisplay(
+    NavDisplay(
         modifier = modifier,
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
+        entryDecorators = listOf(
+            rememberSaveableStateHolderNavEntryDecorator(),
+            rememberViewModelStoreNavEntryDecorator()
+        ),
+        transitionSpec = {
+            slideInHorizontally(initialOffsetX = { it }) togetherWith slideOutHorizontally(
+                targetOffsetX = { -it })
+        },
+        popTransitionSpec = {
+            slideInHorizontally(initialOffsetX = { -it }) togetherWith slideOutHorizontally(
+                targetOffsetX = { it })
+        },
+        predictivePopTransitionSpec = {
+            slideInHorizontally(initialOffsetX = { -it }) togetherWith slideOutHorizontally(
+                targetOffsetX = { it })
+        },
         entryProvider = entryProvider {
             entry<BrowseScreens.PhotoDetailScreen> { key ->
                 val viewModel: PhotoDetailViewModel = koinViewModel<PhotoDetailViewModel> {

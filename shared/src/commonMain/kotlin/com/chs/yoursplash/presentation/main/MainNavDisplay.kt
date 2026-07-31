@@ -1,20 +1,26 @@
 package com.chs.yoursplash.presentation.main
 
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
 import com.chs.yoursplash.domain.model.BrowseInfo
-import com.chs.yoursplash.presentation.base.YourNavDisplay
-import com.chs.yoursplash.presentation.bottom.TopLevelBackStack
+import com.chs.yoursplash.presentation.NavDirection
+import com.chs.yoursplash.presentation.bottom.BottomTopLevelBackStack
 import com.chs.yoursplash.presentation.bottom.collection.CollectionScreenRoot
 import com.chs.yoursplash.presentation.bottom.collection.CollectionViewModel
 import com.chs.yoursplash.presentation.bottom.favorite.FavoriteScreenRoot
 import com.chs.yoursplash.presentation.bottom.favorite.FavoriteViewModel
 import com.chs.yoursplash.presentation.bottom.photo.PhotoScreenRoot
 import com.chs.yoursplash.presentation.bottom.photo.PhotoViewModel
+import com.chs.yoursplash.presentation.directionalTransform
 import com.chs.yoursplash.presentation.search.SearchResultViewModel
 import com.chs.yoursplash.presentation.search.SearchScreenRoot
 import com.chs.yoursplash.presentation.setting.SettingScreenRoot
@@ -26,14 +32,21 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun MainNavDisplay(
     modifier: Modifier = Modifier,
-    backStack: TopLevelBackStack<MainScreens>,
+    backStack: BottomTopLevelBackStack,
     onBrowse: (BrowseInfo) -> Unit,
     searchQuery: String
 ) {
-    YourNavDisplay(
+    NavDisplay(
         modifier = modifier,
         backStack = backStack.backStack,
         onBack = { backStack.removeLast() },
+        entryDecorators = listOf(
+            rememberSaveableStateHolderNavEntryDecorator(),
+            rememberViewModelStoreNavEntryDecorator()
+        ),
+        transitionSpec = { directionalTransform(backStack.direction) },
+        popTransitionSpec = { directionalTransform(backStack.direction) },
+        predictivePopTransitionSpec = { directionalTransform(NavDirection.BACKWARD) },
         entryProvider = entryProvider {
             entry<MainScreens.PhotoScreen> {
                 val viewModel = koinViewModel<PhotoViewModel>()

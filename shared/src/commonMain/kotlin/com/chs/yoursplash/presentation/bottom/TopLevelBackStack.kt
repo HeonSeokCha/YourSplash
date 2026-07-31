@@ -5,29 +5,42 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.chs.yoursplash.presentation.NavDirection
+import com.chs.yoursplash.presentation.main.MainScreens
 
-class TopLevelBackStack<T : Any>(startKey: T) {
+class BottomTopLevelBackStack(startKey: MainScreens) {
 
-    private var topLevelStack: SnapshotStateList<T> = mutableStateListOf(startKey)
+    private val tabOrder = listOf(
+        MainScreens.PhotoScreen,
+        MainScreens.CollectionScreen,
+        MainScreens.FavoriteScreen
+    )
 
-    private val topLevelBackStacks: MutableMap<T, SnapshotStateList<T>> =
+    private var topLevelStack: SnapshotStateList<MainScreens> = mutableStateListOf(startKey)
+    private val topLevelBackStacks: MutableMap<MainScreens, SnapshotStateList<MainScreens>> =
         mutableMapOf(startKey to mutableStateListOf(startKey))
 
     var topLevelKey by mutableStateOf(startKey)
         private set
 
-    val backStack: SnapshotStateList<T> = mutableStateListOf(startKey)
+    val backStack: SnapshotStateList<MainScreens> = mutableStateListOf(startKey)
+
+    var direction by mutableStateOf(NavDirection.FORWARD)
+        private set
 
     private fun updateBackStack() {
         backStack.clear()
         backStack.addAll(topLevelBackStacks[topLevelKey] ?: emptyList())
     }
 
-    fun addTopLevel(key: T) {
+    fun addTopLevel(key: MainScreens) {
         if (key == topLevelKey) return
 
-        if (topLevelStack.contains(key)) topLevelStack.remove(key)
+        val oldIndex = tabOrder.indexOf(topLevelKey)
+        val newIndex = tabOrder.indexOf(key)
+        direction = if (newIndex >= oldIndex) NavDirection.FORWARD else NavDirection.BACKWARD
 
+        if (topLevelStack.contains(key)) topLevelStack.remove(key)
         topLevelStack.add(key)
 
         if (topLevelBackStacks[key] == null) {
@@ -38,14 +51,16 @@ class TopLevelBackStack<T : Any>(startKey: T) {
         updateBackStack()
     }
 
-    fun add(key: T) {
+    fun add(key: MainScreens) {
+        direction = NavDirection.FORWARD
         topLevelBackStacks[topLevelKey]?.add(key)
         updateBackStack()
     }
 
     fun removeLast() {
-        val currentTabStack = topLevelBackStacks[topLevelKey]
+        direction = NavDirection.BACKWARD
 
+        val currentTabStack = topLevelBackStacks[topLevelKey]
         if (currentTabStack != null && currentTabStack.size > 1) {
             currentTabStack.removeAt(currentTabStack.lastIndex)
         } else if (topLevelStack.size > 1) {
