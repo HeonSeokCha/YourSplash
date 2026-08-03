@@ -160,6 +160,8 @@ fun CollectionDetailScreen(
         ) {
             if (state.isGrid) {
                 LazyVerticalStaggeredGrid(
+                    modifier = Modifier
+                        .fillMaxSize(),
                     columns = StaggeredGridCells.Fixed(2),
                     contentPadding = PaddingValues(8.dp),
                     verticalItemSpacing = 8.dp,
@@ -181,7 +183,9 @@ fun CollectionDetailScreen(
                         }
 
                         else -> {
-                            items(count = pagingItems.itemCount) { idx ->
+                            items(
+                                count = pagingItems.itemCount
+                            ) { idx ->
                                 ImageCard(
                                     photoInfo = pagingItems[idx],
                                     isShowUserInfo = false,

@@ -85,6 +85,7 @@ class PhotoDetailViewModel(
             is PhotoDetailIntent.ClickPhotoDetail -> _effect.trySend(NavigatePhotoDetailView(intent.url))
 
             PhotoDetailIntent.ClickAlreadyDownload -> {
+                _state.update { it.copy(isShowFileAlreadyDialog = false) }
                 if (_state.value.imageDetailInfo == null) return
                 requestPhotoDownload(_state.value.imageDetailInfo!!.downloadUrl)
             }

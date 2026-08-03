@@ -58,6 +58,8 @@ fun UserDetailLikeScreen(
     }
     if (isGrid) {
         LazyVerticalStaggeredGrid(
+            modifier = Modifier
+                .fillMaxSize(),
             columns = StaggeredGridCells.Fixed(2),
             contentPadding = PaddingValues(8.dp),
             verticalItemSpacing = 8.dp,
