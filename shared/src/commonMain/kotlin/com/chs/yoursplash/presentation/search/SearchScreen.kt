@@ -132,7 +132,10 @@ private fun SearchScreen(
                 }
             }
 
-            HorizontalPager(state = pagerState) { page ->
+            HorizontalPager(
+                state = pagerState,
+                key = { it }
+            ) { page ->
                 when (page) {
                     0 -> {
                         SearchResultPhotoScreen(

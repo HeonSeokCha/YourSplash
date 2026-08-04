@@ -128,11 +128,11 @@ fun CollectionDetailScreen(
         CollapsingToolbarScaffold(
             scrollState = scrollState,
             isShowTopBar = true,
-            expandContent = {
+            stickyContent = {
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp)
+                        .padding(vertical = 8.dp)
                         .shimmer(visible = state.isDetailLoad),
                     text = if (state.collectionDetailInfo == null) {
                         Constants.TEXT_PREVIEW

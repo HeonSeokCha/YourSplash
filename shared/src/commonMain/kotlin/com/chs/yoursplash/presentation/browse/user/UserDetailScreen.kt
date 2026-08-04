@@ -161,7 +161,10 @@ fun UserDetailScreen(
                     text = stringResource(Res.string.text_no_items)
                 )
             } else {
-                HorizontalPager(state = pagerState) { pager ->
+                HorizontalPager(
+                    state = pagerState,
+                    key= { state.tabList[it] }
+                ) { pager ->
                     when (state.tabList[pager]) {
                         "PHOTOS" -> {
                             UserDetailPhotoScreen(

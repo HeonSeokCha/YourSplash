@@ -167,6 +167,7 @@ fun CollapsingToolbarScaffold(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .background(if (stickyHeaderHeight == 144) Color.Transparent else Color.White)
                 .padding(top = topBarPadding.pxToDp())
                 .align(Alignment.TopStart)
                 .offset {
