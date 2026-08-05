@@ -28,9 +28,9 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.chs.youranimelist.res.Res
-import com.chs.youranimelist.res.text_no_photos
-import com.chs.youranimelist.res.text_no_result
+import com.chs.yoursplash.res.Res
+import com.chs.yoursplash.res.text_no_photos
+import com.chs.yoursplash.res.text_no_result
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.presentation.base.ItemEmpty

@@ -12,8 +12,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.chs.youranimelist.res.Res
-import com.chs.youranimelist.res.lorem_ipsum
+import com.chs.yoursplash.res.Res
+import com.chs.yoursplash.res.lorem_ipsum
 import com.chs.yoursplash.domain.model.User
 import org.jetbrains.compose.resources.stringResource
 

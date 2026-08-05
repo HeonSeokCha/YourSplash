@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.OpenInBrowser
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -30,12 +29,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.chs.youranimelist.res.Res
-import com.chs.youranimelist.res.text_download_again
-import com.chs.youranimelist.res.text_download_again_desc
-import com.chs.youranimelist.res.text_no
-import com.chs.youranimelist.res.text_no_photos
-import com.chs.youranimelist.res.text_yes
 import com.chs.yoursplash.presentation.browse.BrowseScreens
 import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
 import com.chs.yoursplash.presentation.base.GradientTopBar
@@ -43,6 +36,12 @@ import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ShimmerImage
 import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.presentation.browse.BrowseScreens.*
+import com.chs.yoursplash.res.Res
+import com.chs.yoursplash.res.text_download_again
+import com.chs.yoursplash.res.text_download_again_desc
+import com.chs.yoursplash.res.text_no
+import com.chs.yoursplash.res.text_no_photos
+import com.chs.yoursplash.res.text_yes
 import com.chs.yoursplash.util.Constants
 import org.jetbrains.compose.resources.stringResource
 

@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
-import com.chs.youranimelist.res.Res
-import com.chs.youranimelist.res.text_no_items
+import com.chs.yoursplash.res.Res
+import com.chs.yoursplash.res.text_no_items
 import com.chs.yoursplash.domain.model.Photo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.domain.model.UserDetail

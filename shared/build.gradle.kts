@@ -16,6 +16,7 @@ plugins {
 }
 
 kotlin {
+    tasks.create("testClasses")
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
@@ -149,12 +150,6 @@ dependencies {
 
 kotlin.sourceSets.commonMain {
     kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
-}
-
-compose.resources {
-    publicResClass = false
-    packageOfResClass = "com.chs.youranimelist.res"
-    generateResClass = auto
 }
 
 tasks.matching { it.name.startsWith("ksp") && it.name != "kspCommonMainKotlinMetadata" }.configureEach {

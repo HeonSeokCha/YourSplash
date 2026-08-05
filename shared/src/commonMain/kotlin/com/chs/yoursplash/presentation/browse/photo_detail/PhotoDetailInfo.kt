@@ -75,7 +75,7 @@ private fun ItemDetailValue(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalFlexBoxApi::class)
 @Composable
 private fun RelatedTags(
     list: List<UnSplashTag>?,
@@ -94,12 +94,15 @@ private fun RelatedTags(
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        FlowRow(
+        FlexBox(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 2.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(horizontal = 4.dp),
+            config = {
+                direction(FlexDirection.Row)
+                wrap(FlexWrap.Wrap)
+                gap(8.dp)
+            }
         ) {
             if (list == null) {
                 repeat(6) {

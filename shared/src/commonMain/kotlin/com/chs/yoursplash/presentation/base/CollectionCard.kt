@@ -21,8 +21,8 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.chs.youranimelist.res.Res
-import com.chs.youranimelist.res.lorem_ipsum
+import com.chs.yoursplash.res.Res
+import com.chs.yoursplash.res.lorem_ipsum
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.presentation.toCommaFormat
 import com.chs.yoursplash.util.Constants

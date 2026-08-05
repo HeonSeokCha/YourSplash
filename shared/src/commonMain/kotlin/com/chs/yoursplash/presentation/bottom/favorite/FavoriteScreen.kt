@@ -19,8 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.chs.youranimelist.res.Res
-import com.chs.youranimelist.res.text_no_photos
+import com.chs.yoursplash.res.Res
+import com.chs.yoursplash.res.text_no_photos
 import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.presentation.base.ItemEmpty

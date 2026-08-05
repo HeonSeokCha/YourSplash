@@ -17,8 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.chs.youranimelist.res.Res
-import com.chs.youranimelist.res.text_no_result
+import com.chs.yoursplash.res.Res
+import com.chs.yoursplash.res.text_no_result
 import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.presentation.base.CollectionInfoCard

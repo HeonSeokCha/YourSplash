@@ -22,9 +22,9 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import com.chs.youranimelist.res.Res
-import com.chs.youranimelist.res.text_no_collections
-import com.chs.youranimelist.res.text_no_photos
+import com.chs.yoursplash.res.Res
+import com.chs.yoursplash.res.text_no_collections
+import com.chs.yoursplash.res.text_no_photos
 import com.chs.yoursplash.domain.model.BrowseInfo
 import com.chs.yoursplash.domain.model.UnSplashCollection
 import com.chs.yoursplash.presentation.base.CollectionInfoCard
