@@ -97,8 +97,6 @@ fun CollectionDetailScreen(
     snackBarHost: SnackbarHostState,
     onIntent: (CollectionDetailIntent) -> Unit
 ) {
-    val scrollState = rememberScrollState()
-
     LaunchedEffect(pagingItems.loadState.refresh) {
         when (pagingItems.loadState.refresh) {
             is LoadState.Loading -> onIntent(CollectionDetailIntent.Loading)
@@ -126,7 +124,6 @@ fun CollectionDetailScreen(
             .fillMaxSize()
     ) {
         CollapsingToolbarScaffold(
-            scrollState = scrollState,
             isShowTopBar = true,
             stickyContent = {
                 Text(

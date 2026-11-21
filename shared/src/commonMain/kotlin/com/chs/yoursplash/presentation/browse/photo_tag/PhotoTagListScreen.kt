@@ -84,8 +84,6 @@ fun PhotoTagListScreen(
     snackBarHost: SnackbarHostState,
     onIntent: (PhotoTagIntent) -> Unit
 ) {
-    val scrollState = rememberScrollState()
-
     LaunchedEffect(pagingItems.loadState.refresh) {
         when (pagingItems.loadState.refresh) {
             is LoadState.Loading -> onIntent(PhotoTagIntent.Loading)
@@ -113,7 +111,6 @@ fun PhotoTagListScreen(
             .fillMaxSize()
     ) {
         CollapsingToolbarScaffold(
-            scrollState = scrollState,
             isShowTopBar = true,
             collapsedContent = {
                 GradientTopBar(

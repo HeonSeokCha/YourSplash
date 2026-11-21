@@ -1,9 +1,9 @@
 [versions]
-androidStudioGradlePlugin = "9.4.1"
+androidStudioGradlePlugin = "9.5.2"
 
 compileSdkVersion = "37"
 android-minSdk = "29"
-android-targetSdk = "36"
+android-targetSdk = "37"
 componentsResources = "1.12.2"
 foundation = "1.12.2"
 uiToolingPreview = "1.12.2"
@@ -11,11 +11,11 @@ versionCode = "1"
 versionName = "1.0"
 
 activity = "1.13.0"
-kspVersion = "2.3.12"
+kspVersion = "2.3.13"
 room = "3.0.3"
 kotlin = "2.4.21"
 coroutine = "1.11.0"
-ktor = "3.6.0"
+ktor = "3.6.1"
 compose-plugin = "1.12.2"
 lifecycle = "2.11.0"
 koin = "4.2.2"
@@ -23,8 +23,8 @@ android-paging = "3.5.3"
 coil = "3.6.3"
 sqlite = "2.7.1"
 datastore = "1.3.0"
-kotlinxSerializationCore = "1.12.0"
-nav3Core = "1.1.2"
+kotlinxSerializationCore = "1.13.0"
+nav3Core = "1.2.0"
 
 [libraries]
 # AndroidX
@@ -121,5 +121,5 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
 room = { id = "androidx.room3", version.ref = "room" }
-konfig = "com.codingfeline.buildkonfig:0.23.0"
-koin-compiler = "io.insert-koin.compiler.plugin:1.2.1"
+konfig = "com.codingfeline.buildkonfig:0.24.0"
+koin-compiler = "io.insert-koin.compiler.plugin:1.2.3"

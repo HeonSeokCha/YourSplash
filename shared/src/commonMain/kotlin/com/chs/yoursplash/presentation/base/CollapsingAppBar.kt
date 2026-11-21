@@ -1,203 +1,154 @@
 package com.chs.yoursplash.presentation.base
 
-import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.background
+import androidx.compose.animation.core.AnimationState
+import androidx.compose.animation.core.animateDecay
+import androidx.compose.animation.core.exponentialDecay
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.dp
-import com.chs.yoursplash.presentation.pxToDp
+import kotlin.math.abs
+import kotlin.math.roundToInt
 
-internal class BackgroundScrollConnection(
-    private val scrollState: ScrollState
-) : NestedScrollConnection {
+@Stable
+class CollapsingToolbarState(initialHeightOffset: Float = 0f) {
 
-    private var isHeaderHide: Boolean = false
+    internal var heightOffsetLimit by mutableFloatStateOf(0f)
 
-    fun changeHeaderValue(value: Boolean) {
-        isHeaderHide = value
+    internal var heightOffset by mutableFloatStateOf(initialHeightOffset)
+
+    val collapsedFraction: Float
+        get() = if (heightOffsetLimit != 0f) heightOffset / heightOffsetLimit else 0f
+
+    internal fun consume(dy: Float): Float {
+        val old = heightOffset
+        heightOffset = (old + dy).coerceIn(heightOffsetLimit, 0f)
+        return heightOffset - old
     }
 
-    override fun onPreScroll(
-        available: Offset,
-        source: NestedScrollSource
-    ): Offset {
-        val dy = available.y
-
-        return when {
-            isHeaderHide -> {
-                Offset.Zero
+    internal suspend fun fling(velocity: Float) {
+        var last = 0f
+        AnimationState(initialValue = 0f, initialVelocity = velocity)
+            .animateDecay(exponentialDecay()) {
+                val delta = value - last
+                last = value
+                if (abs(delta - consume(delta)) > 0.5f) cancelAnimation()
             }
+    }
 
-            dy < 0 -> {
-                scrollState.dispatchRawDelta(dy * -1)
-                Offset(0f, dy)
-            }
-
-            else -> {
-                Offset.Zero
-            }
+    val nestedScrollConnection: NestedScrollConnection = object : NestedScrollConnection {
+        override fun onPreScroll(
+            available: Offset,
+            source: NestedScrollSource
+        ): Offset {
+            if (available.y >= 0f) return Offset.Zero
+            return Offset(0f, consume(available.y))
         }
+
+        override fun onPostScroll(
+            consumed: Offset,
+            available: Offset,
+            source: NestedScrollSource
+        ): Offset {
+            if (available.y <= 0f) return Offset.Zero
+            return Offset(0f, consume(available.y))
+        }
+    }
+
+    companion object {
+        val Saver: Saver<CollapsingToolbarState, Float> = Saver(
+            save = { it.heightOffset },
+            restore = { CollapsingToolbarState(initialHeightOffset = it) }
+        )
     }
 }
 
 @Composable
+fun rememberCollapsingToolbarState(): CollapsingToolbarState {
+    return rememberSaveable(saver = CollapsingToolbarState.Saver) { CollapsingToolbarState() }
+}
+
+@Composable
 fun CollapsingToolbarScaffold(
-    scrollState: ScrollState,
+    state: CollapsingToolbarState = rememberCollapsingToolbarState(),
     expandContent: @Composable () -> Unit = { },
-    collapsedContent: @Composable (alpha: Float) -> Unit,
+    collapsedContent: @Composable (collapsedFraction: () -> Float) -> Unit,
     isShowTopBar: Boolean = false,
     stickyContent: @Composable () -> Unit = { },
     content: @Composable () -> Unit
 ) {
-    val nestedScrollConnection = remember {
-        BackgroundScrollConnection(scrollState)
-    }
+    val draggableState = rememberDraggableState { delta -> state.consume(delta) }
 
-    val rememberStickyContent = remember {
-        movableContentOf { stickyContent() }
-    }
-
-    var globalHeight by remember { mutableIntStateOf(0) }
-    var expandContent by remember { mutableIntStateOf(0) }
-    var stickyHeaderHeight by remember { mutableIntStateOf(0) }
-    var collapsedHeight by remember { mutableIntStateOf(0) }
-    var topBarPadding by remember { mutableIntStateOf(0) }
-
-    val visiblePercentage by remember {
-        derivedStateOf {
-            if (expandContent <= 0) return@derivedStateOf 1f
-
-            ((expandContent - scrollState.value).toFloat() / expandContent).coerceIn(0f, 1f)
-        }
-    }
-
-    LaunchedEffect(visiblePercentage) {
-        nestedScrollConnection.changeHeaderValue(visiblePercentage <= 0f)
-    }
-
-    LaunchedEffect(collapsedHeight) {
-        if (!isShowTopBar) return@LaunchedEffect
-        topBarPadding = collapsedHeight
-    }
-
-    Box(
+    Layout(
+        contents = listOf(
+            { Column { expandContent() } },
+            { Box { stickyContent() } },
+            { Column { collapsedContent { state.collapsedFraction } } },
+            { Column { content() } },
+        ),
         modifier = Modifier
             .fillMaxSize()
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .onSizeChanged { size ->
-                    globalHeight = size.height
-                }
-                .verticalScroll(scrollState)
-                .nestedScroll(nestedScrollConnection)
-        ) {
-            Column {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 1.dp)
-                        .padding(top = topBarPadding.pxToDp())
-                        .onSizeChanged {
-                            expandContent = it.height.coerceAtLeast(1)
-                        }
-                ) {
-                    expandContent()
-                }
+            .nestedScroll(state.nestedScrollConnection)
+            .draggable(
+                state = draggableState,
+                orientation = Orientation.Vertical,
+                onDragStopped = { velocity -> state.fling(velocity) }
+            )
+    ) { (expandMeasurables, stickyMeasurables, barMeasurables, bodyMeasurables), constraints ->
+        val looseConstraints = constraints.copy(minWidth = 0, minHeight = 0)
 
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(stickyHeaderHeight.pxToDp())
-                )
+        val expandPlaceable = expandMeasurables.first().measure(looseConstraints)
+        val stickyPlaceable = stickyMeasurables.first().measure(looseConstraints)
+        val barPlaceable = barMeasurables.first().measure(looseConstraints)
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(globalHeight.pxToDp())
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .onSizeChanged {
-                                globalHeight = it.height
-                            }
-                    ) {
-                        content()
-                    }
-                }
-            }
-        }
+        val expandHeight = expandPlaceable.height
+        val stickyHeight = stickyPlaceable.height
+        val barHeight = barPlaceable.height
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(if (stickyHeaderHeight == 144) Color.Transparent else Color.White)
-                .padding(top = topBarPadding.pxToDp())
-                .align(Alignment.TopStart)
-                .offset {
-                    val scrollProgress = scrollState.value.coerceAtMost(expandContent)
+        val headerTop = if (isShowTopBar) barHeight else 0
+        val pinnedTop = barHeight
+        val offsetLimit = -(headerTop + expandHeight - pinnedTop).coerceAtLeast(0).toFloat()
+        state.heightOffsetLimit = offsetLimit
 
-                    val yOffset =
-                        if ((expandContent - scrollProgress) < (collapsedHeight - topBarPadding)) {
-                            (collapsedHeight - topBarPadding)
-                        } else {
-                            expandContent - scrollProgress
-                        }
+        val bodyHeight = (constraints.maxHeight - pinnedTop - stickyHeight).coerceAtLeast(0)
+        val bodyPlaceable = bodyMeasurables.first().measure(
+            looseConstraints.copy(minHeight = bodyHeight, maxHeight = bodyHeight)
+        )
 
-                    IntOffset(0, yOffset)
-                }
-                .onSizeChanged { size ->
-                    stickyHeaderHeight = size.height
-                }
-        ) {
-            rememberStickyContent()
-        }
+        layout(constraints.maxWidth, constraints.maxHeight) {
+            val offset = state.heightOffset.coerceAtLeast(offsetLimit).roundToInt()
+            val stickyTop = headerTop + expandHeight + offset
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = 1.dp)
-                .onSizeChanged {
-                    collapsedHeight = it.height
-                }
-        ) {
-            collapsedContent(visiblePercentage)
+            expandPlaceable.place(0, headerTop + offset)
+            bodyPlaceable.place(0, stickyTop + stickyHeight)
+            stickyPlaceable.place(0, stickyTop)
+            barPlaceable.place(0, 0)
         }
     }
 }
@@ -209,46 +160,37 @@ fun GradientTopBar(
     onIconClick: () -> Unit = {},
     onCloseClick: () -> Unit
 ) {
-    Box {
-        Box(
-            modifier = modifier
-                .padding(top = 32.dp)
-                .height(56.dp)
+    Box(
+        modifier = modifier
+            .padding(top = 32.dp)
+            .height(56.dp)
+    ) {
+        IconButton(
+            modifier = Modifier
+                .size(56.dp)
+                .align(Alignment.TopStart),
+            onClick = onCloseClick
         ) {
+            Icon(
+                imageVector = Icons.Filled.Close,
+                tint = White,
+                contentDescription = null
+            )
+        }
+
+        if (topBarIcon != null) {
             IconButton(
                 modifier = Modifier
                     .size(56.dp)
-                    .align(Alignment.TopStart),
-                onClick = onCloseClick
+                    .align(Alignment.TopEnd),
+                onClick = onIconClick
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Close,
+                    imageVector = topBarIcon,
                     tint = White,
                     contentDescription = null
                 )
             }
-
-            if (topBarIcon != null) {
-                IconButton(
-                    modifier = Modifier
-                        .size(56.dp)
-                        .align(Alignment.TopEnd),
-                    onClick = onIconClick
-                ) {
-                    Icon(
-                        imageVector = topBarIcon,
-                        tint = White,
-                        contentDescription = null
-                    )
-                }
-            }
         }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(32.dp)
-                .background(Color.Transparent)
-        )
     }
 }

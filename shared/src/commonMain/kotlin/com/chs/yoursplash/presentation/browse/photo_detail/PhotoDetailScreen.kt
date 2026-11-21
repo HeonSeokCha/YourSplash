@@ -100,14 +100,12 @@ fun PhotoDetailScreen(
     snackBarHost: SnackbarHostState,
     onIntent: (PhotoDetailIntent) -> Unit
 ) {
-    val scrollState = rememberScrollState()
     val lazyVerticalStaggeredState = rememberLazyStaggeredGridState()
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
         CollapsingToolbarScaffold(
-            scrollState = scrollState,
             expandContent = {
                 ShimmerImage(
                     modifier = Modifier
@@ -141,11 +139,11 @@ fun PhotoDetailScreen(
                 GradientTopBar(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .alpha(1f - visiblePercentage)
+                        .alpha(1f - visiblePercentage())
                         .align(Alignment.TopStart)
                         .background(MaterialTheme.colorScheme.primary),
                     onCloseClick = {
-                        if (visiblePercentage > 0.5f) return@GradientTopBar
+                        if (visiblePercentage() > 0.5f) return@GradientTopBar
                         onIntent(PhotoDetailIntent.ClickClose)
                     }
                 )

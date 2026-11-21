@@ -86,7 +86,6 @@ fun UserDetailScreenRoot(
     )
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun UserDetailScreen(
     state: UserDetailState,
@@ -98,7 +97,6 @@ fun UserDetailScreen(
 ) {
     val pagerState = rememberPagerState { state.tabList.size }
     val coroutineScope = rememberCoroutineScope()
-    val scrollState = rememberScrollState()
 
     LaunchedEffect(state.selectIdx) {
         pagerState.animateScrollToPage(state.selectIdx)
@@ -113,7 +111,6 @@ fun UserDetailScreen(
             .fillMaxSize()
     ) {
         CollapsingToolbarScaffold(
-            scrollState = scrollState,
             isShowTopBar = true,
             expandContent = {
                 UserDetailInfo(userInfo = state.userDetailInfo)
