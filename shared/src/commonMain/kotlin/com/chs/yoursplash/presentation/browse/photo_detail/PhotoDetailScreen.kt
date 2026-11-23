@@ -139,11 +139,11 @@ fun PhotoDetailScreen(
                 GradientTopBar(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .alpha(1f - visiblePercentage())
+                        .alpha(visiblePercentage())
                         .align(Alignment.TopStart)
                         .background(MaterialTheme.colorScheme.primary),
                     onCloseClick = {
-                        if (visiblePercentage() > 0.5f) return@GradientTopBar
+                        if (visiblePercentage() < 0.5f) return@GradientTopBar
                         onIntent(PhotoDetailIntent.ClickClose)
                     }
                 )

@@ -43,9 +43,7 @@ fun ImageDetailInfo(
 
         HorizontalDivider(modifier = Modifier.padding(top = 16.dp, bottom = 16.dp))
 
-        RelatedTags(
-            list = imageDetailInfo?.tags,
-        ) {
+        RelatedTags(list = imageDetailInfo?.tags) {
             tagClick(it)
         }
     }
@@ -75,7 +73,7 @@ private fun ItemDetailValue(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalFlexBoxApi::class)
+@OptIn(ExperimentalFlexBoxApi::class)
 @Composable
 private fun RelatedTags(
     list: List<UnSplashTag>?,

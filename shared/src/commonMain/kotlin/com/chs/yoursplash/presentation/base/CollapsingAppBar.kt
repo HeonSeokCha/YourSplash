@@ -32,6 +32,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import kotlin.math.abs
 import kotlin.math.roundToInt
@@ -123,7 +124,8 @@ fun CollapsingToolbarScaffold(
     ) { (expandMeasurables, stickyMeasurables, barMeasurables, bodyMeasurables), constraints ->
         val looseConstraints = constraints.copy(minWidth = 0, minHeight = 0)
 
-        val expandPlaceable = expandMeasurables.first().measure(looseConstraints)
+        val expandPlaceable = expandMeasurables.first()
+            .measure(looseConstraints.copy(maxHeight = Constraints.Infinity))
         val stickyPlaceable = stickyMeasurables.first().measure(looseConstraints)
         val barPlaceable = barMeasurables.first().measure(looseConstraints)
 
