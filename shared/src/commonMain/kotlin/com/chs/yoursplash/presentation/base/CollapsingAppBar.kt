@@ -45,7 +45,7 @@ class CollapsingToolbarState(initialHeightOffset: Float = 0f) {
     internal var heightOffset by mutableFloatStateOf(initialHeightOffset)
 
     val collapsedFraction: Float
-        get() = if (heightOffsetLimit != 0f) heightOffset / heightOffsetLimit else 0f
+        get() = if (heightOffsetLimit != 0f) (heightOffset / heightOffsetLimit).coerceIn(0f, 1f) else 0f
 
     internal fun consume(dy: Float): Float {
         val old = heightOffset
@@ -134,14 +134,16 @@ fun CollapsingToolbarScaffold(
         val barHeight = barPlaceable.height
 
         val headerTop = if (isShowTopBar) barHeight else 0
-        val pinnedTop = barHeight
-        val offsetLimit = -(headerTop + expandHeight - pinnedTop).coerceAtLeast(0).toFloat()
-        state.heightOffsetLimit = offsetLimit
 
-        val bodyHeight = (constraints.maxHeight - pinnedTop - stickyHeight).coerceAtLeast(0)
+        val bodyHeight = (constraints.maxHeight - barHeight - stickyHeight).coerceAtLeast(0)
         val bodyPlaceable = bodyMeasurables.first().measure(
-            looseConstraints.copy(minHeight = bodyHeight, maxHeight = bodyHeight)
+            looseConstraints.copy(maxHeight = bodyHeight)
         )
+
+        val collapseRange = headerTop + expandHeight - barHeight
+        val overflow = headerTop + expandHeight + stickyHeight + bodyPlaceable.height - constraints.maxHeight
+        val offsetLimit = -minOf(collapseRange, overflow).coerceAtLeast(0).toFloat()
+        state.heightOffsetLimit = offsetLimit
 
         layout(constraints.maxWidth, constraints.maxHeight) {
             val offset = state.heightOffset.coerceAtLeast(offsetLimit).roundToInt()
