@@ -34,6 +34,7 @@ import com.chs.yoursplash.presentation.base.CollapsingToolbarScaffold
 import com.chs.yoursplash.presentation.base.GradientTopBar
 import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ShimmerImage
+import com.chs.yoursplash.presentation.base.UnsplashImage
 import com.chs.yoursplash.presentation.base.shimmer
 import com.chs.yoursplash.presentation.browse.BrowseScreens.*
 import com.chs.yoursplash.res.Res
@@ -118,7 +119,7 @@ fun PhotoDetailScreen(
                             if (state.imageDetailInfo == null) return@clickable
                             onIntent(PhotoDetailIntent.ClickPhotoDetail(state.imageDetailInfo.url))
                         },
-                    url = state.imageDetailInfo?.url
+                    model = state.imageDetailInfo?.let { UnsplashImage(it.rawUrl) }
                 )
 
                 ItemUserInfoFromPhotoDetail(
@@ -188,7 +189,7 @@ fun PhotoDetailScreen(
                                     .clickable {
                                         onIntent(PhotoDetailIntent.ClickPhoto(item.id))
                                     },
-                                url = item.urls
+                                model = UnsplashImage(item.rawUrl)
                             )
                         }
                     }

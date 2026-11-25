@@ -9,8 +9,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import coil3.compose.setSingletonImageLoaderFactory
 import com.chs.yoursplash.di.KoinModule
 import com.chs.yoursplash.domain.model.BrowseInfo
+import com.chs.yoursplash.presentation.base.newImageLoader
 import com.chs.yoursplash.presentation.bottom.BottomBar
 import com.chs.yoursplash.presentation.bottom.BottomTopLevelBackStack
 import com.chs.yoursplash.presentation.main.MainNavDisplay
@@ -21,6 +23,8 @@ import org.koin.plugin.module.dsl.koinConfiguration
 
 @Composable
 fun YourSplashApp(onBrowseInfo: (BrowseInfo) -> Unit) {
+    setSingletonImageLoaderFactory(::newImageLoader)
+
     KoinApplication(koinConfiguration<KoinModule>()) {
         val backStack = remember { BottomTopLevelBackStack(MainScreens.PhotoScreen) }
         var currentSearchQuery by remember { mutableStateOf("") }

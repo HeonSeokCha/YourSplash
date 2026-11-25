@@ -77,7 +77,7 @@ fun ImageCard(
                     if (photoInfo?.id == null) return@clickable
                     onPhotoClick(photoInfo.id)
                 },
-            url = photoInfo?.urls
+            model = photoInfo?.let { UnsplashImage(it.rawUrl) }
         )
     }
 }

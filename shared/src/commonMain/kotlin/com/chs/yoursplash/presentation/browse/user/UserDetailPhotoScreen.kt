@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -26,19 +25,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.PagingData
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.chs.yoursplash.res.Res
 import com.chs.yoursplash.res.text_no_photos
-import com.chs.yoursplash.res.text_no_result
 import com.chs.yoursplash.domain.model.Photo
-import com.chs.yoursplash.presentation.base.ImageCard
 import com.chs.yoursplash.presentation.base.ItemEmpty
 import com.chs.yoursplash.presentation.base.ShimmerImage
+import com.chs.yoursplash.presentation.base.UnsplashImage
 import com.chs.yoursplash.presentation.base.shimmer
-import com.chs.yoursplash.presentation.browse.collection_detail.CollectionDetailIntent
-import com.chs.yoursplash.presentation.pxToDp
-import com.chs.yoursplash.presentation.search.SearchIntent
 import com.chs.yoursplash.util.Constants
 import kotlinx.coroutines.flow.Flow
 import org.jetbrains.compose.resources.stringResource
@@ -118,7 +112,7 @@ fun UserDetailPhotoScreen(
                                 .clickable {
                                     onIntent(UserDetailIntent.ClickPhoto(item.id))
                                 },
-                            url = item.urls
+                            model = UnsplashImage(item.rawUrl)
                         )
                     }
                 }
@@ -169,7 +163,7 @@ fun UserDetailPhotoScreen(
                                 .clickable {
                                     onIntent(UserDetailIntent.ClickPhoto(item.id))
                                 },
-                            url = item.urls
+                            model = UnsplashImage(item.rawUrl)
                         )
                     }
                 }

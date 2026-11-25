@@ -9,6 +9,7 @@ data class PhotoDetail(
     val blurHash: String,
     val likes: Int,
     val url: String,
+    val rawUrl: String,
     val downloadUrl: String,
     val description: String?,
     val user: User,

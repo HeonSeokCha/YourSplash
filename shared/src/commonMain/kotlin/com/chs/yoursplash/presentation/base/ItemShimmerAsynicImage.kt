@@ -20,6 +20,15 @@ fun ShimmerImage(
     url: String?,
     color: Color = Color.LightGray
 ) {
+    ShimmerImage(modifier = modifier, model = url, color = color)
+}
+
+@Composable
+fun ShimmerImage(
+    modifier: Modifier = Modifier,
+    model: Any?,
+    color: Color = Color.LightGray
+) {
     val context = LocalPlatformContext.current
     var isLoading by remember { mutableStateOf(false) }
     AsyncImage(
@@ -27,7 +36,7 @@ fun ShimmerImage(
             .shimmer(visible = isLoading),
         placeholder = ColorPainter(color),
         model = ImageRequest.Builder(context)
-            .data(url)
+            .data(model)
             .crossfade(true)
             .build(),
         contentDescription = null,
