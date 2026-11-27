@@ -28,3 +28,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "YourSplash"
 include(":shared")
+include(":androidApp")

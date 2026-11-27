@@ -1,5 +1,5 @@
 [versions]
-androidStudioGradlePlugin = "9.5.2"
+androidStudioGradlePlugin = "9.5.3"
 
 compileSdkVersion = "37"
 android-minSdk = "29"
@@ -15,7 +15,7 @@ kspVersion = "2.3.13"
 room = "3.0.3"
 kotlin = "2.4.21"
 coroutine = "1.11.0"
-ktor = "3.6.1"
+ktor = "3.6.2"
 compose-plugin = "1.12.2"
 lifecycle = "2.11.0"
 koin = "4.2.2"
@@ -115,6 +115,7 @@ koin = [
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidStudioGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidStudioGradlePlugin" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "androidStudioGradlePlugin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
